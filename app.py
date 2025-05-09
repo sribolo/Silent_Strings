@@ -28,12 +28,19 @@ def home():
 
 @app.route('/login')
 def login():
-    """Render the mission briefing and login options."""
-    if not google.authorized:
-        return redirect(url_for("google.login"))
-    resp = google.get("/plus/v1/people/me")
-    session['google_profile'] = resp.json()
-    return redirect(url_for('customise'))
+    try:
+        if not google.authorized:
+            print("User not authorized. Redirecting to Google login...")
+            return redirect(url_for("google.login"))
+        
+        resp = google.get("/plus/v1/people/me")
+        print("Google Response:", resp.json())  # <-- Debugging log
+        session['google_profile'] = resp.json()
+        return redirect(url_for('customize'))
+    except Exception as e:
+        print(f"Error during login: {str(e)}")
+        return "Internal Server Error", 500
+
 
 @app.route('/customise')
 def customize():
