@@ -1,0 +1,24 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+
+# Virtual environment
+venv/
+env/
+
+# Secrets
+.env
+
+# Flask cache
+instance/
+.webassets-cache
+
+# Pytest
+.cache/
+
+# Editor backups
+*.swp
+*.swo
+
+# Gunicorn log files
+*.log

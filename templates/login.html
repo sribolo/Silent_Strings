@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Mission Briefing</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+
+<div id="login-container">
+    <div id="mission-briefing">
+        <p>Welcome agent,</p>
+        <p>Loading mission briefing...</p>
+    </div>
+
+    <div id="login-options">
+        <button class="login-button" onclick="standardLogin()">Log in</button>
+        <button class="login-button google" onclick="googleLogin()">Google</button>
+    </div>
+</div>
+
+<script>
+    function standardLogin() {
+        window.location.href = "/customize";
+    }
+
+    function googleLogin() {
+        window.location.href = "/login";
+    }
+</script>
+
+</body>
+</html>
