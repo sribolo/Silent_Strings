@@ -2,32 +2,16 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Mission Briefing</title>
+    <title>Login Page</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
 <body>
-
-<div id="login-container">
-    <div id="mission-briefing">
-        <p>Welcome agent,</p>
-        <p>Loading mission briefing...</p>
+    <div class="login-container">
+        <form action="/customize" method="post">
+            <input type="text" name="username" placeholder="Enter Username" required>
+            <input type="password" name="password" placeholder="Enter Password" required>
+            <button type="submit">Login</button>
+        </form>
     </div>
-
-    <div id="login-options">
-        <button class="login-button" onclick="standardLogin()">Log in</button>
-        <button class="login-button google" onclick="googleLogin()">Google</button>
-    </div>
-</div>
-
-<script>
-    function standardLogin() {
-        window.location.href = "/customize";
-    }
-
-    function googleLogin() {
-        window.location.href = "/login";
-    }
-</script>
-
 </body>
 </html>

@@ -1,11 +1,25 @@
-<h1>Mission: Trace PH4NT0M</h1>
-<p>Agent, this email was flagged. Is it a phishing attempt?</p>
-
-<pre>
-From: support@bank.com  
-Subject: Urgent! Your account is compromised  
-</pre>
-
-<button onclick="alert('Correct! This is phishing.')">Phishing</button>
-<button onclick="alert('Wrong! This could be phishing.')">Not phishing</button>
-
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Mission Briefing</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <div class="mission-container">
+        <div class="mission-box">
+            <p>Welcome Agent,</p>
+            <p>Loading mission briefing...</p>
+        </div>
+        <div class="mission-buttons">
+            <form action="{{ url_for('google.login') }}" method="post">
+                <button type="submit">Google</button>
+            </form>
+            <form action="{{ url_for('guest_login') }}" method="post">
+                <button type="submit">Play as Guest</button>
+            </form>
+            <button onclick="window.location.href='/login'">Login</button>
+        </div>
+    </div>
+</body>
+</html>

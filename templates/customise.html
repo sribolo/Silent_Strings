@@ -5,15 +5,19 @@
   <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
 <body>
-  <div id="custom-box">
-    <h2>Customise Your Agent</h2>
-    <input type="text" id="agent-name" placeholder="Enter your codename">
-
-    <div id="tabs"></div>
-    <div id="tab-content"></div>
-
-    <button onclick="saveAvatar()">Continue</button>
-  </div>
+  <<div id="custom-box">
+    <h2>Customize Your Avatar</h2>
+    <input type="text" id="agent-name" placeholder="Enter your Agent Name">
+    
+    <div id="avatar-options"></div>
+    
+    <div class="tab-buttons">
+        <button class="tab-button" data-category="characters">Characters</button>
+        <button class="tab-button" data-category="clothes">Clothes</button>
+        <button class="tab-button" data-category="hair">Hair</button>
+        <button class="tab-button" data-category="eyes">Eyes</button>
+        <button class="tab-button" data-category="acc">Accessories</button>
+    </div>
   <script src="{{ url_for('static', filename='js/customize.js') }}"></script>
 
   <div id="loading-screen">

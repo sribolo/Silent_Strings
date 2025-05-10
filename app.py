@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, jsonify, session, redirect, url_for
+from flask import Flask, render_template, request, jsonify, session, redirect, url_for, send_from_directory
 from flask_dance.contrib.google import make_google_blueprint, google
 from dotenv import load_dotenv
 import os
@@ -44,19 +44,31 @@ def login():
 
 
 @app.route('/customise')
-def customize():
-    """Render the avatar customization page."""
+def customise():
+    """Render the avatar customisation page."""
     user_info = session.get('google_profile')
+
+    # If the user is not logged in, render the Mission Briefing page
+    if not user_info and not session.get('guest_user'):
+        return render_template('mission.html')
+    
+    # If logged in, continue to customisation
     if user_info:
-        name = user_info['displayName']
-    else:
-        name = "Agent"
+        name = user_info.get('displayName', 'Agent')
+    elif session.get('guest_user'):
+        name = session.get('guest_user')
+    
     return render_template('customise.html', name=name)
 
+@app.route('/guest_login', methods=['POST'])
+def guest_login():
+    """Log in as a guest and redirect to customisation."""
+    session['guest_user'] = "Guest Agent"
+    return redirect(url_for('customise'))
 
 @app.route('/dialogue')
 def dialogue():
-    """Render the dialogue page with the customized avatar."""
+    """Render the dialogue page with the customised avatar."""
     return render_template('dialogue.html')
 
 
@@ -64,14 +76,14 @@ def dialogue():
 def get_sprites():
     """Serve the sprite mappings to the frontend."""
     data = {}
-    # Traverse each category
-    for category in os.listdir("static/images/avatar_parts"):
-        if os.path.isdir(f"static/images/avatar_parts/{category}"):
-            data[category] = {}
-            for sprite in os.listdir(f"static/images/avatar_parts/{category}"):
-                if sprite.endswith(".json"):
-                    with open(f"static/images/avatar_parts/{category}/{sprite}", 'r') as f:
-                        data[category][sprite.split(".")[0]] = json.load(f)
+    categories = ["acc", "characters", "clothes", "eyes", "hair", "walk"]
+    for category in categories:
+        data[category] = {}
+        folder_path = f'static/images/avatar_parts/{category}'
+        if os.path.exists(folder_path):
+            for filename in os.listdir(folder_path):
+                if filename.endswith(".png"):
+                    data[category][filename.split(".")[0]] = {"x": 0, "y": 0}
     return jsonify(data)
 
 
@@ -96,6 +108,11 @@ def get_avatar():
     else:
         return jsonify({"error": "No avatar data found"}), 404
 
+
+
+@app.route('/avatars/<path:filename>')
+def avatar_files(filename):
+    return send_from_directory('static/images/avatar_parts', filename)
 
 # === RUN SERVER ===
 if __name__ == "__main__":
