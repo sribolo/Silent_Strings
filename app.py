@@ -16,6 +16,7 @@ google_blueprint = make_google_blueprint(
     client_id=os.getenv('GOOGLE_CLIENT_ID'),
     client_secret=os.getenv('GOOGLE_CLIENT_SECRET'),
     redirect_to="customize"
+    redirect_uri="https://silent-strings.onrender.com/login/google/authorized"
 )
 app.register_blueprint(google_blueprint, url_prefix="/login")
 
