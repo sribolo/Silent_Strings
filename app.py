@@ -15,7 +15,8 @@ SPRITE_PATH = "static/images/avatar_parts"
 google_blueprint = make_google_blueprint(
     client_id=os.getenv('GOOGLE_CLIENT_ID'),
     client_secret=os.getenv('GOOGLE_CLIENT_SECRET'),
-    redirect_to="customise",
+     scope=["profile", "email"],
+    redirect_to="customise"
 )
 app.register_blueprint(google_blueprint, url_prefix="/login")
 

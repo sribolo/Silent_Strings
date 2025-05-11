@@ -12,7 +12,7 @@
             <p>Loading mission briefing...</p>
         </div>
         <div id="login-options">
-            <form action="{{ url_for('google.login') }}" method="post">
+            <form action="{{ url_for('google.login') }}" method="get">
                 <button type="submit">Google</button>
             </form>
             <form action="{{ url_for('guest_login') }}" method="post">
