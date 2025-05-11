@@ -26,6 +26,10 @@ def home():
     """Landing Page for Silent Strings Homepage."""
     return render_template('index.html')
 
+@app.route('/start')
+def start():
+    return render_template('dialogue.html')
+
 @app.route('/login')
 def login():
     try:
