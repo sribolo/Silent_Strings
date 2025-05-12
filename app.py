@@ -33,15 +33,6 @@ def home():
 def start():
     return render_template('dialogue.html')
 
-@app.route('/guest_login', methods=['POST'])
-def guest_login():
-    """Handle guest login, set a session and redirect to customize page."""
-    session['google_profile'] = {
-        'displayName': 'Guest Agent',
-        'email': 'guest@silentstrings.com'
-    }
-    return redirect(url_for('customise'))
-
 @app.route('/login')
 def login():
     return render_template('login.html')
