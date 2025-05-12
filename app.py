@@ -33,20 +33,33 @@ def home():
 def start():
     return render_template('dialogue.html')
 
+@app.route('/guest_login', methods=['POST'])
+def guest_login():
+    """Handle guest login, set a session and redirect to customize page."""
+    session['google_profile'] = {
+        'displayName': 'Guest Agent',
+        'email': 'guest@silentstrings.com'
+    }
+    return redirect(url_for('customise'))
+
 @app.route('/login')
 def login():
-    try:
-        if not google.authorized:
-            print("User not authorized. Redirecting to Google login...")
-            return redirect(url_for("google.login"))
-        
-        resp = google.get("/plus/v1/people/me")
-        print("Google Response:", resp.json())  # <-- Debugging log
-        session['google_profile'] = resp.json()
-        return redirect(url_for('customize'))
-    except Exception as e:
-        print(f"Error during login: {str(e)}")
-        return "Internal Server Error", 500
+    return render_template('login.html')
+
+@app.route('/login/google')
+def google_login():
+    if not google.authorized:
+        return redirect(url_for("google.login"))
+    resp = google.get("/plus/v1/people/me")
+    session['google_profile'] = resp.json()
+    return redirect(url_for('customize'))
+
+@app.route('/guest_login', methods=['POST'])
+def guest_login():
+    session['guest'] = True
+    session['name'] = "Guest Agent"
+    return redirect(url_for('customize'))
+
 
 
 @app.route('/customise')
@@ -54,23 +67,14 @@ def customise():
     """Render the avatar customisation page."""
     user_info = session.get('google_profile')
 
-    # If the user is not logged in, render the Mission Briefing page
-    if not user_info and not session.get('guest_user'):
-        return render_template('mission.html')
-    
     # If logged in, continue to customisation
     if user_info:
         name = user_info.get('displayName', 'Agent')
-    elif session.get('guest_user'):
-        name = session.get('guest_user')
+    else:
+        name = "Agent"
     
     return render_template('customise.html', name=name)
 
-@app.route('/guest_login', methods=['POST'])
-def guest_login():
-    """Log in as a guest and redirect to customisation."""
-    session['guest_user'] = "Guest Agent"
-    return redirect(url_for('customise'))
 
 @app.route('/dialogue')
 def dialogue():
