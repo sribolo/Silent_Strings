@@ -101,13 +101,12 @@ html, body {
 }
 
 .mission-box {
-  background-color: #333;
+  background-color: #1a1a1a;
   padding: 20px;
-  border-radius: 8px;
   margin-bottom: 20px;
   text-align: center;
-  width: 300px;
-  box-shadow: 0 0 10px #6C5CE7;
+  width: 400px;
+  box-shadow: 0 0 15px #6C5CE7;
 }
 
 .pixelated-border {
@@ -127,20 +126,17 @@ font-size: 1.2rem;
 font-family: 'VT323', monospace;
 }
 
+/* Button Styles */
 .mission-buttons {
   display: flex;
   gap: 20px;
 }
 
-#login-options {
-display: flex;
-gap: 20px;
-}
 
 .login-button {
 padding: 12px 20px;
 border: none;
-background-color: #444;
+background-color: #333;
 color: white;
 cursor: pointer;
 font-family: 'VT323', monospace;
@@ -159,6 +155,26 @@ background-color: #4285F4;
 
 .login-button.google:hover {
 background-color: #357AE8;
+}
+
+.login-button.signup {
+  background-color: #28a745;
+}
+
+.login-button.signup:hover {
+  background-color: #218838;
+}
+
+input[type="text"], input[type="email"], input[type="password"] {
+  display: block;
+  width: 100%;
+  margin-bottom: 15px;
+  padding: 10px;
+  background-color: #222;
+  border: 1px solid #444;
+  color: white;
+  font-family: 'VT323', monospace;
+  border-radius: 5px;
 }
 
 
