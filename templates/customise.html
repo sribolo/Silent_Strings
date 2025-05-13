@@ -1,29 +1,49 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>Customise Your Agent</title>
-  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <meta charset="UTF-8">
+    <title>Customise Your Avatar</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
 <body>
-  <div id="custom-box">
-    <h2>Customise Your Avatar</h2>
-    <input type="text" id="agent-name" placeholder="Enter your Agent Name">
-    
-    <div id="avatar-options"></div>
-    
-    <div class="tab-buttons">
-        <button class="tab-button" data-category="characters">Characters</button>
-        <button class="tab-button" data-category="clothes">Clothes</button>
-        <button class="tab-button" data-category="hair">Hair</button>
-        <button class="tab-button" data-category="eyes">Eyes</button>
-        <button class="tab-button" data-category="acc">Accessories</button>
+    <div class="bg-container">
+        <img src="{{ url_for('static', filename='images/background.gif') }}" class="background">
+        <div class="darken"></div>
     </div>
-  <script src="{{ url_for('static', filename='js/customize.js') }}"></script>
+    
+    <div class="overlay">
+        <div class="customise-container pixelated-border">
+            <h1 class="customise-title">Customise Your Avatar</h1>
 
-  <div id="loading-screen">
-    <div id="spinner"></div>
-    <p>Loading Mission...</p>
-</div>
+            <input type="text" id="agent-name" placeholder="Enter your Agent Name">
 
+            <div class="tab-buttons">
+                <button class="tab-button active" onclick="openTab('characters')">Characters</button>
+                <button class="tab-button" onclick="openTab('clothes')">Clothes</button>
+                <button class="tab-button" onclick="openTab('hair')">Hair</button>
+                <button class="tab-button" onclick="openTab('eyes')">Eyes</button>
+                <button class="tab-button" onclick="openTab('accessories')">Accessories</button>
+            </div>
+
+            <div id="grid-container" class="grid-container">
+                <!-- Dynamic Sprite List Here -->
+            </div>
+
+            <p class="loading-text">Loading Mission...</p>
+        </div>
+    </div>
+
+    <script>
+        function openTab(category) {
+            document.querySelectorAll(".tab-button").forEach(button => {
+                button.classList.remove("active");
+            });
+            event.target.classList.add("active");
+
+            // Here you would load the sprite images dynamically
+            // For now, it's just simulating the click event
+            document.getElementById("grid-container").innerHTML = `<p>Loading ${category}...</p>`;
+        }
+    </script>
 </body>
 </html>
