@@ -1,119 +1,156 @@
-/* ===========================================
-   ✨ General Reset & Base Styles
-=========================================== */
+/* General Reset & Base Styles */
 html, body {
-  margin: 0;
-  padding: 0;
-  height: 100%;
-  font-family: 'Press Start 2P', monospace;
-  overflow: hidden;
-  background-color: #0d0d0d;
-  color: #e0e0e0;
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    font-family: 'VT323', monospace;
+    overflow: hidden;
+    background-color: #0d0d0d;
+    color: #e0e0e0;
+  }
+  
+  /* Welcome Screen Background */
+  .bg-container {
+    position: relative;
+    width: 100%;
+    height: 100%;
+  }
+  
+  .background {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    position: absolute;
+    z-index: 1;
+    image-rendering: pixelated;
+    image-rendering: crisp-edges;
+  }
+  
+  /* Dark overlay to improve contrast */
+  .darken {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.3);
+    z-index: 2;
+  }
+  
+  /* Overlay Text and Button */
+  .overlay {
+    position: absolute;
+    z-index: 3;
+    top: 25%;
+    width: 100%;
+    text-align: center;
+  }
+  
+  /* Title Text */
+  .game-title {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 4rem;
+    color: #FFFFFF;
+    text-shadow:
+      0 0 5px #A499FF,
+      0 0 10px #A499FF,
+      0 0 20px #6C5CE7;
+    animation: pulseGlow 2.5s ease-in-out infinite;
+  }
+  
+  /* Title glow animation */
+  @keyframes pulseGlow {
+    0%, 100% { text-shadow: 0 0 5px #A499FF; }
+    50% { text-shadow: 0 0 20px #6C5CE7; }
+  }
+  
+  /* Tagline under title */
+  .tagline {
+    color: #CCCCCC;
+    font-size: 1.2rem;
+    margin-top: 10px;
+    text-shadow: 0 0 5px #00000088;
+  }
+  
+  /* Start Button */
+  .start-button {
+    background: #6C5CE7;
+    border: none;
+    color: white;
+    padding: 12px 28px;
+    font-size: 1.2rem;
+    border-radius: 8px;
+    margin-top: 20px;
+    cursor: pointer;
+    font-family: 'Share Tech Mono', monospace;
+    box-shadow: 0 0 10px #6C5CE7;
+    transition: 0.3s;
+  }
+  
+  .start-button:hover, .login-button:hover {
+    background: #8A2BE2;
+    box-shadow: 0 0 20px #8A2BE2;
+  }
+
+  /* Mission Briefing Screen */
+  .mission-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    color: white;
 }
 
-/* ===========================================
- ✨ Background Setup
-=========================================== */
-.bg-container {
-  position: relative;
-  width: 100%;
-  height: 100%;
+.mission-box {
+    background-color: #333;
+    padding: 20px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    text-align: center;
+    width: 300px;
+    box-shadow: 0 0 10px #6C5CE7;
 }
 
-.background {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  position: absolute;
-  z-index: 1;
+.pixelated-border {
+  border: 2px solid #6C5CE7;
   image-rendering: pixelated;
-  image-rendering: crisp-edges;
-  animation: fadeIn 1.5s ease-in-out forwards;
 }
 
-.darken {
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.3);
-  z-index: 2;
-}
-
-/* ===========================================
- ✨ Main Overlay Text and Button
-=========================================== */
-.overlay {
-  position: absolute;
-  z-index: 3;
-  top: 25%;
-  width: 100%;
-  text-align: center;
-}
-
-.game-title {
-  font-family: 'Share Tech Mono', monospace;
-  font-size: 4rem;
-  color: #FFFFFF;
-  text-shadow: 0 0 5px #A499FF, 0 0 10px #A499FF, 0 0 20px #6C5CE7;
-  animation: pulseGlow 2.5s ease-in-out infinite;
-  margin-bottom: 15px;
-}
-
-@keyframes pulseGlow {
-  0%, 100% { text-shadow: 0 0 5px #A499FF; }
-  50% { text-shadow: 0 0 20px #6C5CE7; }
-}
-
-
-
-.game-tagline {
-  color: #CCCCCC;
-  font-size: 1.4rem;
-  margin-top: 10px;
+/* Title and Text */
+.mission-title {
+  font-size: 2rem;
+  margin-bottom: 10px;
   font-family: 'VT323', monospace;
-  text-shadow: 0 0 5px #00000088;
 }
 
-/* ===========================================
- ✨ Button Styles
-=========================================== */
-/*.button-container {
+.mission-text {
+  font-size: 1.2rem;
+  font-family: 'VT323', monospace;
+}
+
+.mission-buttons {
+    display: flex;
+    gap: 20px;
+}
+
+#login-options {
   display: flex;
-  flex-direction: column;
-  gap: 15px;
-  margin-top: 20px;
-}*/
-.start-button {
-  background: #6C5CE7;
+  gap: 20px;
+}
+
+.login-button {
+  padding: 12px 20px;
   border: none;
+  background-color: #444;
   color: white;
-  padding: 12px 28px;
-  font-size: 1.3 rem;
-  border-radius: 8px;
-  margin-top: 20px;
   cursor: pointer;
-  font-family: 'Press Start 2P', monospace;
-  box-shadow: 0 0 10px #6C5CE7;
+  font-family: 'VT323', monospace;
+  border-radius: 8px;
+  box-shadow: 0 0 5px #6C5CE7;
   transition: 0.3s;
 }
 
-.login-button, .signup-button {
-  background: #6C5CE7;
-  border: none;
-  color: white;
-  padding: 12px 28px;
-  font-size: 1.4 rem;
-  border-radius: 8px;
-  cursor: pointer;
-  font-family: 'Press Start 2P', monospace;
-  box-shadow: 0 0 10px #6C5CE7;
-  transition: 0.3s;
-  width: 300px;
-}
-
-.start-button:hover, .login-button:hover, .signup-button:hover {
-  background: #8A2BE2;
-  box-shadow: 0 0 20px #8A2BE2;
+.login-button:hover {
+  background-color: #555;
 }
 
 .login-button.google {
@@ -124,40 +161,192 @@ html, body {
   background-color: #357AE8;
 }
 
-/* ===========================================
- ✨ Mission Briefing Container
-=========================================== */
-.mission-container {
+  
+  /* Dialogue Box */
+  #dialogue-box {
+    max-width: 600px;
+    margin: auto;
+    border: 2px solid #666;
+    padding: 20px;
+    border-radius: 8px;
+    background-color: #1a1a1a;
+  }
+  
+  #dialogue-text {
+    font-size: 1.2rem;
+    line-height: 1.5;
+    white-space: pre-wrap;
+    min-height: 120px;
+    margin-bottom: 15px;
+  }
+  /* Dialogue Buttons */
+  button {
+    margin: 5px;
+    padding: 10px 20px;
+    background-color: #333;
+    color: white;
+    border: none;
+    cursor: pointer;
+  }
+  
+  button:hover {
+    background-color: #555;
+  }
+  
+  #custom-box {
+    max-width: 500px;
+    margin: 100px auto;
+    padding: 30px;
+    background: #1a1a1a;
+    border-radius: 10px;
+    text-align: center;
+    border: 1px solid #444;
+  }
+  
+  #agent-name {
+    padding: 10px;
+    font-size: 1rem;
+    width: 80%;
+    margin: 10px 0 20px;
+    background-color: #222;
+    color: white;
+    border: none;
+    border-radius: 5px;
+  }
+  
+  #avatar-options {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin-bottom: 20px;
+  }
+  
+  .avatar {
+    width: 80px;
+    height: 80px;
+    border-radius: 8px;
+    border: 2px solid transparent;
+    cursor: pointer;
+    transition: 0.2s;
+  }
+  
+  .avatar.selected {
+    border-color: #6C5CE7;
+    box-shadow: 0 0 10px #6C5CE7;
+  }
+  
+  .avatar-header {
+    width: 50px;
+    height: 50px;
+    float: right;
+    margin-bottom: 10px;
+    border-radius: 8px;
+  }
+  
+  #custom-box {
+    max-width: 500px;
+    margin: 50px auto;
+    padding: 30px;
+    background: #1a1a1a;
+    border-radius: 10px;
+    text-align: center;
+    color: white;
+  }
+  
+  #avatar-preview {
+    margin-top: 20px;
+    width: 120px;
+    height: 120px;
+    position: relative;
+    margin-inline: auto;
+  }
+  
+  #avatar-preview img {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+  }
+  
+  .grid-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(32px, 1fr));
+    gap: 5px;
+    margin-top: 10px;
+  }
+  
+  .grid-item {
+    width: 32px;
+    height: 32px;
+    background-repeat: no-repeat;
+    border: 1px solid transparent;
+    cursor: pointer;
+    margin: 2px;
+  }
+  
+  .grid-item:hover {
+    border-color: #6C5CE7;
+  }
+  
+  .grid-item.selected {
+    border-color: #FF5E5E;
+    box-shadow: 0 0 5px #FF5E5E;
+  }
+  
+  .tab-buttons {
+    margin-top: 20px;
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+}
+
+.tab-button {
+    padding: 10px 15px;
+    border: none;
+    background-color: #333;
+    color: white;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+.tab-button:hover {
+    background-color: #555;
+}
+
+  
+  /* === Loading Animation === */
+#loading-screen {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: #0d0d0d;
   display: flex;
-  flex-direction: column;
   align-items: center;
   justify-content: center;
-  height: 100vh;
+  z-index: 999;
   color: white;
-  z-index: 3;
+  font-size: 1.5rem;
+  display: none;
 }
 
-.mission-box {
-  background-color: #333;
-  padding: 20px;
-  border-radius: 8px;
-  margin-bottom: 20px;
-  text-align: center;
-  width: 400px;
-  box-shadow: 0 0 15px #6C5CE7;
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
 }
 
-/* ===========================================
- ✨ Pixelated Border
-=========================================== */
-.pixelated-border {
-  border: 2px solid #6C5CE7;
-  image-rendering: pixelated;
+#spinner {
+  border: 4px solid rgba(255, 255, 255, 0.2);
+  border-left-color: white;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  animation: spin 1s linear infinite;
 }
 
-/* ===========================================
- ✨ Modal Popup
-=========================================== */
+/* Modal Background */
 .modal {
   display: none;
   position: fixed;
@@ -170,6 +359,7 @@ html, body {
   background-color: rgba(0, 0, 0, 0.8);
 }
 
+/* Modal Content */
 .modal-content {
   background-color: #1a1a1a;
   margin: 15% auto;
@@ -183,6 +373,7 @@ html, body {
   box-shadow: 0 0 15px #6C5CE7;
 }
 
+/* Modal Buttons */
 .modal-buttons {
   display: flex;
   justify-content: space-around;
@@ -210,115 +401,4 @@ html, body {
 
 .modal-button.confirm:hover {
   background-color: #8A2BE2;
-}
-/* ===========================================
- ✨ Customise Container
-=========================================== */
-.customise-container {
-    max-width: 500px;
-    margin: 50px auto;
-    padding: 30px;
-    background: #1a1a1a;
-    border-radius: 10px;
-    text-align: center;
-    color: white;
-    border: 1px solid #444;
-}
-
-.customise-title {
-  font-size: 3rem;
-  margin-bottom: 20px;
-  color: #A499FF;
-  text-shadow: 0 0 5px #6C5CE7;
-}
-
-/* ===========================================
- ✨ Input Field
-=========================================== */
-#agent-name {
-  font-size: 1.2rem;
-  padding: 10px;
-  margin-bottom: 20px;
-  width: 90%;
-  border: 2px solid #6C5CE7;
-  border-radius: 8px;
-  background-color: #333;
-  color: white;
-  text-align: center;
-}
-
-/* ===========================================
- ✨ Tab Buttons
-=========================================== */
-.tab-buttons {
-  display: flex;
-  gap: 10px;
-  justify-content: center;
-  margin-bottom: 20px;
-}
-
-.tab-button {
-  background-color: #333;
-  color: white;
-  padding: 10px 20px;
-  border-radius: 8px;
-  border: 2px solid #444;
-  cursor: pointer;
-  transition: 0.3s;
-  font-size: 1.1rem;
-}
-
-.tab-button:hover {
-  background-color: #444;
-}
-
-.tab-button.active {
-  background-color: #6C5CE7;
-  border-color: #A499FF;
-  box-shadow: 0 0 5px #A499FF;
-}
-
-/* ===========================================
- ✨ Grid Container
-=========================================== */
-.grid-container {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(64px, 1fr));
-  gap: 10px;
-  margin-top: 20px;
-}
-
-/* ===========================================
- ✨ Loading Text
-=========================================== */
-.loading-text {
-  margin-top: 30px;
-  font-size: 1.2rem;
-  color: #999;
-  font-style: italic;
-}
-
-/* ===========================================
- ✨ Animations
-=========================================== */
-@keyframes fadeIn {
-  0% {
-    opacity: 0;
-  }
-  100% {
-    opacity: 1;
-  }
-}
-
-/* ===========================================
- ✨ Responsive Design
-=========================================== */
-@media (max-width: 600px) {
-  .game-title {
-    font-size: 3rem;
-  }
-  .start-button {
-    width: 90%;
-    font-size: 1rem;
-  }
 }
