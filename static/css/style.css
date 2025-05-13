@@ -5,7 +5,7 @@ html, body {
   margin: 0;
   padding: 0;
   height: 100%;
-  font-family: 'VT323', monospace;
+  font-family: 'Press Start 2P', cursive;
   overflow: hidden;
   background-color: #0d0d0d;
   color: #e0e0e0;
@@ -51,11 +51,11 @@ html, body {
 }
 
 .game-title {
-  font-family: 'Share Tech Mono', monospace;
   font-size: 4rem;
   color: #FFFFFF;
   text-shadow: 0 0 5px #A499FF, 0 0 10px #A499FF, 0 0 20px #6C5CE7;
   animation: pulseGlow 2.5s ease-in-out infinite;
+  margin-bottom: 15px;
 }
 
 @keyframes pulseGlow {
@@ -72,7 +72,7 @@ html, body {
   }
 }
 
-.tagline {
+.game-tagline {
   color: #CCCCCC;
   font-size: 1.2rem;
   margin-top: 10px;
@@ -90,7 +90,7 @@ html, body {
   margin-top: 20px;
 }
 
-.start-button, .login-button, .signup-button {
+.start-button {
   background: #6C5CE7;
   border: none;
   color: white;
@@ -99,7 +99,7 @@ html, body {
   border-radius: 8px;
   margin-top: 20px;
   cursor: pointer;
-  font-family: 'Share Tech Mono', monospace;
+  font-family: 'Press Start 2P', cursive;
   box-shadow: 0 0 10px #6C5CE7;
   transition: 0.3s;
 }
@@ -109,10 +109,10 @@ html, body {
   border: none;
   color: white;
   padding: 12px 28px;
-  font-size: 1 rem;
+  font-size: 1.2 rem;
   border-radius: 8px;
   cursor: pointer;
-  font-family: 'Share Tech Mono', monospace;
+  font-family: 'Press Start 2P', cursive;
   box-shadow: 0 0 10px #6C5CE7;
   transition: 0.3s;
   width: 300px;
@@ -311,5 +311,18 @@ html, body {
   }
   100% {
     opacity: 1;
+  }
+}
+
+/* ===========================================
+ ✨ Responsive Design
+=========================================== */
+@media (max-width: 600px) {
+  .game-title {
+    font-size: 3rem;
+  }
+  .start-button {
+    width: 90%;
+    font-size: 1rem;
   }
 }
