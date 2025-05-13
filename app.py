@@ -34,7 +34,7 @@ def home():
 @app.route('/start')
 def start():
     """Load the Mission Briefing Screen."""
-    return render_template('dialogue.html')
+    return render_template('start.html')
 
 
 @app.route('/login')
