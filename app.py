@@ -31,7 +31,7 @@ def home():
 
 @app.route('/start')
 def start():
-    return render_template('dialogue.html')
+    return render_template('mission.html')
 
 @app.route('/login')
 def login():
@@ -43,13 +43,13 @@ def google_login():
         return redirect(url_for("google.login"))
     resp = google.get("/plus/v1/people/me")
     session['google_profile'] = resp.json()
-    return redirect(url_for('customize'))
+    return redirect(url_for('customise'))
 
 @app.route('/guest_login', methods=['POST'])
 def guest_login():
     session['guest'] = True
     session['name'] = "Guest Agent"
-    return redirect(url_for('customize'))
+    return redirect(url_for('customise'))
 
 @app.route('/signup')
 def signup():
