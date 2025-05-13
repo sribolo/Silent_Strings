@@ -1,10 +1,9 @@
-from flask import Flask, render_template, request, jsonify, session, redirect, url_for, send_from_directory, flash
+from flask import Flask, render_template, request, jsonify, session, redirect, url_for, send_from_directory
 from flask_dance.contrib.google import make_google_blueprint, google
 from dotenv import load_dotenv
 import os
 import json
 
-# === Load Environment Variables ===
 load_dotenv()
 app = Flask(__name__)
 app.secret_key = os.getenv('FLASK_SECRET_KEY')
@@ -30,77 +29,59 @@ def home():
     """Landing Page for Silent Strings Homepage."""
     return render_template('index.html')
 
-
 @app.route('/start')
 def start():
-    """Load the Mission Briefing Screen."""
-    return render_template('start.html')
-
+    return render_template('dialogue.html')
 
 @app.route('/login')
 def login():
-    """Render the Login Page."""
     return render_template('login.html')
-
 
 @app.route('/login/google')
 def google_login():
-    """Google OAuth Login Process."""
     if not google.authorized:
         return redirect(url_for("google.login"))
     resp = google.get("/plus/v1/people/me")
     session['google_profile'] = resp.json()
-    session['agent_name'] = resp.json().get('displayName', 'Agent')
-    return redirect(url_for('customise'))
-
+    return redirect(url_for('customize'))
 
 @app.route('/guest_login', methods=['POST'])
 def guest_login():
-    """Handle Guest Login and Redirect to Customisation."""
     session['guest'] = True
-    session['agent_name'] = "Guest Agent"
-    return redirect(url_for('customise'))
-
+    session['name'] = "Guest Agent"
+    return redirect(url_for('customize'))
 
 @app.route('/signup')
 def signup():
-    """Render the Sign Up Page."""
+    """Render the sign-up page."""
     return render_template('signup.html')
-
-
-@app.route('/process_signup', methods=['POST'])
-def process_signup():
-    """Handle the Sign Up Form Submission."""
-    username = request.form.get('username')
-    email = request.form.get('email')
-    password = request.form.get('password')
-
-    # 🚀 Placeholder: Save to database (Future)
-    session['agent_name'] = username
-    session['email'] = email
-    flash("Account created successfully! You are now logged in.")
-    return redirect(url_for('customise'))
 
 
 @app.route('/customise')
 def customise():
-    """Render the Avatar Customisation Page."""
-    name = session.get('agent_name', 'Agent')
+    """Render the avatar customisation page."""
+    user_info = session.get('google_profile')
+
+    # If logged in, continue to customisation
+    if user_info:
+        name = user_info.get('displayName', 'Agent')
+    else:
+        name = "Agent"
+    
     return render_template('customise.html', name=name)
 
 
 @app.route('/dialogue')
 def dialogue():
-    """Render the Dialogue Page with the Customised Avatar."""
-    name = session.get('agent_name', 'Agent')
-    return render_template('dialogue.html', name=name)
+    """Render the dialogue page with the customised avatar."""
+    return render_template('dialogue.html')
 
 
 @app.route('/get_sprites')
 def get_sprites():
-    """Serve the Sprite Mappings to the Frontend."""
+    """Serve the sprite mappings to the frontend."""
     data = {}
-    categories = ["acc", "characters", "clothes", "eyes", "hair"]
+    categories = ["acc", "characters", "clothes", "eyes", "hair", "walk"]
     for category in categories:
         data[category] = {}
         folder_path = f'static/images/avatar_parts/{category}'
@@ -113,7 +94,7 @@ def get_sprites():
 
 @app.route('/save-avatar', methods=['POST'])
 def save_avatar():
-    """Save the Customised Avatar to the Session."""
+    """Save the customized avatar to the session."""
     data = request.get_json()
     session['agent_name'] = data['name']
     session['avatar_parts'] = data['selections']
@@ -122,7 +103,7 @@ def save_avatar():
 
 @app.route('/get-avatar')
 def get_avatar():
-    """Fetch the Saved Avatar for Dialogue Rendering."""
+    """Fetch the saved avatar for dialogue rendering."""
     if 'avatar_parts' in session:
         data = {
             "name": session.get('agent_name', 'Agent'),
@@ -133,11 +114,10 @@ def get_avatar():
         return jsonify({"error": "No avatar data found"}), 404
 
 
+
 @app.route('/avatars/<path:filename>')
 def avatar_files(filename):
-    """Serve Avatar Files from the Static Directory."""
     return send_from_directory('static/images/avatar_parts', filename)
-
 
 # === RUN SERVER ===
 if __name__ == "__main__":
