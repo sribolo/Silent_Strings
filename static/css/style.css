@@ -44,13 +44,14 @@ html, body {
 =========================================== */
 .overlay {
   position: absolute;
-  z-index: 2;
+  z-index: 3;
   top: 25%;
   width: 100%;
   text-align: center;
 }
 
 .game-title {
+  font-family: 'Share Tech Mono', monospace;
   font-size: 4rem;
   color: #FFFFFF;
   text-shadow: 0 0 5px #A499FF, 0 0 10px #A499FF, 0 0 20px #6C5CE7;
@@ -63,14 +64,7 @@ html, body {
   50% { text-shadow: 0 0 20px #6C5CE7; }
 }
 
-@keyframes fadeIn {
-  0% {
-    opacity: 0;
-  }
-  100% {
-    opacity: 1;
-  }
-}
+
 
 .game-tagline {
   color: #CCCCCC;
@@ -83,13 +77,12 @@ html, body {
 /* ===========================================
  ✨ Button Styles
 =========================================== */
-.button-container {
+/*.button-container {
   display: flex;
   flex-direction: column;
   gap: 15px;
   margin-top: 20px;
-}
-
+}*/
 .start-button {
   background: #6C5CE7;
   border: none;
@@ -222,11 +215,14 @@ html, body {
  ✨ Customise Container
 =========================================== */
 .customise-container {
-  background-color: #1a1a1a;
-  border-radius: 10px;
-  padding: 30px;
-  width: 600px;
-  box-shadow: 0 0 15px #6C5CE7;
+    max-width: 500px;
+    margin: 50px auto;
+    padding: 30px;
+    background: #1a1a1a;
+    border-radius: 10px;
+    text-align: center;
+    color: white;
+    border: 1px solid #444;
 }
 
 .customise-title {
