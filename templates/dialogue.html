@@ -30,6 +30,11 @@
                 <form action="{{ url_for('login') }}" method="get">
                     <button type="submit" class="login-button">Login</button>
                 </form>
+
+                <!-- Sign Up -->
+                <form action="{{ url_for('signup') }}" method="get">
+                    <button type="submit" class="login-button signup">Sign Up</button>
+                </form>
             </div>
         </div>
     </div>
@@ -47,13 +52,6 @@
         </div>
     </div>
 
-    <!-- Sign Up Button -->
-    <form action="{{ url_for('signup') }}" method="get">
-        <button type="submit" class="login-button signup">Sign Up</button>
-    </form>
-</div>
-</div>
-
     <script>
         function openGuestModal() {
             document.getElementById("guestModal").style.display = "block";
@@ -62,6 +60,14 @@
         function closeGuestModal() {
             document.getElementById("guestModal").style.display = "none";
         }
+
+        // Smooth transition for button clicks
+        document.querySelectorAll(".login-button").forEach(button => {
+            button.addEventListener("click", () => {
+                document.body.style.transition = "opacity 0.5s";
+                document.body.style.opacity = "0";
+            });
+        });
     </script>
 </body>
 </html>

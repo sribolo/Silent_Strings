@@ -27,7 +27,7 @@ html, body {
   position: absolute;
   z-index: 1;
   image-rendering: pixelated;
-  image-rendering: crisp-edges;
+  animation: fadeIn 1s ease-in-out forwards;
 }
 
 .darken {
@@ -39,54 +39,67 @@ html, body {
 }
 
 /* ===========================================
- ✨ Main Overlay Text and Button
+ ✨ Main Overlay
 =========================================== */
 .overlay {
   position: absolute;
   z-index: 3;
-  top: 25%;
-  width: 100%;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
   text-align: center;
 }
 
-.game-title {
-  font-family: 'Share Tech Mono', monospace;
-  font-size: 4rem;
-  color: #FFFFFF;
-  text-shadow: 0 0 5px #A499FF, 0 0 10px #A499FF, 0 0 20px #6C5CE7;
-  animation: pulseGlow 2.5s ease-in-out infinite;
+.mission-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+  color: white;
 }
 
-@keyframes pulseGlow {
-  0%, 100% { text-shadow: 0 0 5px #A499FF; }
-  50% { text-shadow: 0 0 20px #6C5CE7; }
+/* ===========================================
+ ✨ Mission Box
+=========================================== */
+.mission-box {
+  background-color: #333;
+  padding: 25px;
+  border-radius: 8px;
+  text-align: center;
+  width: 450px;
+  box-shadow: 0 0 15px #6C5CE7;
+  margin-bottom: 15px;
 }
 
-.tagline {
-  color: #CCCCCC;
-  font-size: 1.2rem;
-  margin-top: 10px;
-  text-shadow: 0 0 5px #00000088;
+.mission-title {
+  font-size: 2.5rem;
+  margin-bottom: 10px;
+  text-align: center;
+}
+
+.mission-text {
+  font-size: 1.3rem;
+  text-align: center;
 }
 
 /* ===========================================
  ✨ Button Styles
 =========================================== */
-.start-button, .login-button, .signup-button {
+.login-button, .signup-button {
   background: #6C5CE7;
   border: none;
   color: white;
-  padding: 12px 28px;
+  padding: 15px 30px;
   font-size: 1.2rem;
   border-radius: 8px;
-  margin-top: 20px;
   cursor: pointer;
   font-family: 'Share Tech Mono', monospace;
   box-shadow: 0 0 10px #6C5CE7;
   transition: 0.3s;
+  width: 270px;
 }
 
-.start-button:hover, .login-button:hover, .signup-button:hover {
+.login-button:hover, .signup-button:hover {
   background: #8A2BE2;
   box-shadow: 0 0 20px #8A2BE2;
 }
@@ -102,23 +115,11 @@ html, body {
 /* ===========================================
  ✨ Mission Briefing Container
 =========================================== */
-.mission-container {
+.mission-buttons {
   display: flex;
   flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  height: 100vh;
-  color: white;
-}
-
-.mission-box {
-  background-color: #333;
-  padding: 20px;
-  border-radius: 8px;
-  margin-bottom: 20px;
-  text-align: center;
-  width: 400px;
-  box-shadow: 0 0 15px #6C5CE7;
+  gap: 15px;
+  margin-top: 10px;
 }
 
 /* ===========================================
@@ -144,29 +145,6 @@ html, body {
 }
 
 /* ===========================================
- ✨ Tab Buttons for Customization
-=========================================== */
-.tab-buttons {
-  margin-top: 20px;
-  display: flex;
-  justify-content: center;
-  gap: 10px;
-}
-
-.tab-button {
-  padding: 10px 15px;
-  border: none;
-  background-color: #333;
-  color: white;
-  cursor: pointer;
-  border-radius: 5px;
-}
-
-.tab-button:hover {
-  background-color: #555;
-}
-
-/* ===========================================
  ✨ Modal Popup
 =========================================== */
 .modal {
@@ -177,7 +155,6 @@ html, body {
   top: 0;
   width: 100%;
   height: 100%;
-  overflow: auto;
   background-color: rgba(0, 0, 0, 0.8);
 }
 
@@ -221,4 +198,28 @@ html, body {
 
 .modal-button.confirm:hover {
   background-color: #8A2BE2;
+}
+
+/* ===========================================
+ ✨ Animations
+=========================================== */
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+/* ===========================================
+ ✨ Responsive Design
+=========================================== */
+@media (max-width: 600px) {
+  .mission-box {
+    width: 90%;
+  }
+  .login-button, .signup-button {
+    width: 100%;
+  }
 }
