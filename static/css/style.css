@@ -5,7 +5,7 @@ html, body {
   margin: 0;
   padding: 0;
   height: 100%;
-  font-family: 'Press Start 2P', cursive;
+  font-family: 'Press Start 2P', monospace;
   overflow: hidden;
   background-color: #0d0d0d;
   color: #e0e0e0;
@@ -99,7 +99,7 @@ html, body {
   border-radius: 8px;
   margin-top: 20px;
   cursor: pointer;
-  font-family: 'Press Start 2P', cursive;
+  font-family: 'Press Start 2P', monospace;
   box-shadow: 0 0 10px #6C5CE7;
   transition: 0.3s;
 }
@@ -112,7 +112,7 @@ html, body {
   font-size: 1.4 rem;
   border-radius: 8px;
   cursor: pointer;
-  font-family: 'Press Start 2P', cursive;
+  font-family: 'Press Start 2P', monospace;
   box-shadow: 0 0 10px #6C5CE7;
   transition: 0.3s;
   width: 300px;
