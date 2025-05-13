@@ -129,20 +129,25 @@ font-family: 'VT323', monospace;
 /* Button Styles */
 .mission-buttons {
   display: flex;
-  gap: 20px;
+    flex-direction: column;
+    gap: 10px;
+    position: absolute;
+    top: 60%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 4;
 }
 
 
 .login-button {
-padding: 12px 20px;
-border: none;
-background-color: #333;
-color: white;
-cursor: pointer;
-font-family: 'VT323', monospace;
-border-radius: 8px;
-box-shadow: 0 0 5px #6C5CE7;
-transition: 0.3s;
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  font-size: 1.2em;
+  cursor: pointer;
+  border-radius: 5px;
+  text-shadow: 1px 1px 2px #000000;
 }
 
 .login-button:hover {
