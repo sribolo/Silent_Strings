@@ -4,33 +4,32 @@
     <meta charset="UTF-8">
     <title>Mission Briefing</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
 </head>
 <body>
     <div class="bg-container">
         <img src="{{ url_for('static', filename='images/background.gif') }}" class="background">
         <div class="darken"></div>
     </div>
-    
+
     <div class="overlay">
-        <div class="mission-container">
-            <div class="mission-box pixelated-border">
-                <p class="mission-title">Welcome Agent,</p>
-                <p class="mission-text">Loading mission briefing...</p>
-            </div>
-            <div class="mission-buttons">
-                <!-- Google Login -->
-                <form action="{{ url_for('google.login') }}" method="get">
-                    <button type="submit" class="login-button google">Google</button>
-                </form>
+        <div class="mission-container pixelated-border">
+            <p class="mission-title">Welcome Agent,</p>
+            <p class="mission-text">Loading mission briefing...</p>
+        </div>
+        <div class="mission-buttons">
+            <!-- Google Login -->
+            <form action="{{ url_for('google.login') }}" method="get">
+                <button type="submit" class="login-button google">Google</button>
+            </form>
 
-                <!-- Play as Guest -->
-                <button onclick="openGuestModal()" class="login-button">Play as Guest</button>
+            <!-- Play as Guest -->
+            <button onclick="openGuestModal()" class="login-button">Play as Guest</button>
 
-                <!-- Login / Sign Up -->
-                <form action="{{ url_for('login') }}" method="get">
-                    <button type="submit" class="login-button">Login / Sign Up</button>
-                </form>
-            </div>
+            <!-- Login / Sign Up -->
+            <form action="{{ url_for('login') }}" method="get">
+                <button type="submit" class="login-button">Login / Sign Up</button>
+            </form>
         </div>
     </div>
 
@@ -55,14 +54,6 @@
         function closeGuestModal() {
             document.getElementById("guestModal").style.display = "none";
         }
-
-        // Smooth transition for button clicks
-        document.querySelectorAll(".login-button").forEach(button => {
-            button.addEventListener("click", () => {
-                document.body.style.transition = "opacity 0.5s";
-                document.body.style.opacity = "0";
-            });
-        });
     </script>
 </body>
 </html>
