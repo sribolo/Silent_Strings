@@ -130,7 +130,7 @@ font-family: 'VT323', monospace;
 .mission-buttons {
   display: flex;
     flex-direction: column;
-    gap: 10px;
+    gap: 15px;
     position: absolute;
     top: 60%;
     left: 50%;
@@ -140,14 +140,17 @@ font-family: 'VT323', monospace;
 
 
 .login-button {
-  background-color: #4CAF50;
+  background-color: #6B84D2;
   color: white;
   border: none;
-  padding: 10px 20px;
-  font-size: 1.2em;
+  padding: 12px 24 px;
+  font-size: 1.1em;
   cursor: pointer;
   border-radius: 5px;
   text-shadow: 1px 1px 2px #000000;
+  width: 180px;
+  text-align: center;
+  font-family: 'Press Start 2P', monospace;
 }
 
 .login-button:hover {
@@ -155,33 +158,23 @@ background-color: #555;
 }
 
 .login-button.google {
-background-color: #4285F4;
+background-color: #4D6ED5;
 }
 
 .login-button.google:hover {
-background-color: #357AE8;
+background-color: #5757B3;
 }
 
-.login-button.signup {
-  background-color: #28a745;
-}
-
-.login-button.signup:hover {
-  background-color: #218838;
-}
-
-input[type="text"], input[type="email"], input[type="password"] {
-  display: block;
-  width: 100%;
+.pixelated-border {
+  border: 3px solid #555555;
+  background-color: rgba(0, 0, 0, 0.6);
+  border-radius: 8px;
+  padding: 20px;
+  text-align: center;
   margin-bottom: 15px;
-  padding: 10px;
-  background-color: #222;
-  border: 1px solid #444;
   color: white;
-  font-family: 'VT323', monospace;
-  border-radius: 5px;
+  font-family: 'Press Start 2P', monospace;
 }
-
 
 /* Dialogue Box */
 #dialogue-box {
