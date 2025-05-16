@@ -1,9 +1,9 @@
 from flask import Flask, render_template, request, jsonify, session, redirect, url_for, send_from_directory, flash
 from flask_dance.contrib.google import make_google_blueprint, google
+from dotenv import load_dotenv
 from flask_session import Session
 from flask_wtf import CSRFProtect
 from flask_limiter import Limiter
-from dotenv import load_dotenv
 from werkzeug.security import generate_password_hash, check_password_hash
 import os
 import json
@@ -17,13 +17,9 @@ app.config['SESSION_COOKIE_SECURE'] = True
 app.config['SESSION_COOKIE_HTTPONLY'] = True
 app.config['SESSION_COOKIE_SAMESITE'] = 'Lax'
 Session(app)
-
 # === CSRF Protection ===
 csrf = CSRFProtect()
 csrf.init_app(app)
-
-# === CONFIGURATION ===
-SPRITE_PATH = "static/images/avatar_parts"
 
 # === Rate Limiting to Prevent Brute Force ===
 limiter = Limiter(key_func=lambda: request.remote_addr, app=app)
@@ -38,6 +34,15 @@ def add_security_headers(response):
     response.headers['Referrer-Policy'] = 'no-referrer'
     response.headers['Permissions-Policy'] = 'geolocation=(self), microphone=()'
     return response
+
+# === Force HTTPS on Render ===
+@app.before_request
+def enforce_https():
+    if not request.is_secure and not os.getenv("FLASK_ENV") == "development":
+        url = request.url.replace("http://", "https://", 1)
+        return redirect(url)
+# === CONFIGURATION ===
+SPRITE_PATH = "static/images/avatar_parts"
 
 # === OAuth Configuration ===
 google_blueprint = make_google_blueprint(
@@ -69,7 +74,7 @@ def login():
     """Render the Login Page."""
     return render_template('login.html')
 
-
+@limiter.limit("5 per minute")
 @app.route('/login/google')
 def google_login():
     """Google OAuth Login Process."""
@@ -168,4 +173,7 @@ def avatar_files(filename):
 
 # === RUN SERVER ===
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(host='0.0.0.0', port=5000)
+
+
+
