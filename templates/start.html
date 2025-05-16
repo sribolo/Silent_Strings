@@ -1,97 +1,65 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Mission Briefing</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
-    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+  <meta charset="UTF-8">
+  <title>Mission Briefing – Silent Strings</title>
+  <!-- main stylesheet -->
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
 <body>
-    <div class="bg-container">
-        <img src="{{ url_for('static', filename='images/background.gif') }}" class="background">
-        <div class="darken"></div>
+  <div class="bg-container">
+    <img src="{{ url_for('static', filename='images/background.gif') }}" class="background" alt="Background">
+    <div class="darken"></div>
+  </div>
+
+  <div class="overlay">
+    <div class="mission-container pixelated-border">
+      <!-- typing targets -->
+      <p id="welcome-text" class="mission-title"></p>
+      <p id="mission-text"  class="mission-text"></p>
     </div>
 
-    <div class="overlay">
-        <div class="mission-container pixelated-border">
-            <p id="welcome-text" class="mission-title"></p>
-            <p id="mission-text" class="mission-text"></p>
-        </div> 
-        <div class="mission-buttons">
-            <!-- Google Login -->
-            <form action="{{ url_for('google.login') }}" method="get">
-                <button type="submit" class="login-button google">Google</button>
-            </form>
+    <div class="mission-buttons">
+      <!-- Google Login -->
+      <form action="{{ url_for('google.login') }}" method="get">
+        <button type="submit" class="login-button google">Google</button>
+      </form>
 
-            <!-- Play as Guest -->
-            <button onclick="openGuestModal()" class="login-button">Play as Guest</button>
+      <!-- Play as Guest -->
+      <button type="button" id="guestBtn" class="login-button">Play as Guest</button>
 
-            <!-- Login / Sign Up -->
-            <form action="{{ url_for('login') }}" method="post">
-                <button type="submit" class="login-button">Login / Sign Up</button>
-            </form>
-        </div>
+      <!-- Login / Sign Up -->
+      <form action="{{ url_for('login') }}" method="get">
+        <button type="submit" class="login-button">Login / Sign Up</button>
+      </form>
     </div>
+  </div>
 
-    <!-- Guest Modal -->
-    <div id="guestModal" class="modal">
-        <div class="modal-content pixelated-border">
-            <p>You are playing as a Guest. Your progress will not be saved.</p>
-            <div class="modal-buttons">
-                <button onclick="closeGuestModal()" class="modal-button">Cancel</button>
-                <form id="guestForm" action="{{ url_for('guest_login') }}" method="post">
-                    <button type="submit" class="modal-button confirm">Continue</button>
-                </form>
-            </div>
-        </div>
+  <!-- Guest Confirmation Modal -->
+  <div id="guestModal" class="modal">
+    <div class="modal-content pixelated-border">
+      <p>You are playing as a Guest. Your progress will not be saved.</p>
+      <div class="modal-buttons">
+        <button type="button" id="cancelGuest" class="modal-button">Cancel</button>
+        <form action="{{ url_for('guest_login') }}" method="post">
+          {{ csrf_token() }}
+          <button type="submit" class="modal-button confirm">Continue</button>
+        </form>
+      </div>
     </div>
+  </div>
 
-    <script>
-        function openGuestModal() {
-            document.getElementById("guestModal").style.display = "block";
-        }
+  <!-- typing animation external script -->
+  <script src="{{ url_for('static', filename='js/start.js') }}"></script>
 
-        function closeGuestModal() {
-            document.getElementById("guestModal").style.display = "none";
-        }
-    </script>
+  <!-- modal handlers (small inline is fine if you allow 'self' script-src) -->
+  <script>
+    document.getElementById('guestBtn').addEventListener('click', () => {
+      document.getElementById('guestModal').style.display = 'block';
+    });
+    document.getElementById('cancelGuest').addEventListener('click', () => {
+      document.getElementById('guestModal').style.display = 'none';
+    });
+  </script>
 </body>
 </html>
-
-
-<script>
-    // Typing Animation Logic
-    const welcomeText = "Welcome Agent,";
-    const missionText = "Loading mission briefing...";
-    let welcomeIndex = 0;
-    let missionIndex = 0;
-
-    function typeWriterWelcome() {
-        if (welcomeIndex < welcomeText.length) {
-            document.getElementById("welcome-text").innerHTML += welcomeText.charAt(welcomeIndex);
-            welcomeIndex++;
-            setTimeout(typeWriterWelcome, 100); // Speed of typing
-        } else {
-            // Remove blinking cursor after text is done
-            document.getElementById("welcome-text").classList.remove("blinking-cursor");
-            // Start typing the mission text after welcome is done
-            setTimeout(typeWriterMission, 500); // Delay before mission text
-        }
-    }
-
-    function typeWriterMission() {
-        if (missionIndex < missionText.length) {
-            document.getElementById("mission-text").innerHTML += missionText.charAt(missionIndex);
-            missionIndex++;
-            setTimeout(typeWriterMission, 100); // Speed of typing
-        } else {
-            // Remove blinking cursor after text is done
-            document.getElementById("mission-text").classList.remove("blinking-cursor");
-            // Smoothly fade in buttons
-            document.querySelector(".mission-buttons").style.opacity = 1;
-        }
-    }
-
-    // Start typing when the page loads
-    window.onload = typeWriterWelcome;
-</script>
