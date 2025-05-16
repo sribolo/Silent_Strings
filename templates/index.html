@@ -1,25 +1,19 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Silent Strings</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
-    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+  <meta charset="UTF-8">
+  <title>Silent Strings</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
 <body>
-    <div class="bg-container">
-        <img src="{{ url_for('static', filename='images/background.gif') }}" class="background">
-        <div class="darken"></div>
-        <div class="overlay">
-            <h1 class="game-title">Silent Strings</h1>
-            <p class="tagline">Agent, your mission awaits...</p>
-            <button onclick="window.location.href='/start'" class="start-button">START</button>
-        </div>
+  <div class="bg-container">
+    <img src="{{ url_for('static','images/background.gif') }}" class="background">
+    <div class="darken"></div>
+    <div class="overlay">
+      <h1 class="game-title">Silent Strings</h1>
+      <p class="tagline">Agent, your mission awaits...</p>
+      <a href="{{ url_for('start') }}" class="start-button">START</a>
     </div>
+  </div>
 </body>
 </html>
-
-
-
-
-
