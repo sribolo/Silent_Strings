@@ -1,6 +1,10 @@
 from flask import Flask, render_template, request, jsonify, session, redirect, url_for, send_from_directory, flash
 from flask_dance.contrib.google import make_google_blueprint, google
+from flask_session import Session
+from flask_wtf import CSRFProtect
+from flask_limiter import Limiter
 from dotenv import load_dotenv
+from werkzeug.security import generate_password_hash, check_password_hash
 import os
 import json
 
@@ -8,9 +12,32 @@ import json
 load_dotenv()
 app = Flask(__name__)
 app.secret_key = os.getenv('FLASK_SECRET_KEY')
+app.config['SESSION_TYPE'] = 'filesystem'
+app.config['SESSION_COOKIE_SECURE'] = True
+app.config['SESSION_COOKIE_HTTPONLY'] = True
+app.config['SESSION_COOKIE_SAMESITE'] = 'Lax'
+Session(app)
+
+# === CSRF Protection ===
+csrf = CSRFProtect()
+csrf.init_app(app)
 
 # === CONFIGURATION ===
 SPRITE_PATH = "static/images/avatar_parts"
+
+# === Rate Limiting to Prevent Brute Force ===
+limiter = Limiter(key_func=lambda: request.remote_addr, app=app)
+
+# === Secure Headers ===
+@app.after_request
+def add_security_headers(response):
+    response.headers['Strict-Transport-Security'] = 'max-age=31536000; includeSubDomains'
+    response.headers['X-Frame-Options'] = 'DENY'
+    response.headers['X-Content-Type-Options'] = 'nosniff'
+    response.headers['Content-Security-Policy'] = "default-src 'self'"
+    response.headers['Referrer-Policy'] = 'no-referrer'
+    response.headers['Permissions-Policy'] = 'geolocation=(self), microphone=()'
+    return response
 
 # === OAuth Configuration ===
 google_blueprint = make_google_blueprint(

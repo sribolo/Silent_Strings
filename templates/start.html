@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <title>Mission Briefing</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
-    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
 </head>
 <body>
     <div class="bg-container">
@@ -14,9 +13,9 @@
 
     <div class="overlay">
         <div class="mission-container pixelated-border">
-            <p class="mission-title">Welcome Agent,</p>
-            <p class="mission-text">Loading mission briefing...</p>
-        </div>
+            <p id="welcome-text" class="mission-title"></p>
+            <p id="mission-text" class="mission-text"></p>
+        </div> 
         <div class="mission-buttons">
             <!-- Google Login -->
             <form action="{{ url_for('google.login') }}" method="get">
@@ -27,7 +26,7 @@
             <button onclick="openGuestModal()" class="login-button">Play as Guest</button>
 
             <!-- Login / Sign Up -->
-            <form action="{{ url_for('login') }}" method="get">
+            <form action="{{ url_for('login') }}" method="post">
                 <button type="submit" class="login-button">Login / Sign Up</button>
             </form>
         </div>
@@ -57,3 +56,41 @@
     </script>
 </body>
 </html>
+
+
+<script>
+    // Typing Animation Logic
+    const welcomeText = "Welcome Agent,";
+    const missionText = "Loading mission briefing...";
+    let welcomeIndex = 0;
+    let missionIndex = 0;
+
+    function typeWriterWelcome() {
+        if (welcomeIndex < welcomeText.length) {
+            document.getElementById("welcome-text").innerHTML += welcomeText.charAt(welcomeIndex);
+            welcomeIndex++;
+            setTimeout(typeWriterWelcome, 100); // Speed of typing
+        } else {
+            // Remove blinking cursor after text is done
+            document.getElementById("welcome-text").classList.remove("blinking-cursor");
+            // Start typing the mission text after welcome is done
+            setTimeout(typeWriterMission, 500); // Delay before mission text
+        }
+    }
+
+    function typeWriterMission() {
+        if (missionIndex < missionText.length) {
+            document.getElementById("mission-text").innerHTML += missionText.charAt(missionIndex);
+            missionIndex++;
+            setTimeout(typeWriterMission, 100); // Speed of typing
+        } else {
+            // Remove blinking cursor after text is done
+            document.getElementById("mission-text").classList.remove("blinking-cursor");
+            // Smoothly fade in buttons
+            document.querySelector(".mission-buttons").style.opacity = 1;
+        }
+    }
+
+    // Start typing when the page loads
+    window.onload = typeWriterWelcome;
+</script>
