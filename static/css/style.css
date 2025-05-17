@@ -1,9 +1,11 @@
 @font-face {
-    font-family: 'Press Start 2P';
+    font-family: 'Press Start 2P', 'Share Tech Mono';
   font-style: normal;
   font-weight: 400;
   src: url('../fonts/PressStart2P-Regular.woff2') format('woff2'),
-       url('../fonts/PressStart2P-Regular.ttf')  format('truetype');
+       url('../fonts/PressStart2P-Regular.ttf')  format('truetype'),
+       url('../fonts/ShareTechMono-Regular.woff2') format('woff2'),
+       url('../fonts/ShareTechMono-Regular.ttf')  format('truetype');
   font-display: swap;
 }
 
@@ -49,7 +51,7 @@ html, body {
 .overlay {
     position: absolute;
     z-index: 3;
-    top: 30%;
+    top: 25%;
     width: 100%;
     text-align: center;
 }
@@ -105,7 +107,7 @@ html, body {
 .tagline {
     color: #CCCCCC;
     font-size: 1.2rem;
-    margin-top: 10px;
+    margin-top: 5px;
     text-shadow: 0 0 5px #00000088;
     animation: fadeIn 2s 1.5s forwards;
     opacity: 0;
@@ -126,6 +128,7 @@ html, body {
     transition: all 0.3s ease-in-out;
     text-transform: uppercase;
     letter-spacing: 1px;
+    text-decoration: none;
 }
   
 .start-button:hover {
