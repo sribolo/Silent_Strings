@@ -10,6 +10,7 @@ from flask_dance.contrib.google import make_google_blueprint, google
 from flask_session import Session
 from flask_wtf import CSRFProtect
 from flask_limiter import Limiter
+from flask_limiter.util import get_remote_address
 from werkzeug.security import generate_password_hash, check_password_hash
 from dotenv import load_dotenv
 
@@ -30,7 +31,7 @@ Session(app)
 csrf = CSRFProtect(app)
 
 # === Rate Limiter ===
-limiter = Limiter(key_func=lambda: request.remote_addr, app=app)
+limiter = Limiter( app, key_func=get_remote_address, storage_uri=os.getenv("RATELIMIT_STORAGE_URL"))
 
 # === Generate a CSP Nonce Per Request ===
 @app.before_request
@@ -84,8 +85,10 @@ google_bp = make_google_blueprint(
 app.register_blueprint(google_bp, url_prefix="/login")
 
 # === ROUTES ===
-@app.route('/')
+@app.route('/', methods=['GET','HEAD'])
 def home():
+    if request.method == 'HEAD':
+        return '', 200
     return render_template('index.html')
 
 @app.route('/start')
