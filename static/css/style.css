@@ -107,7 +107,7 @@ html, body {
 .tagline {
     color: #CCCCCC;
     font-size: 1.2rem;
-    margin-top: 5px;
+    margin-top: 8px;
     text-shadow: 0 0 5px #00000088;
     animation: fadeIn 2s 1.5s forwards;
     font-family: 'Share Tech Mono', monospace;
