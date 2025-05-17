@@ -1,49 +1,46 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Customise Your Avatar</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+  <meta charset="UTF-8">
+  <title>Customise Your Avatar</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+  <script defer src="{{ url_for('static', filename='js/customise.js') }}"></script>
 </head>
 <body>
-    <div class="bg-container">
-        <img src="{{ url_for('static', filename='images/background.gif') }}" class="background">
-        <div class="darken"></div>
-    </div>
-    
-    <div class="overlay">
-        <div class="customise-container pixelated-border">
-            <h1 class="customise-title">Customise Your Avatar</h1>
+  <div class="bg-container">
+    <img src="{{ url_for('static', filename='images/background.gif') }}" class="background" alt="Background">
+    <div class="darken"></div>
+  </div>
 
-            <input type="text" id="agent-name" placeholder="Enter your Agent Name">
+  <div class="overlay">
+    <div class="customise-container pixelated-border">
+      <h1 class="customise-title">Customise Your Avatar</h1>
 
-            <div class="tab-buttons">
-                <button class="tab-button active" onclick="openTab('characters')">Characters</button>
-                <button class="tab-button" onclick="openTab('clothes')">Clothes</button>
-                <button class="tab-button" onclick="openTab('hair')">Hair</button>
-                <button class="tab-button" onclick="openTab('eyes')">Eyes</button>
-                <button class="tab-button" onclick="openTab('accessories')">Accessories</button>
-            </div>
+      <form id="customise-form">
+        <input
+          type="text"
+          id="agent-name"
+          name="name"
+          value="{{ name }}"
+          placeholder="Enter your Agent Name"
+          required
+        >
 
-            <div id="grid-container" class="grid-container">
-                <!-- Dynamic Sprite List Here -->
-            </div>
-
-            <p class="loading-text">Loading Mission...</p>
+        <div class="tab-buttons">
+          <button type="button" class="tab-button active" data-category="characters">Characters</button>
+          <button type="button" class="tab-button" data-category="clothes">Clothes</button>
+          <button type="button" class="tab-button" data-category="hair">Hair</button>
+          <button type="button" class="tab-button" data-category="eyes">Eyes</button>
+          <button type="button" class="tab-button" data-category="accessories">Accessories</button>
         </div>
+
+        <div id="grid-container" class="grid-container">
+          <p class="loading-text">Loading Mission...</p>
+        </div>
+
+        <button type="submit" class="login-button">Save Avatar</button>
+      </form>
     </div>
-
-    <script>
-        function openTab(category) {
-            document.querySelectorAll(".tab-button").forEach(button => {
-                button.classList.remove("active");
-            });
-            event.target.classList.add("active");
-
-            // Here you would load the sprite images dynamically
-            // For now, it's just simulating the click event
-            document.getElementById("grid-container").innerHTML = `<p>Loading ${category}...</p>`;
-        }
-    </script>
+  </div>
 </body>
 </html>

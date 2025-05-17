@@ -31,7 +31,7 @@ Session(app)
 csrf = CSRFProtect(app)
 
 # === Rate Limiter ===
-limiter = Limiter( app, key_func=get_remote_address, storage_uri=os.getenv("RATELIMIT_STORAGE_URL"))
+limiter = Limiter( app=app, key_func=get_remote_address, storage_uri=os.getenv("RATELIMIT_STORAGE_URL"))
 
 # === Generate a CSP Nonce Per Request ===
 @app.before_request
