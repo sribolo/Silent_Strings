@@ -51,7 +51,7 @@ html, body {
 .overlay {
     position: absolute;
     z-index: 3;
-    top: 25%;
+    top: 30%;
     width: 100%;
     text-align: center;
 }
@@ -110,6 +110,7 @@ html, body {
     margin-top: 5px;
     text-shadow: 0 0 5px #00000088;
     animation: fadeIn 2s 1.5s forwards;
+    font-family: 'Share Tech Mono', monospace;
     opacity: 0;
 }
   
