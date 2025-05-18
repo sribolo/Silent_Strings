@@ -5,7 +5,7 @@ from flask import (
     render_template, request, jsonify, session,
     redirect, url_for, send_from_directory, flash
 )
-from pymongo import MongoClient
+from flask_pymongo import PyMongo
 from flask_dance.contrib.google import make_google_blueprint, google
 from flask_session import Session
 from flask_wtf import CSRFProtect
@@ -19,7 +19,6 @@ load_dotenv()
 
 app = Flask(__name__)
 app.secret_key = os.getenv('FLASK_SECRET_KEY')
-MONGO_URI      = os.getenv("MONGO_URI")
 
 # === Session Configuration ===
 app.config['SESSION_TYPE'] = 'filesystem'
@@ -70,9 +69,9 @@ def enforce_https():
         return redirect(request.url.replace("http://", "https://", 1))
     
 # === MongoDB ===
-client = MongoClient("MONGO_URI")
-db     = client.get_default_database()        
-users  = db.users  
+app.config["MONGO_URI"] = os.getenv("MONGO_URI")
+mongo = PyMongo(app)
+users = mongo.db.users
 
 # === CONFIGURATION ===
 SPRITE_PATH = "static/images/avatar_parts"
