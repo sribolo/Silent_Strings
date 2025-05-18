@@ -126,7 +126,7 @@ def signup():
         flash("Welcome aboard!", "success")
         return redirect(url_for("customise"))
     
-    return render_template("signup.html")
+    return render_template("auth.html")
 
 # Log-In POST
 @app.route("/login", methods=["GET", "POST"])
@@ -144,7 +144,7 @@ def login():
         flash("Invalid email or password.", "danger")
         return redirect(url_for("login"))
 
-    return render_template("login.html")
+    return render_template("auth.html")
 
 
 
