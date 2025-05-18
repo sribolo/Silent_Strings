@@ -103,40 +103,50 @@ def start():
 @app.route("/auth")
 def auth_page():
     return render_template("auth.html")
+
 # Sign-Up POST
-@app.route("/signup", methods=["POST"])
+@app.route("/signup", methods=[ "GET", "POST"])
 def signup():
-    username = request.form["username"]
-    email    = request.form["email"]
-    pwd      = request.form["password"]
+    if request.method == "POST":
+        username = request.form["username"]
+        email    = request.form["email"]
+        pw      = request.form["password"]
 
-    if users.find_one({"email": email}):
-        flash("That email is already registered.", "error")
-        
-        return redirect(url_for("auth_page") + "#chk")
+        if users.find_one({"email": email}):
+            flash("That email is already registered.", "error")
+            return redirect(url_for("auth_page") + "#chk")
 
-    pw_hash = generate_password_hash(pwd)
-    users.insert_one({
-      "username": username,
-      "email":    email,
-      "password": pw_hash
-    })
-    flash("Account created—please log in.", "success")
-    return redirect(url_for("auth_page"))
+        pw_hash = generate_password_hash(pw, method="sha256")
+        users.insert_one({
+            "username": username,
+            "email":    email,
+            "password": pw_hash
+        })
+        session["agent_name"] = username
+        flash("Welcome aboard!", "success")
+        return redirect(url_for("customise"))
+    
+    return render_template("signup.html")
 
 # Log-In POST
-@app.route("/login", methods=["POST"])
-@limiter.limit("5 per minute")
+@app.route("/login", methods=["GET", "POST"])
 def login():
-    email = request.form["email"]
-    pwd   = request.form["password"]
-    user  = users.find_one({"email": email})
+    if request.method == "POST":
+        email = request.form["email"]
+        pw    = request.form["password"]
 
-    if user and check_password_hash(user["password"], pwd):
-        session["user"] = user["username"]
-        return redirect(url_for("customise"))
-    flash("Invalid credentials.", "error")
-    return redirect(url_for("auth_page"))
+        user = users.find_one({"email": email})
+        if user and check_password_hash(user["password_hash"], pw):
+            session["agent_name"] = user["username"]
+            flash(f"Hello, {user['username']}!", "success")
+            return redirect(url_for("customise"))
+
+        flash("Invalid email or password.", "danger")
+        return redirect(url_for("login"))
+
+    return render_template("login.html")
+
+
 
 # Google OAuth Log-In
 @app.route("/login/google")
@@ -167,8 +177,10 @@ def logout():
 # Avatar Customisation
 @app.route('/customise')
 def customise():
-    name = session.get('user', 'Agent')
-    return render_template('customise.html', name=name)
+    if "agent_name" not in session:
+        return redirect(url_for("login"))
+    return render_template("customise.html", name=session["agent_name"])
+
 
 @app.route('/dialogue')
 def dialogue():
