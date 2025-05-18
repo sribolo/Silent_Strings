@@ -69,7 +69,7 @@ def enforce_https():
         return redirect(request.url.replace("http://", "https://", 1))
     
 # === MongoDB ===
-app.config["MONGO_URI"] = os.getenv("MONGO_URI")
+app.config["MONGO_URI"] = os.getenv("MONGO_URI", "mongodb://localhost:27017/silentstrings")
 mongo = PyMongo(app)
 users = mongo.db.users
 
