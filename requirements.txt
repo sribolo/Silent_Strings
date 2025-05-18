@@ -3,6 +3,7 @@ Flask-Dance==5.0.0
 Flask-Session
 Flask-WTF
 Flask-Limiter
+Flask-PyMongo
 Flask-Talisman==1.0.0
 gunicorn==20.1.0
 oauthlib==3.2.2

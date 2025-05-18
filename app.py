@@ -1,11 +1,11 @@
 import os
 import base64
-import json
 from flask import (
     Flask, g,
     render_template, request, jsonify, session,
     redirect, url_for, send_from_directory, flash
 )
+from pymongo import MongoClient
 from flask_dance.contrib.google import make_google_blueprint, google
 from flask_session import Session
 from flask_wtf import CSRFProtect
@@ -19,6 +19,7 @@ load_dotenv()
 
 app = Flask(__name__)
 app.secret_key = os.getenv('FLASK_SECRET_KEY')
+MONGO_URI      = os.getenv("MONGO_URI")
 
 # === Session Configuration ===
 app.config['SESSION_TYPE'] = 'filesystem'
@@ -67,6 +68,11 @@ def add_security_headers(response):
 def enforce_https():
     if not request.is_secure and os.getenv("FLASK_ENV") != "development":
         return redirect(request.url.replace("http://", "https://", 1))
+    
+# === MongoDB ===
+client = MongoClient("MONGO_URI")
+db     = client.get_default_database()        
+users  = db.users  
 
 # === CONFIGURATION ===
 SPRITE_PATH = "static/images/avatar_parts"
@@ -93,23 +99,59 @@ def home():
 
 @app.route('/start')
 def start():
-    # Pass your nonce into any inline handlers, if you kept them:
     return render_template('start.html')
 
-@app.route('/login')
-def login():
-    return render_template('login.html')
+@app.route("/auth")
+def auth_page():
+    return render_template("auth.html")
+# Sign-Up POST
+@app.route("/signup", methods=["POST"])
+def signup():
+    username = request.form["username"]
+    email    = request.form["email"]
+    pwd      = request.form["password"]
 
+    if users.find_one({"email": email}):
+        flash("That email is already registered.", "error")
+        
+        return redirect(url_for("auth_page") + "#chk")
+
+    pw_hash = generate_password_hash(pwd)
+    users.insert_one({
+      "username": username,
+      "email":    email,
+      "password": pw_hash
+    })
+    flash("Account created—please log in.", "success")
+    return redirect(url_for("auth_page"))
+
+# Log-In POST
+@app.route("/login", methods=["POST"])
 @limiter.limit("5 per minute")
-@app.route('/login/google')
+def login():
+    email = request.form["email"]
+    pwd   = request.form["password"]
+    user  = users.find_one({"email": email})
+
+    if user and check_password_hash(user["password"], pwd):
+        session["user"] = user["username"]
+        return redirect(url_for("customise"))
+    flash("Invalid credentials.", "error")
+    return redirect(url_for("auth_page"))
+
+# Google OAuth Log-In
+@app.route("/login/google")
+@limiter.limit("5 per minute")
 def google_login():
     if not google.authorized:
         return redirect(url_for("google.login"))
-    resp = google.get("/plus/v1/people/me")
-    profile = resp.json()
-    session['google_profile'] = profile
-    session['agent_name'] = profile.get('displayName', 'Agent')
-    return redirect(url_for('customise'))
+    resp = google.get("/oauth2/v2/userinfo")
+    if resp.ok:
+        info = resp.json()
+        session["user"] = info.get("name", "Agent")
+    return redirect(url_for("customise"))
+
+
 
 @app.route('/guest_login', methods=['POST'])
 def guest_login():
@@ -117,29 +159,21 @@ def guest_login():
     session['agent_name'] = "Guest Agent"
     return redirect(url_for('customise'))
 
-@app.route('/signup')
-def signup():
-    return render_template('signup.html')
+# Log-Out
+@app.route("/logout")
+def logout():
+    session.pop("user", None)
+    return redirect(url_for("auth_page"))
 
-@app.route('/process_signup', methods=['POST'])
-def process_signup():
-    username = request.form.get('username')
-    email = request.form.get('email')
-    # Hash the password before storing (placeholder logic)
-    password_hash = generate_password_hash(request.form.get('password'), method='sha256')
-    session['agent_name'] = username
-    session['email'] = email
-    flash("Account created successfully! You are now logged in.")
-    return redirect(url_for('customise'))
-
+# Avatar Customisation
 @app.route('/customise')
 def customise():
-    name = session.get('agent_name', 'Agent')
+    name = session.get('user', 'Agent')
     return render_template('customise.html', name=name)
 
 @app.route('/dialogue')
 def dialogue():
-    name = session.get('agent_name', 'Agent')
+    name = session.get('user', 'Agent')
     return render_template('dialogue.html', name=name)
 
 @app.route('/get_sprites')
@@ -164,12 +198,11 @@ def save_avatar():
 
 @app.route('/get-avatar')
 def get_avatar():
-    if 'avatar_parts' in session:
-        return jsonify({
-            "name": session.get('agent_name','Agent'),
-            "selections": session.get('avatar_parts',{})
-        })
-    return jsonify({"error":"No avatar data found"}), 404
+    avatar = session.get("avatar_parts")
+    if avatar:
+        return jsonify(name=session.get("user","Agent"), selections=avatar)
+    return jsonify(error="No avatar data found"), 404
+
 
 @app.route('/avatars/<path:filename>')
 def avatar_files(filename):
