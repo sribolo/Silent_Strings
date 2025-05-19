@@ -100,10 +100,6 @@ def home():
 def start():
     return render_template('start.html')
 
-@app.route("/auth")
-def auth_page():
-    return render_template("auth.html")
-
 # Sign-Up POST
 @app.route("/signup", methods=[ "GET", "POST"])
 def signup():
@@ -114,7 +110,7 @@ def signup():
 
         if users.find_one({"email": email}):
             flash("That email is already registered.", "error")
-            return redirect(url_for("auth_page") + "#chk")
+            return redirect(url_for("login"))
 
         pw_hash = generate_password_hash(pw, method="sha256")
         users.insert_one({
@@ -126,7 +122,7 @@ def signup():
         flash("Welcome aboard!", "success")
         return redirect(url_for("customise"))
     
-    return render_template("auth.html")
+    return render_template("signup.html")
 
 # Log-In POST
 @app.route("/login", methods=["GET", "POST"])
@@ -136,15 +132,15 @@ def login():
         pw    = request.form["password"]
 
         user = users.find_one({"email": email})
-        if user and check_password_hash(user["password_hash"], pw):
-            session["agent_name"] = user["username"]
-            flash(f"Hello, {user['username']}!", "success")
-            return redirect(url_for("customise"))
+        if not user or not check_password_hash(user["password"], pw):
+            flash("Invalid email or password.", "error")
+            return redirect(url_for("login"))
 
-        flash("Invalid email or password.", "danger")
-        return redirect(url_for("login"))
+        session["agent_name"] = user["username"]
+        flash("Logged in successfully.", "success")
+        return redirect(url_for("customise"))
 
-    return render_template("auth.html")
+    return render_template("login.html")
 
 
 
