@@ -1,12 +1,12 @@
 import os
 import base64
+import requests
 from flask import (
     Flask, g,
     render_template, request, jsonify, session,
     redirect, url_for, send_from_directory, flash
 )
 from flask_pymongo import PyMongo
-from pymongo import MongoClient
 from flask_dance.contrib.google import make_google_blueprint, google
 from flask_session import Session
 from flask_wtf import CSRFProtect
@@ -66,7 +66,7 @@ def add_security_headers(response):
 # === Force HTTPS on Render ===
 @app.before_request
 def enforce_https():
-    if not request.is_secure and os.getenv("FLASK_ENV") != "development":
+    if not request.is_secure and os.getenv("FLASK_ENV") != "development" and not request.is_secure:
         return redirect(request.url.replace("http://", "https://", 1))
     
 # === MongoDB ===
@@ -86,9 +86,20 @@ google_bp = make_google_blueprint(
         "https://www.googleapis.com/auth/userinfo.email",
         "openid"
     ],
-    redirect_to="customise"
+    redirect_to="google_authorized" 
 )
-app.register_blueprint(google_bp, url_prefix="/auth/google")
+app.register_blueprint(google_bp, url_prefix="/login/google")
+
+#=== reCAPTCHA helper ===
+def verify_recaptcha(token):
+    secret = os.getenv("RECAPTCHA_SECRET_KEY")
+    if not token or not secret:
+        return False
+    resp = requests.post(
+        "https://www.google.com/recaptcha/api/siteverify",
+        data={ "secret": secret, "response": token }
+    )
+    return resp.json().get("success", False)
 
 # === ROUTES ===
 @app.route('/', methods=['GET','HEAD'])
@@ -105,9 +116,18 @@ def start():
 @app.route("/signup", methods=["GET", "POST"])
 def signup():
     if request.method == "POST":
+        token = request.form.get("g-recaptcha-response")
+        if not verify_recaptcha(token):
+            flash("Please complete the CAPTCHA", "error")
+            return render_template(
+                "signup.html",
+                recaptcha_site_key=os.getenv("RECAPTCHA_SITE_KEY")
+            )
+        
         username = request.form["username"]
         email    = request.form["email"]
         pwd      = request.form["password"]
+        
         if users.find_one({"email": email}):
             flash("That email is already registered", "error")
             return redirect(url_for("signup"))
@@ -122,7 +142,7 @@ def signup():
         flash("Account created!", "success")
         return redirect(url_for("customise"))
 
-    return render_template("signup.html", nonce=g.nonce)
+    return render_template("signup.html", recaptcha_site_key=os.getenv("RECAPTCHA_SITE_KEY"))
 
 
 # Log-In POST
@@ -130,26 +150,35 @@ def signup():
 @limiter.limit("5 per minute")
 def login():
     if request.method == "POST":
+        token = request.form.get("g-recaptcha-response")
+        if not verify_recaptcha(token):
+            flash("Please complete the CAPTCHA", "error")
+            return render_template(
+                "login.html",
+                recaptcha_site_key=os.getenv("RECAPTCHA_SITE_KEY")
+            )
         email = request.form["email"]
         pwd   = request.form["password"]
         user  = users.find_one({"email": email})
+
         if user and check_password_hash(user["pwd_hash"], pwd):
             session["user"] = {"username": user["username"], "email": email}
             return redirect(url_for("customise"))
         flash("Invalid email or password", "error")
-    return render_template("login.html", nonce=g.nonce)
+    return render_template("login.html", recaptcha_site_key=os.getenv("RECAPTCHA_SITE_KEY"))
 
 
 
 # Google OAuth Log-In
-@app.route("/login/google/authorized")
-def google_authorized():
+@app.route("/oauth/google")
+def oauth_google():
     if not google.authorized:
-        return redirect(url_for("google.login"))
+        return redirect(url_for('google.login'))
+    
     resp = google.get("/oauth2/v2/userinfo")
     info = resp.json()
     email = info["email"]
-
+    
     user = users.find_one({"email": email})
     if not user:
         users.insert_one({
@@ -158,6 +187,7 @@ def google_authorized():
             "pwd_hash":  ""
         })
     session["user"] = {"username": info.get("name"), "email": email}
+    flash("Logged in with Google!", "success")
     return redirect(url_for("customise"))
 
 
