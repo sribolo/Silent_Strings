@@ -70,10 +70,9 @@ def enforce_https():
         return redirect(request.url.replace("http://", "https://", 1))
     
 # === MongoDB ===
-mongo_uri = os.getenv("MONGO_URI")
-client    = MongoClient(mongo_uri)
-db        = client.get_default_database()
-users     = db["users"]
+app.config["MONGO_URI"] = os.getenv("MONGO_URI", "mongodb://localhost:27017/silentstrings")
+mongo = PyMongo(app)
+users = mongo.db.users
 
 # === CONFIGURATION ===
 SPRITE_PATH = "static/images/avatar_parts"
