@@ -108,8 +108,8 @@ def auth_page():
 @app.route("/signup", methods=[ "GET", "POST"])
 def signup():
     if request.method == "POST":
-        username = request.form["username"]
-        email    = request.form["email"]
+        username = request.form["username"].strip()
+        email    = request.form["email"].strip().lower()
         pw      = request.form["password"]
 
         if users.find_one({"email": email}):
@@ -132,7 +132,7 @@ def signup():
 @app.route("/login", methods=["GET", "POST"])
 def login():
     if request.method == "POST":
-        email = request.form["email"]
+        email = request.form["email"].strip().lower()
         pw    = request.form["password"]
 
         user = users.find_one({"email": email})
