@@ -88,7 +88,7 @@ google_bp = make_google_blueprint(
     ],
     redirect_to="customise"
 )
-app.register_blueprint(google_bp, url_prefix="/login")
+app.register_blueprint(google_bp, url_prefix="/auth/google")
 
 # === ROUTES ===
 @app.route('/', methods=['GET','HEAD'])
@@ -102,7 +102,6 @@ def start():
     return render_template('start.html')
 
 # Sign-Up POST
-# ─ Sign-Up ────────────────────────────────────────────────────────────────
 @app.route("/signup", methods=["GET", "POST"])
 def signup():
     if request.method == "POST":
@@ -156,7 +155,6 @@ def google_authorized():
         users.insert_one({
             "username": info.get("name"),
             "email":     email,
-            # passwordless
             "pwd_hash":  ""
         })
     session["user"] = {"username": info.get("name"), "email": email}

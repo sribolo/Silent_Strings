@@ -22,6 +22,7 @@
     <div class="mission-buttons">
       <!-- Google Login -->
       <form action="{{ url_for('google.login') }}" method="get">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
         <button type="submit" class="login-button google">Google</button>
       </form>
 
@@ -30,6 +31,7 @@
 
       <!-- Login / Sign Up -->
       <form action="{{ url_for('login') }}" method="get">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
         <button type="submit" class="login-button">Login / Sign Up</button>
       </form>
     </div>
@@ -42,7 +44,7 @@
       <div class="modal-buttons">
         <button type="button" id="cancelGuest" class="modal-button">Cancel</button>
         <form action="{{ url_for('guest_login') }}" method="post">
-          {{ csrf_token() }}
+          <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
           <button type="submit" class="modal-button confirm">Continue</button>
         </form>
       </div>
