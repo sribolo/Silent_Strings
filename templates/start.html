@@ -21,10 +21,10 @@
 
     <div class="mission-buttons">
       <!-- Google Login -->
-      <form action="{{ url_for('google.login') }}" method="get">
-        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-        <button type="submit" class="login-button google">Google</button>
-      </form>
+      <a href="{{ url_for('google.login') }}">
+        <button class="login-button google">Sign in with Google</button>
+      </a>
+      
 
       <!-- Play as Guest -->
       <button type="button" id="guestBtn" class="login-button">Play as Guest</button>
