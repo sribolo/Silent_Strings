@@ -30,10 +30,9 @@
       <button type="button" id="guestBtn" class="login-button">Play as Guest</button>
 
       <!-- Login / Sign Up -->
-      <form action="{{ url_for('login') }}" method="get">
-        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+      <a href="{{ url_for('login') }}">
         <button type="submit" class="login-button">Login / Sign Up</button>
-      </form>
+      </a>
     </div>
   </div>
 
