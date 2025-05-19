@@ -6,6 +6,7 @@ from flask import (
     redirect, url_for, send_from_directory, flash
 )
 from flask_pymongo import PyMongo
+from pymongo import MongoClient
 from flask_dance.contrib.google import make_google_blueprint, google
 from flask_session import Session
 from flask_wtf import CSRFProtect
@@ -18,7 +19,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 app = Flask(__name__)
-app.secret_key = os.getenv('FLASK_SECRET_KEY')
+app.secret_key = os.getenv('FLASK_SECRET_KEY') or "dev-secret-key"
 
 # === Session Configuration ===
 app.config['SESSION_TYPE'] = 'filesystem'
@@ -69,9 +70,10 @@ def enforce_https():
         return redirect(request.url.replace("http://", "https://", 1))
     
 # === MongoDB ===
-app.config["MONGO_URI"] = os.getenv("MONGO_URI", "mongodb://localhost:27017/silentstrings")
-mongo = PyMongo(app)
-users = mongo.db.users
+mongo_uri = os.getenv("MONGO_URI")
+client    = MongoClient(mongo_uri)
+db        = client.get_default_database()
+users     = db["users"]
 
 # === CONFIGURATION ===
 SPRITE_PATH = "static/images/avatar_parts"
@@ -101,61 +103,65 @@ def start():
     return render_template('start.html')
 
 # Sign-Up POST
-@app.route("/signup", methods=[ "GET", "POST"])
+# ─ Sign-Up ────────────────────────────────────────────────────────────────
+@app.route("/signup", methods=["GET", "POST"])
 def signup():
     if request.method == "POST":
-        username = request.form["username"].strip()
-        email    = request.form["email"].strip().lower()
-        pw      = request.form["password"]
-
+        username = request.form["username"]
+        email    = request.form["email"]
+        pwd      = request.form["password"]
         if users.find_one({"email": email}):
-            flash("That email is already registered.", "error")
-            return redirect(url_for("login"))
+            flash("That email is already registered", "error")
+            return redirect(url_for("signup"))
 
-        pw_hash = generate_password_hash(pw, method="sha256")
+        pwd_hash = generate_password_hash(pwd)
         users.insert_one({
             "username": username,
-            "email":    email,
-            "password": pw_hash
+            "email":     email,
+            "pwd_hash":  pwd_hash
         })
-        session["agent_name"] = username
-        flash("Welcome aboard!", "success")
+        session["user"] = {"username": username, "email": email}
+        flash("Account created!", "success")
         return redirect(url_for("customise"))
-    
-    return render_template("signup.html")
+
+    return render_template("signup.html", nonce=g.nonce)
+
 
 # Log-In POST
 @app.route("/login", methods=["GET", "POST"])
+@limiter.limit("5 per minute")
 def login():
     if request.method == "POST":
-        email = request.form["email"].strip().lower()
-        pw    = request.form["password"]
-
-        user = users.find_one({"email": email})
-        if not user or not check_password_hash(user["password"], pw):
-            flash("Invalid email or password.", "error")
-            return redirect(url_for("login"))
-
-        session["agent_name"] = user["username"]
-        flash("Logged in successfully.", "success")
-        return redirect(url_for("customise"))
-
-    return render_template("login.html")
+        email = request.form["email"]
+        pwd   = request.form["password"]
+        user  = users.find_one({"email": email})
+        if user and check_password_hash(user["pwd_hash"], pwd):
+            session["user"] = {"username": user["username"], "email": email}
+            return redirect(url_for("customise"))
+        flash("Invalid email or password", "error")
+    return render_template("login.html", nonce=g.nonce)
 
 
 
 # Google OAuth Log-In
-@app.route("/login/google")
-@limiter.limit("5 per minute")
-def google_login():
+@app.route("/login/google/authorized")
+def google_authorized():
     if not google.authorized:
         return redirect(url_for("google.login"))
     resp = google.get("/oauth2/v2/userinfo")
-    if resp.ok:
-        info = resp.json()
-        session["user"] = info.get("name", "Agent")
-    return redirect(url_for("customise"))
+    info = resp.json()
+    email = info["email"]
 
+    user = users.find_one({"email": email})
+    if not user:
+        users.insert_one({
+            "username": info.get("name"),
+            "email":     email,
+            # passwordless
+            "pwd_hash":  ""
+        })
+    session["user"] = {"username": info.get("name"), "email": email}
+    return redirect(url_for("customise"))
 
 
 @app.route('/guest_login', methods=['POST'])
@@ -168,7 +174,7 @@ def guest_login():
 @app.route("/logout")
 def logout():
     session.pop("user", None)
-    return redirect(url_for("auth_page"))
+    return redirect(url_for("index"))
 
 # Avatar Customisation
 @app.route('/customise')
