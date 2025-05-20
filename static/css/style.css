@@ -325,6 +325,47 @@ html, body {
     border-radius: 8px;
 }
 
+/* ===== Nicer, Retro Pixel Inputs ===== */
+.pixel-input {
+  width: 44%;
+  margin-bottom: 18px;
+  padding: 13px 12px;
+  border: 2.5px solid #7d6ff0;
+  border-radius: 8px;
+  background: #191d33;
+  color: #fafaff;
+  font-size: 1.09rem;
+  font-family: 'Share Tech Mono', 'Press Start 2P', monospace;
+  box-shadow: 0 3px 14px #39337e33;
+  transition: border-color 0.18s, background 0.18s, box-shadow 0.18s;
+  outline: none;
+  letter-spacing: 0.03em;
+  text-shadow: 0 1px 2px #23234a50;
+}
+
+.pixel-input:focus {
+  border-color: #a7a1fb;
+  background: #23244a;
+  box-shadow: 0 4px 18px #8a2be270;
+  color: #fff;
+}
+
+input::placeholder {
+  color: #b3baff;
+  opacity: 1;
+  font-family: inherit;
+  font-size: 1.08rem;
+}
+
+/* Row for two inputs side by side */
+.form-row {
+  display: flex;
+  gap: 1.2vw;
+  justify-content: center;
+  margin-bottom: 0;
+}
+
+
 /* Dialogue Box */
 #dialogue-box {
     max-width: 600px;

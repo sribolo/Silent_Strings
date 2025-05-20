@@ -23,11 +23,11 @@
           </ul>
         {% endif %}
       {% endwith %}
-      <form id="customise-form" action="{{ url_for('login') }}" method="post" autocomplete="off">
+      <form action="{{ url_for('login') }}" method="post" autocomplete="off">
         <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-        <input type="email" name="email" placeholder="Email" required class="field" style="margin-bottom:14px;">
-        <input type="password" name="password" placeholder="Password" required class="field" style="margin-bottom:18px;">
-		<div class="g-recaptcha" data-sitekey="{{ recaptcha_site_key }}"></div>
+        <input type="email" name="email" placeholder="Email" required class="pixel-input">
+        <input type="password" name="password" placeholder="Password" required class="pixel-input">
+		    <div class="g-recaptcha" data-sitekey="{{ recaptcha_site_key }}"></div>
         <button type="submit" class="login-button">Log In</button>
       </form>
       <p>No account? <a href="{{ url_for('signup') }}">Sign Up</a></p>
