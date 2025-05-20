@@ -60,15 +60,6 @@ html, body {
     justify-content: center;
 }
 
-.center-container {
-  min-height: 100vh;
-  width: 100vw;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-}
-
 /* Title Text */
 .game-title {
     font-family: 'Press Start 2P', monospace;
@@ -150,13 +141,6 @@ html, body {
     box-shadow: 0 0 20px #8A2BE2;
     transform: scale(1.05);
 }
-.welcome-flex {
-  display: flex;
-  justify-content: center;      
-  align-items: center;          
-  min-height: 95vh;             
-  gap: 40px;                    
-}
 
 /* Mission Briefing Screen */
 .mission-container {
@@ -167,14 +151,12 @@ html, body {
     border: 3px solid #6C5CE7;
     background-color: rgba(0, 0, 0, 0.8);
     border-radius: 8px;
-    padding: 24px 30px 24px 30px;
+    padding: 20px 30px;
     text-align: center;
     color: white;
     font-family: 'Share Tech Mono', monospace;
-    max-width: 400px;
-    max-height: 94vh;
-    box-sizing: border-box;
-    overflow-y: auto;
+    margin: auto;
+    width: 400px;
 }
 
 .mission-box {
@@ -377,22 +359,6 @@ input::placeholder {
   opacity: 1;
   font-family: inherit;
   font-size: 1.08rem;
-}
-
-/* Center and scale reCAPTCHA widget */
-.recaptcha-center {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  margin: 10px 0 18px 0;
-}
-
-/* Scale down the widget (0.77 = 77% of original size) */
-.recaptcha-center .g-recaptcha {
-  transform: scale(0.77);
-  -webkit-transform: scale(0.77);
-  transform-origin: 0 0;
-  -webkit-transform-origin: 0 0;
 }
 
 /* Row for two inputs side by side */
@@ -648,21 +614,3 @@ button:hover {
 }
   
 
-@media (max-width: 520px) {
-  .mission-container {
-    padding: 18px 6vw;
-    max-width: 96vw;
-  }
-  .pixel-input {
-    font-size: 1rem;
-    padding: 12px 6px;
-  }
-  .login-button {
-    font-size: 1rem;
-    padding: 12px 0;
-  }
-  .welcome-flex {
-    flex-direction: column;
-    gap: 24px;
-  }
-}
