@@ -368,15 +368,18 @@ input::placeholder {
   display: flex;
   justify-content: center;
   align-items: center;
-  margin: 10px 0 18px 0;
+  max-width: 340px;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 /* Scale down the widget (0.77 = 77% of original size) */
 .recaptcha-center .g-recaptcha {
-  transform: scale(0.77);
-  -webkit-transform: scale(0.77);
+  transform: scale(0.8);
+  -webkit-transform: scale(0.8);
   transform-origin: 0 0;
   -webkit-transform-origin: 0 0;
+  margin: 0 auto;
 }
 
 /* Row for two inputs side by side */
