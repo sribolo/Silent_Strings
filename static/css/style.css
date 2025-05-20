@@ -326,7 +326,7 @@ html, body {
 
 /* ===== Nicer, Retro Pixel Inputs ===== */
 .pixel-input {
-  width: 44%;
+  width: 324px;
   margin-bottom: 18px;
   padding: 13px 12px;
   border: 2.5px solid #7d6ff0;
