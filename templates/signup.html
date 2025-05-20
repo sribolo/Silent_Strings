@@ -28,7 +28,9 @@
         <input type="text" name="username" placeholder="Username" required class="pixel-input">
         <input type="email" name="email" placeholder="Email" required class="pixel-input">
         <input type="password" name="password" placeholder="Password" required class="pixel-input">
-        <div class="g-recaptcha" data-sitekey="{{ recaptcha_site_key }}"></div>
+        <div class="recaptcha-center">
+          <div class="g-recaptcha" data-sitekey="{{ recaptcha_site_key }}"></div>
+        </div>        
         <button type="submit" class="login-button">Sign Up</button>
       </form>
       

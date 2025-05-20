@@ -27,7 +27,9 @@
         <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
         <input type="email" name="email" placeholder="Email" required class="pixel-input">
         <input type="password" name="password" placeholder="Password" required class="pixel-input">
-		    <div class="g-recaptcha" data-sitekey="{{ recaptcha_site_key }}"></div>
+		    <div class="recaptcha-center">
+          <div class="g-recaptcha" data-sitekey="{{ recaptcha_site_key }}"></div>
+        </div>        
         <button type="submit" class="login-button">Log In</button>
       </form>
       <p>No account? <a href="{{ url_for('signup') }}">Sign Up</a></p>
