@@ -10,6 +10,7 @@
 }
 
 
+
 /* General Reset & Base Styles */
 html, body {
     margin: 0;
@@ -52,10 +53,7 @@ html, body {
     z-index: 3;
     top: 30%;
     width: 100%;
-    display: flex;
     text-align: center;
-    align-items: center;   /* Vertically center */
-    justify-content: center;
 }
 
 /* Title Text */
@@ -154,10 +152,7 @@ html, body {
     color: white;
     font-family: 'Share Tech Mono', monospace;
     margin: auto;
-    max-width: 400px;
-    max-height: 94vh;
-    box-sizing: border-box;
-    overflow-y: auto;
+    width: 400px;
 }
 
 .mission-box {
@@ -329,64 +324,6 @@ html, body {
     background-color: rgba(0, 0, 0, 0.85);
     border-radius: 8px;
 }
-
-/* ===== Nicer, Retro Pixel Inputs ===== */
-.pixel-input {
-  width: 324px;
-  margin-bottom: 18px;
-  padding: 13px 12px;
-  border: 2.5px solid #7d6ff0;
-  border-radius: 8px;
-  background: #191d33;
-  color: #fafaff;
-  font-size: 1.09rem;
-  font-family: 'Share Tech Mono', 'Press Start 2P', monospace;
-  box-shadow: 0 3px 14px #39337e33;
-  transition: border-color 0.18s, background 0.18s, box-shadow 0.18s;
-  outline: none;
-  letter-spacing: 0.03em;
-  text-shadow: 0 1px 2px #23234a50;
-}
-
-.pixel-input:focus {
-  border-color: #a7a1fb;
-  background: #23244a;
-  box-shadow: 0 4px 18px #8a2be270;
-  color: #fff;
-}
-
-input::placeholder {
-  color: #b3baff;
-  opacity: 1;
-  font-family: inherit;
-  font-size: 1.08rem;
-}
-.recaptcha-center {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  margin: 12px 0 24px 0;
-  width: 100%;
-  max-width: 350px;
-  margin-left: auto;
-  margin-right: auto;
-}
-
-.recaptcha-center .g-recaptcha {
-  transform: scale(0.8);
-  -webkit-transform: scale(0.8);
-  transform-origin: 0 0;
-  -webkit-transform-origin: 0 0;
-  margin: 0 auto;
-}
-/* Row for two inputs side by side */
-.form-row {
-  display: flex;
-  gap: 1.2vw;
-  justify-content: center;
-  margin-bottom: 0;
-}
-
 
 /* Dialogue Box */
 #dialogue-box {
