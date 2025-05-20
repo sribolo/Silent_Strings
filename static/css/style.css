@@ -52,6 +52,7 @@ html, body {
     z-index: 3;
     top: 30%;
     width: 100%;
+    display: flex;
     text-align: center;
     align-items: center;   /* Vertically center */
     justify-content: center;
