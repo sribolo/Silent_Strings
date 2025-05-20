@@ -49,11 +49,23 @@ html, body {
   
 /* Overlay Text and Button */
 .overlay {
-    position: absolute;
-    z-index: 3;
-    top: 30%;
-    width: 100%;
-    text-align: center;
+  position: absolute;
+  z-index: 3;
+  width: 100vw;
+  height: 100vh;
+  top: 0;
+  left: 0;
+  display: flex;
+  align-items: center;   /* Vertically center */
+  justify-content: center; /* Horizontally center */
+}
+.center-container {
+  min-height: 100vh;
+  width: 100vw;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
 }
 
 /* Title Text */
@@ -116,22 +128,22 @@ html, body {
   
 /* Start Button */
 .start-button {
-    background: #6C5CE7;
-    border: none;
-    color: white;
-    padding: 15px 35px;
-    font-size: 1.2rem;
-    border-radius: 8px;
-    margin-top: 20px;
-    cursor: pointer;
-    font-family: 'Press Start 2P', monospace;
-    box-shadow: 0 0 15px rgba(140, 82, 255, 0.5), 0 0 25px rgba(140, 82, 255, 0.3);
-    transition: all 0.3s ease-in-out;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    text-decoration: none;
+  background: #6C5CE7;
+  border: none;
+  color: white;
+  padding: 18px 55px;
+  font-size: 1.5rem;
+  border-radius: 12px;
+  cursor: pointer;
+  font-family: 'Share Tech Mono', 'Press Start 2P', monospace;
+  box-shadow: 0 0 18px rgba(140, 82, 255, 0.35), 0 0 32px rgba(140, 82, 255, 0.22);
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  margin-top: 1vw;
+  transition: background 0.18s, transform 0.12s;
 }
-  
+
+
 .start-button:hover {
     background: #8A2BE2;
     box-shadow: 0 0 20px #8A2BE2;
@@ -140,20 +152,24 @@ html, body {
 
 /* Mission Briefing Screen */
 .mission-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 20px;
-    border: 3px solid #6C5CE7;
-    background-color: rgba(0, 0, 0, 0.8);
-    border-radius: 8px;
-    padding: 20px 30px;
-    text-align: center;
-    color: white;
-    font-family: 'Share Tech Mono', monospace;
-    margin: auto;
-    width: 400px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+  border: 3px solid #6C5CE7;
+  background-color: rgba(0, 0, 0, 0.8);
+  border-radius: 8px;
+  padding: 24px 30px 24px 30px;
+  text-align: center;
+  color: white;
+  font-family: 'Share Tech Mono', monospace;
+  width: 95vw;
+  max-width: 400px;
+  max-height: 94vh;
+  box-sizing: border-box;
+  overflow-y: auto; /* So it never leaves screen */
 }
+
 
 .mission-box {
     border: 2px solid #555555;
@@ -166,7 +182,21 @@ html, body {
     margin-bottom: 20px;
     width: 100%;
 }
-
+.welcome-flex {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 95vh;
+  gap: 40px;
+}
+.mission-buttons {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+  min-width: 320px;
+}
 /* Mission Title Styling */
 #welcome-text {
     font-size: 2rem;
@@ -506,7 +536,22 @@ button:hover {
     background-color: #555;
 }
   
-  
+  /* Center and scale reCAPTCHA widget */
+.recaptcha-center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 10px 0 18px 0;
+}
+
+/* Scale down the widget (0.77 = 77% of original size) */
+.recaptcha-center .g-recaptcha {
+  transform: scale(0.77);
+  -webkit-transform: scale(0.77);
+  transform-origin: 0 0;
+  -webkit-transform-origin: 0 0;
+}
+
 /* === Loading Animation === */
 #loading-screen {
   position: fixed;
@@ -596,3 +641,30 @@ button:hover {
 }
   
 
+@media (max-width: 520px) {
+  .mission-container {
+    padding: 18px 6vw;
+    max-width: 96vw;
+  }
+  .pixel-input {
+    font-size: 1rem;
+    padding: 12px 6px;
+  }
+  .login-button {
+    font-size: 1rem;
+    padding: 12px 0;
+  }
+
+  .recaptcha-wrap {
+    max-width: 97vw;
+    width: 97vw;
+  }
+  .recaptcha-wrap .g-recaptcha {
+    transform: scale(0.78);
+    -webkit-transform: scale(0.78);
+  }
+  .welcome-flex {
+    flex-direction: column;
+    gap: 24px;
+  }
+}
