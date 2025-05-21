@@ -14,6 +14,7 @@ from flask_limiter import Limiter
 from flask_limiter.util import get_remote_address
 from werkzeug.security import generate_password_hash, check_password_hash
 from dotenv import load_dotenv
+from flask_sqlalchemy import SQLAlchemy
 
 # === Load Environment Variables ===
 load_dotenv()
@@ -27,6 +28,9 @@ app.config['SESSION_COOKIE_SECURE'] = True
 app.config['SESSION_COOKIE_HTTPONLY'] = True
 app.config['SESSION_COOKIE_SAMESITE'] = 'Lax'
 app.config['WTF_CSRF_SSL_STRICT'] = False
+app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('SUPABASE_DB_URI')
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+db = SQLAlchemy(app)
 Session(app)
 
 # === CSRF Protection ===
@@ -71,11 +75,7 @@ def enforce_https():
     if not request.is_secure and os.getenv("FLASK_ENV") != "development" and not request.is_secure:
         return redirect(request.url.replace("http://", "https://", 1))
     
-# === MongoDB ===
-app.config["MONGO_URI"] = os.getenv("MONGO_URI")
-mongo = PyMongo(app)
-print("DEBUG: MONGO_URI is:", os.getenv("MONGO_URI"))
-users = mongo.db.users
+
 
 # === CONFIGURATION ===
 SPRITE_PATH = "static/images/avatar_parts"
