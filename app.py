@@ -31,6 +31,13 @@ app.config['WTF_CSRF_SSL_STRICT'] = False
 app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('SUPABASE_DB_URI')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
+class User(db.Model):
+    __tablename__ = "users"
+    id = db.Column(db.Integer, primary_key=True)
+    username = db.Column(db.String(80), unique=True, nullable=False)
+    email = db.Column(db.String(120), unique=True, nullable=False)
+    pwd_hash = db.Column(db.String(256), nullable=False)
+
 Session(app)
 
 # === CSRF Protection ===
@@ -122,31 +129,26 @@ def signup():
         token = request.form.get("g-recaptcha-response")
         if not verify_recaptcha(token):
             flash("Please complete the CAPTCHA", "error")
-            return render_template(
-                "signup.html",
-                recaptcha_site_key=os.getenv("RECAPTCHA_SITE_KEY")
-            )
+            return render_template("signup.html", recaptcha_site_key=os.getenv("RECAPTCHA_SITE_KEY"))
         
         username = request.form["username"]
         email    = request.form["email"]
         pwd      = request.form["password"]
         
-        if users.find_one({"email": email}):
+        # SQLAlchemy way:
+        if User.query.filter_by(email=email).first():
             flash("That email is already registered", "error")
             return redirect(url_for("signup"))
 
         pwd_hash = generate_password_hash(pwd)
-        users.insert_one({
-            "username": username,
-            "email":     email,
-            "pwd_hash":  pwd_hash
-        })
+        user = User(username=username, email=email, pwd_hash=pwd_hash)
+        db.session.add(user)
+        db.session.commit()
         session["user"] = {"username": username, "email": email}
         flash("Account created!", "success")
         return redirect(url_for("customise"))
 
     return render_template("signup.html", recaptcha_site_key=os.getenv("RECAPTCHA_SITE_KEY"))
-
 
 # Log-In POST
 @app.route("/login", methods=["GET", "POST"])
@@ -156,16 +158,13 @@ def login():
         token = request.form.get("g-recaptcha-response")
         if not verify_recaptcha(token):
             flash("Please complete the CAPTCHA", "error")
-            return render_template(
-                "login.html",
-                recaptcha_site_key=os.getenv("RECAPTCHA_SITE_KEY")
-            )
+            return render_template("login.html", recaptcha_site_key=os.getenv("RECAPTCHA_SITE_KEY"))
         email = request.form["email"]
         pwd   = request.form["password"]
-        user  = users.find_one({"email": email})
+        user  = User.query.filter_by(email=email).first()
 
-        if user and check_password_hash(user["pwd_hash"], pwd):
-            session["user"] = {"username": user["username"], "email": email}
+        if user and check_password_hash(user.pwd_hash, pwd):
+            session["user"] = {"username": user.username, "email": email}
             return redirect(url_for("customise"))
         flash("Invalid email or password", "error")
     return render_template("login.html", recaptcha_site_key=os.getenv("RECAPTCHA_SITE_KEY"))
@@ -182,13 +181,11 @@ def oauth_google():
     info = resp.json()
     email = info["email"]
     
-    user = users.find_one({"email": email})
+    user = User.query.filter_by(email=email).first()
     if not user:
-        users.insert_one({
-            "username": info.get("name"),
-            "email":     email,
-            "pwd_hash":  ""
-        })
+        user = User(username=info.get("name"), email=email, pwd_hash="")
+        db.session.add(user)
+        db.session.commit()
     session["user"] = {"username": info.get("name"), "email": email}
     flash("Logged in with Google!", "success")
     return redirect(url_for("customise"))
