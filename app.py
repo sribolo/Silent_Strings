@@ -6,7 +6,6 @@ from flask import (
     render_template, request, jsonify, session,
     redirect, url_for, send_from_directory, flash
 )
-from flask_pymongo import PyMongo
 from flask_dance.contrib.google import make_google_blueprint, google
 from flask_session import Session
 from flask_wtf import CSRFProtect
