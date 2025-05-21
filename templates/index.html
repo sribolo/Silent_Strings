@@ -10,10 +10,11 @@
     <img src="{{ url_for('static', filename='images/background.gif') }}" class="background">
     <div class="darken"></div>
     <div class="overlay">
-      <div class="center-container"></div>
+      <div class="center-container">
       <h1 class="game-title">Silent Strings</h1>
       <p class="tagline">Agent, your mission awaits...</p>
       <a href="{{ url_for('start') }}" class="start-button">START</a>
+    </div>
     </div>
   </div>
   <script src="{{ url_for('static', filename='js/main.js') }}" defer></script>
