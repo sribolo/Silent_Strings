@@ -70,16 +70,14 @@ html, body {
 
 /* Title Text */
 .game-title {
-    font-family: 'Press Start 2P', monospace;
-    font-size: 4rem;
-    color: #FFFFFF;
-    text-shadow:
-      0 0 5px #A499FF,
-      0 0 10px #A499FF,
-      0 0 20px #6C5CE7;
-      animation: pixelIntro 2s ease-out, pulseGlow 2.5s ease-in-out infinite;
-      position: relative;
-      display: inline-block;
+  font-family: 'Press Start 2P', 'Share Tech Mono', monospace;
+  color: #c6bbfa;
+  font-size: 5vw;       /* Responsive big */
+  text-shadow:
+    0 0 8px #fff, 0 0 32px #7a6eff;
+  margin-bottom: 1.5rem;
+  text-align: center;
+  letter-spacing: 2px;
 }
   
 /* Retro Pixel Movement Animation */
@@ -117,37 +115,37 @@ html, body {
   
 /* Tagline under title */
 .tagline {
-    color: #CCCCCC;
-    font-size: 1.2rem;
-    margin-top: 8px;
-    text-shadow: 0 0 5px #00000088;
-    animation: fadeIn 2s 1.5s forwards;
-    font-family: 'Share Tech Mono', monospace;
-    opacity: 0;
+  color: #fff;
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 1.8vw;
+  margin-bottom: 2.5rem;
+  letter-spacing: 1px;
+  text-align: center;
+  text-shadow: 0 0 8px #232369;
 }
   
 /* Start Button */
 .start-button {
   background: #6C5CE7;
+  color: #fff;
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 2vw;
+  padding: 0.7em 2.5em;
   border: none;
-  color: white;
-  padding: 18px 55px;
-  font-size: 1.5rem;
-  border-radius: 12px;
+  border-radius: 10px;
   cursor: pointer;
-  font-family: 'Share Tech Mono', 'Press Start 2P', monospace;
-  box-shadow: 0 0 18px rgba(140, 82, 255, 0.35), 0 0 32px rgba(140, 82, 255, 0.22);
-  text-transform: uppercase;
-  letter-spacing: 0.12em;
-  margin-top: 1vw;
-  transition: background 0.18s, transform 0.12s;
+  box-shadow: 0 0 16px #6658ce66;
+  margin-top: 0.2em;
+  margin-bottom: 2em;
+  letter-spacing: 1px;
+  text-shadow: 0 1px 2px #0009;
+  transition: background 0.2s, transform 0.2s;
 }
 
 
 .start-button:hover {
     background: #8A2BE2;
-    box-shadow: 0 0 20px #8A2BE2;
-    transform: scale(1.05);
+    transform: scale(1.04);
 }
 
 /* Mission Briefing Screen */
