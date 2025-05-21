@@ -14,6 +14,7 @@ from flask_limiter.util import get_remote_address
 from werkzeug.security import generate_password_hash, check_password_hash
 from dotenv import load_dotenv
 from flask_sqlalchemy import SQLAlchemy
+from forms import SignupForm, LoginForm
 
 # === Load Environment Variables ===
 load_dotenv()
@@ -122,19 +123,22 @@ def start():
     return render_template('start.html')
 
 # Sign-Up POST
+from forms import SignupForm, LoginForm
+
 @app.route("/signup", methods=["GET", "POST"])
 def signup():
-    if request.method == "POST":
+    form = SignupForm()
+    if form.validate_on_submit():
+        # reCAPTCHA check
         token = request.form.get("g-recaptcha-response")
         if not verify_recaptcha(token):
             flash("Please complete the CAPTCHA", "error")
-            return render_template("signup.html", recaptcha_site_key=os.getenv("RECAPTCHA_SITE_KEY"))
+            return render_template("signup.html", form=form, recaptcha_site_key=os.getenv("RECAPTCHA_SITE_KEY"))
         
-        username = request.form["username"]
-        email    = request.form["email"]
-        pwd      = request.form["password"]
-        
-        # SQLAlchemy way:
+        username = form.username.data
+        email    = form.email.data
+        pwd      = form.password.data
+
         if User.query.filter_by(email=email).first():
             flash("That email is already registered", "error")
             return redirect(url_for("signup"))
@@ -147,26 +151,27 @@ def signup():
         flash("Account created!", "success")
         return redirect(url_for("customise"))
 
-    return render_template("signup.html", recaptcha_site_key=os.getenv("RECAPTCHA_SITE_KEY"))
+    return render_template("signup.html", form=form, recaptcha_site_key=os.getenv("RECAPTCHA_SITE_KEY"))
 
-# Log-In POST
 @app.route("/login", methods=["GET", "POST"])
 @limiter.limit("5 per minute")
 def login():
-    if request.method == "POST":
+    form = LoginForm()
+    if form.validate_on_submit():
+        # reCAPTCHA check
         token = request.form.get("g-recaptcha-response")
         if not verify_recaptcha(token):
             flash("Please complete the CAPTCHA", "error")
-            return render_template("login.html", recaptcha_site_key=os.getenv("RECAPTCHA_SITE_KEY"))
-        email = request.form["email"]
-        pwd   = request.form["password"]
+            return render_template("login.html", form=form, recaptcha_site_key=os.getenv("RECAPTCHA_SITE_KEY"))
+        email = form.email.data
+        pwd   = form.password.data
         user  = User.query.filter_by(email=email).first()
 
         if user and check_password_hash(user.pwd_hash, pwd):
             session["user"] = {"username": user.username, "email": email}
             return redirect(url_for("customise"))
         flash("Invalid email or password", "error")
-    return render_template("login.html", recaptcha_site_key=os.getenv("RECAPTCHA_SITE_KEY"))
+    return render_template("login.html", form=form, recaptcha_site_key=os.getenv("RECAPTCHA_SITE_KEY"))
 
 
 

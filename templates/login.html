@@ -23,14 +23,30 @@
           </ul>
         {% endif %}
       {% endwith %}
-      <form action="{{ url_for('login') }}" method="post" autocomplete="off">
-        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-        <input type="email" name="email" placeholder="Email" required class="pixel-input">
-        <input type="password" name="password" placeholder="Password" required class="pixel-input">
-		    <div class="recaptcha-center">
+      <form method="post" autocomplete="off">
+        {{ form.hidden_tag() }}
+
+        <div>
+          {{ form.email.label }}<br>
+          {{ form.email(class_="pixel-input", placeholder="Email") }}
+          {% for error in form.email.errors %}
+            <div class="flash error">{{ error }}</div>
+          {% endfor %}
+        </div>
+
+        <div>
+          {{ form.password.label }}<br>
+          {{ form.password(class_="pixel-input", placeholder="Password") }}
+          {% for error in form.password.errors %}
+            <div class="flash error">{{ error }}</div>
+          {% endfor %}
+        </div>
+
+        <div class="recaptcha-center">
           <div class="g-recaptcha" data-sitekey="{{ recaptcha_site_key }}"></div>
-        </div>        
-        <button type="submit" class="login-button">Log In</button>
+        </div>
+
+        {{ form.submit(class_="login-button") }}
       </form>
       <p>No account? <a href="{{ url_for('signup') }}">Sign Up</a></p>
     </div>

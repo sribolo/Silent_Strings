@@ -23,15 +23,38 @@
           </ul>
         {% endif %}
       {% endwith %}
-      <form action="{{ url_for('signup') }}" method="post" autocomplete="off">
-        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-        <input type="text" name="username" placeholder="Username" required class="pixel-input">
-        <input type="email" name="email" placeholder="Email" required class="pixel-input">
-        <input type="password" name="password" placeholder="Password" required class="pixel-input">
+      <form method="post" autocomplete="off">
+        {{ form.hidden_tag() }}
+
+        <div>
+          {{ form.username.label }}<br>
+          {{ form.username(class_="pixel-input", placeholder="Username") }}
+          {% for error in form.username.errors %}
+            <div class="flash error">{{ error }}</div>
+          {% endfor %}
+        </div>
+        
+        <div>
+          {{ form.email.label }}<br>
+          {{ form.email(class_="pixel-input", placeholder="Email") }}
+          {% for error in form.email.errors %}
+            <div class="flash error">{{ error }}</div>
+          {% endfor %}
+        </div>
+        
+        <div>
+          {{ form.password.label }}<br>
+          {{ form.password(class_="pixel-input", placeholder="Password") }}
+          {% for error in form.password.errors %}
+            <div class="flash error">{{ error }}</div>
+          {% endfor %}
+        </div>
+        
         <div class="recaptcha-center">
           <div class="g-recaptcha" data-sitekey="{{ recaptcha_site_key }}"></div>
-        </div>        
-        <button type="submit" class="login-button">Sign Up</button>
+        </div>
+        
+        {{ form.submit(class_="login-button") }}
       </form>
       
       <p>Have an account? <a href="{{ url_for('login') }}">Log In</a></p>
