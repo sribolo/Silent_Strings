@@ -4,7 +4,8 @@ Flask-Session
 Flask-WTF
 WTForms
 Flask-Limiter
-Flask-PyMongo
+Flask-SQLAlchemy
+psycopg2-binary
 Flask-Talisman
 gunicorn
 oauthlib
