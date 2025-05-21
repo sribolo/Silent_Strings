@@ -74,6 +74,7 @@ def enforce_https():
 # === MongoDB ===
 app.config["MONGO_URI"] = os.getenv("MONGO_URI")
 mongo = PyMongo(app)
+print("DEBUG: MONGO_URI is:", os.getenv("MONGO_URI"))
 users = mongo.db.users
 
 # === CONFIGURATION ===
