@@ -13,7 +13,7 @@ class SignupForm(FlaskForm):
         DataRequired(),
         Length(min=8, max=32),
         Regexp(
-            "^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z0-9]).+$",
+            r"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z0-9]).+$",
             message="Password must have uppercase, lowercase, number, and special character."
         )
     ])

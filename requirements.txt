@@ -17,3 +17,6 @@ itsdangerous
 redis
 limits[redis]
 email_validator
+psycopg2-binary
+alembic
+Flask-Migrate

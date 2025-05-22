@@ -15,7 +15,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from dotenv import load_dotenv
 from flask_sqlalchemy import SQLAlchemy
 from forms import SignupForm, LoginForm
-
+from flask_migrate import Migrate
 # === Load Environment Variables ===
 load_dotenv()
 
@@ -31,6 +31,8 @@ app.config['WTF_CSRF_SSL_STRICT'] = False
 app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('SUPABASE_DB_URI')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
+migrate = Migrate(app, db)
+
 class User(db.Model):
     __tablename__ = "users"
     id = db.Column(db.Integer, primary_key=True)
