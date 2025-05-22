@@ -16,3 +16,4 @@ Werkzeug
 itsdangerous
 redis
 limits[redis]
+email_validator
