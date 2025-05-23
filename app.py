@@ -23,7 +23,7 @@ app = Flask(__name__)
 app.secret_key = os.getenv('FLASK_SECRET_KEY') or "dev-secret-key"
 
 # === Session Configuration ===
-app.config['SESSION_TYPE'] = 'filesystem'
+#app.config['SESSION_TYPE'] = 'filesystem'
 app.config['SESSION_COOKIE_SECURE'] = True
 app.config['SESSION_COOKIE_HTTPONLY'] = True
 app.config['SESSION_COOKIE_SAMESITE'] = 'Lax'
@@ -32,7 +32,8 @@ app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DATABASE_URL')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 migrate = Migrate(app, db)
-Session(app)
+#Session(app)
+
 
 class User(db.Model):
     __tablename__ = "users"
@@ -130,6 +131,11 @@ from forms import SignupForm, LoginForm
 @app.route("/signup", methods=["GET", "POST"])
 def signup():
     form = SignupForm()
+    print("Session Keys:", session.keys())
+    print("Session Cookie:", request.cookies.get('session'))
+    print("CSRF Token (form):", form.csrf_token.data)
+    print("CSRF Token (session):", session.get('_csrf_token'))
+
     if form.validate_on_submit():
         # reCAPTCHA check
         token = request.form.get("g-recaptcha-response")
