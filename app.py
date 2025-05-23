@@ -32,6 +32,7 @@ app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DATABASE_URL')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 migrate = Migrate(app, db)
+Session(app)
 
 class User(db.Model):
     __tablename__ = "users"
@@ -40,7 +41,6 @@ class User(db.Model):
     email = db.Column(db.String(120), unique=True, nullable=False)
     pwd_hash = db.Column(db.String(256), nullable=False)
 
-Session(app)
 
 # === CSRF Protection ===
 csrf = CSRFProtect(app)
@@ -207,19 +207,26 @@ def guest_login():
 @app.route("/logout")
 def logout():
     session.pop("user", None)
+    session.pop("guest", None)
+    session.pop("agent_name", None)
     return redirect(url_for("index"))
 
 # Avatar Customisation
 @app.route('/customise')
 def customise():
-    if "agent_name" not in session:
+    if "user" in session:
+        name = session["user"]["username"]
+    elif "agent_name" in session:
+        name = session["agent_name"]
+    else:
         return redirect(url_for("login"))
-    return render_template("customise.html", name=session["agent_name"])
+    return render_template("customise.html", name=name)
+
 
 
 @app.route('/dialogue')
 def dialogue():
-    name = session.get('user', 'Agent')
+    name = session["user"]["username"] if "user" in session else session.get("agent_name", "Agent")
     return render_template('dialogue.html', name=name)
 
 @app.route('/get_sprites')
