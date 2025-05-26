@@ -16,6 +16,7 @@ from dotenv import load_dotenv
 from flask_sqlalchemy import SQLAlchemy
 from forms import SignupForm, LoginForm
 from flask_migrate import Migrate
+
 # === Load Environment Variables ===
 load_dotenv()
 
@@ -82,10 +83,9 @@ def add_security_headers(response):
 # === Force HTTPS on Render ===
 @app.before_request
 def enforce_https():
-    if not request.is_secure and os.getenv("FLASK_ENV") != "development" and not request.is_secure:
+    if not request.is_secure and os.getenv("FLASK_ENV") != "development":
         return redirect(request.url.replace("http://", "https://", 1))
     
-
 
 # === CONFIGURATION ===
 SPRITE_PATH = "static/images/avatar_parts"
@@ -131,10 +131,10 @@ from forms import SignupForm, LoginForm
 @app.route("/signup", methods=["GET", "POST"])
 def signup():
     form = SignupForm()
-    print("Session Keys:", session.keys())
-    print("Session Cookie:", request.cookies.get('session'))
-    print("CSRF Token (form):", form.csrf_token.data)
-    print("CSRF Token (session):", session.get('_csrf_token'))
+    #print("Session Keys:", session.keys())
+    #print("Session Cookie:", request.cookies.get('session'))
+   # print("CSRF Token (form):", form.csrf_token.data)
+    #print("CSRF Token (session):", session.get('_csrf_token'))
 
     if form.validate_on_submit():
         # reCAPTCHA check
@@ -188,7 +188,6 @@ def login():
 def oauth_google():
     if not google.authorized:
         return redirect(url_for('google.login'))
-    
     resp = google.get("/oauth2/v2/userinfo")
     info = resp.json()
     email = info["email"]
