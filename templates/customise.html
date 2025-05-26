@@ -16,7 +16,7 @@
     <div class="customise-container pixelated-border">
       <h1 class="customise-title">Customise Your Avatar</h1>
 
-      <form id="customise-form">
+      <form id="customise-form" onsubmit="return false">
         <input
           type="text"
           id="agent-name"
@@ -31,14 +31,16 @@
           <button type="button" class="tab-button" data-category="clothes">Clothes</button>
           <button type="button" class="tab-button" data-category="hair">Hair</button>
           <button type="button" class="tab-button" data-category="eyes">Eyes</button>
-          <button type="button" class="tab-button" data-category="accessories">Accessories</button>
+          <button type="button" class="tab-button" data-category="acc">Accessories</button>
         </div>
 
-        <div id="grid-container" class="grid-container">
+        <!-- FIX: This is the container your JS expects -->
+        <div id="avatar-options">
           <p class="loading-text">Loading Mission...</p>
         </div>
 
-        <button type="submit" class="login-button">Save Avatar</button>
+        <!-- FIX: Correct ID and type -->
+        <button type="button" class="login-button" id="save-avatar">Save Avatar</button>
       </form>
     </div>
   </div>
