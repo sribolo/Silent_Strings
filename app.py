@@ -249,15 +249,20 @@ def dialogue():
 
 @app.route('/get_sprites')
 def get_sprites():
+    import os
     data = {}
-    for category in ["acc","characters","clothes","eyes","hair"]:
+    for category in ["acc", "characters", "clothes", "eyes", "hair"]:
         data[category] = {}
         folder = f'static/images/avatar_parts/{category}'
         if os.path.isdir(folder):
-            for fn in os.listdir(folder):
-                if fn.lower().endswith('.png'):
-                    key = fn.rsplit('.',1)[0]
-                    data[category][key] = {"x":0,"y":0}
+            # Walk through all subdirectories and files
+            for root, dirs, files in os.walk(folder):
+                for fn in files:
+                    if fn.lower().endswith('.png'):
+                        # Make a unique key for each file
+                        rel_path = os.path.relpath(os.path.join(root, fn), folder)
+                        key = rel_path.replace(os.sep, '_').rsplit('.', 1)[0]
+                        data[category][key] = {"x": 0, "y": 0}
     return jsonify(data)
 
 @app.route('/save-avatar', methods=['POST'])
