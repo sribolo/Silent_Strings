@@ -652,20 +652,25 @@ button:hover {
 }
   
 
-@media (max-width: 520px) {
+@media (max-width: 850px) {
   .mission-container {
-    padding: 18px 6vw;
-    max-width: 96vw;
+    min-width: 90vw;
+    padding: 1.2rem 1rem;
   }
   .pixel-input {
     font-size: 1rem;
     padding: 12px 6px;
   }
   .login-button {
+    min-width: 140px;
     font-size: 1rem;
-    padding: 12px 0;
   }
-
+  .center-stack-container {
+    left: 50%;
+    transform: translate(-50%, -25%);
+    min-width: 90vw;
+    padding: 1.2rem 1rem;
+  }
   .recaptcha-wrap {
     max-width: 97vw;
     width: 97vw;
