@@ -69,16 +69,18 @@ html, body {
 }
 
 /* Title Text */
-.game-title {
+game-title {
   font-family: 'Press Start 2P', monospace;
-  font-size: 2.5rem;
-  color: #FFD369;
-  text-align: center;
-  letter-spacing: 2px;
-  margin-bottom: 18px;
-  text-shadow: 2px 2px 0 #23232b, 0 0 8px #FFD369;
+  font-size: 4rem;
+  color: #FFFFFF;
+  text-shadow:
+    0 0 5px #A499FF,
+    0 0 10px #A499FF,
+    0 0 20px #6C5CE7;
+    animation: pixelIntro 2s ease-out, pulseGlow 2.5s ease-in-out infinite;
+    position: relative;
+    display: inline-block;
 }
-
   
 /* Retro Pixel Movement Animation */
 @keyframes pixelIntro {
@@ -126,26 +128,27 @@ html, body {
   
 /* Start Button */
 .start-button {
-  text-decoration: none !important;
-  font-family: 'Press Start 2P', monospace; /* For pixel look */
-  background: #FFD369;
-  color: #23232b;
-  padding: 16px 36px;
-  border-radius: 14px;
+  background: #6C5CE7;
+  border: none;
+  color: white;
+  padding: 15px 35px;
   font-size: 1.2rem;
-  font-weight: bold;
-  box-shadow: 0 4px 20px rgba(0,0,0,0.18);
-  border: 2px solid #23232b;
-  display: inline-block;
+  border-radius: 8px;
   margin-top: 20px;
-  letter-spacing: 2px;
-  transition: background 0.2s, color 0.2s;
+  cursor: pointer;
+  font-family: 'Press Start 2P', monospace;
+  box-shadow: 0 0 15px rgba(140, 82, 255, 0.5), 0 0 25px rgba(140, 82, 255, 0.3);
+  transition: all 0.3s ease-in-out;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  text-decoration: none;
 }
 
 
 .start-button:hover {
-    background: #8A2BE2;
-    transform: scale(1.04);
+  background: #8A2BE2;
+  box-shadow: 0 0 20px #8A2BE2;
+  transform: scale(1.05);
 }
 
 /* Mission Briefing Screen */
