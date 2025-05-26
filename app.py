@@ -219,6 +219,18 @@ def logout():
 # Avatar Customisation
 @app.route('/customise')
 def customise():
+    if google.authorized:
+        resp = google.get("/oauth2/v2/userinfo")
+        info = resp.json()
+        email = info["email"]
+        user = User.query.filter_by(email=email).first()
+        if not user:
+            user = User(username=info.get("name"), email=email, pwd_hash="")
+            db.session.add(user)
+            db.session.commit()
+        session["user"] = {"username": info.get("name"), "email": email}
+        name = info.get("name")
+        
     if "user" in session:
         name = session["user"]["username"]
     elif "agent_name" in session:
