@@ -55,13 +55,13 @@
   <script src="{{ url_for('static', filename='js/start.js') }}"></script>
 
   <!-- modal handlers (small inline is fine if you allow 'self' script-src) -->
-  <script>
-    document.getElementById('guestBtn').addEventListener('click', () => {
-      document.getElementById('guestModal').style.display = 'block';
-    });
-    document.getElementById('cancelGuest').addEventListener('click', () => {
-      document.getElementById('guestModal').style.display = 'none';
-    });
+  <script nonce="{{ csp_nonce }}">
+    document.getElementById('guestBtn').addEventListener('click', function() {
+    document.getElementById('guestModal').style.display = 'block';
+});
+    document.getElementById('cancelGuest').addEventListener('click', function() {
+    document.getElementById('guestModal').style.display = 'none';
+});
   </script>
 </body>
 </html>
