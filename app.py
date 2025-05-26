@@ -204,6 +204,7 @@ def login():
 
 @app.route('/guest_login', methods=['POST'])
 def guest_login():
+    session.clear()
     session['guest'] = True
     session['agent_name'] = "Guest Agent"
     return redirect(url_for('customise'))
