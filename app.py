@@ -230,7 +230,7 @@ def customise():
             db.session.commit()
         session["user"] = {"username": info.get("name"), "email": email}
         name = info.get("name")
-        
+
     if "user" in session:
         name = session["user"]["username"]
     elif "agent_name" in session:
@@ -277,6 +277,13 @@ def get_avatar():
 @app.route('/avatars/<path:filename>')
 def avatar_files(filename):
     return send_from_directory('static/images/avatar_parts', filename)
+
+@app.route('/profile')
+def profile():
+    if "user" not in session:
+        return redirect(url_for('login'))
+    user = session["user"]
+    return render_template("profile.html", user=user)
 
 # === RUN SERVER ===
 if __name__ == "__main__":
