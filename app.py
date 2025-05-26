@@ -98,8 +98,8 @@ google_bp = make_google_blueprint(
         "https://www.googleapis.com/auth/userinfo.profile",
         "https://www.googleapis.com/auth/userinfo.email",
         "openid"
-    ],
-    redirect_to="google.authorized" 
+    ]
+    #redirect_to="google.authorized" 
 )
 app.register_blueprint(google_bp, url_prefix="/login/google")
 
@@ -184,22 +184,22 @@ def login():
 
 
 # Google OAuth Log-In
-@app.route("/oauth/google")
-def oauth_google():
-    if not google.authorized:
-        return redirect(url_for('google.login'))
-    resp = google.get("/oauth2/v2/userinfo")
-    info = resp.json()
-    email = info["email"]
+#@app.route("/oauth/google")
+#def oauth_google():
+#    if not google.authorized:
+ #       return redirect(url_for('google.login'))
+ #   resp = google.get("/oauth2/v2/userinfo")
+  #  info = resp.json()
+ #   email = info["email"]
     
-    user = User.query.filter_by(email=email).first()
-    if not user:
-        user = User(username=info.get("name"), email=email, pwd_hash="")
-        db.session.add(user)
-        db.session.commit()
-    session["user"] = {"username": info.get("name"), "email": email}
-    flash("Logged in with Google!", "success")
-    return redirect(url_for("customise"))
+ #   user = User.query.filter_by(email=email).first()
+ #   if not user:
+ #       user = User(username=info.get("name"), email=email, pwd_hash="")
+ #       db.session.add(user)
+ #       db.session.commit()
+ #   session["user"] = {"username": info.get("name"), "email": email}
+ #   flash("Logged in with Google!", "success")
+ #   return redirect(url_for("customise"))
 
 
 @app.route('/guest_login', methods=['POST'])
