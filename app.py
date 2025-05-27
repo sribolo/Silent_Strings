@@ -247,36 +247,29 @@ def dialogue():
     name = session["user"]["username"] if "user" in session else session.get("agent_name", "Agent")
     return render_template('dialogue.html', name=name)
 
+import os
+from flask import Flask, jsonify
+
+app = Flask(__name__)
+
 @app.route('/get_sprites')
 def get_sprites():
     base_path = os.path.join(app.root_path, 'static', 'images', 'avatar_parts')
     data = {}
-    if not os.path.exists(base_path):
-        return jsonify({"error": "avatar_parts folder missing"}), 500
+    categories = ['characters', 'clothes', 'face', 'hair', 'acc', 'walk']  # update if you have more!
 
-    # Loop through all top-level categories (acc, characters, clothes, face, hair, walk)
-    for category in os.listdir(base_path):
+    for category in categories:
         category_path = os.path.join(base_path, category)
         data[category] = []
         if os.path.isdir(category_path):
-            # Check for subfolders (like characters/char1/char1.png)
-            for item in os.listdir(category_path):
-                item_path = os.path.join(category_path, item)
-                # If it's a folder, look for PNGs inside
-                if os.path.isdir(item_path):
-                    for fn in os.listdir(item_path):
-                        if fn.lower().endswith('.png'):
-                            data[category].append({
-                                "name": item,
-                                "img": f"/static/images/avatar_parts/{category}/{item}/{fn}"
-                            })
-                # If it's a PNG directly inside the category folder
-                elif item.lower().endswith('.png'):
+            for fn in os.listdir(category_path):
+                if fn.lower().endswith('.png'):
                     data[category].append({
-                        "name": os.path.splitext(item)[0],
-                        "img": f"/static/images/avatar_parts/{category}/{item}"
+                        "name": os.path.splitext(fn)[0],
+                        "img": f"/static/images/avatar_parts/{category}/{fn}"
                     })
     return jsonify(data)
+
 
 
 
