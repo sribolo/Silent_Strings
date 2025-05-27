@@ -1,26 +1,43 @@
-
 document.addEventListener("DOMContentLoaded", () => {
-  const container = document.getElementById("avatar-options");
   const categories = ["characters", "clothes", "hair", "eyes", "acc"];
-  const selections = {};
+  const selections = {}; // Stores the user's current choices
 
   // === Fetch all sprites from the backend ===
   fetch('/get_sprites')
-  .then(res => res.json())
-  .then(data => {
-    const charDiv = document.getElementById('character-options');
-    data.characters.forEach(char => {
-      const img = document.createElement('img');
-      img.src = char.img;
-      img.alt = char.name;
-      img.classList.add('avatar-choice');
-      // Optional: click to select
-      img.onclick = () => {
-        // Mark as selected (add a CSS class, store in variable, etc)
-      };
-      charDiv.appendChild(img);
+    .then(res => res.json())
+    .then(data => {
+      categories.forEach(category => {
+        const grid = document.getElementById(`grid-${category}`);
+        if (!grid) return;
+
+        grid.innerHTML = ""; // Clear any previous entries
+
+        data[category].forEach(option => {
+          const img = document.createElement('img');
+          img.src = option.img;
+          img.alt = option.name;
+          img.classList.add('avatar-choice');
+          img.dataset.category = category;
+          img.dataset.name = option.name;
+
+          img.onclick = () => {
+            // Unselect all in this category
+            grid.querySelectorAll('.avatar-choice.selected').forEach(el => el.classList.remove('selected'));
+            // Select this one
+            img.classList.add('selected');
+            // Store selection
+            selections[category] = {
+              name: option.name,
+              img: option.img
+            };
+          };
+
+          grid.appendChild(img);
+        });
+      });
+      // Show the first category by default
+      showCategory(categories[0]);
     });
-  });
 
   // === Tab switching logic ===
   document.querySelectorAll(".tab-button").forEach(btn => {
@@ -50,6 +67,11 @@ document.addEventListener("DOMContentLoaded", () => {
       nameInput.focus();
       return;
     }
+    // Optionally, ensure at least a character is selected
+    if (!selections.characters) {
+      alert("Please select a character avatar.");
+      return;
+    }
 
     fetch("/save-avatar", {
       method: "POST",
@@ -70,19 +92,4 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 });
 
-const SPRITE_WIDTH = 32;
-const SPRITE_HEIGHT = 32;
-const FRAMES = 4; // e.g., number of walk frames per row
-let currentFrame = 0;
-let row = 0; // e.g., 0=idle, 1=walk down, 2=walk left, 3=walk right, 4=walk up (adjust based on your sheet)
 
-function showFrame() {
-  document.getElementById('sprite').style.backgroundPosition =
-    `-${currentFrame * SPRITE_WIDTH}px -${row * SPRITE_HEIGHT}px`;
-}
-
-// Animate (walk cycle)
-setInterval(() => {
-  currentFrame = (currentFrame + 1) % FRAMES;
-  showFrame();
-}, 200); // adjust timing as needed

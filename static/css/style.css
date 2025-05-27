@@ -696,8 +696,12 @@ button:hover {
   width: 32px;
   height: 32px;
   cursor: pointer;
-  margin: 5px;
+  margin: 4px;
+  border: 2px solid transparent;
+  border-radius: 4px;
+  transition: border 0.2s;
 }
 .avatar-choice.selected {
-  border: 2px solid #FFD369;
+  border: 2px solid #6C5CE7;
+  background: #23232b;
 }
