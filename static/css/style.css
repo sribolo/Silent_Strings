@@ -684,3 +684,11 @@ button:hover {
     gap: 24px;
   }
 }
+
+#sprite {
+  width: 32px;
+  height: 32px;
+  background-image: url("/static/images/avatar_parts/characters/char1/char1.png");
+  image-rendering: pixelated; /* for crisp pixels */
+  background-position: 0px 0px;
+}

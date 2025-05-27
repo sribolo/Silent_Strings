@@ -98,3 +98,20 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   });
 });
+
+const SPRITE_WIDTH = 32;
+const SPRITE_HEIGHT = 32;
+const FRAMES = 4; // e.g., number of walk frames per row
+let currentFrame = 0;
+let row = 0; // e.g., 0=idle, 1=walk down, 2=walk left, 3=walk right, 4=walk up (adjust based on your sheet)
+
+function showFrame() {
+  document.getElementById('sprite').style.backgroundPosition =
+    `-${currentFrame * SPRITE_WIDTH}px -${row * SPRITE_HEIGHT}px`;
+}
+
+// Animate (walk cycle)
+setInterval(() => {
+  currentFrame = (currentFrame + 1) % FRAMES;
+  showFrame();
+}, 200); // adjust timing as needed
