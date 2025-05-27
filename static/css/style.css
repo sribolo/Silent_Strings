@@ -428,56 +428,6 @@ button:hover {
   
 #custom-box {
     max-width: 500px;
-    margin: 100px auto;
-    padding: 30px;
-    background: #1a1a1a;
-    border-radius: 10px;
-    text-align: center;
-    border: 1px solid #444;
-}
-
-#agent-name {
-    padding: 10px;
-    font-size: 1rem;
-    width: 80%;
-    margin: 10px 0 20px;
-    background-color: #222;
-    color: white;
-    border: none;
-    border-radius: 5px;
-}
-
-#avatar-options {
-    display: flex;
-    justify-content: center;
-    gap: 15px;
-    margin-bottom: 20px;
-}
-
-.avatar {
-    width: 80px;
-    height: 80px;
-    border-radius: 8px;
-    border: 2px solid transparent;
-    cursor: pointer;
-    transition: 0.2s;
-}
-
-.avatar.selected {
-    border-color: #6C5CE7;
-    box-shadow: 0 0 10px #6C5CE7;
-}
-  
-.avatar-header {
-    width: 50px;
-    height: 50px;
-    float: right;
-    margin-bottom: 10px;
-    border-radius: 8px;
-}
-  
-#custom-box {
-    max-width: 500px;
     margin: 50px auto;
     padding: 30px;
     background: #1a1a1a;
@@ -485,67 +435,8 @@ button:hover {
     text-align: center;
     color: white;
  }
-  
-#avatar-preview {
-    margin-top: 20px;
-    width: 120px;
-    height: 120px;
-    position: relative;
-    margin-inline: auto;
-}
-  
-#avatar-preview img {
-    width: 100%;
-    height: 100%;
-    position: absolute;
-    top: 0;
-    left: 0;
-}
-  
-.grid-container {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(32px, 1fr));
-    gap: 5px;
-    margin-top: 10px;
-}
+ 
 
-.grid-item {
-    width: 32px;
-    height: 32px;
-    background-repeat: no-repeat;
-    border: 1px solid transparent;
-    cursor: pointer;
-    margin: 2px;
-}
-
-.grid-item:hover {
-    border-color: #6C5CE7;
-}
-  
-.grid-item.selected {
-    border-color: #FF5E5E;
-    box-shadow: 0 0 5px #FF5E5E;
-}
-  
-.tab-buttons {
-    margin-top: 20px;
-    display: flex;
-    justify-content: center;
-    gap: 10px;
-}
-
-.tab-button {
-    padding: 10px 15px;
-    border: none;
-    background-color: #333;
-    color: white;
-    cursor: pointer;
-    border-radius: 5px;
-}
-
-.tab-button:hover {
-    background-color: #555;
-}
   
   /* Center and scale reCAPTCHA widget */
 .recaptcha-center {
@@ -692,34 +583,137 @@ button:hover {
   image-rendering: pixelated; /* for crisp pixels */
   background-position: 0px 0px;
 }
-.avatar-choice {
-  width: 32px;
-  height: 32px;
-  cursor: pointer;
-  margin: 4px;
-  border: 2px solid transparent;
-  border-radius: 4px;
-  transition: border 0.2s;
-}
-.avatar-choice.selected {
-  border: 2px solid #6C5CE7;
-  background: #23232b;
-}
-
+/* --- Avatar Preview --- */
 .avatar-preview-big {
-  width: 128px;    /* 4x bigger than 32px */
+  width: 128px;
   height: 128px;
   position: relative;
-  background: none; /* or a checkerboard bg if you want */
-  margin: 0 auto;
+  background: #23232b;
+  border: 2px solid #FFD369;
+  border-radius: 12px;
+  margin-bottom: 16px;
+  box-shadow: 0 2px 8px #0005;
   display: block;
+  margin-left: auto;
+  margin-right: auto;
 }
+
 .avatar-layer {
   position: absolute;
-  left: 0;
-  top: 0;
+  left: 0; top: 0;
   width: 128px;
   height: 128px;
   image-rendering: pixelated;
-  pointer-events: none; /* So user can't click these */
+  pointer-events: none;
+  /* Optional: fade-in animation */
+  /* animation: fadeIn 0.2s; */
 }
+
+/* --- Avatar Choice Thumbnails --- */
+.avatar-choice {
+  width: 32px;
+  height: 32px;
+  margin: 4px;
+  border: 2px solid transparent;
+  border-radius: 6px;
+  background: #18181b;
+  box-shadow: 0 2px 4px #0002;
+  cursor: pointer;
+  image-rendering: pixelated;
+  transition: border 0.15s, box-shadow 0.15s;
+}
+
+.avatar-choice.selected {
+  border: 2px solid #FFD369;
+  box-shadow: 0 0 8px #FFD36999;
+  background: #282833;
+}
+
+/* --- Grid Layout for Avatars --- */
+.grid-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin: 12px 0;
+  background: #18181b;
+  padding: 12px;
+  border-radius: 8px;
+  min-height: 48px;
+  max-width: 320px;
+}
+
+.tab-bar {
+  margin-bottom: 8px;
+  display: flex;
+  gap: 8px;
+}
+
+.tab-button {
+  background: #23232b;
+  color: #FFD369;
+  border: 2px solid #FFD36950;
+  border-radius: 6px;
+  padding: 6px 18px;
+  font-family: 'Press Start 2P', monospace;
+  font-size: 0.9em;
+  cursor: pointer;
+  transition: background 0.2s, border 0.2s;
+}
+
+.tab-button.active {
+  background: #FFD369;
+  color: #23232b;
+  border: 2px solid #FFD369;
+}
+
+#agent-name {
+  width: 85%;
+  padding: 8px;
+  margin: 14px 0;
+  border-radius: 8px;
+  border: 1.5px solid #FFD36970;
+  font-size: 1.1em;
+  background: #1c1c22;
+  color: #FFD369;
+}
+
+#save-avatar {
+  background: #FFD369;
+  color: #23232b;
+  border: none;
+  border-radius: 8px;
+  padding: 10px 32px;
+  font-size: 1.2em;
+  font-family: 'Press Start 2P', monospace;
+  cursor: pointer;
+  margin-top: 10px;
+  transition: background 0.2s, color 0.2s;
+}
+
+#save-avatar:hover {
+  background: #e8c548;
+  color: #18181b;
+}
+
+.customise-title {
+  color: #FFD369;
+  text-align: center;
+  font-family: 'Press Start 2P', monospace;
+  margin-bottom: 20px;
+  font-size: 2em;
+  text-shadow: 1px 2px 2px #18181b70;
+}
+
+/* --- Responsive layout for preview+grid --- */
+.customise-flex {
+  display: flex;
+  align-items: flex-start;
+  gap: 32px;
+  justify-content: center;
+  margin-top: 32px;
+}
+@media (max-width: 900px) {
+  .customise-flex { flex-direction: column; gap: 20px; align-items: center; }
+  .avatar-preview-big { margin-bottom: 0; }
+}
+

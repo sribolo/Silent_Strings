@@ -1,6 +1,6 @@
 document.addEventListener("DOMContentLoaded", () => {
   const categories = ["characters", "clothes", "hair", "eyes", "acc"];
-  const selections = {}; // Stores the user's current choices
+  const selections = {}; // User's current selections for each category
 
   // === Fetch all sprites from the backend ===
   fetch('/get_sprites')
@@ -30,6 +30,7 @@ document.addEventListener("DOMContentLoaded", () => {
               name: option.name,
               img: option.img
             };
+            updateAvatarPreview(selections);
           };
 
           grid.appendChild(img);
@@ -37,25 +38,22 @@ document.addEventListener("DOMContentLoaded", () => {
       });
       // Show the first category by default
       showCategory(categories[0]);
+      updateAvatarPreview(selections); // Show initial preview (empty or preselected)
     });
 
   // === Tab switching logic ===
   document.querySelectorAll(".tab-button").forEach(btn => {
     btn.addEventListener("click", () => {
-      // update active button
-      document.querySelectorAll(".tab-button.active")
-              .forEach(el => el.classList.remove("active"));
+      document.querySelectorAll(".tab-button.active").forEach(el => el.classList.remove("active"));
       btn.classList.add("active");
-      // show corresponding grid
       showCategory(btn.dataset.category);
     });
   });
 
   function showCategory(category) {
-    document.querySelectorAll(".grid-container")
-            .forEach(grid => grid.style.display = "none");
+    document.querySelectorAll(".grid-container").forEach(grid => grid.style.display = "none");
     const target = document.getElementById(`grid-${category}`);
-    if (target) target.style.display = "grid";
+    if (target) target.style.display = "flex";
   }
 
   // === Save Avatar and Navigate to Dialogue ===
@@ -92,17 +90,18 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 });
 
+// === Function to update the big preview on the left ===
 function updateAvatarPreview(selections) {
   const preview = document.getElementById('avatar-preview');
   preview.innerHTML = ""; // Clear previous
 
-  // List of layers, in order from bottom to top:
+  // Draw layers in order (bottom to top)
   const LAYER_ORDER = [
-    'characters',
-    'clothes',
-    'hair',
-    'eyes',
-    'acc'
+    'characters',   // base
+    'clothes',      // outfit
+    'hair',         // hair
+    'eyes',         // eyes/blush/lipstick if eyes layer
+    'acc'           // accessories: beard, glasses, hat
   ];
   LAYER_ORDER.forEach(category => {
     if (selections[category]) {
@@ -113,4 +112,3 @@ function updateAvatarPreview(selections) {
     }
   });
 }
-
