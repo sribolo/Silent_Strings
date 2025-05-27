@@ -692,3 +692,12 @@ button:hover {
   image-rendering: pixelated; /* for crisp pixels */
   background-position: 0px 0px;
 }
+.avatar-choice {
+  width: 32px;
+  height: 32px;
+  cursor: pointer;
+  margin: 5px;
+}
+.avatar-choice.selected {
+  border: 2px solid #FFD369;
+}

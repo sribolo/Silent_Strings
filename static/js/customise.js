@@ -5,51 +5,22 @@ document.addEventListener("DOMContentLoaded", () => {
   const selections = {};
 
   // === Fetch all sprites from the backend ===
-  fetch("/get_sprites")
-    .then(res => {
-      if (!res.ok) throw new Error("Failed to load sprites");
-      return res.json();
-    })
-    .then(data => {
-      categories.forEach(category => {
-        const grid = document.createElement("div");
-        grid.className = "grid-container";
-        grid.id = `grid-${category}`;
-        grid.style.display = "none";
-
-        const sprites = data[category] || {};
-        Object.entries(sprites).forEach(([sprite, coords]) => {
-          const item = document.createElement("div");
-          item.className = "grid-item";
-          // serve via Flask's /avatars route
-          item.style.backgroundImage = `url('/avatars/${category}/${sprite}.png')`;
-          item.style.backgroundPosition = `-${coords.x}px -${coords.y}px`;
-          item.dataset.category = category;
-          item.dataset.sprite = sprite;
-
-          item.addEventListener("click", () => {
-            // deselect others in this grid
-            grid.querySelectorAll(".grid-item.selected")
-                .forEach(el => el.classList.remove("selected"));
-            // mark this one
-            item.classList.add("selected");
-            // record selection (just the sprite key)
-            selections[category] = sprite;
-          });
-
-          grid.appendChild(item);
-        });
-
-        container.appendChild(grid);
-      });
-
-      // Show the first category by default
-      showCategory(categories[0]);
-    })
-    .catch(err => {
-      console.error(err);
-      container.innerHTML = "<p>Failed to load avatar options.</p>";
+  fetch('/get_sprites')
+  .then(res => res.json())
+  .then(data => {
+    const charDiv = document.getElementById('character-options');
+    data.characters.forEach(char => {
+      const img = document.createElement('img');
+      img.src = char.img;
+      img.alt = char.name;
+      img.classList.add('avatar-choice');
+      // Optional: click to select
+      img.onclick = () => {
+        // Mark as selected (add a CSS class, store in variable, etc)
+      };
+      charDiv.appendChild(img);
     });
+  });
 
   // === Tab switching logic ===
   document.querySelectorAll(".tab-button").forEach(btn => {
