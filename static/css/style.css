@@ -705,3 +705,21 @@ button:hover {
   border: 2px solid #6C5CE7;
   background: #23232b;
 }
+
+.avatar-preview-big {
+  width: 128px;    /* 4x bigger than 32px */
+  height: 128px;
+  position: relative;
+  background: none; /* or a checkerboard bg if you want */
+  margin: 0 auto;
+  display: block;
+}
+.avatar-layer {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 128px;
+  height: 128px;
+  image-rendering: pixelated;
+  pointer-events: none; /* So user can't click these */
+}

@@ -17,15 +17,7 @@
       <h1 class="customise-title">Customise Your Avatar</h1>
 
       <form id="customise-form" onsubmit="return false">
-        <input
-          type="text"
-          id="agent-name"
-          name="name"
-          value="{{ name }}"
-          placeholder="Enter your Agent Name"
-          required
-        >
-
+       
         <div id="character-options">
           <div class="tab-bar">
             <button class="tab-button active" data-category="characters">Characters</button>
@@ -40,7 +32,9 @@
           <div id="grid-eyes" class="grid-container" style="display:none;"></div>
           <div id="grid-acc" class="grid-container" style="display:none;"></div>
         </div>
-        <input type="text" id="agent-name" placeholder="Agent Name">
+        <div id="avatar-preview" class="avatar-preview-big"></div>
+
+        <input type="text" id="agent-name" placeholder="Agent Name" required>
         <button id="save-avatar">Save Avatar</button>
       
       </form>

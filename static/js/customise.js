@@ -92,4 +92,25 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 });
 
+function updateAvatarPreview(selections) {
+  const preview = document.getElementById('avatar-preview');
+  preview.innerHTML = ""; // Clear previous
+
+  // List of layers, in order from bottom to top:
+  const LAYER_ORDER = [
+    'characters',
+    'clothes',
+    'hair',
+    'eyes',
+    'acc'
+  ];
+  LAYER_ORDER.forEach(category => {
+    if (selections[category]) {
+      const img = document.createElement('img');
+      img.src = selections[category].img;
+      img.className = 'avatar-layer';
+      preview.appendChild(img);
+    }
+  });
+}
 
