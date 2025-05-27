@@ -265,15 +265,27 @@ def get_sprites():
                     })
     return jsonify(data)
 
-
-
-
 @app.route('/save-avatar', methods=['POST'])
 def save_avatar():
-    data = request.get_json()
-    session['agent_name']   = data.get('name','Agent')
-    session['avatar_parts'] = data.get('selections',{})
-    return jsonify(status="ok")
+    try:
+        data = request.get_json(force=True)
+        print("Received /save-avatar data:", data)  # Debug output
+
+        # Validate incoming data
+        name = data.get('name')
+        selections = data.get('selections')
+        if not name or not selections or 'characters' not in selections:
+            print("Invalid avatar data:", data)
+            return jsonify({"error": "Missing or invalid avatar data"}), 400
+
+        # Save to session (you can change this to DB if needed)
+        session['agent_name'] = name
+        session['avatar_parts'] = selections
+        print("Avatar saved to session:", session['avatar_parts'])
+        return jsonify(status="ok")
+    except Exception as e:
+        print("Exception in /save-avatar:", e)
+        return jsonify({"error": str(e)}), 500
 
 @app.route('/get-avatar')
 def get_avatar():
