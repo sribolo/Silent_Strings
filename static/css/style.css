@@ -589,7 +589,7 @@ button:hover {
   height: 128px;
   position: relative;
   background: #23232b;
-  border: 2px solid #FFD369;
+  border: 2px solid #6C5CE7;;
   border-radius: 12px;
   margin-bottom: 16px;
   box-shadow: 0 2px 8px #0005;
@@ -605,8 +605,6 @@ button:hover {
   height: 128px;
   image-rendering: pixelated;
   pointer-events: none;
-  /* Optional: fade-in animation */
-  /* animation: fadeIn 0.2s; */
 }
 
 /* --- Avatar Choice Thumbnails --- */
@@ -624,8 +622,8 @@ button:hover {
 }
 
 .avatar-choice.selected {
-  border: 2px solid #FFD369;
-  box-shadow: 0 0 8px #FFD36999;
+  border: 2px solid #6C5CE7;
+  box-shadow: 0 0 8px #18181b;
   background: #282833;
 }
 
@@ -650,7 +648,7 @@ button:hover {
 
 .tab-button {
   background: #23232b;
-  color: #FFD369;
+  color: #6C5CE7;
   border: 2px solid #FFD36950;
   border-radius: 6px;
   padding: 6px 18px;
@@ -661,9 +659,9 @@ button:hover {
 }
 
 .tab-button.active {
-  background: #FFD369;
+  background: #6C5CE7;
   color: #23232b;
-  border: 2px solid #FFD369;
+  border: 2px solid #6C5CE7;
 }
 
 #agent-name {
@@ -671,14 +669,14 @@ button:hover {
   padding: 8px;
   margin: 14px 0;
   border-radius: 8px;
-  border: 1.5px solid #FFD36970;
+  border: 1.5px solid #18181b;
   font-size: 1.1em;
   background: #1c1c22;
-  color: #FFD369;
+  color: #6C5CE7;
 }
 
 #save-avatar {
-  background: #FFD369;
+  background: #6C5CE7;
   color: #23232b;
   border: none;
   border-radius: 8px;
@@ -691,12 +689,12 @@ button:hover {
 }
 
 #save-avatar:hover {
-  background: #e8c548;
+  background: #6C5CE7;
   color: #18181b;
 }
 
 .customise-title {
-  color: #FFD369;
+  color: #6C5CE7;
   text-align: center;
   font-family: 'Press Start 2P', monospace;
   margin-bottom: 20px;
