@@ -251,19 +251,26 @@ def dialogue():
 def get_sprites():
     import os
     data = {}
-    for category in ["acc", "characters", "clothes", "eyes", "hair"]:
-        data[category] = {}
-        folder = f'static/images/avatar_parts/{category}'
-        if os.path.isdir(folder):
-            # Walk through all subdirectories and files
-            for root, dirs, files in os.walk(folder):
-                for fn in files:
-                    if fn.lower().endswith('.png'):
-                        # Make a unique key for each file
-                        rel_path = os.path.relpath(os.path.join(root, fn), folder)
-                        key = rel_path.replace(os.sep, '_').rsplit('.', 1)[0]
-                        data[category][key] = {"x": 0, "y": 0}
+    root_folder = 'static/images/avatar_parts'
+    # Scan all main action folders (walk, jump, hurt, etc)
+    for action in os.listdir(root_folder):
+        action_path = os.path.join(root_folder, action)
+        if os.path.isdir(action_path):
+            data[action] = {}
+            for part in os.listdir(action_path):
+                part_path = os.path.join(action_path, part)
+                if os.path.isdir(part_path):
+                    data[action][part] = []
+                    for fn in os.listdir(part_path):
+                        if fn.endswith('.png'):
+                            data[action][part].append(fn)
+                else:
+                    # Top-level sprite for that action (e.g., char1_walk.png)
+                    if action not in data:
+                        data[action] = []
+                    data[action].append(part)
     return jsonify(data)
+
 
 @app.route('/save-avatar', methods=['POST'])
 def save_avatar():
