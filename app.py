@@ -247,11 +247,6 @@ def dialogue():
     name = session["user"]["username"] if "user" in session else session.get("agent_name", "Agent")
     return render_template('dialogue.html', name=name)
 
-import os
-from flask import Flask, jsonify
-
-app = Flask(__name__)
-
 @app.route('/get_sprites')
 def get_sprites():
     base_path = os.path.join(app.root_path, 'static', 'images', 'avatar_parts')
