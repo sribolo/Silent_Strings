@@ -249,27 +249,35 @@ def dialogue():
 
 @app.route('/get_sprites')
 def get_sprites():
-    import os
+    base_path = os.path.join(app.root_path, 'static', 'images', 'avatar_parts')
     data = {}
-    root_folder = 'static/images/avatar_parts'
-    # Scan all main action folders (walk, jump, hurt, etc)
-    for action in os.listdir(root_folder):
-        action_path = os.path.join(root_folder, action)
-        if os.path.isdir(action_path):
-            data[action] = {}
-            for part in os.listdir(action_path):
-                part_path = os.path.join(action_path, part)
-                if os.path.isdir(part_path):
-                    data[action][part] = []
-                    for fn in os.listdir(part_path):
-                        if fn.endswith('.png'):
-                            data[action][part].append(fn)
-                else:
-                    # Top-level sprite for that action (e.g., char1_walk.png)
-                    if action not in data:
-                        data[action] = []
-                    data[action].append(part)
+    if not os.path.exists(base_path):
+        return jsonify({"error": "avatar_parts folder missing"}), 500
+
+    # Loop through all top-level categories (acc, characters, clothes, face, hair, walk)
+    for category in os.listdir(base_path):
+        category_path = os.path.join(base_path, category)
+        data[category] = []
+        if os.path.isdir(category_path):
+            # Check for subfolders (like characters/char1/char1.png)
+            for item in os.listdir(category_path):
+                item_path = os.path.join(category_path, item)
+                # If it's a folder, look for PNGs inside
+                if os.path.isdir(item_path):
+                    for fn in os.listdir(item_path):
+                        if fn.lower().endswith('.png'):
+                            data[category].append({
+                                "name": item,
+                                "img": f"/static/images/avatar_parts/{category}/{item}/{fn}"
+                            })
+                # If it's a PNG directly inside the category folder
+                elif item.lower().endswith('.png'):
+                    data[category].append({
+                        "name": os.path.splitext(item)[0],
+                        "img": f"/static/images/avatar_parts/{category}/{item}"
+                    })
     return jsonify(data)
+
 
 
 @app.route('/save-avatar', methods=['POST'])
