@@ -14,7 +14,7 @@ from flask_limiter.util import get_remote_address
 from werkzeug.security import generate_password_hash, check_password_hash
 from dotenv import load_dotenv
 from flask_sqlalchemy import SQLAlchemy
-from forms import SignupForm, LoginForm, ForgotPasswordForm
+from forms import SignupForm, LoginForm, ForgotPasswordForm, ResetPasswordForm
 from flask_migrate import Migrate
 from itsdangerous import URLSafeTimedSerializer
 from flask_mail import Mail, Message
@@ -140,25 +140,39 @@ from forms import SignupForm, LoginForm
 @app.route("/signup", methods=["GET", "POST"])
 def signup():
     form = SignupForm()
-    #print("Session Keys:", session.keys())
-    #print("Session Cookie:", request.cookies.get('session'))
-   # print("CSRF Token (form):", form.csrf_token.data)
-    #print("CSRF Token (session):", session.get('_csrf_token'))
 
     if form.validate_on_submit():
         # reCAPTCHA check
         token = request.form.get("g-recaptcha-response")
         if not verify_recaptcha(token):
             flash("Please complete the CAPTCHA", "error")
-            return render_template("signup.html", form=form, recaptcha_site_key=os.getenv("RECAPTCHA_SITE_KEY"))
-        
+            return render_template(
+                "signup.html",
+                form=form,
+                recaptcha_site_key=os.getenv("RECAPTCHA_SITE_KEY")
+            )
+
         username = form.username.data
         email    = form.email.data
         pwd      = form.password.data
 
+        # Check for duplicate username
+        if User.query.filter_by(username=username).first():
+            flash("That username is already taken. Please choose another.", "error")
+            return render_template(
+                "signup.html",
+                form=form,
+                recaptcha_site_key=os.getenv("RECAPTCHA_SITE_KEY")
+            )
+
+        # Check for duplicate email
         if User.query.filter_by(email=email).first():
-            flash("That email is already registered", "error")
-            return redirect(url_for("signup"))
+            flash("That email is already registered. Please log in.", "error")
+            return render_template(
+                "signup.html",
+                form=form,
+                recaptcha_site_key=os.getenv("RECAPTCHA_SITE_KEY")
+            )
 
         pwd_hash = generate_password_hash(pwd)
         user = User(username=username, email=email, pwd_hash=pwd_hash)
@@ -168,7 +182,12 @@ def signup():
         flash("Account created!", "success")
         return redirect(url_for("customise"))
 
-    return render_template("signup.html", form=form, recaptcha_site_key=os.getenv("RECAPTCHA_SITE_KEY"))
+    return render_template(
+        "signup.html",
+        form=form,
+        recaptcha_site_key=os.getenv("RECAPTCHA_SITE_KEY")
+    )
+ 
 
 @app.route("/login", methods=["GET", "POST"])
 @limiter.limit("5 per minute")
@@ -316,20 +335,21 @@ def forgot_password():
 
 @app.route('/reset-password/<token>', methods=['GET', 'POST'])
 def reset_password(token):
+    form = ResetPasswordForm()  # <-- Make sure this exists and is imported!
     try:
         email = s.loads(token, salt='reset-password', max_age=3600)
     except Exception:
         flash("Invalid or expired link.", "error")
         return redirect(url_for('login'))
-    if request.method == 'POST':
-        pwd = request.form['password']
+    if form.validate_on_submit():
         user = User.query.filter_by(email=email).first()
         if user:
-            user.pwd_hash = generate_password_hash(pwd)
+            user.pwd_hash = generate_password_hash(form.password.data)
             db.session.commit()
             flash("Password updated!", "success")
             return redirect(url_for('login'))
-    return render_template('reset_password.html', token=token)
+    return render_template('reset_password.html', form=form, token=token)
+
 
 @app.route('/profile')
 def profile():
