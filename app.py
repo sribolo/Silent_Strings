@@ -16,13 +16,16 @@ from dotenv import load_dotenv
 from flask_sqlalchemy import SQLAlchemy
 from forms import SignupForm, LoginForm
 from flask_migrate import Migrate
+from itsdangerous import URLSafeTimedSerializer
+
+
 
 # === Load Environment Variables ===
 load_dotenv()
 
 app = Flask(__name__)
 app.secret_key = os.getenv('FLASK_SECRET_KEY') or "dev-secret-key"
-
+s = URLSafeTimedSerializer(app.secret_key)
 # === Session Configuration ===
 app.config['SESSION_TYPE'] = 'filesystem'
 app.config['SESSION_COOKIE_SECURE'] = True
@@ -301,6 +304,39 @@ def get_avatar():
 @app.route('/avatars/<path:filename>')
 def avatar_files(filename):
     return send_from_directory('static/images/avatar_parts', filename)
+
+@app.route('/forgot-password', methods=['GET', 'POST'])
+def forgot_password():
+    if request.method == 'POST':
+        email = request.form['email']
+        user = User.query.filter_by(email=email).first()
+        if user:
+            token = s.dumps(email, salt='reset-password')
+            reset_url = url_for('reset_password', token=token, _external=True)
+            # TODO: Send reset_url via email. For now, just print it!
+            print("RESET LINK:", reset_url)
+            flash("Check your email for a password reset link.", "info")
+        else:
+            flash("No account with that email.", "error")
+        return redirect(url_for('forgot_password'))
+    return render_template('forgot_password.html')
+
+@app.route('/reset-password/<token>', methods=['GET', 'POST'])
+def reset_password(token):
+    try:
+        email = s.loads(token, salt='reset-password', max_age=3600)
+    except Exception:
+        flash("Invalid or expired link.", "error")
+        return redirect(url_for('login'))
+    if request.method == 'POST':
+        pwd = request.form['password']
+        user = User.query.filter_by(email=email).first()
+        if user:
+            user.pwd_hash = generate_password_hash(pwd)
+            db.session.commit()
+            flash("Password updated!", "success")
+            return redirect(url_for('login'))
+    return render_template('reset_password.html', token=token)
 
 @app.route('/profile')
 def profile():

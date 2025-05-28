@@ -44,7 +44,11 @@
         
         <div>
           {{ form.password.label }}<br>
-          {{ form.password(class_="pixel-input", placeholder="Password") }}
+          <div style="position: relative;">
+            {{ form.password(class_="pixel-input", placeholder="Password", id="password") }}
+            <button type="button" id="toggle-password" class="show-password-btn" tabindex="-1">Show</button>
+          </div>
+
           {% for error in form.password.errors %}
             <div class="flash error">{{ error }}</div>
           {% endfor %}
@@ -62,5 +66,19 @@
     </div>
   </div>
   <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      var pwInput = document.getElementById('password');
+      var toggleBtn = document.getElementById('toggle-password');
+      if (pwInput && toggleBtn) {
+        toggleBtn.addEventListener('click', function() {
+          const type = pwInput.type === 'password' ? 'text' : 'password';
+          pwInput.type = type;
+          toggleBtn.textContent = type === 'password' ? 'Show' : 'Hide';
+        });
+      }
+    });
+    </script>
+    
 </body>
 </html>
