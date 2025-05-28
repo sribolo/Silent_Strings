@@ -801,11 +801,19 @@ button:hover {
 
 .relative-wrap {
   position: relative;
+  width: 100%;
+  margin-bottom: 12px;
+}
+
+.pixel-input {
+  width: 100%;
+  box-sizing: border-box;
+  padding-right: 44px 
 }
 
 .show-password-btn {
   position: absolute;
-  right: 12px;
+  right: 10px;
   top: 50%;
   transform: translateY(-50%);
   background: none;
@@ -816,9 +824,17 @@ button:hover {
   padding: 0 4px;
   font-family: inherit;
   z-index: 2;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 .show-password-btn:focus { outline: none; }
 
+.show-password-btn i {
+  font-size: 1.2em;
+  pointer-events: none;
+}
 
 
 @media (max-width: 900px) {
