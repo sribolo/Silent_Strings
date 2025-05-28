@@ -294,6 +294,7 @@ def avatar_files(filename):
 
 @app.route('/forgot-password', methods=['GET', 'POST'])
 def forgot_password():
+    form = ForgotPasswordForm()
     if request.method == 'POST':
         email = request.form['email']
         user = User.query.filter_by(email=email).first()
@@ -311,7 +312,7 @@ def forgot_password():
         else:
             flash("No account with that email.", "error")
         return redirect(url_for('forgot_password'))
-    return render_template('forgot_password.html')
+    return render_template('forgot_password.html', form=form)
 
 @app.route('/reset-password/<token>', methods=['GET', 'POST'])
 def reset_password(token):
