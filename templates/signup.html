@@ -4,11 +4,11 @@
   <meta charset="UTF-8">
   <title>Agent Sign Up</title>
   <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/all.min.css') }}">
 </head>
 <body>
   <div class="bg-container">
     <img src="{{ url_for('static', filename='images/background.gif') }}" class="background" alt="Background">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/all.min.css') }}">
     <div class="darken"></div>
   </div>
 
@@ -26,7 +26,6 @@
       {% endwith %}
       <form method="post" autocomplete="off">
         {{ form.hidden_tag() }}
-
         <div>
           {{ form.username.label }}<br>
           {{ form.username(class_="pixel-input", placeholder="Username") }}
@@ -34,7 +33,6 @@
             <div class="flash error">{{ error }}</div>
           {% endfor %}
         </div>
-        
         <div>
           {{ form.email.label }}<br>
           {{ form.email(class_="pixel-input", placeholder="Email") }}
@@ -42,34 +40,28 @@
             <div class="flash error">{{ error }}</div>
           {% endfor %}
         </div>
-        
         <div>
           {{ form.password.label }}<br>
           <div style="position: relative;">
             {{ form.password(class_="pixel-input", placeholder="Password", id="password") }}
-            <button type="button" class="show-password-btn" data-target="password" tabindex="-1">
+            <button type="button" class="show-password-btn" data-target="password" tabindex="-1" aria-label="Show/Hide password">
               <i class="fa-solid fa-eye"></i>
             </button>
           </div>
-          
           {% for error in form.password.errors %}
             <div class="flash error">{{ error }}</div>
           {% endfor %}
         </div>
-        
         <div class="recaptcha-center">
           <div class="g-recaptcha" data-sitekey="{{ recaptcha_site_key }}"></div>
         </div>
-        
         {{ form.submit(class_="login-button") }}
       </form>
-      
       <p>Have an account? <a href="{{ url_for('login') }}">Log In</a></p>
-    
     </div>
   </div>
   <script src="https://www.google.com/recaptcha/api.js" async defer></script>
-  <script>
+  <script nonce="{{ csp_nonce }}">
     document.addEventListener("DOMContentLoaded", function () {
       document.querySelectorAll('.show-password-btn').forEach(function(btn) {
         btn.addEventListener('click', function() {
@@ -85,7 +77,6 @@
         });
       });
     });
-    </script>
-    
+  </script>
 </body>
 </html>

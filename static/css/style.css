@@ -801,8 +801,8 @@ button:hover {
 /* Show/Hide Password Button */
 .show-password-btn {
   position: absolute;
-  right: 8px;
-  top: 6px;
+  right: 12px;
+  top: 50%;
   background: none;
   border: none;
   color: #6C5CE7;
@@ -810,7 +810,7 @@ button:hover {
   font-size: 1.2em;
   padding: 0 4px;
   font-family: inherit;
-  z-index: 1;
+  z-index: 2;
 }
 .show-password-btn:focus { outline: none; }
 

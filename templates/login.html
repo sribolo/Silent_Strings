@@ -11,7 +11,6 @@
     <img src="{{ url_for('static', filename='images/background.gif') }}" class="background" alt="Background">
     <div class="darken"></div>
   </div>
-
   <div class="overlay">
     <div class="mission-container pixelated-border">
       <h2>Agent Login</h2>
@@ -34,36 +33,31 @@
             <div class="flash error">{{ error }}</div>
           {% endfor %}
         </div>
-
         <div>
           {{ form.password.label }}<br>
           <div style="position: relative;">
             {{ form.password(class_="pixel-input", placeholder="Password", id="password") }}
-            <button type="button" class="show-password-btn" data-target="password" tabindex="-1">
+            <button type="button" class="show-password-btn" data-target="password" tabindex="-1" aria-label="Show/Hide password">
               <i class="fa-solid fa-eye"></i>
             </button>
           </div>
-          
           {% for error in form.password.errors %}
             <div class="flash error">{{ error }}</div>
           {% endfor %}
         </div>
-
         <div class="recaptcha-center">
           <div class="g-recaptcha" data-sitekey="{{ recaptcha_site_key }}"></div>
         </div>
-
         {{ form.submit(class_="login-button") }}
       </form>
       <p>
         <a href="{{ url_for('forgot_password') }}" class="forgot-link">Forgot your password?</a>
       </p>
-      
       <p>No account? <a href="{{ url_for('signup') }}">Sign Up</a></p>
     </div>
   </div>
   <script src="https://www.google.com/recaptcha/api.js" async defer></script>
-  <script>
+  <script nonce="{{ csp_nonce }}">
     document.addEventListener("DOMContentLoaded", function () {
       document.querySelectorAll('.show-password-btn').forEach(function(btn) {
         btn.addEventListener('click', function() {
@@ -79,6 +73,6 @@
         });
       });
     });
-    </script>    
+  </script>
 </body>
 </html>
