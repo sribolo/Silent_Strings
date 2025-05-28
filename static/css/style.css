@@ -790,8 +790,8 @@ input::placeholder {
 /* Eye Button Styling */
 .show-password-btn {
   position: absolute;
-  right: 16px;
-  top: 50%;
+  right: 12px;
+  top: 40%;
   transform: translateY(-50%);
   height: 36px;
   width: 36px;
