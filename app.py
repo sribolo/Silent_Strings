@@ -24,7 +24,7 @@ app = Flask(__name__)
 app.secret_key = os.getenv('FLASK_SECRET_KEY') or "dev-secret-key"
 
 # === Session Configuration ===
-#app.config['SESSION_TYPE'] = 'filesystem'
+app.config['SESSION_TYPE'] = 'filesystem'
 app.config['SESSION_COOKIE_SECURE'] = True
 app.config['SESSION_COOKIE_HTTPONLY'] = True
 app.config['SESSION_COOKIE_SAMESITE'] = 'Lax'
@@ -33,7 +33,7 @@ app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DATABASE_URL')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 migrate = Migrate(app, db)
-#Session(app)
+Session(app)
 
 
 class User(db.Model):
@@ -266,19 +266,20 @@ def get_sprites():
     return jsonify(data)
 
 @app.route('/save-avatar', methods=['POST'])
+@csrf.exempt
 def save_avatar():
     try:
         data = request.get_json(force=True)
-        print("Received /save-avatar data:", data)  # Debug output
+        print("DEBUG /save-avatar received data:", data)
 
-        # Validate incoming data
         name = data.get('name')
         selections = data.get('selections')
+        print("DEBUG name:", name)
+        print("DEBUG selections:", selections)
         if not name or not selections or 'characters' not in selections:
-            print("Invalid avatar data:", data)
-            return jsonify({"error": "Missing or invalid avatar data"}), 400
+            print("DEBUG MISSING: name or selections or 'characters'")
+            return jsonify({"error": "Missing avatar data"}), 400
 
-        # Save to session (you can change this to DB if needed)
         session['agent_name'] = name
         session['avatar_parts'] = selections
         print("Avatar saved to session:", session['avatar_parts'])
