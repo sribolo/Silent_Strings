@@ -798,11 +798,16 @@ button:hover {
   transition: color 0.2s;
 }
 .return-link:hover { color: #6C5CE7; }
-/* Show/Hide Password Button */
+
+.relative-wrap {
+  position: relative;
+}
+
 .show-password-btn {
   position: absolute;
   right: 12px;
   top: 50%;
+  transform: translateY(-50%);
   background: none;
   border: none;
   color: #6C5CE7;
