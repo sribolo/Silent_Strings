@@ -17,7 +17,7 @@ from flask_sqlalchemy import SQLAlchemy
 from forms import SignupForm, LoginForm
 from flask_migrate import Migrate
 from itsdangerous import URLSafeTimedSerializer
-
+from flask_mail import Mail, Message
 
 
 # === Load Environment Variables ===
@@ -34,8 +34,14 @@ app.config['SESSION_COOKIE_SAMESITE'] = 'Lax'
 app.config['WTF_CSRF_SSL_STRICT'] = False
 app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DATABASE_URL')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+app.config['MAIL_SERVER'] = 'smtp.gmail.com'
+app.config['MAIL_PORT'] = 587
+app.config['MAIL_USE_TLS'] = True
+app.config['MAIL_USERNAME'] = os.getenv('MAIL_USERNAME')  
+app.config['MAIL_PASSWORD'] = os.getenv('MAIL_PASSWORD')  
 db = SQLAlchemy(app)
 migrate = Migrate(app, db)
+mail = Mail(app)
 Session(app)
 
 
@@ -186,25 +192,6 @@ def login():
 
 
 
-# Google OAuth Log-In
-#@app.route("/oauth/google")
-#def oauth_google():
-#    if not google.authorized:
- #       return redirect(url_for('google.login'))
- #   resp = google.get("/oauth2/v2/userinfo")
-  #  info = resp.json()
- #   email = info["email"]
-    
- #   user = User.query.filter_by(email=email).first()
- #   if not user:
- #       user = User(username=info.get("name"), email=email, pwd_hash="")
- #       db.session.add(user)
- #       db.session.commit()
- #   session["user"] = {"username": info.get("name"), "email": email}
- #   flash("Logged in with Google!", "success")
- #   return redirect(url_for("customise"))
-
-
 @app.route('/guest_login', methods=['POST'])
 def guest_login():
     session.clear()
@@ -313,8 +300,13 @@ def forgot_password():
         if user:
             token = s.dumps(email, salt='reset-password')
             reset_url = url_for('reset_password', token=token, _external=True)
-            # TODO: Send reset_url via email. For now, just print it!
-            print("RESET LINK:", reset_url)
+            msg = Message(
+                subject="Silent Strings Password Reset",
+                recipients=[email],
+                body=f"Hi! Click the link to reset your password:\n{reset_url}\n\nIf you didn't request this, ignore this email.",
+                sender=app.config['MAIL_USERNAME']
+            )
+            mail.send(msg)
             flash("Check your email for a password reset link.", "info")
         else:
             flash("No account with that email.", "error")
