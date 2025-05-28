@@ -36,11 +36,11 @@
         <div>
           {{ form.password.label }}<br>
           <div class="relative-wrap">
-            {{ form.password(class_="pixel-input", placeholder="Password", id="password") }}
+            {{ form.password(class_="pixel-input password-input", placeholder="Password", id="password") }}
             <button type="button" class="show-password-btn" data-target="password" tabindex="-1" aria-label="Show/Hide password">
               <i class="fa-solid fa-eye"></i>
             </button>
-          </div>
+          </div>          
           {% for error in form.password.errors %}
             <div class="flash error">{{ error }}</div>
           {% endfor %}
