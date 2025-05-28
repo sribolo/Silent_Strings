@@ -874,3 +874,215 @@ input::placeholder {
   transition: color 0.2s;
 }
 .return-link:hover { color: #A499FF; }
+
+.profile-container {
+  max-width: 520px;
+  margin: 8vh auto 0 auto;
+  background: #191927;
+  border-radius: 14px;
+  padding: 2.5rem 2.2rem 2rem 2.2rem;
+  box-shadow: 0 4px 24px #0008;
+  font-family: 'Share Tech Mono', monospace;
+  color: #e0e0e0;
+  border: 3px solid #6C5CE7;
+  text-align: left;
+  min-height: 320px;
+}
+
+.profile-title {
+  font-family: 'Press Start 2P', monospace;
+  color: #A499FF;
+  font-size: 2.1rem;
+  letter-spacing: 1px;
+  margin-bottom: 1.5rem;
+  text-align: center;
+  text-shadow: 0 0 8px #23236999;
+}
+
+.profile-info {
+  font-size: 1.25rem;
+  margin-bottom: 2.1rem;
+}
+
+.profile-label {
+  font-weight: bold;
+  color: #6C5CE7;
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 1.15rem;
+  margin-right: 5px;
+}
+
+.profile-actions {
+  margin-top: 16px;
+  text-align: center;
+}
+.profile-link {
+  color: #A499FF;
+  text-decoration: underline;
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 1.1em;
+  margin: 0 0.7em;
+  transition: color 0.2s;
+}
+.profile-link:hover {
+  color: #fff;
+  text-shadow: 0 0 5px #6C5CE7;
+}
+.logout {
+  color: #FF6B6B;
+  font-weight: bold;
+}
+.logout:hover {
+  color: #fff;
+  text-shadow: 0 0 6px #ff6b6b77;
+}
+.profile-divider {
+  color: #232369;
+  margin: 0 0.3em;
+  font-size: 1em;
+}
+.profile-avatar-wrap {
+  width: 128px;
+  height: 128px;
+  margin: 0 auto 24px auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #23232b;
+  border: 2.5px solid #6C5CE7;
+  border-radius: 18px;
+  box-shadow: 0 2px 8px #0005;
+  overflow: hidden;
+}
+
+.profile-avatar {
+  width: 112px;
+  height: 112px;
+  image-rendering: pixelated;
+  border-radius: 10px;
+  display: block;
+}
+/* Pixel Background (full-page, behind everything) */
+.pixel-bg-wrap {
+  position: fixed;
+  z-index: 0;
+  width: 100vw;
+  height: 100vh;
+  top: 0; left: 0;
+  overflow: hidden;
+}
+.pixel-bg {
+  width: 100vw;
+  height: 100vh;
+  object-fit: cover;
+  image-rendering: pixelated;
+  opacity: 0.6;
+  filter: brightness(0.7);
+  pointer-events: none;
+}
+
+.profile-avatar-section {
+  text-align: center;
+  margin-bottom: 24px;
+}
+.profile-avatar-wrap {
+  width: 128px;
+  height: 128px;
+  margin: 0 auto 10px auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #23232b;
+  border: 2.5px solid #6C5CE7;
+  border-radius: 18px;
+  box-shadow: 0 2px 8px #0005;
+  overflow: hidden;
+}
+.profile-avatar {
+  width: 112px;
+  height: 112px;
+  image-rendering: pixelated;
+  border-radius: 10px;
+  display: block;
+}
+.avatar-thumbnails {
+  margin-top: 10px;
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.avatar-thumb-btn {
+  border: 2px solid transparent;
+  background: #23232b;
+  border-radius: 6px;
+  padding: 2px;
+  transition: border 0.2s, box-shadow 0.2s;
+  cursor: pointer;
+}
+.avatar-thumb-btn.active, .avatar-thumb-btn:hover {
+  border: 2px solid #6C5CE7;
+  box-shadow: 0 0 8px #6C5CE799;
+}
+.avatar-thumb-img {
+  width: 36px;
+  height: 36px;
+  border-radius: 5px;
+  image-rendering: pixelated;
+  background: #23232b;
+  display: block;
+}
+
+.agent-stats {
+  background: #18182b;
+  border: 2px solid #35347a;
+  border-radius: 9px;
+  margin: 1.8em 0 1.2em 0;
+  padding: 1.3em 1.2em 0.8em 1.2em;
+  box-shadow: 0 2px 10px #0002;
+}
+.stat-row {
+  display: flex;
+  justify-content: space-between;
+  font-size: 1.05em;
+  margin-bottom: 7px;
+}
+.stat-label {
+  color: #A499FF;
+  font-family: 'Share Tech Mono', monospace;
+}
+.stat-value {
+  color: #fff;
+  font-weight: bold;
+  font-family: 'VT323', monospace;
+}
+.stat-bar-outer {
+  height: 16px;
+  background: #282847;
+  border-radius: 7px;
+  margin: 8px 0 12px 0;
+  overflow: hidden;
+  border: 1.5px solid #6C5CE7;
+}
+.stat-bar-inner {
+  height: 100%;
+  background: linear-gradient(90deg, #6C5CE7 60%, #A499FF 100%);
+  border-radius: 7px;
+  width: 0; /* will be set inline in HTML */
+  transition: width 0.5s;
+}
+
+.profile-container {
+  position: relative;
+  z-index: 2;
+}
+
+.profile-bg:before {
+  content: "";
+  position: fixed;
+  z-index: 1;
+  top: 0; left: 0;
+  width: 100vw; height: 100vh;
+  background: rgba(20,18,38,0.65);
+  pointer-events: none;
+}

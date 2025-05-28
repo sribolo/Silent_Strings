@@ -1,17 +1,57 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Your Profile</title>
-  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <meta charset="UTF-8">
+    <title>Agent Profile</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
 </head>
-<body>
-  <div class="container">
-    <h2>Agent Profile</h2>
-    <p><b>Username:</b> {{ user.username }}</p>
-    <p><b>Email:</b> {{ user.email }}</p>
-    <a href="{{ url_for('customise') }}">Customise Avatar</a> |
-    <a href="{{ url_for('logout') }}">Logout</a>
-  </div>
+<body class="profile-bg">
+    <!-- Pixel-art city background (local, CSP-safe) -->
+    <div class="pixel-bg-wrap">
+        <img src="{{ url_for('static', filename='images/pixelcity_bg.png') }}" alt="Pixel Background" class="pixel-bg">
+    </div>
+    <div class="profile-container pixelated-border">
+        <h1 class="profile-title">Agent Profile</h1>
+        
+        <!-- Avatar Display & Options -->
+        <div class="profile-avatar-section">
+            <div class="profile-avatar-wrap">
+                <img src="{{ url_for('static', filename='avatars/' + current_avatar) }}" 
+                     alt="Agent Avatar"
+                     class="profile-avatar">
+            </div>
+            <div class="avatar-thumbnails">
+                {% for avatar in avatar_choices %}
+                  <form method="POST" action="{{ url_for('set_avatar') }}" style="display:inline;">
+                    <input type="hidden" name="avatar_filename" value="{{ avatar }}">
+                    <button type="submit" class="avatar-thumb-btn{% if avatar == current_avatar %} active{% endif %}">
+                        <img src="{{ url_for('static', filename='avatars/' + avatar) }}"
+                             alt="Avatar" class="avatar-thumb-img">
+                    </button>
+                  </form>
+                {% endfor %}
+            </div>
+        </div>
+        
+        <!-- Profile Info -->
+        <div class="profile-info">
+            <div>
+                <span class="profile-label">Username:</span>
+                {{ username }}
+            </div>
+            <div>
+                <span class="profile-label">Email:</span>
+                {{ email }}
+            </div>
+        </div>
+        
+        <!-- Profile Actions -->
+        <div class="profile-actions">
+            <a href="{{ url_for('customise_avatar') }}" class="profile-link">Customise Avatar</a>
+            <span class="profile-divider">|</span>
+            <a href="{{ url_for('logout') }}" class="profile-link logout">Logout</a>
+        </div>
+    </div>
 </body>
 </html>
