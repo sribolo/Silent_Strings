@@ -20,3 +20,4 @@ email_validator
 psycopg2-binary
 alembic
 Flask-Migrate
+Flask-Mail
