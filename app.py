@@ -251,18 +251,20 @@ def dialogue():
 def get_sprites():
     base_path = os.path.join(app.root_path, 'static', 'images', 'avatar_parts')
     data = {}
-    categories = ['characters', 'clothes', 'face', 'hair', 'acc', 'walk']  # update if you have more!
+    categories = ['characters', 'clothes', 'hair', 'eyes', 'acc']
 
     for category in categories:
         category_path = os.path.join(base_path, category)
         data[category] = []
         if os.path.isdir(category_path):
-            for fn in os.listdir(category_path):
-                if fn.lower().endswith('.png'):
-                    data[category].append({
-                        "name": os.path.splitext(fn)[0],
-                        "img": f"/static/images/avatar_parts/{category}/{fn}"
-                    })
+            for root, dirs, files in os.walk(category_path):
+                for fn in files:
+                    if fn.lower().endswith('.png'):
+                        rel_path = os.path.relpath(os.path.join(root, fn), base_path)
+                        data[category].append({
+                            "name": os.path.splitext(fn)[0],
+                            "img": f"/static/images/avatar_parts/{rel_path.replace(os.sep, '/')}"
+                        })
     return jsonify(data)
 
 @app.route('/save-avatar', methods=['POST'])
