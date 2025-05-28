@@ -48,7 +48,6 @@
             {{ form.password(class_="pixel-input", placeholder="Password", id="password") }}
             <button type="button" id="toggle-password" class="show-password-btn" tabindex="-1">Show</button>
           </div>
-
           {% for error in form.password.errors %}
             <div class="flash error">{{ error }}</div>
           {% endfor %}
@@ -78,7 +77,6 @@
         });
       }
     });
-    </script>
-    
+  </script>
 </body>
 </html>

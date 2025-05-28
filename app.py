@@ -146,11 +146,8 @@ def signup():
         token = request.form.get("g-recaptcha-response")
         if not verify_recaptcha(token):
             flash("Please complete the CAPTCHA", "error")
-            return render_template(
-                "signup.html",
-                form=form,
-                recaptcha_site_key=os.getenv("RECAPTCHA_SITE_KEY")
-            )
+            return render_template("signup.html", form=form, recaptcha_site_key=os.getenv("RECAPTCHA_SITE_KEY"))
+
 
         username = form.username.data
         email    = form.email.data
@@ -159,20 +156,12 @@ def signup():
         # Check for duplicate username
         if User.query.filter_by(username=username).first():
             flash("That username is already taken. Please choose another.", "error")
-            return render_template(
-                "signup.html",
-                form=form,
-                recaptcha_site_key=os.getenv("RECAPTCHA_SITE_KEY")
-            )
+            return render_template("signup.html", form=form, recaptcha_site_key=os.getenv("RECAPTCHA_SITE_KEY"))
 
         # Check for duplicate email
         if User.query.filter_by(email=email).first():
             flash("That email is already registered. Please log in.", "error")
-            return render_template(
-                "signup.html",
-                form=form,
-                recaptcha_site_key=os.getenv("RECAPTCHA_SITE_KEY")
-            )
+            return render_template("signup.html", form=form, recaptcha_site_key=os.getenv("RECAPTCHA_SITE_KEY"))
 
         pwd_hash = generate_password_hash(pwd)
         user = User(username=username, email=email, pwd_hash=pwd_hash)
@@ -182,11 +171,7 @@ def signup():
         flash("Account created!", "success")
         return redirect(url_for("customise"))
 
-    return render_template(
-        "signup.html",
-        form=form,
-        recaptcha_site_key=os.getenv("RECAPTCHA_SITE_KEY")
-    )
+    return render_template("signup.html", form=form, recaptcha_site_key=os.getenv("RECAPTCHA_SITE_KEY"))
  
 
 @app.route("/login", methods=["GET", "POST"])
