@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <title>Agent Login</title>
   <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 </head>
 <body>
   <div class="bg-container">
@@ -38,8 +39,11 @@
           {{ form.password.label }}<br>
           <div style="position: relative;">
             {{ form.password(class_="pixel-input", placeholder="Password", id="password") }}
-            <button type="button" id="toggle-password" class="show-password-btn" tabindex="-1">Show</button>
+            <button type="button" class="show-password-btn" data-target="password" tabindex="-1">
+              <i class="fa-solid fa-eye"></i>
+            </button>
           </div>
+          
           {% for error in form.password.errors %}
             <div class="flash error">{{ error }}</div>
           {% endfor %}
@@ -61,17 +65,20 @@
   <script src="https://www.google.com/recaptcha/api.js" async defer></script>
   <script>
     document.addEventListener("DOMContentLoaded", function () {
-      var pwInput = document.getElementById('password');
-      var toggleBtn = document.getElementById('toggle-password');
-      if (pwInput && toggleBtn) {
-        toggleBtn.addEventListener('click', function() {
-          const type = pwInput.type === 'password' ? 'text' : 'password';
-          pwInput.type = type;
-          toggleBtn.textContent = type === 'password' ? 'Show' : 'Hide';
+      document.querySelectorAll('.show-password-btn').forEach(function(btn) {
+        btn.addEventListener('click', function() {
+          const inputId = btn.getAttribute('data-target');
+          var pwInput = document.getElementById(inputId);
+          var icon = btn.querySelector('i');
+          if (pwInput && icon) {
+            const isHidden = pwInput.type === 'password';
+            pwInput.type = isHidden ? 'text' : 'password';
+            icon.classList.toggle('fa-eye', !isHidden);
+            icon.classList.toggle('fa-eye-slash', isHidden);
+          }
         });
-      }
+      });
     });
-    </script>
-    
+    </script>    
 </body>
 </html>

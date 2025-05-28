@@ -807,16 +807,13 @@ button:hover {
   border: none;
   color: #6C5CE7;
   cursor: pointer;
-  font-size: 0.98em;
+  font-size: 1.2em;
   padding: 0 4px;
   font-family: inherit;
+  z-index: 1;
 }
 .show-password-btn:focus { outline: none; }
-.pw-wrap {
-  position: relative;
-  display: flex;
-  width: 100%;
-}
+
 
 
 @media (max-width: 900px) {
