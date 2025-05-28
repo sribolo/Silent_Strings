@@ -14,7 +14,7 @@ from flask_limiter.util import get_remote_address
 from werkzeug.security import generate_password_hash, check_password_hash
 from dotenv import load_dotenv
 from flask_sqlalchemy import SQLAlchemy
-from forms import SignupForm, LoginForm
+from forms import SignupForm, LoginForm, ForgotPasswordForm
 from flask_migrate import Migrate
 from itsdangerous import URLSafeTimedSerializer
 from flask_mail import Mail, Message
