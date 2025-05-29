@@ -7,24 +7,23 @@
   <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
 <body>
-  <div id="game-map">
-    <img id="map-bg" src="{{ url_for('static', filename='images/pixel_town_16_9.png') }}" alt="Town Map">
+  <div class="game-viewport">
+    <div id="game-map">
+      <img id="map-bg" src="{{ url_for('static', filename='images/pixel_town_16_9.png') }}" alt="Town Map">
 
-    <div id="player-avatar" class="avatar"></div>
-    
-    <!-- Invisible buttons over buildings -->
-    <button class="map-area-btn" style="top:50px; left:120px; width:85px; height:70px;" onclick="startMission('bank')"></button>
-    <button class="map-area-btn" style="top:110px; left:320px; width:85px; height:70px;" onclick="startMission('postoffice')"></button>
-    <button class="map-area-btn" style="top:230px; left:600px; width:100px; height:80px;" onclick="startMission('school')"></button>
+      <div id="player-avatar" class="avatar"></div>
+      
+      <!-- Invisible buttons over buildings (adjust positions/sizes as needed) -->
+      <button class="map-area-btn" style="top:50px; left:120px; width:85px; height:70px;" onclick="startMission('bank')"></button>
+      <button class="map-area-btn" style="top:110px; left:320px; width:85px; height:70px;" onclick="startMission('postoffice')"></button>
+      <button class="map-area-btn" style="top:230px; left:600px; width:100px; height:80px;" onclick="startMission('school')"></button>
 
-    <!-- Overlay UI (score, coins, controls, etc.) -->
-    <div id="ui-overlay">
-      <span>Score: 123</span>
-      <span> | Coins: 99</span>
-      <!-- Add more overlay elements here -->
+      <div id="ui-overlay">
+        <span>Score: 123</span>
+        <span> | Coins: 99</span>
+      </div>
     </div>
   </div>
-  <!-- Game logic JS -->
   <script src="{{ url_for('static', filename='js/game.js') }}"></script>
 </body>
 </html>
