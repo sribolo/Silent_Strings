@@ -3,27 +3,25 @@
 <head>
     <meta charset="UTF-8">
     <title>Agent Profile</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
-<body class="profile-bg">
+<body>
     <div class="bg-container">
-        <img src="{{ url_for('static', filename='images/background.gif') }}" class="background">
-        <div class="darken"></div>
+    <img src="{{ url_for('static', filename='images/background.gif') }}" class="background">
+    <div class="darken"></div>
         <div class="overlay">
-            <div class="profile-container pixelated-border">
-                <h1 class="profile-title">Agent Profile</h1>
-                <!-- Avatar Display & Options -->
-                <div class="profile-avatar-section">
-                    <div class="profile-avatar-wrap">
-                        <img src="{{ url_for('static', filename='avatars/' + current_avatar) }}" 
-                             alt="Agent Avatar"
-                             class="profile-avatar">
-                    </div>
+            <div class="mission-container pixelated-border">
+            <h1 class="profile-title">Agent Profile</h1>
+            <div class="profile-avatar-section">
+                <div class="profile-avatar-wrap">
+                    <img src="{{ url_for('static', filename='avatars/' + current_avatar) }}" 
+                            alt="Agent Avatar"
+                            class="profile-avatar">
+                </div>
                     <div class="avatar-thumbnails">
-                        {% for avatar in avatar_choices %}
-                          <form method="POST" action="{{ url_for('set_avatar') }}" style="display:inline;">
-                            <input type="hidden" name="avatar_filename" value="{{ avatar }}">
+                    {% for avatar in avatar_choices %}
+                        <form method="POST" action="{{ url_for('set_avatar') }}" style="display:inline;">
+                        <input type="hidden" name="avatar_filename" value="{{ avatar }}">
                             <button type="submit" class="avatar-thumb-btn{% if avatar == current_avatar %} active{% endif %}">
                                 <img src="{{ url_for('static', filename='avatars/' + avatar) }}"
                                      alt="Avatar" class="avatar-thumb-img">
