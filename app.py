@@ -285,6 +285,15 @@ def get_avatar():
         return jsonify(name=session.get("user","Agent"), selections=avatar)
     return jsonify(error="No avatar data found"), 404
 
+@app.route('/set_avatar', methods=['POST'])
+def set_avatar():
+    avatar = request.form.get('avatar_filename')
+    avatars_dir = os.path.join(app.static_folder, 'avatars')
+    # Validate avatar is in avatars folder for security
+    if avatar and avatar in os.listdir(avatars_dir):
+        session['current_avatar'] = avatar
+    return redirect(url_for('profile'))
+
 
 @app.route('/avatars/<path:filename>')
 def avatar_files(filename):
