@@ -9,7 +9,7 @@
 <body class="profile-bg">
     <!-- Pixel-art city background (local, CSP-safe) -->
     <div class="pixel-bg-wrap">
-        <img src="{{ url_for('static', filename='images/pixelcity_bg.png') }}" alt="Pixel Background" class="pixel-bg">
+        <img src="{{ url_for('static', filename='images/pixel_town_16_9.png') }}" alt="Pixel Background" class="pixel-bg">
     </div>
     <div class="profile-container pixelated-border">
         <h1 class="profile-title">Agent Profile</h1>
@@ -23,7 +23,7 @@
             </div>
             <div class="avatar-thumbnails">
                 {% for avatar in avatar_choices %}
-                  <form method="POST" action="{{ url_for('set_avatar') }}" style="display:inline;">
+                  <form method="POST" action="{{ url_for('get_avatar') }}" style="display:inline;">
                     <input type="hidden" name="avatar_filename" value="{{ avatar }}">
                     <button type="submit" class="avatar-thumb-btn{% if avatar == current_avatar %} active{% endif %}">
                         <img src="{{ url_for('static', filename='avatars/' + avatar) }}"
