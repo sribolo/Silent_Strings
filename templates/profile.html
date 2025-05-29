@@ -44,9 +44,9 @@
                     <div>
                         <span class="profile-label">Email:</span>
                         {% if is_guest %}
-                            Not available
+                            <span class="profile-label" style="color:#6C5CE7;">Not available</span>
                         {% else %}
-                            {{ email }}
+                            <span style="color:#A499FF;">{{ email }}</span>
                         {% endif %}
                     </div>
                 </div>
