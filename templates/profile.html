@@ -6,57 +6,57 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 </head>
-<div class="bg-container">
-    <img src="{{ url_for('static', filename='images/background.gif') }}" class="background">
-    <div class="darken"></div>
-    <div class="overlay">
-    <div class="profile-container pixelated-border">
-        <h1 class="profile-title">Agent Profile</h1>
-        
-        <!-- Avatar Display & Options -->
-        <div class="profile-avatar-section">
-            <div class="profile-avatar-wrap">
-                <img src="{{ url_for('static', filename='avatars/' + current_avatar) }}" 
-                     alt="Agent Avatar"
-                     class="profile-avatar">
+<body class="profile-bg">
+    <div class="bg-container">
+        <img src="{{ url_for('static', filename='images/background.gif') }}" class="background">
+        <div class="darken"></div>
+        <div class="overlay">
+            <div class="profile-container pixelated-border">
+                <h1 class="profile-title">Agent Profile</h1>
+                <!-- Avatar Display & Options -->
+                <div class="profile-avatar-section">
+                    <div class="profile-avatar-wrap">
+                        <img src="{{ url_for('static', filename='avatars/' + current_avatar) }}" 
+                             alt="Agent Avatar"
+                             class="profile-avatar">
+                    </div>
+                    <div class="avatar-thumbnails">
+                        {% for avatar in avatar_choices %}
+                          <form method="POST" action="{{ url_for('set_avatar') }}" style="display:inline;">
+                            <input type="hidden" name="avatar_filename" value="{{ avatar }}">
+                            <button type="submit" class="avatar-thumb-btn{% if avatar == current_avatar %} active{% endif %}">
+                                <img src="{{ url_for('static', filename='avatars/' + avatar) }}"
+                                     alt="Avatar" class="avatar-thumb-img">
+                            </button>
+                          </form>
+                        {% endfor %}
+                    </div>
+                </div>
+                <!-- Profile Info -->
+                <div class="profile-info">
+                    <div>
+                        <span class="profile-label">Username:</span>
+                        {{ username }}
+                        {% if is_guest %}
+                        <span style="color:#FF6B6B;">(Guest)</span>
+                        {% endif %}
+                    </div>
+                    <div>
+                        <span class="profile-label">Email:</span>
+                        {% if is_guest %}
+                            Not available
+                        {% else %}
+                            {{ email }}
+                        {% endif %}
+                    </div>
+                </div>
+                <!-- Profile Actions -->
+                <div class="profile-actions">
+                    <a href="{{ url_for('customise') }}" class="profile-link">Customise Avatar</a>
+                    <span class="profile-divider">|</span>
+                    <a href="{{ url_for('logout') }}" class="profile-link logout">Logout</a>
+                </div>
             </div>
-            <div class="avatar-thumbnails">
-                {% for avatar in avatar_choices %}
-                  <form method="POST" action="{{ url_for('get_avatar') }}" style="display:inline;">
-                    <input type="hidden" name="avatar_filename" value="{{ avatar }}">
-                    <button type="submit" class="avatar-thumb-btn{% if avatar == current_avatar %} active{% endif %}">
-                        <img src="{{ url_for('static', filename='avatars/' + avatar) }}"
-                             alt="Avatar" class="avatar-thumb-img">
-                    </button>
-                  </form>
-                {% endfor %}
-            </div>
-        </div>
-        
-        <!-- Profile Info -->
-        <div class="profile-info">
-            <div>
-                <span class="profile-label">Username:</span>
-                {{ username }}
-                {% if is_guest %}
-                <span style="color:#FF6B6B;">(Guest)</span>
-            {% endif %}
-        </div>
-        <div>
-            <span class="profile-label">Email:</span>
-            {% if is_guest %}
-                Not available
-            {% else %}
-                {{ email }}
-            {% endif %}
-            </div>
-        </div>
-        
-        <!-- Profile Actions -->
-        <div class="profile-actions">
-            <a href="{{ url_for('customise') }}" class="profile-link">Customise Avatar</a>
-            <span class="profile-divider">|</span>
-            <a href="{{ url_for('logout') }}" class="profile-link logout">Logout</a>
         </div>
     </div>
 </body>
