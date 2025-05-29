@@ -19,8 +19,11 @@
       <button class="map-area-btn" style="top:230px; left:600px; width:100px; height:80px;" onclick="startMission('school')"></button>
 
       <div id="ui-overlay">
-        <span>Score: 123</span>
-        <span> | Coins: 99</span>
+        <a href="{{ url_for('profile') }}" id="profile-btn" title="Your Profile">
+            <img src="{{ url_for('static', filename='static/images/profile.png) }}"
+                 alt="Profile"
+                 class="profile-icon">
+        </a>
       </div>
     </div>
   </div>
