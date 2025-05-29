@@ -83,3 +83,23 @@ html, body {
     padding: 8px 16px;
   }
   
+  .profile-icon {
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    border: 2px solid #A499FF;
+    background: #18181b;
+    margin-right: 16px;
+    margin-bottom: -12px;
+    box-shadow: 0 2px 10px #23236950;
+    cursor: pointer;
+    transition: border 0.2s, box-shadow 0.2s;
+    object-fit: cover;
+    image-rendering: pixelated;
+    vertical-align: middle;
+  }
+  #profile-btn:hover .profile-icon {
+    border: 2px solid #fff;
+    box-shadow: 0 0 12px #6C5CE7;
+  }
+  
