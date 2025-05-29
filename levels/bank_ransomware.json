@@ -1,0 +1,31 @@
+{
+    "title": "The Locked Vault",
+    "timer": 1800,
+    "objectives": [
+      "Identify Patient Zero",
+      "Find the ransomware note and sample",
+      "Collect evidence of intrusion",
+      "Trace the attack’s origin",
+      "Restore banking services"
+    ],
+    "npcs": [
+      {
+        "name": "IT Admin",
+        "dialogue": [
+          "We first noticed unusual activity around 3AM. My team’s been locked out since.",
+          "There was a weird attachment sent to staff yesterday. Maybe that’s related?"
+        ]
+      },
+      {
+        "name": "Teller",
+        "dialogue": [
+          "I clicked a PDF from what looked like HR… then my screen froze."
+        ]
+      }
+    ],
+    "clues": [
+      {"type": "environment", "desc": "USB drive in trash", "id": "usb"},
+      {"type": "hidden", "desc": "Sticky note: 'HR password: B@nking2025'", "id": "sticky"}
+    ]
+  }
+  

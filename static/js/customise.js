@@ -81,7 +81,7 @@ document.addEventListener("DOMContentLoaded", () => {
       return res.json();
     })
     .then(() => {
-      window.location.href = "/dialogue";
+      window.location.href = "/game";
     })
     .catch(err => {
       console.error(err);

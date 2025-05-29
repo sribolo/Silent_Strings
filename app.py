@@ -140,25 +140,19 @@ from forms import SignupForm, LoginForm
 @app.route("/signup", methods=["GET", "POST"])
 def signup():
     form = SignupForm()
-
     if form.validate_on_submit():
-        # reCAPTCHA check
         token = request.form.get("g-recaptcha-response")
         if not verify_recaptcha(token):
             flash("Please complete the CAPTCHA", "error")
             return render_template("signup.html", form=form, recaptcha_site_key=os.getenv("RECAPTCHA_SITE_KEY"))
-
-
         username = form.username.data
         email    = form.email.data
         pwd      = form.password.data
 
-        # Check for duplicate username
         if User.query.filter_by(username=username).first():
             flash("That username is already taken. Please choose another.", "error")
             return render_template("signup.html", form=form, recaptcha_site_key=os.getenv("RECAPTCHA_SITE_KEY"))
-
-        # Check for duplicate email
+        
         if User.query.filter_by(email=email).first():
             flash("That email is already registered. Please log in.", "error")
             return render_template("signup.html", form=form, recaptcha_site_key=os.getenv("RECAPTCHA_SITE_KEY"))
@@ -338,10 +332,50 @@ def reset_password(token):
 
 @app.route('/profile')
 def profile():
-    if "user" not in session:
+    # Determine if user is logged in or a guest
+    username = None
+    email = None
+
+    if "user" in session:
+        username = session["user"]["username"]
+        email = session["user"]["email"]
+        is_guest = False
+    elif session.get("guest"):
+        username = session.get("agent_name", "Guest Agent")
+        email = None
+        is_guest = True
+    else:
         return redirect(url_for('login'))
-    user = session["user"]
-    return render_template("profile.html", user=user)
+
+    # Example avatar data for the template (replace with your actual logic)
+    current_avatar = session.get('current_avatar', 'avatar1.png')
+    avatar_choices = ['avatar1.png', 'avatar2.png', 'avatar3.png']  # Example, update for your logic
+
+
+    return render_template(
+        "profile.html",
+        username=username,
+        email=email,
+        is_guest=is_guest,
+        current_avatar=current_avatar,
+        avatar_choices=avatar_choices,
+    )
+
+
+@app.route('/level/<level_name>')
+def load_level(level_name):
+    level_path = os.path.join('levels', f'{level_name}.json')
+    if not os.path.exists(level_path):
+        return jsonify({"error": "Level not found"}), 404
+    with open(level_path, 'r') as f:
+        data = json.load(f)
+    return jsonify(data)
+
+@app.route('/game')
+def game():
+    avatar_img = session.get('avatar_img', 'default.png')
+    return render_template('game.html', avatar_img=avatar_img)
+
 
 # === RUN SERVER ===
 if __name__ == "__main__":
