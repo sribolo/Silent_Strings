@@ -112,8 +112,8 @@ google_bp = make_google_blueprint(
         "https://www.googleapis.com/auth/userinfo.profile",
         "https://www.googleapis.com/auth/userinfo.email",
         "openid"
-    ]
-    #redirect_to="google.authorized" 
+    ],
+    redirect_to="customise"
 )
 app.register_blueprint(google_bp, url_prefix="/login/google")
 
