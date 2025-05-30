@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Settings</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <div class="bg-container">
+        <img src="{{ url_for('static', filename='images/background.gif') }}" class="background">
+        <div class="darken"></div>
+        <div class="overlay">
+            <div class="mission-container pixelated-border">
+                <h1 class="profile-title">Settings</h1>
+                <form id="settings-form">
+                    <div class="profile-info">
+                        <label>
+                            <input type="checkbox" id="sfx-toggle" {% if sfx_enabled %}checked{% endif %}>
+                            Enable Sound Effects (SFX)
+                        </label>
+                        <br>
+                        <label>
+                            <input type="checkbox" id="music-toggle" {% if music_enabled %}checked{% endif %}>
+                            Enable Music
+                        </label>
+                    </div>
+                    <button type="button" class="profile-link" onclick="saveSettings()">Save</button>
+                </form>
+                <div class="profile-actions">
+                    <a href="{{ url_for('profile') }}" class="profile-link">Back to Profile</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+    function saveSettings() {
+        fetch('/save-settings', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({
+                sfx_enabled: document.getElementById('sfx-toggle').checked,
+                music_enabled: document.getElementById('music-toggle').checked
+            })
+        }).then(res => res.json()).then(data => {
+            alert('Settings saved!');
+        });
+    }
+    </script>
+</body>
+</html>
