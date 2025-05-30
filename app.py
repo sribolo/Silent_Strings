@@ -405,6 +405,18 @@ def profile():
         default_avatar=default_avatar,
     )
 
+@app.route('/settings', methods=['GET', 'POST'])
+def settings():
+    sfx_enabled = session.get('sfx_enabled', True)
+    music_enabled = session.get('music_enabled', True)
+    return render_template('settings.html', sfx_enabled=sfx_enabled, music_enabled=music_enabled)
+
+@app.route('/save-settings', methods=['POST'])
+def save_settings():
+    data = request.get_json()
+    session['sfx_enabled'] = data.get('sfx_enabled', True)
+    session['music_enabled'] = data.get('music_enabled', True)
+    return jsonify(status="ok")
 
 @app.route('/level/<level_name>')
 def load_level(level_name):
