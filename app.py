@@ -363,13 +363,11 @@ def profile():
     avatar_parts = None
     is_guest = False
 
-    # --- LOGGED-IN USER ---
     if "user" in session:
         username = session["user"]["username"]
         email = session["user"]["email"]
         is_guest = False
 
-        # Fetch user's avatar parts from the database
         user = User.query.filter_by(email=email).first()
         if user:
             avatar_parts = {
@@ -379,23 +377,23 @@ def profile():
                 "acc": user.avatar_acc,
                 "eyes": user.avatar_eyes,
             }
-        else:
-            avatar_parts = None
-
-    # --- GUEST USER ---
     elif session.get("guest"):
         username = session.get("agent_name", "Guest Agent")
         email = None
         is_guest = True
 
-        # Fall back to session-stored avatar, if any
-        avatar_parts = session.get("avatar_parts", {})
+        # Clean up session avatar_parts to ensure only strings
+        raw_parts = session.get("avatar_parts", {})
+        avatar_parts = {}
+        for k, v in raw_parts.items():
+            if isinstance(v, dict):
+                avatar_parts[k] = v.get("name")
+            else:
+                avatar_parts[k] = v
 
-    # --- NOT LOGGED IN OR GUEST ---
     else:
         return redirect(url_for('login'))
 
-    # Fallback/default avatar image, if no data found
     default_avatar = "avatar1.png"
 
     return render_template(
