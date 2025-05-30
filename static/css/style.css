@@ -913,9 +913,59 @@ input::placeholder {
 }
 
 .profile-actions {
-  margin-top: 16px;
-  text-align: center;
+  display: flex;
+  justify-content: center;
+  gap: 18px;
+  margin-top: 18px;
+  flex-wrap: wrap;
 }
+
+.pixel-btn {
+  min-width: 150px;
+  max-width: 200px;
+  padding: 12px 20px;
+  font-size: 1.1em;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 10px;
+  box-shadow: 0 2px 8px #0003;
+  background: #6C5CE7;
+  color: #fff;
+  border: none;
+  text-decoration: none !important;
+  font-family: 'Share Tech Mono', monospace;
+  transition: background 0.2s, color 0.2s, transform 0.1s;
+  cursor: pointer;
+  margin: 0;
+}
+
+.pixel-btn i {
+  margin-right: 8px;
+  font-size: 1.2em;
+  vertical-align: middle;
+}
+
+.pixel-btn.logout {
+  background: #FF6B6B;
+  color: #fff;
+}
+
+.pixel-btn:hover {
+  background: #A499FF;
+  color: #23232b;
+  transform: translateY(-2px) scale(1.04);
+}
+
+.pixel-btn.logout:hover {
+  background: #ff8787;
+  color: #23232b;
+}
+
+.profile-divider {
+  display: none;
+}
+
 .profile-link {
   color: #A499FF;
   text-decoration: underline;
@@ -935,11 +985,6 @@ input::placeholder {
 .logout:hover {
   color: #fff;
   text-shadow: 0 0 6px #ff6b6b77;
-}
-.profile-divider {
-  color: #232369;
-  margin: 0 0.3em;
-  font-size: 1em;
 }
 .profile-avatar-wrap {
   width: 128px;
