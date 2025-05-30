@@ -14,9 +14,19 @@
             <h1 class="profile-title">Agent Profile</h1>
             <div class="profile-avatar-section">
                 <div class="profile-avatar-wrap">
-                    <img src="{{ url_for('static', filename='avatars/' + current_avatar) }}" 
-                            alt="Agent Avatar"
-                            class="profile-avatar">
+                    {% if avatar_parts %}
+                        {% for part, value in avatar_parts.items() %}
+                            {% if value %}
+                                <img src="{{ url_for('static', filename='images/avatar_parts/' + part + '/' + value + '.png') }}" 
+                                     alt="{{ part }}" 
+                                     class="profile-avatar">
+                            {% endif %}
+                        {% endfor %}
+                    {% else %}
+                        <img src="{{ url_for('static', filename='images/avatar_parts/characters/' + default_avatar) }}" 
+                             alt="Default Avatar" 
+                             class="profile-avatar">
+                    {% endif %}
                 </div>
                 </div>
                 <!-- Profile Info -->

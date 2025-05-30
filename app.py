@@ -51,7 +51,11 @@ class User(db.Model):
     username = db.Column(db.String(80), unique=True, nullable=False)
     email = db.Column(db.String(120), unique=True, nullable=False)
     pwd_hash = db.Column(db.String(256), nullable=False)
-
+    avatar_character = db.Column(db.String(120), nullable=True)
+    avatar_hair = db.Column(db.String(120), nullable=True)
+    avatar_clothes = db.Column(db.String(120), nullable=True)
+    avatar_acc = db.Column(db.String(120), nullable=True)
+    avatar_eyes = db.Column(db.String(120), nullable=True)
 
 # === CSRF Protection ===
 csrf = CSRFProtect(app)
@@ -260,19 +264,27 @@ def get_sprites():
 def save_avatar():
     try:
         data = request.get_json(force=True)
-        print("DEBUG /save-avatar received data:", data)
-
         name = data.get('name')
         selections = data.get('selections')
-        print("DEBUG name:", name)
-        print("DEBUG selections:", selections)
         if not name or not selections or 'characters' not in selections:
-            print("DEBUG MISSING: name or selections or 'characters'")
             return jsonify({"error": "Missing avatar data"}), 400
 
         session['agent_name'] = name
         session['avatar_parts'] = selections
         print("Avatar saved to session:", session['avatar_parts'])
+
+        if "user" in session:
+            user = User.query.filter_by(email=session["user"]["email"]).first()
+            if user:
+                user.avatar_character = selections.get('characters')
+                user.avatar_hair      = selections.get('hair')
+                user.avatar_clothes   = selections.get('clothes')
+                user.avatar_acc       = selections.get('acc')
+                user.avatar_eyes      = selections.get('eyes')
+                # Add any additional avatar parts here
+                db.session.commit()
+                print("Avatar saved to database for user:", user.email)
+
         return jsonify(status="ok")
     except Exception as e:
         print("Exception in /save-avatar:", e)
@@ -341,33 +353,53 @@ def reset_password(token):
 
 @app.route('/profile')
 def profile():
-    # Determine if user is logged in or a guest
     username = None
     email = None
+    avatar_parts = None
+    is_guest = False
 
+    # --- LOGGED-IN USER ---
     if "user" in session:
         username = session["user"]["username"]
         email = session["user"]["email"]
         is_guest = False
+
+        # Fetch user's avatar parts from the database
+        user = User.query.filter_by(email=email).first()
+        if user:
+            avatar_parts = {
+                "characters": user.avatar_character,
+                "hair": user.avatar_hair,
+                "clothes": user.avatar_clothes,
+                "acc": user.avatar_acc,
+                "eyes": user.avatar_eyes,
+            }
+        else:
+            avatar_parts = None
+
+    # --- GUEST USER ---
     elif session.get("guest"):
         username = session.get("agent_name", "Guest Agent")
         email = None
         is_guest = True
+
+        # Fall back to session-stored avatar, if any
+        avatar_parts = session.get("avatar_parts", {})
+
+    # --- NOT LOGGED IN OR GUEST ---
     else:
         return redirect(url_for('login'))
 
-    # Example avatar data for the template (replace with your actual logic)
-    current_avatar = session.get('current_avatar', 'avatar1.png')
-    avatar_choices = ['avatar1.png', 'avatar2.png', 'avatar3.png']  # Example, update for your logic
-
+    # Fallback/default avatar image, if no data found
+    default_avatar = "avatar1.png"
 
     return render_template(
         "profile.html",
         username=username,
         email=email,
         is_guest=is_guest,
-        current_avatar=current_avatar,
-        avatar_choices=avatar_choices,
+        avatar_parts=avatar_parts,
+        default_avatar=default_avatar,
     )
 
 
