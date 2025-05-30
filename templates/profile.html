@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <title>Agent Profile</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/all.min.css') }}">
 </head>
 <body>
     <div class="bg-container">
@@ -25,7 +26,7 @@
                     {% else %}
                         <img src="{{ url_for('static', filename='images/avatar_parts/characters/' + default_avatar) }}" 
                              alt="Default Avatar" 
-                             class="profile-avatar">
+                            class="profile-avatar">
                     {% endif %}
                 </div>
                 </div>
@@ -49,11 +50,19 @@
                 </div>
                 <!-- Profile Actions -->
                 <div class="profile-actions">
-                    <a href="{{ url_for('settings') }}" class="profile-link">Settings</a>
-                    <span class="profile-divider">|</span>
-                    <a href="{{ url_for('customise') }}" class="profile-link">Customise Avatar</a>
-                    <span class="profile-divider">|</span>
-                    <a href="{{ url_for('logout') }}" class="profile-link logout">Logout</a>
+                    <a href="{{ url_for('settings') }}" class="pixel-btn">
+                        <i class="fa-solid fa-gear"></i>
+                        Settings
+                    </a>
+                    <a href="{{ url_for('customise') }}" class="pixel-btn">
+                        <i class="fa-solid fa-paint-brush"></i>
+                        Customise Avatar
+                    </a>
+                    <a href="{{ url_for('logout') }}" class="pixel-btn logout">
+                        <i class="fa-solid fa-right-from-bracket"></i>
+                        Logout
+                    </a>
+                </div>
                 </div>
             </div>
         </div>

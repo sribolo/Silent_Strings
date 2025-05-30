@@ -1114,3 +1114,8 @@ input::placeholder {
 .guest-label { color: #FF6B6B; }
 .not-available-label { color: #6C5CE7; }
 .email-label { color: #A499FF; }
+
+.profile-actions .pixel-btn i {
+    margin-right: 6px;
+    vertical-align: middle;
+}
