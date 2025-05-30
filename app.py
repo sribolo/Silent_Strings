@@ -78,12 +78,13 @@ def inject_csp_nonce():
 def add_security_headers(response):
     nonce = g.get('csp_nonce')
     csp = (
-         "default-src 'self'; "
+        "default-src 'self'; "
         f"script-src 'self' https://www.google.com/recaptcha/ https://www.gstatic.com/recaptcha/ 'nonce-{nonce}'; "
         f"style-src  'self' 'nonce-{nonce}' 'unsafe-inline'; "
         "font-src   'self'; "
         "img-src    'self' https://www.google.com/recaptcha/ https://www.gstatic.com/recaptcha/; "
         "frame-src  https://www.google.com/recaptcha/ https://www.gstatic.com/recaptcha/; "
+        "connect-src 'self' https://www.google.com/recaptcha/ https://www.gstatic.com/recaptcha/; "
     )
     response.headers['Content-Security-Policy'] = csp
     response.headers['Strict-Transport-Security'] = 'max-age=31536000; includeSubDomains'
