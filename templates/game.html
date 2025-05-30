@@ -14,9 +14,9 @@
       <div id="player-avatar" class="avatar"></div>
       
       <!-- Invisible buttons over buildings (adjust positions/sizes as needed) -->
-      <button class="map-area-btn" style="top:50px; left:120px; width:85px; height:70px;" onclick="startMission('bank')"></button>
-      <button class="map-area-btn" style="top:110px; left:320px; width:85px; height:70px;" onclick="startMission('postoffice')"></button>
-      <button class="map-area-btn" style="top:230px; left:600px; width:100px; height:80px;" onclick="startMission('school')"></button>
+      <button class="map-area-btn map-area-bank" onclick="startMission('bank')"></button>
+      <button class="map-area-btn map-area-postoffice" onclick="startMission('postoffice')"></button>
+      <button class="map-area-btn map-area-school" onclick="startMission('school')"></button>
 
       <div id="ui-overlay">
         <a href="{{ url_for('profile') }}" id="profile-btn" title="Your Profile">

@@ -35,15 +35,15 @@
                         <span class="profile-label">Username:</span>
                         {{ username }}
                         {% if is_guest %}
-                        <span style="color:#FF6B6B;">(Guest)</span>
+                        <span class="guest-label">(Guest)</span>
                         {% endif %}
                     </div>
                     <div>
                         <span class="profile-label">Email:</span>
                         {% if is_guest %}
-                            <span class="profile-label" style="color:#6C5CE7;">Not available</span>
+                            <span class="profile-label not-available-label">Not available</span>
                         {% else %}
-                            <span style="color:#A499FF;">{{ email }}</span>
+                            <span class="email-label">{{ email }}</span>
                         {% endif %}
                     </div>
                 </div>

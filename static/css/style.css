@@ -1086,3 +1086,31 @@ input::placeholder {
   background: rgba(20,18,38,0.65);
   pointer-events: none;
 }
+
+.map-area-bank {
+  top: 50px;
+  left: 120px;
+  width: 85px;
+  height: 70px;
+  position: absolute;
+}
+.map-area-postoffice {
+  top: 110px;
+  left: 320px;
+  width: 85px;
+  height: 70px;
+  position: absolute;
+}
+.map-area-school {
+  top: 230px;
+  left: 600px;
+  width: 100px;
+  height: 80px;
+  position: absolute;
+}
+
+.hidden { display: none !important; }
+
+.guest-label { color: #FF6B6B; }
+.not-available-label { color: #6C5CE7; }
+.email-label { color: #A499FF; }
