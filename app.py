@@ -277,12 +277,16 @@ def save_avatar():
         if "user" in session:
             user = User.query.filter_by(email=session["user"]["email"]).first()
             if user:
-                user.avatar_character = selections.get('characters')
-                user.avatar_hair      = selections.get('hair')
-                user.avatar_clothes   = selections.get('clothes')
-                user.avatar_acc       = selections.get('acc')
-                user.avatar_eyes      = selections.get('eyes')
-                # Add any additional avatar parts here
+                char = selections.get('characters')
+                hair = selections.get('hair')
+                clothes = selections.get('clothes')
+                acc = selections.get('acc')
+                eyes = selections.get('eyes')
+                user.avatar_character = char['name'] if isinstance(char, dict) else char
+                user.avatar_hair      = hair['name'] if isinstance(hair, dict) else hair
+                user.avatar_clothes   = clothes['name'] if isinstance(clothes, dict) else clothes
+                user.avatar_acc       = acc['name'] if isinstance(acc, dict) else acc
+                user.avatar_eyes      = eyes['name'] if isinstance(eyes, dict) else eyes
                 db.session.commit()
                 print("Avatar saved to database for user:", user.email)
 
