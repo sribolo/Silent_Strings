@@ -18,17 +18,6 @@
                             alt="Agent Avatar"
                             class="profile-avatar">
                 </div>
-                    <div class="avatar-thumbnails">
-                    {% for avatar in avatar_choices %}
-                        <form method="POST" action="{{ url_for('set_avatar') }}" style="display:inline;">
-                        <input type="hidden" name="avatar_filename" value="{{ avatar }}">
-                            <button type="submit" class="avatar-thumb-btn{% if avatar == current_avatar %} active{% endif %}">
-                                <img src="{{ url_for('static', filename='avatars/' + avatar) }}"
-                                     alt="Avatar" class="avatar-thumb-img">
-                            </button>
-                          </form>
-                        {% endfor %}
-                    </div>
                 </div>
                 <!-- Profile Info -->
                 <div class="profile-info">

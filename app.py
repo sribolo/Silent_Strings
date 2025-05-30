@@ -203,7 +203,7 @@ def logout():
     session.pop("user", None)
     session.pop("guest", None)
     session.pop("agent_name", None)
-    return redirect(url_for("index"))
+    return redirect(url_for("index.html"))
 
 # Avatar Customisation
 @app.route('/customise')
