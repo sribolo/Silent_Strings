@@ -4,8 +4,8 @@ import os
 
 
 # Update these paths!
-sprite_sheet_path = "static/images/avatar_parts/clothes/floral/floral.png"
-output_folder = "static/images/avatar_parts/clothes/floral_tiles"
+sprite_sheet_path = "static/images/avatar_parts/face/lipstick/lipstick.png"
+output_folder = "static/images/avatar_parts/face/lipstick_tiles"
 
 
 os.makedirs(output_folder, exist_ok=True)
