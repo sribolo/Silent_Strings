@@ -2,22 +2,19 @@
 const sfx = {
     // Cache for loaded sounds
     sounds: {},
-    bgm: null,
     
     // Initialize sound effects
     init() {
-        // Initialize background music
-        this.bgm = new Audio('/static/sfx/bgm.wav');
-        this.bgm.loop = true;
-        this.bgm.volume = 0.3; // Set BGM volume to 30%
-        
         // Preload UI sounds
-        this.loadSound('click', '/static/sfx/click.mp3');
+        /*this.loadSound('click', '/static/sfx/click.mp3');
         this.loadSound('hover', '/static/sfx/hover.mp3');
-        this.loadSound('success', '/static/sfx/success.mp3');
+        this.loadSound('success', '/static/sfx/success.mp3');*/
         
-        // Start background music
-        this.playBGM();
+        // Set BGM volume using the HTML audio element
+        const bgm = document.getElementById('bgm');
+        if (bgm) {
+            bgm.volume = 0.3;
+        }
     },
     
     // Load a sound file
@@ -36,21 +33,6 @@ const sfx = {
             soundClone.volume = 0.2; // Set UI sounds to 20% volume
             soundClone.play().catch(e => console.log('Audio play failed:', e));
         }
-    },
-    
-    // Play background music
-    playBGM() {
-        this.bgm.play().catch(e => console.log('BGM play failed:', e));
-    },
-    
-    // Pause background music
-    pauseBGM() {
-        this.bgm.pause();
-    },
-    
-    // Set background music volume
-    setBGMVolume(volume) {
-        this.bgm.volume = volume;
     },
     
     // Set UI sounds volume

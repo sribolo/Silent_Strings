@@ -7,9 +7,12 @@
   <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
 <body>
+  <audio id="bgm" src="{{ url_for('static', filename='sfx/bgm.wav') }}" autoplay loop>
+    Your browser does not support the audio element.
+  </audio>
   <div class="game-viewport">
     <div id="game-map">
-      <img id="map-bg" src="{{ url_for('static', filename='images/cyber_city_map.svg') }}" alt="City Map">
+      <img id="map-bg" src="{{ url_for('static', filename='images/pixel_town_16_9.png') }}" alt="Town Map">
 
       <div id="player-avatar" class="avatar"></div>
       

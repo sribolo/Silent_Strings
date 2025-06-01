@@ -74,3 +74,9 @@ function startMission(location) {
 
 // Initialize standing frame
 setPlayerFrame(direction, 0);
+
+window.onload = function() {
+  const bgm = document.getElementById('bgm');
+  bgm.volume = 0.3; // Set volume (0.0 to 1.0)
+  // bgm.play(); // If you want to trigger play via JS
+};

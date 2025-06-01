@@ -8,6 +8,9 @@
     {% block extra_css %}{% endblock %}
 </head>
 <body>
+    <audio id="bgm" src="{{ url_for('static', filename='sfx/bgm.wav') }}" autoplay loop>
+        Your browser does not support the audio element.
+    </audio>
     {% block content %}{% endblock %}
     
     <!-- Common Scripts -->
