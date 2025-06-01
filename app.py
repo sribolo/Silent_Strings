@@ -305,15 +305,33 @@ def save_avatar():
             user = User.query.filter_by(email=session["user"]["email"]).first()
             if user:
                 char = selections.get('characters')
+                # For subcategory-based selections, pick the first selected subcat (if any)
+                def get_first_subcat_name(sel):
+                    if isinstance(sel, dict):
+                        for v in sel.values():
+                            if isinstance(v, dict) and 'name' in v:
+                                return v['name']
+                            elif isinstance(v, str):
+                                return v
+                    return None
+                def get_first_subcat(sel):
+                    if isinstance(sel, dict):
+                        for v in sel.values():
+                            if isinstance(v, dict) and 'name' in v:
+                                return v
+                            elif isinstance(v, str):
+                                return {'name': v, 'img': ''}
+                    return None
+
                 hair = selections.get('hair')
                 clothes = selections.get('clothes')
                 acc = selections.get('acc')
                 face = selections.get('face')
                 user.avatar_character = char['name'] if isinstance(char, dict) else char
-                user.avatar_hair      = hair['name'] if isinstance(hair, dict) else hair
-                user.avatar_clothes   = clothes['name'] if isinstance(clothes, dict) else clothes
-                user.avatar_acc       = acc['name'] if isinstance(acc, dict) else acc
-                user.avatar_face      = face['name'] if isinstance(face, dict) else face
+                user.avatar_hair      = get_first_subcat_name(hair)
+                user.avatar_clothes   = get_first_subcat_name(clothes)
+                user.avatar_acc       = get_first_subcat_name(acc)
+                user.avatar_face      = get_first_subcat_name(face)
                 db.session.commit()
                 print("Avatar saved to database for user:", user.email)
 
