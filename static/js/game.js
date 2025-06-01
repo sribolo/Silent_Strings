@@ -67,7 +67,7 @@ map.addEventListener('click', function(e) {
 
 // Start mission on button click
 function startMission(location) {
-  // TODO: Integrate with mission/dialogue system or modal
+  console.log("Starting mission for location:", location);
   window.location.href = `/mission/${location}`;
 }
 

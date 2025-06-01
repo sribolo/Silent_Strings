@@ -589,13 +589,16 @@ button:hover {
   height: 128px;
   position: relative;
   background: #23232b;
-  border: 2px solid #6C5CE7;;
+  border: 2px solid #6C5CE7;
   border-radius: 12px;
   margin-bottom: 16px;
   box-shadow: 0 2px 8px #0005;
-  display: block;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   margin-left: auto;
   margin-right: auto;
+  overflow: hidden;
 }
 
 .avatar-layer {

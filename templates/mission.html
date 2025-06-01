@@ -29,6 +29,7 @@
     <script src="{{ url_for('static', filename='js/dialogues.js') }}"></script>
     {% if mission %}
     <script>
+        console.log("Mission data:", JSON.parse('{{ mission|tojson|safe }}'));
         // Pass the dialogue key to JS (always a string or null)
         const npcDialogueKey = "{{ mission.npc_dialogue_key|tojson|safe }}";
         

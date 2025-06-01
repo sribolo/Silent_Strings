@@ -183,31 +183,29 @@ document.addEventListener("DOMContentLoaded", () => {
 function updateAvatarPreview(selections) {
   const preview = document.getElementById('avatar-preview');
   preview.innerHTML = "";
-  const LAYER_ORDER = [
-    'characters',
-    'clothes',
-    'hair',
-    'face',
-    'acc'
-  ];
+
+  // Always render character first if present
+  if (selections.characters && selections.characters.img) {
+    const img = document.createElement('img');
+    img.src = selections.characters.img;
+    img.className = 'avatar-layer';
+    preview.appendChild(img);
+  }
+
+  // Render other layers (skip characters)
+  const LAYER_ORDER = ['clothes', 'hair', 'face', 'acc'];
   LAYER_ORDER.forEach(category => {
     if (selections[category]) {
       if (typeof selections[category] === 'object' && !Array.isArray(selections[category])) {
-        // For subcategories
         Object.values(selections[category]).forEach(sel => {
           if (sel && sel.img) {
             const img = document.createElement('img');
             img.src = sel.img;
             img.className = 'avatar-layer';
+            img.onerror = function() { this.style.display = 'none'; }; // Hide broken images
             preview.appendChild(img);
           }
         });
-      } else if (selections[category].img) {
-        // For characters
-        const img = document.createElement('img');
-        img.src = selections[category].img;
-        img.className = 'avatar-layer';
-        preview.appendChild(img);
       }
     }
   });
