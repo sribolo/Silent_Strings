@@ -255,10 +255,13 @@ def get_sprites():
                 for fn in files:
                     if fn.lower().endswith('.png'):
                         rel_path = os.path.relpath(os.path.join(root, fn), base_path)
+                        img_path = f"/static/images/avatar_parts/{rel_path.replace(os.sep, '/')}"
+                        print(f"Found image for {category}: {img_path}")
                         data[category].append({
                             "name": os.path.splitext(fn)[0],
-                            "img": f"/static/images/avatar_parts/{rel_path.replace(os.sep, '/')}"
+                            "img": img_path
                         })
+    print("Final sprite data:", data)
     return jsonify(data)
 
 @app.route('/save-avatar', methods=['POST'])

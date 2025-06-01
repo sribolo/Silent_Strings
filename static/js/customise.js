@@ -51,9 +51,9 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   function showCategory(category) {
-    document.querySelectorAll(".grid-container").forEach(grid => grid.style.display = "none");
+    document.querySelectorAll(".grid-container").forEach(grid => grid.classList.add("hidden"));
     const target = document.getElementById(`grid-${category}`);
-    if (target) target.style.display = "flex";
+    if (target) target.classList.remove("hidden");
   }
 
   // === Save Avatar and Navigate to Dialogue ===
