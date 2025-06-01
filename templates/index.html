@@ -1,11 +1,6 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>Silent Strings</title>
-  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
-</head>
-<body>
+{% extends "base.html" %}
+{% block title %}Silent Strings{% endblock %}
+{% block content %}
   <div class="bg-container">
     <img src="{{ url_for('static', filename='images/background.gif') }}" class="background">
     <div class="darken"></div>
@@ -17,6 +12,4 @@
     </div>
     </div>
   </div>
-  <script src="{{ url_for('static', filename='js/main.js') }}" defer></script>
-</body>
-</html>
+{% endblock %}

@@ -106,10 +106,28 @@ document.addEventListener("DOMContentLoaded", () => {
 
   function renderSubcatGrid(category, subcat) {
     const grid = document.getElementById(`grid-${category}`);
-    // Remove any previous grid of images (but keep subheader bar)
     grid.querySelectorAll('.subcat-grid').forEach(el => el.remove());
     const imgGrid = document.createElement('div');
     imgGrid.className = 'subcat-grid';
+
+    // --- Add Remove Button ---
+    const removeBtn = document.createElement('button');
+    removeBtn.textContent = 'Remove';
+    removeBtn.className = 'remove-btn';
+    removeBtn.onclick = () => {
+      if (selections[category]) {
+        delete selections[category][subcat];
+        // If no subcats left, delete the category
+        if (Object.keys(selections[category]).length === 0) {
+          delete selections[category];
+        }
+        updateAvatarPreview(selections);
+        // Remove selected highlight
+        imgGrid.querySelectorAll('.avatar-choice.selected').forEach(el => el.classList.remove('selected'));
+      }
+    };
+    imgGrid.appendChild(removeBtn);
+
     const options = spriteData[category][subcat] || [];
     options.forEach(option => {
       const img = document.createElement('img');

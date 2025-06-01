@@ -1,11 +1,6 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>{{ mission.title if mission else "Mission" }}</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/game.css') }}">
-</head>
-<body>
+{% extends "base.html" %}
+{% block title %}{{ mission.title if mission else "Mission" }}{% endblock %}
+{% block content %}
     <div class="mission-container">
         {% if error %}
             <h2>{{ error }}</h2>
@@ -89,5 +84,4 @@
         }
     </script>
     {% endif %}
-</body>
-</html> 
+{% endblock %} 

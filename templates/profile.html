@@ -11,19 +11,31 @@
             <h1 class="profile-title">Agent Profile</h1>
             <div class="profile-avatar-section">
                 <div class="profile-avatar-wrap">
-                    {% if avatar_parts %}
-                        {% for part, value in avatar_parts.items() %}
-                            {% if value %}
-                                <img src="{{ url_for('static', filename='images/avatar_parts/' + part + '/' + (value['name'] if value is mapping else value) + '.png') }}" 
-                                     alt="{{ part }}" 
-                                     class="profile-avatar">
+                    {% set LAYER_ORDER = ["characters", "clothes", "hair", "face", "acc"] %}
+                    {% for part in LAYER_ORDER %}
+                        {% set value = avatar_parts.get(part) %}
+                        {% if value %}
+                            {% if part == "characters" %}
+                                <img src="{{ url_for('static', filename='images/avatar_parts/characters/' + value + '.png') }}"
+                                     alt="{{ part }}" class="profile-avatar">
+                            {% else %}
+                                {# Try to find the subcategory and filename #}
+                                {% set found = false %}
+                                {% for subcat in ['basic', 'skirts', 'pants', 'dress', 'shoes_tiles', 'curly', 'emo', 'extra_long', 'french_curl', 'gentleman', 'spaebuns', 'wavy', 'long_straight', 'midiwave', 'ponytail', 'buzzcut', 'braids', 'bob', 'blush', 'eyes_tiles', 'lipstick', 'glasses', 'beard', 'earring_red', 'earring_emerald', 'earring_red_silver', 'earring_emerald_silver', 'default'] %}
+                                    {% if not found and value in subcat %}
+                                        <img src="{{ url_for('static', filename='images/avatar_parts/' + part + '/' + subcat + '/' + value + '.png') }}"
+                                             alt="{{ part }}" class="profile-avatar">
+                                        {% set found = true %}
+                                    {% endif %}
+                                {% endfor %}
+                                {# fallback if not found #}
+                                {% if not found %}
+                                    <img src="{{ url_for('static', filename='images/avatar_parts/' + part + '/default/' + value + '.png') }}"
+                                         alt="{{ part }}" class="profile-avatar">
+                                {% endif %}
                             {% endif %}
-                        {% endfor %}
-                    {% else %}
-                        <img src="{{ url_for('static', filename='images/avatar_parts/characters/' + default_avatar) }}" 
-                             alt="Default Avatar" 
-                            class="profile-avatar">
-                    {% endif %}
+                        {% endif %}
+                    {% endfor %}
                 </div>
             </div>
             <!-- Profile Info -->

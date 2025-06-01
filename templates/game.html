@@ -1,12 +1,6 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>Main Game</title>
-  <link rel="stylesheet" href="{{ url_for('static', filename='css/game.css') }}">
-  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
-</head>
-<body>
+{% extends "base.html" %}
+{% block title %}Main Game{% endblock %}
+{% block content %}
   <div class="game-viewport">
     <div id="game-map">
       <img id="map-bg" src="{{ url_for('static', filename='images/pixel_town_16_9.png') }}" alt="Town Map">
@@ -33,5 +27,4 @@
     </div>
   </div>
   <script src="{{ url_for('static', filename='js/game.js') }}"></script>
-</body>
-</html>
+{% endblock %}

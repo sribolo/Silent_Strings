@@ -1,12 +1,6 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>Mission Briefing</title>
-  <!-- main stylesheet -->
-  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
-</head>
-<body>
+{% extends "base.html" %}
+{% block title %}Mission Briefing{% endblock %}
+{% block content %}
   <div class="bg-container">
     <img src="{{ url_for('static', filename='images/background.gif') }}" class="background" alt="Background">
     <div class="darken"></div>
@@ -63,5 +57,4 @@
     document.getElementById('guestModal').style.display = 'none';
 });
   </script>
-</body>
-</html>
+{% endblock %}
