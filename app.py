@@ -56,7 +56,7 @@ class User(db.Model):
     avatar_hair = db.Column(db.String(120), nullable=True)
     avatar_clothes = db.Column(db.String(120), nullable=True)
     avatar_acc = db.Column(db.String(120), nullable=True)
-    avatar_eyes = db.Column(db.String(120), nullable=True)
+    avatar_face = db.Column(db.String(120), nullable=True)
 
 # === CSRF Protection ===
 csrf = CSRFProtect(app)
@@ -245,7 +245,7 @@ def dialogue():
 def get_sprites():
     base_path = os.path.join(app.root_path, 'static', 'images', 'avatar_parts')
     data = {}
-    categories = ['characters', 'clothes', 'hair', 'eyes', 'acc']
+    categories = ['characters', 'clothes', 'hair', 'face', 'acc']
 
     for category in categories:
         category_path = os.path.join(base_path, category)
@@ -282,12 +282,12 @@ def save_avatar():
                 hair = selections.get('hair')
                 clothes = selections.get('clothes')
                 acc = selections.get('acc')
-                eyes = selections.get('eyes')
+                face = selections.get('face')
                 user.avatar_character = char['name'] if isinstance(char, dict) else char
                 user.avatar_hair      = hair['name'] if isinstance(hair, dict) else hair
                 user.avatar_clothes   = clothes['name'] if isinstance(clothes, dict) else clothes
                 user.avatar_acc       = acc['name'] if isinstance(acc, dict) else acc
-                user.avatar_eyes      = eyes['name'] if isinstance(eyes, dict) else eyes
+                user.avatar_face      = face['name'] if isinstance(face, dict) else face
                 db.session.commit()
                 print("Avatar saved to database for user:", user.email)
 
@@ -376,7 +376,7 @@ def profile():
                 "hair": user.avatar_hair,
                 "clothes": user.avatar_clothes,
                 "acc": user.avatar_acc,
-                "eyes": user.avatar_eyes,
+                "face": user.avatar_face,
             }
     elif session.get("guest"):
         username = session.get("agent_name", "Guest Agent")

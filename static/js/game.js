@@ -27,7 +27,6 @@ function animateWalk(dir) {
   }, 100); // Adjust animation speed
 }
 
-// Keyboard move
 document.addEventListener('keydown', function(e) {
   let moved = false;
   if (e.key === "ArrowRight") { x += 10; direction = 2; moved = true; }
@@ -80,3 +79,12 @@ window.onload = function() {
   bgm.volume = 0.3; // Set volume (0.0 to 1.0)
   // bgm.play(); // If you want to trigger play via JS
 };
+
+document.addEventListener('DOMContentLoaded', function() {
+    document.querySelectorAll('.map-area-btn').forEach(function(btn) {
+        btn.addEventListener('click', function() {
+            const mission = btn.getAttribute('data-mission');
+            if (mission) startMission(mission);
+        });
+    });
+});

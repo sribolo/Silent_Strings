@@ -1,5 +1,5 @@
 document.addEventListener("DOMContentLoaded", () => {
-  const categories = ["characters", "clothes", "hair", "eyes", "acc"];
+  const categories = ["characters", "clothes", "hair", "face", "acc"];
   const selections = {}; // User's current selections for each category
 
   // === Fetch all sprites from the backend ===
@@ -100,7 +100,7 @@ function updateAvatarPreview(selections) {
     'characters',   // base
     'clothes',      // outfit
     'hair',         // hair
-    'eyes',         // eyes/blush/lipstick if eyes layer
+    'face',         // face features
     'acc'           // accessories: beard, glasses, hat
   ];
   LAYER_ORDER.forEach(category => {

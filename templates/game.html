@@ -14,14 +14,14 @@
       <div id="player-avatar" class="avatar"></div>
       
       <!-- Invisible buttons over buildings (adjust positions/sizes as needed) -->
-      <button class="map-area-btn map-area-bank" onclick="startMission('bank')"></button>
-      <button class="map-area-btn map-area-school" onclick="startMission('school')"></button>
-      <button class="map-area-btn map-area-company" onclick="startMission('company')"></button>
-      <button class="map-area-btn map-area-cafe" onclick="startMission('cafe')"></button>
-      <button class="map-area-btn map-area-news" onclick="startMission('news')"></button>
-      <button class="map-area-btn map-area-government" onclick="startMission('government')"></button>
-      <button class="map-area-btn map-area-transport" onclick="startMission('transport')"></button>
-      <button class="map-area-btn map-area-hq" onclick="startMission('hq')"></button>
+      <button class="map-area-btn map-area-bank" data-mission="bank"></button>
+      <button class="map-area-btn map-area-school" data-mission="school"></button>
+      <button class="map-area-btn map-area-company" data-mission="company"></button>
+      <button class="map-area-btn map-area-cafe" data-mission="cafe"></button>
+      <button class="map-area-btn map-area-news" data-mission="news"></button>
+      <button class="map-area-btn map-area-government" data-mission="government"></button>
+      <button class="map-area-btn map-area-transport" data-mission="transport"></button>
+      <button class="map-area-btn map-area-hq" data-mission="hq"></button>
 
       <div id="ui-overlay">
         <a href="{{ url_for('profile') }}" id="profile-btn" title="Your Profile">

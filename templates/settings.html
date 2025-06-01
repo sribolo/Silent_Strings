@@ -24,7 +24,7 @@
                             Enable Music
                         </label>
                     </div>
-                    <button type="button" class="profile-link" onclick="saveSettings()">Save</button>
+                    <button type="button" class="profile-link" id="save-settings-btn">Save</button>
                 </form>
                 <div class="profile-actions">
                     <a href="{{ url_for('profile') }}" class="profile-link">Back to Profile</a>
@@ -45,6 +45,13 @@
             alert('Settings saved!');
         });
     }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        const btn = document.getElementById('save-settings-btn');
+        if (btn) {
+            btn.addEventListener('click', saveSettings);
+        }
+    });
     </script>
 </body>
 </html>
