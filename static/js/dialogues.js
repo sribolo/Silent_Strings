@@ -107,6 +107,38 @@ const levelDialogues = {
       { "text": "Silent Strings isn't just a program—it's the end of trust." },
       { "text": "What will you choose: preserve a broken system, or let it fall?" }
     ]
+  },
+  "level1_dialogues": {
+    "Security_Guard": [
+      {
+        "text": "I noticed something strange last night. The server room door was left unlocked.",
+        "clue": "Check server room access logs between 10 PM and 2 AM"
+      },
+      {
+        "text": "The night shift admin, Sarah, seemed stressed. She was working late.",
+        "clue": "Review Sarah's workstation for suspicious activity"
+      }
+    ],
+    "IT_Admin": [
+      {
+        "text": "We've been getting unusual login attempts from multiple IPs.",
+        "clue": "Analyze failed login attempts in the security logs"
+      },
+      {
+        "text": "The backup system was tampered with. Someone tried to delete our logs.",
+        "clue": "Use file recovery tool to restore deleted logs"
+      }
+    ],
+    "Sarah_Night_Admin": [
+      {
+        "text": "I... I might have clicked on a suspicious email. It looked like it was from HR.",
+        "clue": "Check Sarah's email for phishing attempts"
+      },
+      {
+        "text": "After that, my account started acting strange. I couldn't access certain files.",
+        "clue": "Investigate Sarah's account permissions and recent changes"
+      }
+    ]
   }
 };
 
@@ -181,6 +213,95 @@ const toolDialogues = {
     complete: "Log analysis complete. Suspicious events identified."
   }
 };
+
+// Dialogue state management
+let currentDialogueState = {
+  level: null,
+  npc: null,
+  lineIndex: 0
+};
+
+function initializeDialogue(levelKey) {
+  currentDialogueState.level = levelKey;
+  currentDialogueState.npc = Object.keys(levelDialogues[levelKey])[0];
+  currentDialogueState.lineIndex = 0;
+  showDialogue();
+}
+
+function showDialogue() {
+  const dialogueArea = document.getElementById('dialogue-text');
+  const optionsBox = document.getElementById('options');
+  
+  if (!currentDialogueState.level || !currentDialogueState.npc) {
+    return;
+  }
+
+  const npc = currentDialogueState.npc;
+  const lines = levelDialogues[currentDialogueState.level][npc];
+  const line = lines[currentDialogueState.lineIndex];
+
+  // Display dialogue
+  dialogueArea.innerHTML = `<b>${npc.replace(/_/g, ' ')}:</b> ${line.text}`;
+  optionsBox.innerHTML = '';
+
+  // Display clue if available
+  if (line.clue) {
+    const clueDiv = document.createElement('div');
+    clueDiv.textContent = 'Clue: ' + line.clue;
+    clueDiv.className = 'clue-text';
+    optionsBox.appendChild(clueDiv);
+  }
+
+  // Add navigation buttons
+  addNavigationButtons(lines.length);
+}
+
+function addNavigationButtons(totalLines) {
+  const optionsBox = document.getElementById('options');
+  const npcs = Object.keys(levelDialogues[currentDialogueState.level]);
+  const currentNpcIndex = npcs.indexOf(currentDialogueState.npc);
+
+  // Next/Previous buttons for current NPC
+  if (currentDialogueState.lineIndex < totalLines - 1) {
+    addButton('Next', () => {
+      currentDialogueState.lineIndex++;
+      showDialogue();
+    });
+  }
+
+  if (currentDialogueState.lineIndex > 0) {
+    addButton('Previous', () => {
+      currentDialogueState.lineIndex--;
+      showDialogue();
+    });
+  }
+
+  // Next/Previous NPC buttons
+  if (currentNpcIndex < npcs.length - 1) {
+    addButton('Next NPC', () => {
+      currentDialogueState.npc = npcs[currentNpcIndex + 1];
+      currentDialogueState.lineIndex = 0;
+      showDialogue();
+    });
+  }
+
+  if (currentNpcIndex > 0) {
+    addButton('Previous NPC', () => {
+      currentDialogueState.npc = npcs[currentNpcIndex - 1];
+      currentDialogueState.lineIndex = 0;
+      showDialogue();
+    });
+  }
+}
+
+function addButton(text, onClick) {
+  const optionsBox = document.getElementById('options');
+  const button = document.createElement('button');
+  button.textContent = text;
+  button.className = 'dialogue-btn';
+  button.onclick = onClick;
+  optionsBox.appendChild(button);
+}
 
 let current = "intro";
 const textBox = document.getElementById("dialogue-text");

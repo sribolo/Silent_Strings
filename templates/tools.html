@@ -1,0 +1,112 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="tools-container">
+    <div class="tools-sidebar">
+        <h3>Available Tools</h3>
+        <div class="tool-list">
+            <button class="tool-btn" data-tool="scanner">Network Scanner</button>
+            <button class="tool-btn" data-tool="log-analyzer">Log Analyzer</button>
+            <button class="tool-btn" data-tool="password-cracker">Password Cracker</button>
+            <button class="tool-btn" data-tool="file-recovery">File Recovery</button>
+        </div>
+    </div>
+
+    <div class="tool-workspace">
+        <!-- Network Scanner Tool -->
+        <div class="tool-interface" id="scanner-interface" style="display: none;">
+            <div class="tool-header">
+                <h2>Network Scanner</h2>
+                <div class="tool-controls">
+                    <button class="tool-action-btn" id="start-scan">Start Scan</button>
+                    <button class="tool-action-btn" id="stop-scan" disabled>Stop</button>
+                </div>
+            </div>
+            <div class="tool-content">
+                <div class="scan-progress">
+                    <div class="progress-bar">
+                        <div class="progress-bar-fill" style="width: 0%"></div>
+                    </div>
+                    <div class="scan-status">Ready to scan</div>
+                </div>
+                <div class="scan-results">
+                    <pre id="scan-output"></pre>
+                </div>
+            </div>
+        </div>
+
+        <!-- Log Analyzer Tool -->
+        <div class="tool-interface" id="log-analyzer-interface" style="display: none;">
+            <div class="tool-header">
+                <h2>Log Analyzer</h2>
+                <div class="tool-controls">
+                    <select id="log-type">
+                        <option value="system">System Logs</option>
+                        <option value="security">Security Logs</option>
+                        <option value="application">Application Logs</option>
+                    </select>
+                    <button class="tool-action-btn" id="analyze-logs">Analyze</button>
+                </div>
+            </div>
+            <div class="tool-content">
+                <div class="log-filters">
+                    <input type="text" id="log-search" placeholder="Search logs...">
+                    <input type="datetime-local" id="log-time-start">
+                    <input type="datetime-local" id="log-time-end">
+                </div>
+                <div class="log-results">
+                    <pre id="log-output"></pre>
+                </div>
+            </div>
+        </div>
+
+        <!-- Password Cracker Tool -->
+        <div class="tool-interface" id="password-cracker-interface" style="display: none;">
+            <div class="tool-header">
+                <h2>Password Cracker</h2>
+                <div class="tool-controls">
+                    <input type="text" id="hash-input" placeholder="Enter hash...">
+                    <button class="tool-action-btn" id="crack-hash">Crack</button>
+                </div>
+            </div>
+            <div class="tool-content">
+                <div class="crack-progress">
+                    <div class="progress-bar">
+                        <div class="progress-bar-fill" style="width: 0%"></div>
+                    </div>
+                    <div class="crack-status">Ready</div>
+                </div>
+                <div class="crack-results">
+                    <pre id="crack-output"></pre>
+                </div>
+            </div>
+        </div>
+
+        <!-- File Recovery Tool -->
+        <div class="tool-interface" id="file-recovery-interface" style="display: none;">
+            <div class="tool-header">
+                <h2>File Recovery</h2>
+                <div class="tool-controls">
+                    <input type="text" id="file-path" placeholder="Enter file path...">
+                    <button class="tool-action-btn" id="recover-file">Recover</button>
+                </div>
+            </div>
+            <div class="tool-content">
+                <div class="recovery-progress">
+                    <div class="progress-bar">
+                        <div class="progress-bar-fill" style="width: 0%"></div>
+                    </div>
+                    <div class="recovery-status">Ready</div>
+                </div>
+                <div class="recovery-results">
+                    <pre id="recovery-output"></pre>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/tools.js') }}"></script>
+{% endblock %} 

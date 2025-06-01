@@ -18,6 +18,7 @@ from forms import SignupForm, LoginForm, ForgotPasswordForm, ResetPasswordForm
 from flask_migrate import Migrate
 from itsdangerous import URLSafeTimedSerializer
 from flask_mail import Mail, Message
+from functools import wraps
 
 
 # === Load Environment Variables ===
@@ -429,9 +430,52 @@ def load_level(level_name):
 
 @app.route('/game')
 def game():
-    avatar_img = session.get('avatar_img', 'default.png')
-    return render_template('game.html', avatar_img=avatar_img)
+    return render_template('game.html')
 
+# Example mission data (expand as needed)
+MISSIONS = {
+    "bank": {
+        "title": "The Locked Vault",
+        "objectives": [
+            "Identify Patient Zero (the first infected device).",
+            "Find the ransomware note and sample.",
+            "Collect evidence of intrusion (logs, emails, malware sample).",
+            "Trace the attack's origin (IP, user account, method).",
+            "Restore banking services (deactivate malware, patch system)."
+        ],
+        "npc_dialogue_key": "level3"  # Example: use level3 from dialogue.js
+    },
+    "school": {
+        "title": "PhishNet",
+        "objectives": [
+            "Trace the phishing email source.",
+            "Identify compromised student accounts.",
+            "Secure the school's network."
+        ],
+        "npc_dialogue_key": "level2"
+    },
+    # Add more missions as needed...
+}
+
+@app.route('/mission/<location>')
+def mission(location):
+    mission_data = MISSIONS.get(location)
+    if not mission_data:
+        return render_template('mission.html', error="Mission not found.", location=location)
+    return render_template('mission.html', mission=mission_data, location=location)
+
+def login_required(f):
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        if "user" not in session and not session.get("guest"):
+            return redirect(url_for("login"))
+        return f(*args, **kwargs)
+    return decorated_function
+
+@app.route('/tools')
+@login_required
+def tools():
+    return render_template('tools.html')
 
 # === RUN SERVER ===
 if __name__ == "__main__":

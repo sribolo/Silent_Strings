@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ mission.title if mission else "Mission" }}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/game.css') }}">
+</head>
+<body>
+    <div class="mission-container">
+        {% if error %}
+            <h2>{{ error }}</h2>
+            <a href="{{ url_for('game') }}" class="back-btn">Back to Map</a>
+        {% else %}
+            <h1>{{ mission.title }}</h1>
+            <h3>Objectives:</h3>
+            <ul class="objectives-list">
+                {% for obj in mission.objectives %}
+                    <li>{{ obj }}</li>
+                {% endfor %}
+            </ul>
+            <h3>NPC Dialogue:</h3>
+            <div class="npc-dialogue-area">
+                <div id="dialogue-text"></div>
+                <div id="options"></div>
+            </div>
+            <a href="{{ url_for('game') }}" class="back-btn">Back to Map</a>
+        {% endif %}
+    </div>
+    <script src="{{ url_for('static', filename='js/dialogues.js') }}"></script>
+    {% if mission %}
+    <script>
+        // Pass the dialogue key to JS (always a string or null)
+        const npcDialogueKey = "{{ mission.npc_dialogue_key|tojson|safe }}";
+        
+        if (npcDialogueKey && typeof levelDialogues !== 'undefined') {
+            const dialogueArea = document.getElementById('dialogue-text');
+            const optionsBox = document.getElementById('options');
+            const npcs = Object.keys(levelDialogues[npcDialogueKey]);
+            let npcIndex = 0;
+            let lineIndex = 0;
+
+            function showDialogue() {
+                const npc = npcs[npcIndex];
+                const lines = levelDialogues[npcDialogueKey][npc];
+                const line = lines[lineIndex];
+                dialogueArea.innerHTML = `<b>${npc.replace(/_/g, ' ')}:</b> ${line.text}`;
+                optionsBox.innerHTML = '';
+                
+                if (line.clue) {
+                    const clueDiv = document.createElement('div');
+                    clueDiv.textContent = 'Clue: ' + line.clue;
+                    clueDiv.style.color = '#A3FFB0';
+                    clueDiv.style.marginTop = '8px';
+                    optionsBox.appendChild(clueDiv);
+                }
+                
+                // Next/Prev buttons
+                if (lineIndex < lines.length - 1) {
+                    const nextBtn = document.createElement('button');
+                    nextBtn.textContent = 'Next';
+                    nextBtn.className = 'back-btn';
+                    nextBtn.onclick = () => { lineIndex++; showDialogue(); };
+                    optionsBox.appendChild(nextBtn);
+                } else if (npcIndex < npcs.length - 1) {
+                    const nextNpcBtn = document.createElement('button');
+                    nextNpcBtn.textContent = 'Next NPC';
+                    nextNpcBtn.className = 'back-btn';
+                    nextNpcBtn.onclick = () => { npcIndex++; lineIndex = 0; showDialogue(); };
+                    optionsBox.appendChild(nextNpcBtn);
+                }
+                
+                if (lineIndex > 0) {
+                    const prevBtn = document.createElement('button');
+                    prevBtn.textContent = 'Previous';
+                    prevBtn.className = 'back-btn';
+                    prevBtn.onclick = () => { lineIndex--; showDialogue(); };
+                    optionsBox.appendChild(prevBtn);
+                } else if (npcIndex > 0) {
+                    const prevNpcBtn = document.createElement('button');
+                    prevNpcBtn.textContent = 'Previous NPC';
+                    prevNpcBtn.className = 'back-btn';
+                    prevNpcBtn.onclick = () => { npcIndex--; lineIndex = 0; showDialogue(); };
+                    optionsBox.appendChild(prevNpcBtn);
+                }
+            }
+            
+            showDialogue();
+        }
+    </script>
+    {% endif %}
+</body>
+</html> 

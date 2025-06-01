@@ -1,0 +1,47 @@
+{
+    "levels": {
+        "level1": {
+            "title": "Breach at Base",
+            "target": "SECTOR-9 HQ",
+            "skills": ["Log analysis", "Phishing detection"],
+            "timeLimit": 1800,
+            "objectives": [
+                "Identify the initial breach point",
+                "Analyze suspicious login attempts",
+                "Trace the attacker's IP address",
+                "Recover deleted system logs",
+                "Secure the compromised accounts"
+            ],
+            "npc_dialogue_key": "level1_dialogues",
+            "tools_available": [
+                "Network Scanner",
+                "Log Analyzer",
+                "Password Cracker",
+                "File Recovery Tool"
+            ],
+            "evidence_locations": [
+                "Server Room",
+                "Security Office",
+                "Network Hub",
+                "Admin Workstation"
+            ],
+            "clues": {
+                "required": [
+                    "Suspicious login timestamp",
+                    "Deleted log file",
+                    "Compromised admin account"
+                ],
+                "optional": [
+                    "USB drive in trash",
+                    "Sticky note with password",
+                    "Security camera footage"
+                ]
+            },
+            "success_criteria": {
+                "time_bonus": 300,
+                "evidence_threshold": 3,
+                "required_objectives": 4
+            }
+        }
+    }
+} 

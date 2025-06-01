@@ -130,3 +130,145 @@ html, body {
     box-shadow: 0 0 12px #6C5CE7;
   }
   
+  /* Mission Container */
+  .mission-container {
+    max-width: 800px;
+    margin: 2rem auto;
+    padding: 2rem;
+    background: rgba(0, 0, 0, 0.8);
+    border-radius: 10px;
+    color: #fff;
+    font-family: 'Courier New', monospace;
+  }
+  
+  /* Objectives List */
+  .objectives-list {
+    list-style-type: none;
+    padding: 0;
+    margin: 1rem 0;
+  }
+  
+  .objectives-list li {
+    padding: 0.5rem 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  }
+  
+  /* NPC Dialogue Area */
+  .npc-dialogue-area {
+    margin: 2rem 0;
+    padding: 1rem;
+    background: rgba(0, 0, 0, 0.5);
+    border-radius: 5px;
+  }
+  
+  #dialogue-text {
+    font-size: 1.1rem;
+    line-height: 1.6;
+    margin-bottom: 1rem;
+  }
+  
+  #options {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-top: 1rem;
+  }
+  
+  /* Buttons */
+  .back-btn, .dialogue-btn {
+    background: #2c3e50;
+    color: #fff;
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+    font-family: 'Courier New', monospace;
+  }
+  
+  .back-btn:hover, .dialogue-btn:hover {
+    background: #34495e;
+  }
+  
+  /* Clue Text */
+  .clue-text {
+    color: #A3FFB0;
+    margin: 1rem 0;
+    padding: 0.5rem;
+    background: rgba(163, 255, 176, 0.1);
+    border-radius: 5px;
+    font-style: italic;
+  }
+  
+  /* Timer Display */
+  .timer {
+    position: fixed;
+    top: 1rem;
+    right: 1rem;
+    background: rgba(0, 0, 0, 0.8);
+    padding: 0.5rem 1rem;
+    border-radius: 5px;
+    color: #fff;
+    font-family: 'Courier New', monospace;
+  }
+  
+  /* Tool Interface */
+  .tool-interface {
+    margin: 1rem 0;
+    padding: 1rem;
+    background: rgba(0, 0, 0, 0.5);
+    border-radius: 5px;
+  }
+  
+  .tool-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+  }
+  
+  .tool-content {
+    background: #000;
+    padding: 1rem;
+    border-radius: 5px;
+    font-family: 'Courier New', monospace;
+    white-space: pre-wrap;
+  }
+  
+  /* Mission Failed State */
+  .mission-failed {
+    filter: grayscale(100%);
+    transition: filter 0.5s ease;
+  }
+  
+  /* Evidence Collection */
+  .evidence-item {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 0.5rem;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 5px;
+    margin: 0.5rem 0;
+  }
+  
+  .evidence-item.collected {
+    background: rgba(163, 255, 176, 0.1);
+  }
+  
+  /* Progress Bar */
+  .progress-bar {
+    width: 100%;
+    height: 5px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 5px;
+    margin: 1rem 0;
+  }
+  
+  .progress-bar-fill {
+    height: 100%;
+    background: #A3FFB0;
+    border-radius: 5px;
+    transition: width 0.3s ease;
+  }
+  
