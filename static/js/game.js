@@ -68,7 +68,8 @@ map.addEventListener('click', function(e) {
 
 // Start mission on button click
 function startMission(location) {
-  alert("Start mission at: " + location); // Replace with actual modal or page navigation
+  // TODO: Integrate with mission/dialogue system or modal
+  window.location.href = `/mission/${location}`;
 }
 
 // Initialize standing frame
