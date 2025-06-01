@@ -249,19 +249,42 @@ def get_sprites():
 
     for category in categories:
         category_path = os.path.join(base_path, category)
-        data[category] = []
-        if os.path.isdir(category_path):
+        if not os.path.isdir(category_path):
+            data[category] = {}
+            continue
+        # Characters: flat list
+        if category == 'characters':
+            data[category] = []
             for root, dirs, files in os.walk(category_path):
                 for fn in files:
                     if fn.lower().endswith('.png'):
                         rel_path = os.path.relpath(os.path.join(root, fn), base_path)
                         img_path = f"/static/images/avatar_parts/{rel_path.replace(os.sep, '/')}"
-                        print(f"Found image for {category}: {img_path}")
                         data[category].append({
                             "name": os.path.splitext(fn)[0],
                             "img": img_path
                         })
-    print("Final sprite data:", data)
+            continue
+        # Other categories: group by subfolder
+        subcategories = {}
+        for root, dirs, files in os.walk(category_path):
+            rel_root = os.path.relpath(root, category_path)
+            # Skip root if not a subcategory (e.g. for face, acc, etc.)
+            if rel_root == '.':
+                subcat_name = 'default'
+            else:
+                subcat_name = rel_root.replace(os.sep, '_')
+            for fn in files:
+                if fn.lower().endswith('.png'):
+                    rel_path = os.path.relpath(os.path.join(root, fn), base_path)
+                    img_path = f"/static/images/avatar_parts/{rel_path.replace(os.sep, '/')}"
+                    if subcat_name not in subcategories:
+                        subcategories[subcat_name] = []
+                    subcategories[subcat_name].append({
+                        "name": os.path.splitext(fn)[0],
+                        "img": img_path
+                    })
+        data[category] = subcategories
     return jsonify(data)
 
 @app.route('/save-avatar', methods=['POST'])

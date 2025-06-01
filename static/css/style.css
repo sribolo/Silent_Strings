@@ -1164,3 +1164,37 @@ input::placeholder {
     margin-right: 6px;
     vertical-align: middle;
 }
+
+.subheader-bar {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 8px;
+  flex-wrap: wrap;
+}
+.subheader-btn {
+  background: #23232b;
+  color: #6C5CE7;
+  border: 2px solid #5757B3;
+  border-radius: 6px;
+  padding: 4px 14px;
+  font-family: 'Press Start 2P', monospace;
+  font-size: 0.8em;
+  cursor: pointer;
+  transition: background 0.2s, border 0.2s;
+}
+.subheader-btn.active {
+  background: #6C5CE7;
+  color: #23232b;
+  border: 2px solid #6C5CE7;
+}
+.subcat-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin: 0 0 12px 0;
+  background: #18181b;
+  padding: 8px;
+  border-radius: 8px;
+  min-height: 48px;
+  max-width: 320px;
+}
