@@ -3,7 +3,7 @@ const map = document.getElementById('game-map');
 
 // Sprite sheet config
 const SPRITE_SIZE = 32;
-const FRAMES = 16;
+const FRAMES = 4;
 const ROWS = 4; // down, left, right, up
 
 let x = 500, y = 300; // Start pos
