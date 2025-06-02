@@ -208,10 +208,30 @@ for (let i = 0; i < NUM_NPCS; i++) {
 
 // Animate NPCs
 function moveNpc(npcDiv) {
-  const pos = getRandomPosition();
-  npcDiv.style.transition = 'left 2s linear, top 2s linear';
-  npcDiv.style.left = pos.x + 'px';
-  npcDiv.style.top = pos.y + 'px';
+  const currentLeft = parseFloat(npcDiv.style.left);
+  const currentTop = parseFloat(npcDiv.style.top);
+  const moveDistance = 32; // move by one tile (adjust as needed)
+  let newLeft = currentLeft;
+  let newTop = currentTop;
+  // Randomly choose to move horizontally or vertically
+  if (Math.random() < 0.5) {
+    // Move horizontally
+    if (Math.random() < 0.5) {
+      newLeft = Math.max(0, Math.min(currentLeft + moveDistance, map.offsetWidth - SPRITE_SIZE));
+    } else {
+      newLeft = Math.max(0, Math.min(currentLeft - moveDistance, map.offsetWidth - SPRITE_SIZE));
+    }
+  } else {
+    // Move vertically
+    if (Math.random() < 0.5) {
+      newTop = Math.max(0, Math.min(currentTop + moveDistance, map.offsetHeight - SPRITE_SIZE));
+    } else {
+      newTop = Math.max(0, Math.min(currentTop - moveDistance, map.offsetHeight - SPRITE_SIZE));
+    }
+  }
+  npcDiv.style.transition = 'left 1.2s linear, top 1.2s linear';
+  npcDiv.style.left = newLeft + 'px';
+  npcDiv.style.top = newTop + 'px';
 }
 
 // Move all NPCs every few seconds
