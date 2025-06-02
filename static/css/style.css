@@ -394,22 +394,60 @@ input::placeholder {
 }
 
 /* Dialogue Box */
-#dialogue-box {
-    max-width: 600px;
-    margin: auto;
-    border: 2px solid #666;
-    padding: 20px;
-    border-radius: 8px;
-    background-color: #1a1a1a;
+.dialogue-box-outer {
+  max-width: 600px;
+  margin: 48px auto;
+  background: #23232b;
+  border: 4px solid #bdbdbd;
+  border-radius: 12px;
+  box-shadow: 0 4px 24px #000a;
+  font-family: 'Press Start 2P', monospace;
+  color: #fff;
+  position: relative;
+}
+.dialogue-box-header {
+  background: #bdbdbd;
+  color: #23232b;
+  font-family: 'Press Start 2P', monospace;
+  font-size: 1.1em;
+  padding: 8px 18px;
+  border-top-left-radius: 8px;
+  border-top-right-radius: 8px;
+  border-bottom: 2px solid #23232b;
+  letter-spacing: 1px;
+}
+.dialogue-box-inner {
+  padding: 22px 28px 18px 28px;
+  font-size: 1.1em;
+  line-height: 1.7;
+  background: #23232b;
+  border-radius: 0 0 8px 8px;
+  min-height: 60px;
+  min-width: 320px;
+}
+.dialogue-options {
+  display: flex;
+  gap: 16px;
+  justify-content: flex-end;
+  padding: 12px 28px 18px 28px;
+}
+.dialogue-btn {
+  background: #6C5CE7;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  padding: 8px 18px;
+  font-family: 'Press Start 2P', monospace;
+  font-size: 1em;
+  cursor: pointer;
+  margin-left: 8px;
+  transition: background 0.2s, color 0.2s;
+}
+.dialogue-btn:hover {
+  background: #8A2BE2;
+  color: #fff;
 }
 
-#dialogue-text {
-    font-size: 1.2rem;
-    line-height: 1.5;
-    white-space: pre-wrap;
-    min-height: 120px;
-    margin-bottom: 15px;
-}
 /* Dialogue Buttons */
 button {
     margin: 5px;
@@ -1246,4 +1284,21 @@ input::placeholder {
 }
 .remove-btn:hover {
   background: #ff8787;
+}
+
+.dialogue-box-content-row {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+}
+.dialogue-portrait {
+  width: 72px;
+  height: 72px;
+  margin-right: 18px;
+  border: 2px solid #bdbdbd;
+  border-radius: 8px;
+  background: #18181b;
+  image-rendering: pixelated;
+  box-shadow: 0 2px 8px #0005;
+  display: block;
 }

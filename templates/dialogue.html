@@ -2,6 +2,12 @@
 {% extends "base.html" %}
 {% block title %}Dialogue{% endblock %}
 {% block content %}
-  <h1>Hello, {{ name }}!</h1>
-  <p>This is the dialogue screen.</p>
+  <div class="dialogue-box-outer">
+    <div class="dialogue-box-header" id="dialogue-npc"></div>
+    <div class="dialogue-box-content-row">
+      <img id="dialogue-portrait" class="dialogue-portrait" src="" alt="Portrait" style="display:none;" />
+      <div class="dialogue-box-inner" id="dialogue-text"></div>
+    </div>
+    <div id="options" class="dialogue-options"></div>
+  </div>
 {% endblock %}

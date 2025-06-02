@@ -195,6 +195,57 @@ document.addEventListener("DOMContentLoaded", () => {
       alert("There was a problem saving your avatar. Please try again.");
     });
   });
+
+  // === Add Randomize Button ===
+  const previewContainer = document.getElementById('avatar-preview').parentNode;
+  const randomBtn = document.createElement('button');
+  randomBtn.textContent = 'Randomize';
+  randomBtn.className = 'pixel-btn';
+  randomBtn.style.marginBottom = '12px';
+  randomBtn.onclick = () => {
+    // Randomize characters (flat)
+    if (spriteData.characters && spriteData.characters.length > 0) {
+      const randChar = spriteData.characters[Math.floor(Math.random() * spriteData.characters.length)];
+      selections.characters = { name: randChar.name, img: randChar.img };
+    }
+    // Randomize other categories (with subcats)
+    ["clothes", "hair", "face", "acc"].forEach(cat => {
+      if (spriteData[cat]) {
+        const subcats = Object.keys(spriteData[cat]);
+        if (subcats.length > 0) {
+          const randSubcat = subcats[Math.floor(Math.random() * subcats.length)];
+          const options = spriteData[cat][randSubcat];
+          if (options && options.length > 0) {
+            const randOpt = options[Math.floor(Math.random() * options.length)];
+            if (!selections[cat]) selections[cat] = {};
+            selections[cat][randSubcat] = { name: randOpt.name, img: randOpt.img };
+          }
+        }
+      }
+    });
+    updateAvatarPreview(selections);
+    // Highlight selected in UI
+    categories.forEach(category => {
+      const grid = document.getElementById(`grid-${category}`);
+      if (!grid) return;
+      grid.querySelectorAll('.avatar-choice.selected').forEach(el => el.classList.remove('selected'));
+      if (category === 'characters' && selections.characters) {
+        const sel = selections.characters.name;
+        grid.querySelectorAll('.avatar-choice').forEach(img => {
+          if (img.dataset.name === sel) img.classList.add('selected');
+        });
+      } else if (selections[category]) {
+        Object.entries(selections[category]).forEach(([subcat, selObj]) => {
+          grid.querySelectorAll('.avatar-choice').forEach(img => {
+            if (img.dataset.subcat === subcat && img.dataset.name === selObj.name) {
+              img.classList.add('selected');
+            }
+          });
+        });
+      }
+    });
+  };
+  previewContainer.insertBefore(randomBtn, previewContainer.firstChild);
 });
 
 // === Function to update the big preview on the left ===

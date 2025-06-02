@@ -221,6 +221,73 @@ let currentDialogueState = {
   lineIndex: 0
 };
 
+// --- NPC Avatar Randomizer ---
+let npcAvatars = {};
+let npcSpriteData = null;
+
+function fetchNpcSpriteData(callback) {
+  if (npcSpriteData) return callback(npcSpriteData);
+  fetch('/get_sprites')
+    .then(res => res.json())
+    .then(data => {
+      npcSpriteData = data;
+      callback(data);
+    });
+}
+
+function randomizeNpcAvatar() {
+  const avatar = {};
+  // Characters (flat)
+  if (npcSpriteData.characters && npcSpriteData.characters.length > 0) {
+    const randChar = npcSpriteData.characters[Math.floor(Math.random() * npcSpriteData.characters.length)];
+    avatar.characters = { name: randChar.name, img: randChar.img };
+  }
+  // Other categories (with subcats)
+  ["clothes", "hair", "face", "acc"].forEach(cat => {
+    if (npcSpriteData[cat]) {
+      const subcats = Object.keys(npcSpriteData[cat]);
+      if (subcats.length > 0) {
+        const randSubcat = subcats[Math.floor(Math.random() * subcats.length)];
+        const options = npcSpriteData[cat][randSubcat];
+        if (options && options.length > 0) {
+          const randOpt = options[Math.floor(Math.random() * options.length)];
+          if (!avatar[cat]) avatar[cat] = {};
+          avatar[cat][randSubcat] = { name: randOpt.name, img: randOpt.img };
+        }
+      }
+    }
+  });
+  return avatar;
+}
+
+function renderNpcAvatar(avatar, container) {
+  container.innerHTML = '';
+  // Always render character first if present
+  if (avatar.characters && avatar.characters.img) {
+    const img = document.createElement('img');
+    img.src = avatar.characters.img;
+    img.className = 'avatar-layer';
+    container.appendChild(img);
+  }
+  // Render other layers (skip characters)
+  const LAYER_ORDER = ['clothes', 'hair', 'face', 'acc'];
+  LAYER_ORDER.forEach(category => {
+    if (avatar[category]) {
+      if (typeof avatar[category] === 'object' && !Array.isArray(avatar[category])) {
+        Object.values(avatar[category]).forEach(sel => {
+          if (sel && sel.img) {
+            const img = document.createElement('img');
+            img.src = sel.img;
+            img.className = 'avatar-layer';
+            img.onerror = function() { this.style.display = 'none'; };
+            container.appendChild(img);
+          }
+        });
+      }
+    }
+  });
+}
+
 function initializeDialogue(levelKey) {
   currentDialogueState.level = levelKey;
   currentDialogueState.npc = Object.keys(levelDialogues[levelKey])[0];
@@ -231,7 +298,9 @@ function initializeDialogue(levelKey) {
 function showDialogue() {
   const dialogueArea = document.getElementById('dialogue-text');
   const optionsBox = document.getElementById('options');
-  
+  const npcHeader = document.getElementById('dialogue-npc');
+  const portraitImg = document.getElementById('dialogue-portrait');
+
   if (!currentDialogueState.level || !currentDialogueState.npc) {
     return;
   }
@@ -240,20 +309,43 @@ function showDialogue() {
   const lines = levelDialogues[currentDialogueState.level][npc];
   const line = lines[currentDialogueState.lineIndex];
 
-  // Display dialogue
-  dialogueArea.innerHTML = `<b>${npc.replace(/_/g, ' ')}:</b> ${line.text}`;
-  optionsBox.innerHTML = '';
+  // Set NPC name in header
+  npcHeader.textContent = npc.replace(/_/g, ' ');
 
-  // Display clue if available
-  if (line.clue) {
-    const clueDiv = document.createElement('div');
-    clueDiv.textContent = 'Clue: ' + line.clue;
-    clueDiv.className = 'clue-text';
-    optionsBox.appendChild(clueDiv);
-  }
+  // --- Randomized NPC Avatar ---
+  fetchNpcSpriteData(spriteData => {
+    if (!npcAvatars[npc]) {
+      npcAvatars[npc] = randomizeNpcAvatar();
+    }
+    // Render composite avatar in the portrait area
+    portraitImg.style.display = 'none';
+    let avatarDiv = document.getElementById('npc-avatar-composite');
+    if (!avatarDiv) {
+      avatarDiv = document.createElement('div');
+      avatarDiv.id = 'npc-avatar-composite';
+      avatarDiv.style.position = 'relative';
+      avatarDiv.style.width = '72px';
+      avatarDiv.style.height = '72px';
+      avatarDiv.style.marginRight = '18px';
+      avatarDiv.style.display = 'inline-block';
+      portraitImg.parentNode.insertBefore(avatarDiv, portraitImg);
+    }
+    renderNpcAvatar(npcAvatars[npc], avatarDiv);
+    avatarDiv.style.display = 'block';
+  });
 
-  // Add navigation buttons
-  addNavigationButtons(lines.length);
+  // Use typewriter effect for dialogue
+  typeText(line.text, () => {
+    // Display clue if available
+    optionsBox.innerHTML = '';
+    if (line.clue) {
+      const clueDiv = document.createElement('div');
+      clueDiv.textContent = 'Clue: ' + line.clue;
+      clueDiv.className = 'clue-text';
+      optionsBox.appendChild(clueDiv);
+    }
+    addNavigationButtons(lines.length);
+  });
 }
 
 function addNavigationButtons(totalLines) {
@@ -309,20 +401,19 @@ const optionsBox = document.getElementById("options");
 const timerDisplay = document.getElementById("timer");
 
 function typeText(text, callback) {
-  textBox.innerHTML = "";
+  const textBox = document.getElementById('dialogue-text');
+  textBox.innerHTML = '';
   let i = 0;
   const speed = 30;
-
   function typeChar() {
     if (i < text.length) {
-      textBox.innerHTML += text.charAt(i);
+      textBox.innerHTML += text.charAt(i) === '\n' ? '<br>' : text.charAt(i);
       i++;
       setTimeout(typeChar, speed);
     } else {
       if (callback) callback();
     }
   }
-
   typeChar();
 }
 
