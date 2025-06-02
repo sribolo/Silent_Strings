@@ -11,6 +11,11 @@ let direction = 0; // 0=down, 1=left, 2=right, 3=up
 let frame = 0;
 let animInterval = null;
 
+// Number of NPCs to spawn
+const NUM_NPCS = 5;
+const npcAvatars = [];
+const npcElements = [];
+
 // Helper: Set sprite sheet background position
 function setPlayerFrame(dir, frame) {
   player.style.backgroundPosition = `-${frame*SPRITE_SIZE}px -${dir*SPRITE_SIZE}px`;
@@ -88,3 +93,54 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 });
+
+// Helper: get random position within map bounds
+function getRandomPosition() {
+  const mapRect = map.getBoundingClientRect();
+  const x = Math.random() * (map.offsetWidth - 32);
+  const y = Math.random() * (map.offsetHeight - 32);
+  return { x, y };
+}
+
+// Helper: randomize avatar (reuse your randomizer logic)
+function randomizeNpcAvatar() {
+  // Use your spriteData and randomization logic here
+  // For demo, just pick a random character sprite
+  const idx = Math.floor(Math.random() * spriteData.characters.length);
+  return spriteData.characters[idx].img;
+}
+
+// Spawn NPCs
+for (let i = 0; i < NUM_NPCS; i++) {
+  const npcDiv = document.createElement('div');
+  npcDiv.className = 'npc-avatar';
+  // Set random avatar image
+  const img = document.createElement('img');
+  img.src = randomizeNpcAvatar();
+  img.style.width = '32px';
+  img.style.height = '32px';
+  img.style.imageRendering = 'pixelated';
+  npcDiv.appendChild(img);
+
+  // Set initial position
+  const pos = getRandomPosition();
+  npcDiv.style.position = 'absolute';
+  npcDiv.style.left = pos.x + 'px';
+  npcDiv.style.top = pos.y + 'px';
+
+  map.appendChild(npcDiv);
+  npcElements.push(npcDiv);
+}
+
+// Animate NPCs
+function moveNpc(npcDiv) {
+  const pos = getRandomPosition();
+  npcDiv.style.transition = 'left 2s linear, top 2s linear';
+  npcDiv.style.left = pos.x + 'px';
+  npcDiv.style.top = pos.y + 'px';
+}
+
+// Move all NPCs every few seconds
+setInterval(() => {
+  npcElements.forEach(moveNpc);
+}, 3000);

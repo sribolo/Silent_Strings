@@ -202,7 +202,9 @@ document.addEventListener("DOMContentLoaded", () => {
   randomBtn.textContent = 'Randomize';
   randomBtn.className = 'pixel-btn';
   randomBtn.style.marginBottom = '12px';
-  randomBtn.onclick = () => {
+  randomBtn.type = 'button'; // Prevent form submission
+  randomBtn.onclick = (e) => {
+    e.preventDefault(); // Prevent any default action
     // Randomize characters (flat)
     if (spriteData.characters && spriteData.characters.length > 0) {
       const randChar = spriteData.characters[Math.floor(Math.random() * spriteData.characters.length)];
@@ -213,12 +215,18 @@ document.addEventListener("DOMContentLoaded", () => {
       if (spriteData[cat]) {
         const subcats = Object.keys(spriteData[cat]);
         if (subcats.length > 0) {
-          const randSubcat = subcats[Math.floor(Math.random() * subcats.length)];
+          // Pick a random subcat with at least one option
+          let validSubcats = subcats.filter(subcat => (spriteData[cat][subcat] && spriteData[cat][subcat].length > 0));
+          if (validSubcats.length === 0) return;
+          const randSubcat = validSubcats[Math.floor(Math.random() * validSubcats.length)];
           const options = spriteData[cat][randSubcat];
           if (options && options.length > 0) {
             const randOpt = options[Math.floor(Math.random() * options.length)];
-            if (!selections[cat]) selections[cat] = {};
+            selections[cat] = {}; // Remove any previous subcat selections
             selections[cat][randSubcat] = { name: randOpt.name, img: randOpt.img };
+            // Update currentSubheader and re-render grid
+            currentSubheader[cat] = randSubcat;
+            renderSubcatGrid(cat, randSubcat);
           }
         }
       }
