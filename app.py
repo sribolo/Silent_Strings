@@ -472,7 +472,37 @@ def load_level(level_name):
 
 @app.route('/game')
 def game():
-    return render_template('game.html')
+    username = None
+    avatar_parts = None
+    is_guest = False
+
+    if "user" in session:
+        username = session["user"]["username"]
+        email = session["user"]["email"]
+        is_guest = False
+        user = User.query.filter_by(email=email).first()
+        if user:
+            avatar_parts = {
+                "characters": user.avatar_character,
+                "hair": user.avatar_hair,
+                "clothes": user.avatar_clothes,
+                "acc": user.avatar_acc,
+                "face": user.avatar_face,
+            }
+    elif session.get("guest"):
+        username = session.get("agent_name", "Guest Agent")
+        is_guest = True
+        raw_parts = session.get("avatar_parts", {})
+        avatar_parts = {}
+        for k, v in raw_parts.items():
+            if isinstance(v, dict):
+                avatar_parts[k] = v.get("name")
+            else:
+                avatar_parts[k] = v
+    else:
+        return redirect(url_for('login'))
+
+    return render_template('game.html', avatar_parts=avatar_parts, is_guest=is_guest, username=username)
 
 # Example mission data (expand as needed)
 MISSIONS = {
