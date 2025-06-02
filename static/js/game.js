@@ -16,6 +16,15 @@ const NUM_NPCS = 5;
 const npcAvatars = [];
 const npcElements = [];
 
+// Fallback NPC character images (add your actual character PNGs here)
+const fallbackNpcCharacters = [
+  '/static/images/avatar_parts/characters/char1.png',
+  '/static/images/avatar_parts/characters/char2.png',
+  '/static/images/avatar_parts/characters/char3.png',
+  '/static/images/avatar_parts/characters/char4.png',
+  '/static/images/avatar_parts/characters/char5.png'
+];
+
 // Helper: Set sprite sheet background position
 function setPlayerFrame(dir, frame) {
   player.style.backgroundPosition = `-${frame*SPRITE_SIZE}px -${dir*SPRITE_SIZE}px`;
@@ -102,12 +111,15 @@ function getRandomPosition() {
   return { x, y };
 }
 
-// Helper: randomize avatar (reuse your randomizer logic)
 function randomizeNpcAvatar() {
-  // Use your spriteData and randomization logic here
-  // For demo, just pick a random character sprite
-  const idx = Math.floor(Math.random() * spriteData.characters.length);
-  return spriteData.characters[idx].img;
+  // Use spriteData if available, otherwise fallback
+  if (typeof spriteData !== 'undefined' && spriteData.characters && spriteData.characters.length > 0) {
+    const idx = Math.floor(Math.random() * spriteData.characters.length);
+    return spriteData.characters[idx].img;
+  } else {
+    const idx = Math.floor(Math.random() * fallbackNpcCharacters.length);
+    return fallbackNpcCharacters[idx];
+  }
 }
 
 // Spawn NPCs

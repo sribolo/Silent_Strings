@@ -88,13 +88,18 @@ html, body {
 
 .map-area-btn {
   position: absolute;
-  background: transparent;
-  border: none;
+  background: transparent !important;
+  border: none !important;
   z-index: 20;
   cursor: pointer;
   padding: 0;
 }
 .map-area-btn:focus { outline: 2px dashed #a499ff77; }
+.map-area-btn:hover, .map-area-btn:active {
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+}
 
 #ui-overlay {
   position: absolute;
