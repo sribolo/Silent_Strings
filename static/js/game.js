@@ -217,4 +217,4 @@ function moveNpc(npcDiv) {
 // Move all NPCs every few seconds
 setInterval(() => {
   npcElements.forEach(moveNpc);
-}, 3000);
+}, 5000); // Slower movement
