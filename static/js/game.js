@@ -3,7 +3,7 @@ const map = document.getElementById('game-map');
 
 // Sprite sheet config
 const SPRITE_SIZE = 32;
-const FRAMES = 8;
+const FRAMES = 16;
 const ROWS = 4; // down, left, right, up
 
 let x = 500, y = 300; // Start pos
@@ -24,6 +24,17 @@ const fallbackNpcCharacters = [
   '/static/images/avatar_parts/characters/char4.png',
   '/static/images/avatar_parts/characters/char5.png'
 ];
+const fallbackNpcClothes = [
+  '/static/images/avatar_parts/clothes/default/clothes1.png',
+  '/static/images/avatar_parts/clothes/default/clothes2.png',
+  // ...
+];
+const fallbackNpcHair = [
+  '/static/images/avatar_parts/hair/default/hair1.png',
+  '/static/images/avatar_parts/hair/default/hair2.png',
+  // ...
+];
+// Add arrays for face, acc, etc. as needed
 
 // Helper: Set sprite sheet background position
 function setPlayerFrame(dir, frame) {
@@ -126,13 +137,26 @@ function randomizeNpcAvatar() {
 for (let i = 0; i < NUM_NPCS; i++) {
   const npcDiv = document.createElement('div');
   npcDiv.className = 'npc-avatar';
-  // Set random avatar image
-  const img = document.createElement('img');
-  img.src = randomizeNpcAvatar();
-  img.style.width = '32px';
-  img.style.height = '32px';
-  img.style.imageRendering = 'pixelated';
-  npcDiv.appendChild(img);
+
+  // Character base
+  const charImg = document.createElement('img');
+  charImg.src = fallbackNpcCharacters[Math.floor(Math.random() * fallbackNpcCharacters.length)];
+  charImg.className = 'avatar-layer';
+  npcDiv.appendChild(charImg);
+
+  // Clothes
+  const clothesImg = document.createElement('img');
+  clothesImg.src = fallbackNpcClothes[Math.floor(Math.random() * fallbackNpcClothes.length)];
+  clothesImg.className = 'avatar-layer';
+  npcDiv.appendChild(clothesImg);
+
+  // Hair
+  const hairImg = document.createElement('img');
+  hairImg.src = fallbackNpcHair[Math.floor(Math.random() * fallbackNpcHair.length)];
+  hairImg.className = 'avatar-layer';
+  npcDiv.appendChild(hairImg);
+
+  // ...repeat for face, acc, etc.
 
   // Set initial position
   const pos = getRandomPosition();
