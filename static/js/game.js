@@ -61,7 +61,7 @@ function animateWalk(dir) {
   animInterval = setInterval(() => {
     frame = (frame + 1) % FRAMES;
     setPlayerFrame(dir, frame);
-  }, 100); // Adjust animation speed
+  }, 200); // Slower animation speed
 }
 
 document.addEventListener('keydown', function(e) {
@@ -76,7 +76,7 @@ document.addEventListener('keydown', function(e) {
     player.style.left = x + "px";
     player.style.top = y + "px";
     animateWalk(direction);
-    setTimeout(() => { clearInterval(animInterval); setPlayerFrame(direction, 0); }, 400);
+    setTimeout(() => { clearInterval(animInterval); setPlayerFrame(direction, 0); }, 700); // Slower stop
   }
 });
 
@@ -149,26 +149,40 @@ function randomizeNpcAvatar() {
 for (let i = 0; i < NUM_NPCS; i++) {
   const npcDiv = document.createElement('div');
   npcDiv.className = 'npc-avatar';
+  npcDiv.style.width = '32px';
+  npcDiv.style.height = '32px';
 
   // Character base
   const charImg = document.createElement('img');
   charImg.src = fallbackNpcCharacters[Math.floor(Math.random() * fallbackNpcCharacters.length)];
   charImg.className = 'avatar-layer';
+  charImg.style.width = '32px';
+  charImg.style.height = '32px';
   npcDiv.appendChild(charImg);
 
   // Clothes
   const clothesImg = document.createElement('img');
   clothesImg.src = fallbackNpcClothes[Math.floor(Math.random() * fallbackNpcClothes.length)];
   clothesImg.className = 'avatar-layer';
+  clothesImg.style.width = '32px';
+  clothesImg.style.height = '32px';
   npcDiv.appendChild(clothesImg);
 
   // Hair
   const hairImg = document.createElement('img');
   hairImg.src = fallbackNpcHair[Math.floor(Math.random() * fallbackNpcHair.length)];
   hairImg.className = 'avatar-layer';
+  hairImg.style.width = '32px';
+  hairImg.style.height = '32px';
   npcDiv.appendChild(hairImg);
 
-  // ...repeat for face, acc, etc.
+  // Face
+  const faceImg = document.createElement('img');
+  faceImg.src = fallbackNpcFace[Math.floor(Math.random() * fallbackNpcFace.length)];
+  faceImg.className = 'avatar-layer';
+  faceImg.style.width = '32px';
+  faceImg.style.height = '32px';
+  npcDiv.appendChild(faceImg);
 
   // Set initial position
   const pos = getRandomPosition();
