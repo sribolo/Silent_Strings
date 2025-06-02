@@ -5,10 +5,8 @@
     <div class="game-viewport">
       <div id="game-map">
         <img id="map-bg" src="{{ url_for('static', filename='images/pixel_town_16_9.png') }}" alt="Town Map">
-
         <div id="player-avatar" class="avatar"></div>
-        
-        <!-- Invisible buttons over buildings (adjust positions/sizes as needed) -->
+        <!-- Map building buttons -->
         <button class="map-area-btn map-area-bank" data-mission="bank"></button>
         <button class="map-area-btn map-area-school" data-mission="school"></button>
         <button class="map-area-btn map-area-company" data-mission="company"></button>
@@ -17,12 +15,9 @@
         <button class="map-area-btn map-area-government" data-mission="government"></button>
         <button class="map-area-btn map-area-transport" data-mission="transport"></button>
         <button class="map-area-btn map-area-hq" data-mission="hq"></button>
-
         <div id="ui-overlay">
           <a href="{{ url_for('profile') }}" id="profile-btn" title="Your Profile">
-              <img src="{{ url_for('static', filename='images/profile.png') }}"
-                   alt="Profile"
-                   class="profile-icon">
+            <img src="{{ url_for('static', filename='images/profile.png') }}" alt="Profile" class="profile-icon">
           </a>
         </div>
       </div>

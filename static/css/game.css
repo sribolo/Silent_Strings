@@ -1,49 +1,37 @@
-body, html {
-  background: #181a2b !important; /* deep blue/black */
+html, body {
   width: 100vw;
   height: 100vh;
   margin: 0;
   padding: 0;
+  background: #25244a;
   overflow: hidden;
 }
 
-.game-outer-bg {
+.game-viewport {
   width: 100vw;
   height: 100vh;
   display: flex;
   align-items: center;
   justify-content: center;
-  background: #181a2b;
-}
-
-.game-viewport {
-  border-radius: 32px;
-  box-shadow: 0 0 0 8px #23244a, 0 0 48px #181a2b;
-  background: #23244a;
-  padding: 18px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  /* Optionally, add a pixel border image for extra retro feel */
+  background: #25244a;
 }
 
 #game-map {
-  border-radius: 24px;
-  overflow: hidden;
-  box-shadow: 0 0 32px #000a;
-  background: #23232b;
-  width: 1280px;
-  height: 720px;
-  max-width: 98vw;
-  max-height: 90vh;
   position: relative;
-  display: block;
+  width: 80vw;
+  aspect-ratio: 16 / 9;
+  max-width: 1280px;
+  max-height: 90vh;
+  overflow: hidden;
+  background: #23232b;
+  border-radius: 16px;
+  box-shadow: 0 0 28px #18181b90;
 }
 
 #map-bg {
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  object-fit: fill;
   position: absolute;
   top: 0;
   left: 0;
@@ -99,41 +87,37 @@ body, html {
 }
 
 .map-area-btn {
-  background: transparent !important;
-  border: none !important;
-  opacity: 0;
   position: absolute;
+  background: transparent;
+  border: none;
+  z-index: 20;
   cursor: pointer;
-  z-index: 10;
-  /* Optionally, add a hover outline for debugging: */
-  /* transition: opacity 0.2s; */
+  padding: 0;
 }
-.map-area-btn:hover {
-  /* Uncomment for a visible outline on hover for debugging: */
-  /* outline: 2px solid #6C5CE7; */
-  /* opacity: 0.2; */
-  cursor: pointer;
-}
+.map-area-btn:focus { outline: 2px dashed #a499ff77; }
 
 #ui-overlay {
   position: absolute;
-  top: 24px;
-  left: 24px;
+  top: 10px;
+  left: 10px;
   z-index: 30;
-  background: none;
-  box-shadow: none;
-  padding: 0;
+  color: #fff;
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 1.2rem;
+  background: rgba(40,32,90,0.56);
+  border-radius: 12px;
+  padding: 8px 16px;
 }
 
 .profile-icon {
   width: 42px;
   height: 42px;
   border-radius: 50%;
-  border: 3px solid #fff;
-  box-shadow: 0 0 0 4px #6C5CE7, 0 0 12px #23244a;
-  background: #23232b;
+  border: 2px solid #A499FF;
+  background: #18181b;
   margin-right: 16px;
   margin-bottom: -12px;
+  box-shadow: 0 2px 10px #23236950;
   cursor: pointer;
   transition: border 0.2s, box-shadow 0.2s;
   object-fit: cover;
