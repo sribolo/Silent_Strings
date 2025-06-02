@@ -18,21 +18,33 @@ const npcElements = [];
 
 // Fallback NPC character images (add your actual character PNGs here)
 const fallbackNpcCharacters = [
-  '/static/images/avatar_parts/characters/char1.png',
-  '/static/images/avatar_parts/characters/char2.png',
-  '/static/images/avatar_parts/characters/char3.png',
-  '/static/images/avatar_parts/characters/char4.png',
-  '/static/images/avatar_parts/characters/char5.png'
+  '/static/images/avatar_parts/characters/char_1.png',
+  '/static/images/avatar_parts/characters/char_2.png',
+  '/static/images/avatar_parts/characters/char_3.png',
+  '/static/images/avatar_parts/characters/char_4.png',
+  '/static/images/avatar_parts/characters/char_5.png',
+  '/static/images/avatar_parts/characters/char_6.png',
+  '/static/images/avatar_parts/characters/char_7.png',
+  '/static/images/avatar_parts/characters/char_9.png'
 ];
 const fallbackNpcClothes = [
-  '/static/images/avatar_parts/clothes/default/clothes1.png',
-  '/static/images/avatar_parts/clothes/default/clothes2.png',
-  // ...
+  '/static/images/avatar_parts/clothes/basic/tile_1182.png',
+  '/static/images/avatar_parts/clothes/basic/tile_1178.png',
+  '/static/images/avatar_parts/clothes/basic/tile_1177.png',
+  '/static/images/avatar_parts/clothes/basic/tile_1176.png',
+  '/static/images/avatar_parts/clothes/basic/tile_1174.png',
+  '/static/images/avatar_parts/clothes/basic/tile_1169.png',
+  '/static/images/avatar_parts/clothes/basic/tile_1168.png',
+  '/static/images/avatar_parts/clothes/basic/tile_1166.png'
 ];
 const fallbackNpcHair = [
-  '/static/images/avatar_parts/hair/default/hair1.png',
-  '/static/images/avatar_parts/hair/default/hair2.png',
-  // ...
+  '/static/images/avatar_parts/hair/curly/curly.png'
+];
+const fallbackNpcFace = [
+  '/static/images/avatar_parts/face/blush/tile_992.png',
+  '/static/images/avatar_parts/face/blush/tile_984.png',
+  '/static/images/avatar_parts/face/blush/tile_976.png',
+  '/static/images/avatar_parts/face/blush/tile_960.png'
 ];
 // Add arrays for face, acc, etc. as needed
 
