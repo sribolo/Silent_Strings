@@ -1,7 +1,9 @@
 {% extends "base.html" %}
 {% block title %}Main Game{% endblock %}
+{% block extra_css %}
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/game.css') }}">
+{% endblock %}
 {% block content %}
-  <div class="game-outer-bg">
     <div class="game-viewport">
       <div id="game-map">
         <img id="map-bg" src="{{ url_for('static', filename='images/pixel_town_16_9.png') }}" alt="Town Map">
@@ -19,7 +21,6 @@
           <a href="{{ url_for('profile') }}" id="profile-btn" title="Your Profile">
             <img src="{{ url_for('static', filename='images/profile.png') }}" alt="Profile" class="profile-icon">
           </a>
-        </div>
       </div>
     </div>
   </div>
