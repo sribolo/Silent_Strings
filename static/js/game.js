@@ -2,8 +2,8 @@ const player = document.getElementById('player-avatar');
 const map = document.getElementById('game-map');
 
 // Sprite sheet config
-const SPRITE_SIZE = 32;
-const FRAMES = 4;
+const SPRITE_SIZE = 64;
+const FRAMES = 8;
 const ROWS = 4; // down, left, right, up
 
 let x = 500, y = 300; // Start pos
@@ -48,12 +48,24 @@ const fallbackNpcFace = [
 ];
 // Add arrays for face, acc, etc. as needed
 
-// Helper: Set sprite sheet background position
-function setPlayerFrame(dir, frame) {
-  player.style.backgroundPosition = `-${frame*SPRITE_SIZE}px -${dir*SPRITE_SIZE}px`;
+// Animate a layered sprite (player or NPC)
+function setLayeredSpriteFrame(container, direction, frame) {
+  // container: the div containing the avatar layers (e.g., #player-avatar)
+  // direction: 0=down, 1=left, 2=right, 3=up
+  // frame: 0-7
+  const layers = container.querySelectorAll('img');
+  layers.forEach(img => {
+    img.style.objectFit = 'none';
+    img.style.objectPosition = `-${frame * SPRITE_SIZE}px -${direction * SPRITE_SIZE}px`;
+  });
 }
 
-// Animate walking
+// Helper: Set sprite sheet background position (for layered sprite)
+function setPlayerFrame(dir, frame) {
+  setLayeredSpriteFrame(player, dir, frame);
+}
+
+// Animate walking (for layered sprite)
 function animateWalk(dir) {
   clearInterval(animInterval);
   frame = 0;
@@ -149,39 +161,39 @@ function randomizeNpcAvatar() {
 for (let i = 0; i < NUM_NPCS; i++) {
   const npcDiv = document.createElement('div');
   npcDiv.className = 'npc-avatar';
-  npcDiv.style.width = '32px';
-  npcDiv.style.height = '32px';
+  npcDiv.style.width = '64px';
+  npcDiv.style.height = '64px';
 
   // Character base
   const charImg = document.createElement('img');
   charImg.src = fallbackNpcCharacters[Math.floor(Math.random() * fallbackNpcCharacters.length)];
   charImg.className = 'avatar-layer';
-  charImg.style.width = '32px';
-  charImg.style.height = '32px';
+  charImg.style.width = '64px';
+  charImg.style.height = '64px';
   npcDiv.appendChild(charImg);
 
   // Clothes
   const clothesImg = document.createElement('img');
   clothesImg.src = fallbackNpcClothes[Math.floor(Math.random() * fallbackNpcClothes.length)];
   clothesImg.className = 'avatar-layer';
-  clothesImg.style.width = '32px';
-  clothesImg.style.height = '32px';
+  clothesImg.style.width = '64px';
+  clothesImg.style.height = '64px';
   npcDiv.appendChild(clothesImg);
 
   // Hair
   const hairImg = document.createElement('img');
   hairImg.src = fallbackNpcHair[Math.floor(Math.random() * fallbackNpcHair.length)];
   hairImg.className = 'avatar-layer';
-  hairImg.style.width = '32px';
-  hairImg.style.height = '32px';
+  hairImg.style.width = '64px';
+  hairImg.style.height = '64px';
   npcDiv.appendChild(hairImg);
 
   // Face
   const faceImg = document.createElement('img');
   faceImg.src = fallbackNpcFace[Math.floor(Math.random() * fallbackNpcFace.length)];
   faceImg.className = 'avatar-layer';
-  faceImg.style.width = '32px';
-  faceImg.style.height = '32px';
+  faceImg.style.width = '64px';
+  faceImg.style.height = '64px';
   npcDiv.appendChild(faceImg);
 
   // Set initial position
