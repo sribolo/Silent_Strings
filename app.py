@@ -318,7 +318,7 @@ def save_avatar():
             "clothes": {"subcategory": "basic", "name": "shirt1"},
             "hair": {"subcategory": "curly", "name": "curly1"},
             "face": {"subcategory": "blush", "name": "blush1"},
-            "acc": "glasses001"
+            "acc": {"subcategory": "glasses", "name": "glasses001"}
         }
         session['avatar_parts'] = {
             'characters': extract_part(selections.get('characters'), FALLBACKS['characters']),
@@ -417,7 +417,7 @@ def profile():
         "clothes": {"subcategory": "basic", "name": "shirt1"},
         "hair": {"subcategory": "curly", "name": "curly1"},
         "face": {"subcategory": "blush", "name": "blush1"},
-        "acc": "glasses001"
+        "acc": {"subcategory": "glasses", "name": "glasses001"}
     }
 
     if "user" in session:
@@ -484,7 +484,7 @@ def game():
         "clothes": {"subcategory": "basic", "name": "shirt1"},
         "hair": {"subcategory": "curly", "name": "curly1"},
         "face": {"subcategory": "blush", "name": "blush1"},
-        "acc": "glasses001"
+        "acc": {"subcategory": "glasses", "name": "glasses001"}
     }
 
     if "user" in session:
