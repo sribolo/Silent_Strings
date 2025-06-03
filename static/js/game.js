@@ -212,7 +212,15 @@ function randomNpcAvatar(spriteData) {
             if (!avatar.clothes) avatar.clothes = {};
             const randSkirt = getRandomElement(skirtOptions);
             avatar.clothes['skirts'] = { name: randSkirt.name, img: randSkirt.img };
-            // Do not pick shirt or pants if skirt is picked
+            // Pick a shirt, but not pants
+            if (subcats.includes('basic')) {
+              const shirtOptions = spriteData.clothes['basic'];
+              if (shirtOptions && shirtOptions.length > 0) {
+                const randShirt = getRandomElement(shirtOptions);
+                avatar.clothes['basic'] = { name: randShirt.name, img: randShirt.img };
+              }
+            }
+            // Do not pick pants if skirt is picked
           } else {
             // If not picking dress or skirt, pick shirt and ensure pants
             if (subcats.includes('basic')) {
@@ -259,7 +267,15 @@ function randomNpcAvatar(spriteData) {
         if (!avatar.clothes) avatar.clothes = {};
         const randSkirt = getRandomElement(skirtOptions);
         avatar.clothes['skirts'] = { name: randSkirt.name, img: randSkirt.img };
-        // Do not pick shirt or pants if skirt is picked
+        // Pick a shirt, but not pants
+        if (subcats.includes('basic')) {
+          const shirtOptions = spriteData.clothes['basic'];
+          if (shirtOptions && shirtOptions.length > 0) {
+            const randShirt = getRandomElement(shirtOptions);
+            avatar.clothes['basic'] = { name: randShirt.name, img: randShirt.img };
+          }
+        }
+        // Do not pick pants if skirt is picked
       } else {
         // If not picking skirt, pick shirt and ensure pants
         if (subcats.includes('basic')) {
