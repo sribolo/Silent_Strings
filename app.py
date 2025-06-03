@@ -346,9 +346,10 @@ def save_avatar():
         if "user" in session:
             user = User.query.filter_by(email=session["user"]["email"]).first()
             if user:
-                user.avatar_character = selections.get('characters', {}).get('name')
+                char = selections.get('characters')
+                user.avatar_character = char.get('name') if isinstance(char, dict) else char
                 user.avatar_hair = selections.get('hair', {})
-                user.avatar_clothes = selections.get('clothes', {})
+                user.avatar_clothes = selections.get('clothes', {}) if isinstance(selections.get('clothes', {}), dict) else {}
                 user.avatar_acc = selections.get('acc', {})
                 user.avatar_face = selections.get('face', {})
                 db.session.commit()
