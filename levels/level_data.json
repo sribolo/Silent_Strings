@@ -1,47 +1,374 @@
 {
     "levels": {
-        "level1": {
-            "title": "Breach at Base",
-            "target": "SECTOR-9 HQ",
-            "skills": ["Log analysis", "Phishing detection"],
-            "timeLimit": 1800,
-            "objectives": [
-                "Identify the initial breach point",
-                "Analyze suspicious login attempts",
-                "Trace the attacker's IP address",
-                "Recover deleted system logs",
-                "Secure the compromised accounts"
-            ],
-            "npc_dialogue_key": "level1_dialogues",
-            "tools_available": [
-                "Network Scanner",
-                "Log Analyzer",
-                "Password Cracker",
-                "File Recovery Tool"
-            ],
-            "evidence_locations": [
-                "Server Room",
-                "Security Office",
-                "Network Hub",
-                "Admin Workstation"
-            ],
-            "clues": {
-                "required": [
-                    "Suspicious login timestamp",
-                    "Deleted log file",
-                    "Compromised admin account"
-                ],
-                "optional": [
-                    "USB drive in trash",
-                    "Sticky note with password",
-                    "Security camera footage"
-                ]
-            },
-            "success_criteria": {
-                "time_bonus": 300,
-                "evidence_threshold": 3,
-                "required_objectives": 4
-            }
+      "level1": {
+        "title": "Breach at Base",
+        "target": "SECTOR-9 HQ",
+        "skills": ["Log analysis", "Phishing detection"],
+        "timeLimit": 1800,
+        "objectives": [
+          "Identify the initial breach point",
+          "Analyze suspicious login attempts",
+          "Trace the attacker's IP address",
+          "Recover deleted system logs",
+          "Secure the compromised accounts"
+        ],
+        "npc_dialogue_key": "level1",
+        "tools_available": [
+          "Network Scanner",
+          "Log Analyzer",
+          "Password Cracker",
+          "File Recovery Tool"
+        ],
+        "evidence_locations": [
+          "Server Room",
+          "Security Office",
+          "Network Hub",
+          "Admin Workstation"
+        ],
+        "clues": {
+          "required": [
+            "Suspicious login timestamp",
+            "Deleted log file",
+            "Compromised admin account"
+          ],
+          "optional": [
+            "USB drive in trash",
+            "Sticky note with password",
+            "Security camera footage"
+          ]
+        },
+        "success_criteria": {
+          "time_bonus": 300,
+          "evidence_threshold": 3,
+          "required_objectives": 4
         }
+      },
+      "level2": {
+        "title": "Operation Deadlink",
+        "target": "News Outlet",
+        "skills": ["XSS analysis", "JS analysis"],
+        "timeLimit": 1800,
+        "objectives": [
+          "Identify website defacement source",
+          "Analyze injected JavaScript",
+          "Trace phishing campaign",
+          "Patch exploited vulnerability"
+        ],
+        "npc_dialogue_key": "level2",
+        "tools_available": [
+          "JS Analyzer",
+          "Email Scanner"
+        ],
+        "evidence_locations": [
+          "Web Server",
+          "Editorial Desk",
+          "Intern's Computer"
+        ],
+        "clues": {
+          "required": [
+            "XSS payload in ticker",
+            "Phishing email",
+            "Extension log"
+          ],
+          "optional": [
+            "Unused login credentials",
+            "Defaced homepage backup"
+          ]
+        },
+        "success_criteria": {
+          "evidence_threshold": 3,
+          "required_objectives": 3
+        }
+      },
+      "level3": {
+        "title": "PhishNet",
+        "target": "Bank",
+        "skills": ["Email forensics"],
+        "timeLimit": 1800,
+        "objectives": [
+          "Identify Patient Zero",
+          "Find the ransomware note and sample",
+          "Collect evidence of intrusion",
+          "Trace the attack’s origin",
+          "Restore banking services"
+        ],
+        "npc_dialogue_key": "level3",
+        "tools_available": [
+          "Email Analyzer",
+          "Log Analyzer",
+          "File Recovery"
+        ],
+        "evidence_locations": [
+          "Staff Workstation",
+          "IT Office",
+          "Shared Drive"
+        ],
+        "clues": {
+          "required": [
+            "Ransomware sample",
+            "Phishing email",
+            "Network log"
+          ],
+          "optional": [
+            "Sticky note: HR password",
+            "Staff email forwards"
+          ]
+        },
+        "success_criteria": {
+          "evidence_threshold": 3,
+          "required_objectives": 4
+        }
+      },
+      "level4": {
+        "title": "Shadow Repo",
+        "target": "Software Company",
+        "skills": ["Secure coding", "Supply chain analysis"],
+        "timeLimit": 1800,
+        "objectives": [
+          "Detect code injection in repo",
+          "Audit CI/CD pipeline",
+          "Identify compromised developer account",
+          "Revert malicious commits"
+        ],
+        "npc_dialogue_key": "level4",
+        "tools_available": [
+          "Code Diff Tool",
+          "Pipeline Monitor"
+        ],
+        "evidence_locations": [
+          "Code Repository",
+          "Build Server",
+          "Dev's Laptop"
+        ],
+        "clues": {
+          "required": [
+            "Compromised repo commit",
+            "Pipeline warning logs",
+            "Credential reuse"
+          ],
+          "optional": [
+            "Unapproved SSH key",
+            "Suspicious merge history"
+          ]
+        },
+        "success_criteria": {
+          "evidence_threshold": 3,
+          "required_objectives": 3
+        }
+      },
+      "level5": {
+        "title": "Trojan Trap",
+        "target": "Government Server",
+        "skills": ["Malware sandboxing", "Persistence detection"],
+        "timeLimit": 1800,
+        "objectives": [
+          "Find persistent malware",
+          "Analyze unauthorized scheduled tasks",
+          "Recover deleted database records",
+          "Trace admin privilege escalation"
+        ],
+        "npc_dialogue_key": "level5",
+        "tools_available": [
+          "Malware Sandbox",
+          "File Recovery",
+          "Log Analyzer"
+        ],
+        "evidence_locations": [
+          "System Scheduler",
+          "Database",
+          "Admin PC"
+        ],
+        "clues": {
+          "required": [
+            "Backdoor binary",
+            "Task scheduler log",
+            "Database restore point"
+          ],
+          "optional": [
+            "Old Flash Player popup",
+            "Unusual firewall rule"
+          ]
+        },
+        "success_criteria": {
+          "evidence_threshold": 3,
+          "required_objectives": 3
+        }
+      },
+      "level6": {
+        "title": "Dark Tunn3l",
+        "target": "Power Grid",
+        "skills": ["USB decryption", "SCADA forensics"],
+        "timeLimit": 1800,
+        "objectives": [
+          "Find rogue USB device",
+          "Analyze firmware changes",
+          "Trace remote access",
+          "Restore alarm system"
+        ],
+        "npc_dialogue_key": "level6",
+        "tools_available": [
+          "USB Analyzer",
+          "Firmware Scanner"
+        ],
+        "evidence_locations": [
+          "Control Room",
+          "Monitoring Station"
+        ],
+        "clues": {
+          "required": [
+            "USB drive",
+            "Firmware diff",
+            "Remote access log"
+          ],
+          "optional": [
+            "Tampered alarm config"
+          ]
+        },
+        "success_criteria": {
+          "evidence_threshold": 3,
+          "required_objectives": 3
+        }
+      },
+      "level7": {
+        "title": "Ghost Protocol",
+        "target": "SECTOR-9 Insider Threat",
+        "skills": ["Behavior analytics", "Insider forensics"],
+        "timeLimit": 1800,
+        "objectives": [
+          "Identify rogue agent",
+          "Analyze credential access logs",
+          "Recover encrypted note",
+          "Prevent data exfiltration"
+        ],
+        "npc_dialogue_key": "level7",
+        "tools_available": [
+          "Credential Monitor",
+          "Encryption Cracker"
+        ],
+        "evidence_locations": [
+          "Agent's Terminal",
+          "HR Office"
+        ],
+        "clues": {
+          "required": [
+            "Encrypted locker note",
+            "Access log",
+            "Process hash"
+          ],
+          "optional": [
+            "Overheard conversation"
+          ]
+        },
+        "success_criteria": {
+          "evidence_threshold": 3,
+          "required_objectives": 3
+        }
+      },
+      "level8": {
+        "title": "Deep Dive",
+        "target": "Dark Web",
+        "skills": ["OSINT", "Encryption", "Dark web navigation"],
+        "timeLimit": 1800,
+        "objectives": [
+          "Locate PH4NT0M forum posts",
+          "Identify Ghostline’s aliases",
+          "Decrypt hidden messages",
+          "Trace zero-day auction"
+        ],
+        "npc_dialogue_key": "level8",
+        "tools_available": [
+          "OSINT Suite",
+          "Message Decryptor"
+        ],
+        "evidence_locations": [
+          "Onion Forum",
+          "Marketplace"
+        ],
+        "clues": {
+          "required": [
+            "Encrypted forum post",
+            "Alias log",
+            "Auction data"
+          ],
+          "optional": [
+            "Private chat log"
+          ]
+        },
+        "success_criteria": {
+          "evidence_threshold": 3,
+          "required_objectives": 3
+        }
+      },
+      "level9": {
+        "title": "Red Flag",
+        "target": "Public Transport",
+        "skills": ["Live DDoS defense", "Incident coordination"],
+        "timeLimit": 1800,
+        "objectives": [
+          "Restore control center",
+          "Analyze attack message",
+          "Secure passenger data",
+          "Patch exploited service"
+        ],
+        "npc_dialogue_key": "level9",
+        "tools_available": [
+          "DDoS Mitigator",
+          "Service Patch Tool"
+        ],
+        "evidence_locations": [
+          "Control Center",
+          "Train Router"
+        ],
+        "clues": {
+          "required": [
+            "DDoS log",
+            "Service exploit",
+            "WiFi config"
+          ],
+          "optional": [
+            "Passenger complaint log"
+          ]
+        },
+        "success_criteria": {
+          "evidence_threshold": 3,
+          "required_objectives": 3
+        }
+      },
+      "level10": {
+        "title": "Final String",
+        "target": "Global Systems",
+        "skills": ["Worm deactivation", "Code tracing", "Crisis response"],
+        "timeLimit": 1800,
+        "objectives": [
+          "Disarm Silent Strings protocol",
+          "Trace global worm propagation",
+          "Restore critical systems",
+          "Identify Ghostline’s last move"
+        ],
+        "npc_dialogue_key": "level10",
+        "tools_available": [
+          "Worm Deactivator",
+          "Code Tracer"
+        ],
+        "evidence_locations": [
+          "World Network Map",
+          "Director's Office"
+        ],
+        "clues": {
+          "required": [
+            "Worm payload",
+            "Ghostline's message",
+            "Attack map"
+          ],
+          "optional": [
+            "Encrypted kill switch code"
+          ]
+        },
+        "success_criteria": {
+          "evidence_threshold": 3,
+          "required_objectives": 3
+        }
+      }
     }
-} 
+  }
+  

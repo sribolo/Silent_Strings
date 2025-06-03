@@ -7,7 +7,7 @@ const levelDialogues = {
     ],
     "Security_Guard": [
       { "text": "No one reported anything unusual, but the backup generator restarted suddenly." },
-      { "text": "I remember seeing a USB left at the reception desk." }
+      { "text": "I remember seeing a USB left at the reception desk.", "clue": "USB drive clue." }
     ]
   },
   "level2": {
@@ -37,11 +37,11 @@ const levelDialogues = {
   },
   "level4": {
     "DevOps_Engineer": [
-      { "text": "A merge request yesterday changed the authentication code. I didn't approve it." },
-      { "text": "Our CI/CD pipeline was showing warnings, but nobody looked.", "clue": "Possible supply chain compromise." }
+      { "text": "A merge request yesterday changed the authentication code. I didn't approve it.", "clue": "Unapproved code injection in repo." },
+      { "text": "Our CI/CD pipeline was showing warnings, but nobody looked." }
     ],
     "Junior_Developer": [
-      { "text": "I reused my password from a previous project… should I change it?" }
+      { "text": "I reused my password from a previous project… should I change it?", "clue": "Credential reuse is a risk." }
     ]
   },
   "level5": {
@@ -60,30 +60,30 @@ const levelDialogues = {
       { "text": "Alarms were disabled, but nobody had access after midnight." }
     ],
     "Maintenance_Worker": [
-      { "text": "A USB stick was found plugged into a monitoring station." },
+      { "text": "A USB stick was found plugged into a monitoring station.", "clue": "Rogue USB device." },
       { "text": "Routine checks flagged firmware changes last night." }
     ]
   },
   "level7": {
     "Suspect_Insider": [
       { "text": "Why am I being questioned? I followed all procedures." },
-      { "text": "I found a strange process running on my terminal." },
+      { "text": "I found a strange process running on my terminal.", "clue": "Unknown process hash." },
       { "text": "Someone left an encrypted note in my locker." }
     ],
     "HR_Officer": [
       { "text": "Agent Kim requested time off right after the breach." },
-      { "text": "Our team's credentials list was accessed by multiple users." }
+      { "text": "Our team's credentials list was accessed by multiple users.", "clue": "Check access logs." }
     ]
   },
   "level8": {
     "DarkWeb_Informant": [
-      { "text": "PH4NT0M auctions zero-days to the highest bidder. You want info? Pay up." },
+      { "text": "PH4NT0M auctions zero-days to the highest bidder." },
       { "text": "Ghostline never uses the same forum twice.", "clue": "Trace Ghostline's aliases." },
       { "text": "Check for hidden links in the .onion marketplace." }
     ],
     "Fellow_Hacker": [
       { "text": "Don't trust anyone in this chatroom." },
-      { "text": "A recent leak contained your agency's network map…" }
+      { "text": "A leak contained your agency's network map…" }
     ]
   },
   "level9": {
@@ -93,7 +93,7 @@ const levelDialogues = {
     ],
     "Commuter": [
       { "text": "My e-ticket app crashed and now I can't board." },
-      { "text": "A stranger was fiddling with the WiFi router this morning." }
+      { "text": "A stranger was fiddling with the WiFi router this morning.", "clue": "Check train WiFi configuration." }
     ]
   },
   "level10": {
@@ -107,41 +107,10 @@ const levelDialogues = {
       { "text": "Silent Strings isn't just a program—it's the end of trust." },
       { "text": "What will you choose: preserve a broken system, or let it fall?" }
     ]
-  },
-  "level1_dialogues": {
-    "Security_Guard": [
-      {
-        "text": "I noticed something strange last night. The server room door was left unlocked.",
-        "clue": "Check server room access logs between 10 PM and 2 AM"
-      },
-      {
-        "text": "The night shift admin, Sarah, seemed stressed. She was working late.",
-        "clue": "Review Sarah's workstation for suspicious activity"
-      }
-    ],
-    "IT_Admin": [
-      {
-        "text": "We've been getting unusual login attempts from multiple IPs.",
-        "clue": "Analyze failed login attempts in the security logs"
-      },
-      {
-        "text": "The backup system was tampered with. Someone tried to delete our logs.",
-        "clue": "Use file recovery tool to restore deleted logs"
-      }
-    ],
-    "Sarah_Night_Admin": [
-      {
-        "text": "I... I might have clicked on a suspicious email. It looked like it was from HR.",
-        "clue": "Check Sarah's email for phishing attempts"
-      },
-      {
-        "text": "After that, my account started acting strange. I couldn't access certain files.",
-        "clue": "Investigate Sarah's account permissions and recent changes"
-      }
-    ]
   }
 };
 
+// Branching intro, tutorial, and mission story
 const dialogues = {
   intro: {
     text: "Welcome to SECTOR-9, Agent. We've intercepted a breach in our training servers. Your mission begins now...",
@@ -195,24 +164,6 @@ const dialogues = {
   }
 };
 
-// Tool-specific dialogue options
-const toolDialogues = {
-  scanner: {
-    start: "Initiating network scan...",
-    progress: "Scanning for vulnerabilities...",
-    complete: "Scan complete. Vulnerabilities detected."
-  },
-  autopsy: {
-    start: "Loading forensic analysis suite...",
-    progress: "Analyzing disk image...",
-    complete: "Analysis complete. Evidence recovered."
-  },
-  log_analyzer: {
-    start: "Parsing system logs...",
-    progress: "Identifying suspicious activity...",
-    complete: "Log analysis complete. Suspicious events identified."
-  }
-};
 
 // Dialogue state management
 let currentDialogueState = {
