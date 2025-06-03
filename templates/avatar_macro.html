@@ -1,0 +1,24 @@
+{% macro render_avatar(avatar_parts) %}
+  {% set LAYER_ORDER = ["characters", "clothes", "hair", "face", "acc"] %}
+  {% for part in LAYER_ORDER %}
+    {% set value = avatar_parts.get(part) %}
+    {% if value %}
+      {# Characters: always string or dict with name #}
+      {% if part == "characters" %}
+        {% set name = value.name if value is mapping and value.name else value %}
+        <img src="{{ url_for('static', filename='images/avatar_parts/characters/' ~ name ~ '.png') }}"
+             alt="{{ part }}" class="avatar-layer">
+      {% elif part == "acc" %}
+        {% if value is string %}
+          <img src="{{ url_for('static', filename='images/avatar_parts/acc/' ~ value ~ '.png') }}"
+               alt="{{ part }}" class="avatar-layer">
+        {% endif %}
+      {% else %}
+        {% if value is mapping and value.subcategory and value.name %}
+          <img src="{{ url_for('static', filename='images/avatar_parts/' ~ part ~ '/' ~ value.subcategory ~ '/' ~ value.name ~ '.png') }}"
+               alt="{{ part }}" class="avatar-layer">
+        {% endif %}
+      {% endif %}
+    {% endif %}
+  {% endfor %}
+{% endmacro %} 
