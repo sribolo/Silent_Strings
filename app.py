@@ -331,6 +331,12 @@ def save_avatar():
         required_parts = ['characters', 'clothes', 'hair', 'face', 'acc']
         missing_parts = [part for part in required_parts if not selections.get(part)]
         
+        # Special validation for clothes - must have at least one subcategory selected
+        if 'clothes' in selections:
+            clothes = selections['clothes']
+            if not isinstance(clothes, dict) or not any(clothes.values()):
+                missing_parts.append('clothes')
+        
         if missing_parts:
             return jsonify({
                 "error": "Please select all avatar parts before continuing",
@@ -453,6 +459,11 @@ def profile():
     if not all(part in avatar_parts and avatar_parts[part] for part in required_parts):
         flash("Please complete your avatar customization first", "warning")
         return redirect(url_for('customise'))
+    
+    # Special check for clothes - must have at least one subcategory
+    if not isinstance(avatar_parts.get('clothes'), dict) or not any(avatar_parts.get('clothes', {}).values()):
+        flash("Please select at least one clothing item", "warning")
+        return redirect(url_for('customise'))
 
     return render_template(
         "profile.html",
@@ -514,6 +525,11 @@ def game():
     required_parts = ['characters', 'clothes', 'hair', 'face', 'acc']
     if not all(part in avatar_parts and avatar_parts[part] for part in required_parts):
         flash("Please complete your avatar customization first", "warning")
+        return redirect(url_for('customise'))
+    
+    # Special check for clothes - must have at least one subcategory
+    if not isinstance(avatar_parts.get('clothes'), dict) or not any(avatar_parts.get('clothes', {}).values()):
+        flash("Please select at least one clothing item", "warning")
         return redirect(url_for('customise'))
 
     return render_template('game.html', avatar_parts=avatar_parts, is_guest=is_guest, username=username)
