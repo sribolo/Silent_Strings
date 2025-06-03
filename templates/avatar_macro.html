@@ -11,8 +11,10 @@
       {% elif part == "clothes" and value is mapping %}
         {# Support multiple clothing subcategories (e.g., shoes, dress, etc.) #}
         {% for subcat, item in value.items() %}
-          <img src="{{ url_for('static', filename='images/avatar_parts/clothes/' ~ subcat ~ '/' ~ item.name ~ '.png') }}"
-               alt="{{ part }}-{{ subcat }}" class="avatar-layer">
+          {% if item.name %}
+            <img src="{{ url_for('static', filename='images/avatar_parts/clothes/' ~ subcat ~ '/' ~ item.name ~ '.png') }}"
+                 alt="{{ part }}-{{ subcat }}" class="avatar-layer">
+          {% endif %}
         {% endfor %}
       {% elif part == "acc" %}
         {% if value is string %}
