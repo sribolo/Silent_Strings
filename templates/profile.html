@@ -20,6 +20,13 @@
                         {% else %}
                             {% if value is mapping and value.name %}
                                 <img src="{{ url_for('static', filename='images/avatar_parts/' + part + '/' + value.name + '.png') }}" alt="{{ part }}" class="avatar-layer">
+                            {% elif value is mapping %}
+                                {# Handle subcategories #}
+                                {% for subcat, data in value.items() %}
+                                    {% if data.name %}
+                                        <img src="{{ url_for('static', filename='images/avatar_parts/' + part + '/' + data.name + '.png') }}" alt="{{ part }}" class="avatar-layer">
+                                    {% endif %}
+                                {% endfor %}
                             {% elif value is string %}
                                 <img src="{{ url_for('static', filename='images/avatar_parts/' + part + '/' + value + '.png') }}" alt="{{ part }}" class="avatar-layer">
                             {% endif %}
