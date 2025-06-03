@@ -13,26 +13,27 @@
                 <div class="profile-avatar-wrap">
                     {% set LAYER_ORDER = ["characters", "clothes", "hair", "face", "acc"] %}
                     {% for part in LAYER_ORDER %}
-                    {% set value = avatar_parts.get(part) %}
-                    {% if value %}
-                        {% if part == "characters" %}
-                            <img src="{{ url_for('static', filename='images/avatar_parts/characters/' + (value.name if value is mapping and value.name else value|string) + '.png') }}" alt="{{ part }}" class="avatar-layer">
-                        {% else %}
-                            {% if value is mapping and value.name %}
-                                <img src="{{ url_for('static', filename='images/avatar_parts/' + part + '/' + value.name + '.png') }}" alt="{{ part }}" class="avatar-layer">
-                            {% elif value is mapping %}
-                                {# Handle subcategories #}
-                                {% for subcat, data in value.items() %}
-                                    {% if data.name %}
-                                        <img src="{{ url_for('static', filename='images/avatar_parts/' + part + '/' + data.name + '.png') }}" alt="{{ part }}" class="avatar-layer">
-                                    {% endif %}
-                                {% endfor %}
-                            {% elif value is string %}
-                                <img src="{{ url_for('static', filename='images/avatar_parts/' + part + '/' + value + '.png') }}" alt="{{ part }}" class="avatar-layer">
+                        {% set value = avatar_parts.get(part) %}
+                        {% if value %}
+                            {% if part == "characters" %}
+                                {% if value is mapping and value.name %}
+                                    <img src="{{ url_for('static', filename='images/avatar_parts/characters/' + value.name + '.png') }}" alt="{{ part }}" class="avatar-layer">
+                                {% elif value is string %}
+                                    <img src="{{ url_for('static', filename='images/avatar_parts/characters/' + value + '.png') }}" alt="{{ part }}" class="avatar-layer">
+                                {% endif %}
+                            {% else %}
+                                {% if value is mapping %}
+                                    {% for subcat, data in value.items() %}
+                                        {% if data is mapping and data.name %}
+                                            <img src="{{ url_for('static', filename='images/avatar_parts/' + part + '/' + subcat + '/' + data.name + '.png') }}" alt="{{ part }}" class="avatar-layer">
+                                        {% endif %}
+                                    {% endfor %}
+                                {% elif value is string %}
+                                    <img src="{{ url_for('static', filename='images/avatar_parts/' + part + '/default/' + value + '.png') }}" alt="{{ part }}" class="avatar-layer">
+                                {% endif %}
                             {% endif %}
                         {% endif %}
-                    {% endif %}
-                {% endfor %}
+                    {% endfor %}
                 </div>
             </div>
             <!-- Profile Info -->
