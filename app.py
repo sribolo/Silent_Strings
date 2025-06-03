@@ -465,8 +465,14 @@ def profile():
     if "user" in session:
         try:
             user = User.query.filter_by(email=session["user"]["email"]).first()
-            if user and hasattr(user, 'avatar_parts') and user.avatar_parts:
-                avatar_parts = user.avatar_parts
+            if user:
+                avatar_parts = {
+                    'characters': user.avatar_character,
+                    'hair': user.avatar_hair,
+                    'clothes': user.avatar_clothes,
+                    'acc': user.avatar_acc,
+                    'face': user.avatar_face
+                }
         except Exception as e:
             print("DB lookup failed:", e)
     # 2. If not in database, try session
