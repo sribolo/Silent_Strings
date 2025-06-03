@@ -10,36 +10,36 @@
         <div class="mission-container pixelated-border">
             <h1 class="profile-title">Agent Profile</h1>
             <div class="profile-avatar-section">
-                <div class="profile-avatar-wrap">
+                <div class="profile-avatar-wrap" style="position: relative; width: 96px; height: 96px; margin: auto;">
+                    {# Layer avatar parts in correct order: #}
                     {% set LAYER_ORDER = ["characters", "clothes", "hair", "face", "acc"] %}
                     {% for part in LAYER_ORDER %}
                         {% set value = avatar_parts.get(part) %}
                         {% if value %}
-                            {# ----- Characters Layer (Always string) ----- #}
+                            {# Characters - always string #}
                             {% if part == "characters" %}
                                 <img src="{{ url_for('static', filename='images/avatar_parts/characters/' ~ value ~ '.png') }}" alt="{{ part }}" class="avatar-layer">
-                            {# ----- Clothes/Face/Acc Layers (may be dict of subcategories) ----- #}
+                            {# Clothes/Face/Acc - dict (subcat: filename) or string #}
                             {% elif part in ["clothes", "face", "acc"] %}
                                 {% if value is mapping %}
-                                    {% for subcat, subvalue in value.items() %}
-                                        {% if subvalue %}
-                                            <img src="{{ url_for('static', filename='images/avatar_parts/' ~ part ~ '/' ~ subcat ~ '/' ~ subvalue ~ '.png') }}" alt="{{ part ~ '-' ~ subcat }}" class="avatar-layer">
+                                    {% for subcat, filename in value.items() %}
+                                        {% if filename %}
+                                            <img src="{{ url_for('static', filename='images/avatar_parts/' ~ part ~ '/' ~ filename ~ '.png') }}" alt="{{ part }}-{{ subcat }}" class="avatar-layer">
                                         {% endif %}
                                     {% endfor %}
                                 {% elif value is string %}
                                     <img src="{{ url_for('static', filename='images/avatar_parts/' ~ part ~ '/' ~ value ~ '.png') }}" alt="{{ part }}" class="avatar-layer">
                                 {% endif %}
-                            {# ----- Hair Layer (may be object with subcategory/name or string) ----- #}
+                            {# Hair - dict with "name" or string #}
                             {% elif part == "hair" %}
-                                {% if value is mapping and value.subcategory and value.name %}
-                                    <img src="{{ url_for('static', filename='images/avatar_parts/hair/' ~ value.subcategory ~ '/' ~ value.name ~ '.png') }}" alt="hair" class="avatar-layer">
+                                {% if value is mapping and value.name %}
+                                    <img src="{{ url_for('static', filename='images/avatar_parts/hair/' ~ value.name ~ '.png') }}" alt="hair" class="avatar-layer">
                                 {% elif value is string %}
                                     <img src="{{ url_for('static', filename='images/avatar_parts/hair/' ~ value ~ '.png') }}" alt="hair" class="avatar-layer">
                                 {% endif %}
                             {% endif %}
                         {% endif %}
                     {% endfor %}
-
                 </div>
             </div>
             <!-- Profile Info -->

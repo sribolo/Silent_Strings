@@ -6,7 +6,7 @@
 {% block content %}
     <div class="game-viewport">
       <div id="game-map">
-        <img id="map-bg" src="{{ url_for('static', filename='images/pixel_town_16_9.png') }}" alt="Town Map">
+        <img id="map-bg" src="{{ url_for('static', filename='images/pixel_town_1280x720.png') }}" alt="Town Map">
         <div id="player-avatar" class="avatar">
           {% set LAYER_ORDER = ["characters", "clothes", "hair", "face", "acc"] %}
           {% for part in LAYER_ORDER %}
