@@ -245,6 +245,40 @@ def get_sprites():
     data = {}
     categories = ['characters', 'clothes', 'hair', 'face', 'acc']
 
+    def get_default_parts():
+        defaults = {}
+        for category in categories:
+            category_path = os.path.join(base_path, category)
+            if not os.path.isdir(category_path):
+                continue
+                
+            if category == 'characters':
+                # Get first character as default
+                for root, dirs, files in os.walk(category_path):
+                    for fn in files:
+                        if fn.lower().endswith('.png'):
+                            defaults[category] = os.path.splitext(fn)[0]
+                            break
+                    break
+            else:
+                # For other categories, get first subcategory and its first item
+                for root, dirs, files in os.walk(category_path):
+                    rel_root = os.path.relpath(root, category_path)
+                    subcat_name = 'default' if rel_root == '.' else rel_root.replace(os.sep, '_')
+                    for fn in files:
+                        if fn.lower().endswith('.png'):
+                            defaults[category] = {
+                                'subcategory': subcat_name,
+                                'name': os.path.splitext(fn)[0]
+                            }
+                            break
+                    break
+        return defaults
+
+    # Store defaults in app context for reuse
+    if not hasattr(app, 'default_avatar_parts'):
+        app.default_avatar_parts = get_default_parts()
+
     for category in categories:
         category_path = os.path.join(base_path, category)
         if not os.path.isdir(category_path):
@@ -292,41 +326,22 @@ def save_avatar():
         data = request.get_json(force=True)
         name = data.get('name')
         selections = data.get('selections')
-        if not name or not selections or 'characters' not in selections:
-            return jsonify({"error": "Missing avatar data"}), 400
+        
+        # Validate required selections
+        required_parts = ['characters', 'clothes', 'hair', 'face', 'acc']
+        missing_parts = [part for part in required_parts if not selections.get(part)]
+        
+        if missing_parts:
+            return jsonify({
+                "error": "Please select all avatar parts before continuing",
+                "missing_parts": missing_parts
+            }), 400
+
+        if not name:
+            return jsonify({"error": "Please enter a name"}), 400
 
         session['agent_name'] = name
-        # Save avatar parts with subcategory and name for guests (session only)
-        def extract_part(val, fallback, use_subcat=False):
-            if use_subcat:
-                if isinstance(val, dict) and 'subcategory' in val and 'name' in val:
-                    return {
-                        'subcategory': val.get('subcategory', fallback['subcategory']),
-                        'name': val.get('name', fallback['name'])
-                    }
-                return fallback
-            else:
-                if isinstance(val, dict) and 'name' in val:
-                    return val.get('name', fallback)
-                elif isinstance(val, str):
-                    return val
-                return fallback
-
-        LAYER_ORDER = ["characters", "clothes", "hair", "face", "acc"]
-        FALLBACKS = {
-            "characters": "char_1",
-            "clothes": {"subcategory": "basic", "name": "shirt1"},
-            "hair": {"subcategory": "curly", "name": "curly1"},
-            "face": {"subcategory": "blush", "name": "blush1"},
-            "acc": {"subcategory": "glasses", "name": "glasses001"}
-        }
-        session['avatar_parts'] = {
-            'characters': extract_part(selections.get('characters'), FALLBACKS['characters']),
-            'clothes': extract_part(selections.get('clothes'), FALLBACKS['clothes'], use_subcat=True),
-            'hair': extract_part(selections.get('hair'), FALLBACKS['hair'], use_subcat=True),
-            'face': extract_part(selections.get('face'), FALLBACKS['face'], use_subcat=True),
-            'acc': extract_part(selections.get('acc'), FALLBACKS['acc'], use_subcat=True)
-        }
+        session['avatar_parts'] = selections
 
         if "user" in session:
             user = User.query.filter_by(email=session["user"]["email"]).first()
@@ -411,15 +426,6 @@ def profile():
     avatar_parts = {}
     is_guest = False
 
-    LAYER_ORDER = ["characters", "clothes", "hair", "face", "acc"]
-    FALLBACKS = {
-        "characters": "char_1",
-        "clothes": {"subcategory": "basic", "name": "shirt1"},
-        "hair": {"subcategory": "curly", "name": "curly1"},
-        "face": {"subcategory": "blush", "name": "blush1"},
-        "acc": {"subcategory": "glasses", "name": "glasses001"}
-    }
-
     if "user" in session:
         username = session["user"]["username"]
         email = session["user"]["email"]
@@ -428,19 +434,25 @@ def profile():
         user = User.query.filter_by(email=email).first()
         if user:
             avatar_parts = {
-                part: getattr(user, f"avatar_{part}" if part != "characters" else "avatar_character")
-                for part in LAYER_ORDER
+                'characters': user.avatar_character,
+                'hair': user.avatar_hair,
+                'clothes': user.avatar_clothes,
+                'acc': user.avatar_acc,
+                'face': user.avatar_face
             }
     elif session.get("guest"):
         username = session.get("agent_name", "Guest Agent")
         email = None
         is_guest = True
-
-        raw_parts = session.get("avatar_parts", {})
-        for part in LAYER_ORDER:
-            avatar_parts[part] = raw_parts.get(part) or FALLBACKS[part]
+        avatar_parts = session.get("avatar_parts", {})
     else:
         return redirect(url_for('login'))
+
+    # Check if avatar is complete
+    required_parts = ['characters', 'clothes', 'hair', 'face', 'acc']
+    if not all(part in avatar_parts and avatar_parts[part] for part in required_parts):
+        flash("Please complete your avatar customization first", "warning")
+        return redirect(url_for('customise'))
 
     return render_template(
         "profile.html",
@@ -478,15 +490,6 @@ def game():
     avatar_parts = {}
     is_guest = False
 
-    LAYER_ORDER = ["characters", "clothes", "hair", "face", "acc"]
-    FALLBACKS = {
-        "characters": "char_1",
-        "clothes": {"subcategory": "basic", "name": "shirt1"},
-        "hair": {"subcategory": "curly", "name": "curly1"},
-        "face": {"subcategory": "blush", "name": "blush1"},
-        "acc": {"subcategory": "glasses", "name": "glasses001"}
-    }
-
     if "user" in session:
         username = session["user"]["username"]
         email = session["user"]["email"]
@@ -494,17 +497,24 @@ def game():
         user = User.query.filter_by(email=email).first()
         if user:
             avatar_parts = {
-                part: getattr(user, f"avatar_{part}" if part != "characters" else "avatar_character")
-                for part in LAYER_ORDER
+                'characters': user.avatar_character,
+                'hair': user.avatar_hair,
+                'clothes': user.avatar_clothes,
+                'acc': user.avatar_acc,
+                'face': user.avatar_face
             }
     elif session.get("guest"):
         username = session.get("agent_name", "Guest Agent")
         is_guest = True
-        raw_parts = session.get("avatar_parts", {})
-        for part in LAYER_ORDER:
-            avatar_parts[part] = raw_parts.get(part) or FALLBACKS[part]
+        avatar_parts = session.get("avatar_parts", {})
     else:
         return redirect(url_for('login'))
+
+    # Check if avatar is complete
+    required_parts = ['characters', 'clothes', 'hair', 'face', 'acc']
+    if not all(part in avatar_parts and avatar_parts[part] for part in required_parts):
+        flash("Please complete your avatar customization first", "warning")
+        return redirect(url_for('customise'))
 
     return render_template('game.html', avatar_parts=avatar_parts, is_guest=is_guest, username=username)
 

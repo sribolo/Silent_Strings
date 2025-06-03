@@ -46,7 +46,6 @@ html, body {
 }
 
 #player-avatar {
-  background-image: url("../walk/char1_walk/char1_walk.png");
   background-repeat: no-repeat;
   background-size: 256px 128px; /* 8 columns x 32px, 4 rows x 32px */
   left: 500px;
