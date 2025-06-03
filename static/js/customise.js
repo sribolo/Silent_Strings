@@ -222,24 +222,108 @@ document.addEventListener("DOMContentLoaded", () => {
           selections.clothes['shoes'] = { name: randShoes.name, img: randShoes.img };
         }
       }
-      // If there are shirts, pick one and ensure pants are also picked
-      if (subcats.includes('basic')) {
-        const shirtOptions = spriteData.clothes['basic'];
-        if (shirtOptions && shirtOptions.length > 0) {
+      // If there are dresses, pick one and skip shirt/pants/skirts
+      if (subcats.includes('dress')) {
+        const dressOptions = spriteData.clothes['dress'];
+        if (dressOptions && dressOptions.length > 0 && Math.random() < 0.5) { // 50% chance to pick dress
           if (!selections.clothes) selections.clothes = {};
-          const randShirt = shirtOptions[Math.floor(Math.random() * shirtOptions.length)];
-          selections.clothes['basic'] = { name: randShirt.name, img: randShirt.img };
-          // Now ensure pants
-          if (subcats.includes('pants')) {
-            const pantOptions = spriteData.clothes['pants'];
-            if (pantOptions && pantOptions.length > 0) {
-              const randPant = pantOptions[Math.floor(Math.random() * pantOptions.length)];
-              selections.clothes['pants'] = { name: randPant.name, img: randPant.img };
+          const randDress = dressOptions[Math.floor(Math.random() * dressOptions.length)];
+          selections.clothes['dress'] = { name: randDress.name, img: randDress.img };
+          // Do not pick shirt, pants, or skirts if dress is picked
+        } else {
+          // If not picking dress, check for skirts
+          if (subcats.includes('skirts')) {
+            const skirtOptions = spriteData.clothes['skirts'];
+            if (skirtOptions && skirtOptions.length > 0 && Math.random() < 0.5) { // 50% chance to pick skirt
+              if (!selections.clothes) selections.clothes = {};
+              const randSkirt = skirtOptions[Math.floor(Math.random() * skirtOptions.length)];
+              selections.clothes['skirts'] = { name: randSkirt.name, img: randSkirt.img };
+              // Do not pick shirt or pants if skirt is picked
+            } else {
+              // If not picking dress or skirt, pick shirt and ensure pants
+              if (subcats.includes('basic')) {
+                const shirtOptions = spriteData.clothes['basic'];
+                if (shirtOptions && shirtOptions.length > 0) {
+                  if (!selections.clothes) selections.clothes = {};
+                  const randShirt = shirtOptions[Math.floor(Math.random() * shirtOptions.length)];
+                  selections.clothes['basic'] = { name: randShirt.name, img: randShirt.img };
+                  // Now ensure pants
+                  if (subcats.includes('pants')) {
+                    const pantOptions = spriteData.clothes['pants'];
+                    if (pantOptions && pantOptions.length > 0) {
+                      const randPant = pantOptions[Math.floor(Math.random() * pantOptions.length)];
+                      selections.clothes['pants'] = { name: randPant.name, img: randPant.img };
+                    }
+                  }
+                }
+              }
+            }
+          } else {
+            // If no skirts, pick shirt and ensure pants
+            if (subcats.includes('basic')) {
+              const shirtOptions = spriteData.clothes['basic'];
+              if (shirtOptions && shirtOptions.length > 0) {
+                if (!selections.clothes) selections.clothes = {};
+                const randShirt = shirtOptions[Math.floor(Math.random() * shirtOptions.length)];
+                selections.clothes['basic'] = { name: randShirt.name, img: randShirt.img };
+                // Now ensure pants
+                if (subcats.includes('pants')) {
+                  const pantOptions = spriteData.clothes['pants'];
+                  if (pantOptions && pantOptions.length > 0) {
+                    const randPant = pantOptions[Math.floor(Math.random() * pantOptions.length)];
+                    selections.clothes['pants'] = { name: randPant.name, img: randPant.img };
+                  }
+                }
+              }
+            }
+          }
+        }
+      } else if (subcats.includes('skirts')) {
+        // If no dresses, but skirts exist
+        const skirtOptions = spriteData.clothes['skirts'];
+        if (skirtOptions && skirtOptions.length > 0 && Math.random() < 0.5) { // 50% chance to pick skirt
+          if (!selections.clothes) selections.clothes = {};
+          const randSkirt = skirtOptions[Math.floor(Math.random() * skirtOptions.length)];
+          selections.clothes['skirts'] = { name: randSkirt.name, img: randSkirt.img };
+          // Do not pick shirt or pants if skirt is picked
+        } else {
+          // If not picking skirt, pick shirt and ensure pants
+          if (subcats.includes('basic')) {
+            const shirtOptions = spriteData.clothes['basic'];
+            if (shirtOptions && shirtOptions.length > 0) {
+              if (!selections.clothes) selections.clothes = {};
+              const randShirt = shirtOptions[Math.floor(Math.random() * shirtOptions.length)];
+              selections.clothes['basic'] = { name: randShirt.name, img: randShirt.img };
+              // Now ensure pants
+              if (subcats.includes('pants')) {
+                const pantOptions = spriteData.clothes['pants'];
+                if (pantOptions && pantOptions.length > 0) {
+                  const randPant = pantOptions[Math.floor(Math.random() * pantOptions.length)];
+                  selections.clothes['pants'] = { name: randPant.name, img: randPant.img };
+                }
+              }
+            }
+          }
+        }
+      } else {
+        // If no dresses or skirts, pick shirt and ensure pants
+        if (subcats.includes('basic')) {
+          const shirtOptions = spriteData.clothes['basic'];
+          if (shirtOptions && shirtOptions.length > 0) {
+            if (!selections.clothes) selections.clothes = {};
+            const randShirt = shirtOptions[Math.floor(Math.random() * shirtOptions.length)];
+            selections.clothes['basic'] = { name: randShirt.name, img: randShirt.img };
+            // Now ensure pants
+            if (subcats.includes('pants')) {
+              const pantOptions = spriteData.clothes['pants'];
+              if (pantOptions && pantOptions.length > 0) {
+                const randPant = pantOptions[Math.floor(Math.random() * pantOptions.length)];
+                selections.clothes['pants'] = { name: randPant.name, img: randPant.img };
+              }
             }
           }
         }
       }
-      // You can add similar logic for skirts/dresses if needed
     }
     // Randomize other categories (with subcats)
     ["hair", "face", "acc"].forEach(cat => {
