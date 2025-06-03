@@ -22,14 +22,18 @@
                                     <img src="{{ url_for('static', filename='images/avatar_parts/characters/' + value + '.png') }}" alt="{{ part }}" class="avatar-layer">
                                 {% endif %}
                             {% else %}
-                                {% if value is mapping %}
+                                {% if value is mapping and value.name %}
+                                    <img src="{{ url_for('static', filename='images/avatar_parts/' + part + '/' + value.name + '.png') }}" alt="{{ part }}" class="avatar-layer">
+                                {% elif value is mapping %}
                                     {% for subcat, data in value.items() %}
                                         {% if data is mapping and data.name %}
                                             <img src="{{ url_for('static', filename='images/avatar_parts/' + part + '/' + subcat + '/' + data.name + '.png') }}" alt="{{ part }}" class="avatar-layer">
+                                        {% elif data is string %}
+                                            <img src="{{ url_for('static', filename='images/avatar_parts/' + part + '/' + data + '.png') }}" alt="{{ part }}" class="avatar-layer">
                                         {% endif %}
                                     {% endfor %}
                                 {% elif value is string %}
-                                    <img src="{{ url_for('static', filename='images/avatar_parts/' + part + '/default/' + value + '.png') }}" alt="{{ part }}" class="avatar-layer">
+                                    <img src="{{ url_for('static', filename='images/avatar_parts/' + part + '/' + value + '.png') }}" alt="{{ part }}" class="avatar-layer">
                                 {% endif %}
                             {% endif %}
                         {% endif %}
