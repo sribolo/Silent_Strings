@@ -296,24 +296,36 @@ def save_avatar():
             return jsonify({"error": "Missing avatar data"}), 400
 
         session['agent_name'] = name
-        # Save avatar parts as strings for guests (session only)
-        def extract_name(val, fallback):
-            if isinstance(val, dict):
-                return val.get('name', fallback)
-            elif isinstance(val, str):
-                return val
-            return fallback
+        # Save avatar parts with subcategory and name for guests (session only)
+        def extract_part(val, fallback, use_subcat=False):
+            if use_subcat:
+                if isinstance(val, dict):
+                    return {
+                        'subcategory': val.get('subcategory', fallback['subcategory']),
+                        'name': val.get('name', fallback['name'])
+                    }
+                return fallback
+            else:
+                if isinstance(val, dict):
+                    return val.get('name', fallback)
+                elif isinstance(val, str):
+                    return val
+                return fallback
 
         LAYER_ORDER = ["characters", "clothes", "hair", "face", "acc"]
         FALLBACKS = {
             "characters": "char_1",
-            "clothes": "shirt1",
-            "hair": "curly1",
-            "face": "blush1",
+            "clothes": {"subcategory": "basic", "name": "shirt1"},
+            "hair": {"subcategory": "curly", "name": "curly1"},
+            "face": {"subcategory": "blush", "name": "blush1"},
             "acc": "glasses001"
         }
         session['avatar_parts'] = {
-            part: extract_name(selections.get(part), FALLBACKS[part]) for part in LAYER_ORDER
+            'characters': extract_part(selections.get('characters'), FALLBACKS['characters']),
+            'clothes': extract_part(selections.get('clothes'), FALLBACKS['clothes'], use_subcat=True),
+            'hair': extract_part(selections.get('hair'), FALLBACKS['hair'], use_subcat=True),
+            'face': extract_part(selections.get('face'), FALLBACKS['face'], use_subcat=True),
+            'acc': extract_part(selections.get('acc'), FALLBACKS['acc'])
         }
 
         if "user" in session:
@@ -403,9 +415,9 @@ def profile():
     LAYER_ORDER = ["characters", "clothes", "hair", "face", "acc"]
     FALLBACKS = {
         "characters": "char_1",
-        "clothes": "shirt1",
-        "hair": "curly1",
-        "face": "blush1",
+        "clothes": {"subcategory": "basic", "name": "shirt1"},
+        "hair": {"subcategory": "curly", "name": "curly1"},
+        "face": {"subcategory": "blush", "name": "blush1"},
         "acc": "glasses001"
     }
 
@@ -470,9 +482,9 @@ def game():
     LAYER_ORDER = ["characters", "clothes", "hair", "face", "acc"]
     FALLBACKS = {
         "characters": "char_1",
-        "clothes": "shirt1",
-        "hair": "curly1",
-        "face": "blush1",
+        "clothes": {"subcategory": "basic", "name": "shirt1"},
+        "hair": {"subcategory": "curly", "name": "curly1"},
+        "face": {"subcategory": "blush", "name": "blush1"},
         "acc": "glasses001"
     }
 
