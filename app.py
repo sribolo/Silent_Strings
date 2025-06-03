@@ -69,38 +69,6 @@ limiter = Limiter( app=app, key_func=get_remote_address, storage_uri=os.getenv("
 def generate_csp_nonce():
     g.csp_nonce = base64.b64encode(os.urandom(16)).decode('ascii')
 
-@app._got_first_request
-def set_default_avatar_parts():
-    base_path = os.path.join(app.root_path, 'static', 'images', 'avatar_parts')
-    categories = ['characters', 'clothes', 'hair', 'face', 'acc']
-    def get_default_parts():
-        defaults = {}
-        for category in categories:
-            category_path = os.path.join(base_path, category)
-            if not os.path.isdir(category_path):
-                continue
-            if category == 'characters':
-                for root, dirs, files in os.walk(category_path):
-                    for fn in files:
-                        if fn.lower().endswith('.png'):
-                            defaults[category] = os.path.splitext(fn)[0]
-                            break
-                    break
-            else:
-                for root, dirs, files in os.walk(category_path):
-                    rel_root = os.path.relpath(root, category_path)
-                    subcat_name = 'default' if rel_root == '.' else rel_root.replace(os.sep, '_')
-                    for fn in files:
-                        if fn.lower().endswith('.png'):
-                            defaults[category] = {
-                                'subcategory': subcat_name,
-                                'name': os.path.splitext(fn)[0]
-                            }
-                            break
-                    break
-        return defaults
-    app.default_avatar_parts = get_default_parts()
-
 # === Make the nonce available to Jinja templates ===
 @app.context_processor
 def inject_csp_nonce():
@@ -363,12 +331,6 @@ def save_avatar():
         required_parts = ['characters', 'clothes', 'hair', 'face', 'acc']
         missing_parts = [part for part in required_parts if not selections.get(part)]
         
-        # Special validation for clothes - must have at least one subcategory selected
-        if 'clothes' in selections:
-            clothes = selections['clothes']
-            if not isinstance(clothes, dict) or not any(clothes.values()):
-                missing_parts.append('clothes')
-        
         if missing_parts:
             return jsonify({
                 "error": "Please select all avatar parts before continuing",
@@ -384,9 +346,9 @@ def save_avatar():
         if "user" in session:
             user = User.query.filter_by(email=session["user"]["email"]).first()
             if user:
-                user.avatar_character = selections.get('characters', {}) if isinstance(selections.get('characters'), str) else selections.get('characters', {}).get('name')
+                user.avatar_character = selections.get('characters', {}).get('name')
                 user.avatar_hair = selections.get('hair', {})
-                user.avatar_clothes = selections.get('clothes', {}) if isinstance(selections.get('clothes', {}), dict) else {}
+                user.avatar_clothes = selections.get('clothes', {})
                 user.avatar_acc = selections.get('acc', {})
                 user.avatar_face = selections.get('face', {})
                 db.session.commit()
@@ -459,37 +421,45 @@ def reset_password(token):
 
 @app.route('/profile')
 def profile():
-    avatar_parts = None
-    user = None
-    # 1. Try to load from database if user is logged in
+    username = None
+    email = None
+    avatar_parts = {}
+    is_guest = False
+
     if "user" in session:
-        try:
-            user = User.query.filter_by(email=session["user"]["email"]).first()
-            if user:
-                # Ensure clothes is a dict of subcategories
-                clothes = user.avatar_clothes if isinstance(user.avatar_clothes, dict) else {}
-                avatar_parts = {
-                    'characters': user.avatar_character,
-                    'hair': user.avatar_hair,
-                    'clothes': clothes,
-                    'acc': user.avatar_acc,
-                    'face': user.avatar_face
-                }
-        except Exception as e:
-            print("DB lookup failed:", e)
-    # 2. If not in database, try session
-    if not avatar_parts:
-        avatar_parts = session.get('avatar_parts')
-    # 3. If not in session, use app default
-    if not avatar_parts:
-        avatar_parts = getattr(app, 'default_avatar_parts', None)
-    print("DEBUG avatar_parts for profile:", avatar_parts)
+        username = session["user"]["username"]
+        email = session["user"]["email"]
+        is_guest = False
+
+        user = User.query.filter_by(email=email).first()
+        if user:
+            avatar_parts = {
+                'characters': user.avatar_character,
+                'hair': user.avatar_hair,
+                'clothes': user.avatar_clothes,
+                'acc': user.avatar_acc,
+                'face': user.avatar_face
+            }
+    elif session.get("guest"):
+        username = session.get("agent_name", "Guest Agent")
+        email = None
+        is_guest = True
+        avatar_parts = session.get("avatar_parts", {})
+    else:
+        return redirect(url_for('login'))
+
+    # Check if avatar is complete
+    required_parts = ['characters', 'clothes', 'hair', 'face', 'acc']
+    if not all(part in avatar_parts and avatar_parts[part] for part in required_parts):
+        flash("Please complete your avatar customization first", "warning")
+        return redirect(url_for('customise'))
+
     return render_template(
         "profile.html",
+        username=username,
+        email=email,
+        is_guest=is_guest,
         avatar_parts=avatar_parts,
-        username=session.get("agent_name", "Guest Agent"),
-        email=session.get("user", {}).get("email", None),
-        is_guest="user" not in session
     )
 
 @app.route('/settings', methods=['GET', 'POST'])
@@ -597,8 +567,6 @@ def login_required(f):
 @login_required
 def tools():
     return render_template('tools.html')
-
-
 
 # === RUN SERVER ===
 if __name__ == "__main__":
