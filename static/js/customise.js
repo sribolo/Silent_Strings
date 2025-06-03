@@ -210,8 +210,39 @@ document.addEventListener("DOMContentLoaded", () => {
       const randChar = spriteData.characters[Math.floor(Math.random() * spriteData.characters.length)];
       selections.characters = { name: randChar.name, img: randChar.img };
     }
+    // --- Outfit logic for clothes ---
+    if (spriteData.clothes) {
+      const subcats = Object.keys(spriteData.clothes);
+      // Always pick shoes if available
+      if (subcats.includes('shoes')) {
+        const shoesOptions = spriteData.clothes['shoes'];
+        if (shoesOptions && shoesOptions.length > 0) {
+          if (!selections.clothes) selections.clothes = {};
+          const randShoes = shoesOptions[Math.floor(Math.random() * shoesOptions.length)];
+          selections.clothes['shoes'] = { name: randShoes.name, img: randShoes.img };
+        }
+      }
+      // If there are shirts, pick one and ensure pants are also picked
+      if (subcats.includes('basic')) {
+        const shirtOptions = spriteData.clothes['basic'];
+        if (shirtOptions && shirtOptions.length > 0) {
+          if (!selections.clothes) selections.clothes = {};
+          const randShirt = shirtOptions[Math.floor(Math.random() * shirtOptions.length)];
+          selections.clothes['basic'] = { name: randShirt.name, img: randShirt.img };
+          // Now ensure pants
+          if (subcats.includes('pants')) {
+            const pantOptions = spriteData.clothes['pants'];
+            if (pantOptions && pantOptions.length > 0) {
+              const randPant = pantOptions[Math.floor(Math.random() * pantOptions.length)];
+              selections.clothes['pants'] = { name: randPant.name, img: randPant.img };
+            }
+          }
+        }
+      }
+      // You can add similar logic for skirts/dresses if needed
+    }
     // Randomize other categories (with subcats)
-    ["clothes", "hair", "face", "acc"].forEach(cat => {
+    ["hair", "face", "acc"].forEach(cat => {
       if (spriteData[cat]) {
         const subcats = Object.keys(spriteData[cat]);
         if (subcats.length > 0) {
@@ -221,8 +252,8 @@ document.addEventListener("DOMContentLoaded", () => {
           const randSubcat = validSubcats[Math.floor(Math.random() * validSubcats.length)];
           const options = spriteData[cat][randSubcat];
           if (options && options.length > 0) {
-            const randOpt = options[Math.floor(Math.random() * options.length)];
             selections[cat] = {}; // Remove any previous subcat selections
+            const randOpt = options[Math.floor(Math.random() * options.length)];
             selections[cat][randSubcat] = { name: randOpt.name, img: randOpt.img };
             // Update currentSubheader and re-render grid
             currentSubheader[cat] = randSubcat;
