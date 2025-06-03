@@ -1,46 +1,29 @@
-from PIL import Image
-import json
+
 import os
 
-def generate_sprite_map(image_path, sprite_width, sprite_height, output_file):
-    """
-    Generates a JSON file mapping the coordinates of each sprite in a sheet.
-    """
-    try:
-        image = Image.open(image_path)
-        sheet_width, sheet_height = image.size
+AVATAR_PARTS = {
+    'characters': ['char_1.png', 'char_2.png', 'char_3.png', 'char_4.png', 'char_5.png', 'char_6.png', 'char_7.png', 'char_9.png', 'tile_48.png'],
+    'hair/midiwave': ['midiwave14.png', 'midiwave1.png'],
+    'clothes/shoes': ['shoe6.png', 'shoe1.png'],
+    'face/blush': ['blush3.png', 'blush1.png'],
+    'acc': ['glasses001.png', 'earring_red001.png'],
+}
 
-        columns = sheet_width // sprite_width
-        rows = sheet_height // sprite_height
+STATIC_ROOT = os.path.join(os.path.dirname(__file__), 'static', 'images', 'avatar_parts')
 
-        sprite_map = {}
-        counter = 1
+missing = {}
+for part, files in AVATAR_PARTS.items():
+    part_dir = os.path.join(STATIC_ROOT, *part.split('/'))
+    for fname in files:
+        fpath = os.path.join(part_dir, fname)
+        if not os.path.isfile(fpath):
+            missing.setdefault(part, []).append(fname)
 
-        for row in range(rows):
-            for col in range(columns):
-                x = col * sprite_width
-                y = row * sprite_height
-                sprite_map[f"sprite{counter}"] = {
-                    "x": x,
-                    "y": y
-                }
-                counter += 1
-
-        with open(output_file, "w") as f:
-            json.dump(sprite_map, f, indent=4)
-        print(f"✅ Sprite map generated: {output_file}")
-
-    except Exception as e:
-        print(f"❌ Error generating sprite map: {e}")
-
-# === AUTO-GENERATE MAPPING FOR ALL CLOTHES ===
-acc_dir = "static/images/avatar_parts/walk/hair"
-for file_name in os.listdir(acc_dir):
-    if file_name.endswith(".png"):
-        name = file_name.split(".png")[0]
-        generate_sprite_map(
-            image_path=f"{acc_dir}/{file_name}",
-            sprite_width=32,          # Adjust based on your sprite size
-            sprite_height=32,         # Adjust based on your sprite size
-            output_file=f"{acc_dir}/{name}_map.json"
-        )
+if missing:
+    print("Missing avatar part files:")
+    for part, files in missing.items():
+        print(f"  {part}:")
+        for fname in files:
+            print(f"    - {fname}")
+else:
+    print("All expected avatar part files are present.")
