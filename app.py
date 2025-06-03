@@ -384,9 +384,9 @@ def save_avatar():
         if "user" in session:
             user = User.query.filter_by(email=session["user"]["email"]).first()
             if user:
-                user.avatar_character = selections.get('characters', {}).get('name')
+                user.avatar_character = selections.get('characters', {}) if isinstance(selections.get('characters'), str) else selections.get('characters', {}).get('name')
                 user.avatar_hair = selections.get('hair', {})
-                user.avatar_clothes = selections.get('clothes', {})
+                user.avatar_clothes = selections.get('clothes', {}) if isinstance(selections.get('clothes', {}), dict) else {}
                 user.avatar_acc = selections.get('acc', {})
                 user.avatar_face = selections.get('face', {})
                 db.session.commit()
@@ -466,10 +466,12 @@ def profile():
         try:
             user = User.query.filter_by(email=session["user"]["email"]).first()
             if user:
+                # Ensure clothes is a dict of subcategories
+                clothes = user.avatar_clothes if isinstance(user.avatar_clothes, dict) else {}
                 avatar_parts = {
                     'characters': user.avatar_character,
                     'hair': user.avatar_hair,
-                    'clothes': user.avatar_clothes,
+                    'clothes': clothes,
                     'acc': user.avatar_acc,
                     'face': user.avatar_face
                 }
@@ -481,6 +483,7 @@ def profile():
     # 3. If not in session, use app default
     if not avatar_parts:
         avatar_parts = getattr(app, 'default_avatar_parts', None)
+    print("DEBUG avatar_parts for profile:", avatar_parts)
     return render_template(
         "profile.html",
         avatar_parts=avatar_parts,
