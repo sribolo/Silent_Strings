@@ -403,8 +403,22 @@ def reset_password(token):
 def profile():
     username = None
     email = None
-    avatar_parts = None
+    avatar_parts = {}
     is_guest = False
+
+    LAYER_ORDER = ["characters", "clothes", "hair", "face", "acc"]
+    FALLBACKS = {
+        "characters": "char_1",
+        "clothes": "shirt1",
+        "hair": "curly1",
+        "face": "blush1",
+        "acc": "glasses001"
+    }
+
+    def clean_part(val, part):
+        if isinstance(val, dict):
+            return val.get("name") or FALLBACKS[part]
+        return val or FALLBACKS[part]
 
     if "user" in session:
         username = session["user"]["username"]
@@ -414,30 +428,19 @@ def profile():
         user = User.query.filter_by(email=email).first()
         if user:
             avatar_parts = {
-                "characters": user.avatar_character,
-                "hair": user.avatar_hair,
-                "clothes": user.avatar_clothes,
-                "acc": user.avatar_acc,
-                "face": user.avatar_face,
+                part: clean_part(getattr(user, f"avatar_{part}" if part != "characters" else "avatar_character"), part)
+                for part in LAYER_ORDER
             }
     elif session.get("guest"):
         username = session.get("agent_name", "Guest Agent")
         email = None
         is_guest = True
 
-        # Clean up session avatar_parts to ensure only strings
         raw_parts = session.get("avatar_parts", {})
-        avatar_parts = {}
-        for k, v in raw_parts.items():
-            if isinstance(v, dict):
-                avatar_parts[k] = v.get("name")
-            else:
-                avatar_parts[k] = v
-
+        for part in LAYER_ORDER:
+            avatar_parts[part] = clean_part(raw_parts.get(part), part)
     else:
         return redirect(url_for('login'))
-
-    default_avatar = "avatar1.png"
 
     return render_template(
         "profile.html",
@@ -445,7 +448,6 @@ def profile():
         email=email,
         is_guest=is_guest,
         avatar_parts=avatar_parts,
-        default_avatar=default_avatar,
     )
 
 @app.route('/settings', methods=['GET', 'POST'])
@@ -473,8 +475,22 @@ def load_level(level_name):
 @app.route('/game')
 def game():
     username = None
-    avatar_parts = None
+    avatar_parts = {}
     is_guest = False
+
+    LAYER_ORDER = ["characters", "clothes", "hair", "face", "acc"]
+    FALLBACKS = {
+        "characters": "char_1",
+        "clothes": "shirt1",
+        "hair": "curly1",
+        "face": "blush1",
+        "acc": "glasses001"
+    }
+
+    def clean_part(val, part):
+        if isinstance(val, dict):
+            return val.get("name") or FALLBACKS[part]
+        return val or FALLBACKS[part]
 
     if "user" in session:
         username = session["user"]["username"]
@@ -483,22 +499,15 @@ def game():
         user = User.query.filter_by(email=email).first()
         if user:
             avatar_parts = {
-                "characters": user.avatar_character,
-                "hair": user.avatar_hair,
-                "clothes": user.avatar_clothes,
-                "acc": user.avatar_acc,
-                "face": user.avatar_face,
+                part: clean_part(getattr(user, f"avatar_{part}" if part != "characters" else "avatar_character"), part)
+                for part in LAYER_ORDER
             }
     elif session.get("guest"):
         username = session.get("agent_name", "Guest Agent")
         is_guest = True
         raw_parts = session.get("avatar_parts", {})
-        avatar_parts = {}
-        for k, v in raw_parts.items():
-            if isinstance(v, dict):
-                avatar_parts[k] = v.get("name")
-            else:
-                avatar_parts[k] = v
+        for part in LAYER_ORDER:
+            avatar_parts[part] = clean_part(raw_parts.get(part), part)
     else:
         return redirect(url_for('login'))
 

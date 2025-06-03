@@ -1,27 +1,40 @@
-from PIL import Image
 import os
 
-# Root directory containing all hair sprite sheets (and subfolders)
-hair_root = "static/images/avatar_parts/hair"
+def rename_files(folder, prefix):
+    files = [f for f in os.listdir(folder) if f.startswith('tile_') and f.endswith('.png')]
+    # Sort files by the number in the filename
+    def extract_number(filename):
+        try:
+            return int(filename.split('_')[1].split('.')[0])
+        except Exception:
+            return 0
+    files.sort(key=extract_number)
+    for idx, filename in enumerate(files, 1):
+        new_name = f"{prefix}{idx}.png"
+        src = os.path.join(folder, filename)
+        dst = os.path.join(folder, new_name)
+        print(f"Renaming {src} -> {dst}")
+        os.rename(src, dst)
 
-tile_width, tile_height = 32, 32
+if __name__ == "__main__":
+    base_path = "static/images/avatar_parts"
 
-for root, dirs, files in os.walk(hair_root):
-    for file in files:
-        if file.lower().endswith('.png'):
-            sprite_sheet_path = os.path.join(root, file)
-            output_folder = os.path.join(root + "_tiles", os.path.splitext(file)[0])
-            os.makedirs(output_folder, exist_ok=True)
+    # Clothes
+    rename_files(os.path.join(base_path, "clothes/basic"), "shirt")
+    rename_files(os.path.join(base_path, "clothes/dress"), "dress")
+    rename_files(os.path.join(base_path, "clothes/pants"), "pant")
+    rename_files(os.path.join(base_path, "clothes/shoes"), "shoe")
+    rename_files(os.path.join(base_path, "clothes/skirts"), "skirt")
 
-            sprite_sheet = Image.open(sprite_sheet_path)
-            sheet_width, sheet_height = sprite_sheet.size
+    # Face
+    rename_files(os.path.join(base_path, "face/blush"), "blush")
+    rename_files(os.path.join(base_path, "face/lipstick"), "lipstick")
 
-            tile_num = 0
-            for y in range(0, sheet_height, tile_height):
-                for x in range(0, sheet_width, tile_width):
-                    box = (x, y, x + tile_width, y + tile_height)
-                    tile = sprite_sheet.crop(box)
-                    tile.save(os.path.join(output_folder, f"tile_{tile_num}.png"))
-                    tile_num += 1
+    # Hair (all subfolders)
+    hair_base = os.path.join(base_path, "hair")
+    for subfolder in os.listdir(hair_base):
+        subfolder_path = os.path.join(hair_base, subfolder)
+        if os.path.isdir(subfolder_path):
+            rename_files(subfolder_path, subfolder)
 
-            print(f"Saved {tile_num} tiles from '{sprite_sheet_path}' to '{output_folder}'") 
+    # You can add more folders here if needed (e.g., acc, other face subfolders, etc.)

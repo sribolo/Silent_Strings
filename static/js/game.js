@@ -16,37 +16,62 @@ const NUM_NPCS = 5;
 const npcAvatars = [];
 const npcElements = [];
 
-// Fallback NPC character images (add your actual character PNGs here)
-const fallbackNpcCharacters = [
-  '/static/images/avatar_parts/characters/char_1.png',
-  '/static/images/avatar_parts/characters/char_2.png',
-  '/static/images/avatar_parts/characters/char_3.png',
-  '/static/images/avatar_parts/characters/char_4.png',
-  '/static/images/avatar_parts/characters/char_5.png',
-  '/static/images/avatar_parts/characters/char_6.png',
-  '/static/images/avatar_parts/characters/char_7.png',
-  '/static/images/avatar_parts/characters/char_9.png'
-];
-const fallbackNpcClothes = [
-  '/static/images/avatar_parts/clothes/basic/tile_1182.png',
-  '/static/images/avatar_parts/clothes/basic/tile_1178.png',
-  '/static/images/avatar_parts/clothes/basic/tile_1177.png',
-  '/static/images/avatar_parts/clothes/basic/tile_1176.png',
-  '/static/images/avatar_parts/clothes/basic/tile_1174.png',
-  '/static/images/avatar_parts/clothes/basic/tile_1169.png',
-  '/static/images/avatar_parts/clothes/basic/tile_1168.png',
-  '/static/images/avatar_parts/clothes/basic/tile_1166.png'
-];
-const fallbackNpcHair = [
-  '/static/images/avatar_parts/hair/curly/curly.png'
-];
-const fallbackNpcFace = [
-  '/static/images/avatar_parts/face/blush/tile_992.png',
-  '/static/images/avatar_parts/face/blush/tile_984.png',
-  '/static/images/avatar_parts/face/blush/tile_976.png',
-  '/static/images/avatar_parts/face/blush/tile_960.png'
-];
-// Add arrays for face, acc, etc. as needed
+let spriteData = null;
+
+fetch('/get_sprites')
+  .then(res => res.json())
+  .then(data => {
+    spriteData = data;
+    spawnNpcs();
+  });
+
+function spawnNpcs() {
+  for (let i = 0; i < NUM_NPCS; i++) {
+    const npcDiv = document.createElement('div');
+    npcDiv.className = 'npc-avatar';
+    npcDiv.style.width = '64px';
+    npcDiv.style.height = '64px';
+
+    // Generate a random avatar
+    const npcAvatar = randomNpcAvatar(spriteData);
+
+    // Render character base
+    if (npcAvatar.characters && npcAvatar.characters.img) {
+      const charImg = document.createElement('img');
+      charImg.src = npcAvatar.characters.img;
+      charImg.className = 'avatar-layer';
+      charImg.style.width = '64px';
+      charImg.style.height = '64px';
+      npcDiv.appendChild(charImg);
+    }
+
+    // Render other layers
+    ['clothes', 'hair', 'face', 'acc'].forEach(category => {
+      if (npcAvatar[category]) {
+        Object.values(npcAvatar[category]).forEach(sel => {
+          if (sel && sel.img) {
+            const img = document.createElement('img');
+            img.src = sel.img;
+            img.className = 'avatar-layer';
+            img.style.width = '64px';
+            img.style.height = '64px';
+            img.onerror = function() { this.style.display = 'none'; };
+            npcDiv.appendChild(img);
+          }
+        });
+      }
+    });
+
+    // Set initial position
+    const pos = getRandomPosition();
+    npcDiv.style.position = 'absolute';
+    npcDiv.style.left = pos.x + 'px';
+    npcDiv.style.top = pos.y + 'px';
+
+    map.appendChild(npcDiv);
+    npcElements.push(npcDiv);
+  }
+}
 
 // Animate a layered sprite (player or NPC)
 function setLayeredSpriteFrame(container, direction, frame) {
@@ -146,64 +171,35 @@ function getRandomPosition() {
   return { x, y };
 }
 
-function randomizeNpcAvatar() {
-  // Use spriteData if available, otherwise fallback
-  if (typeof spriteData !== 'undefined' && spriteData.characters && spriteData.characters.length > 0) {
-    const idx = Math.floor(Math.random() * spriteData.characters.length);
-    return spriteData.characters[idx].img;
-  } else {
-    const idx = Math.floor(Math.random() * fallbackNpcCharacters.length);
-    return fallbackNpcCharacters[idx];
-  }
+function getRandomElement(arr) {
+  return arr[Math.floor(Math.random() * arr.length)];
 }
 
-// Spawn NPCs
-for (let i = 0; i < NUM_NPCS; i++) {
-  const npcDiv = document.createElement('div');
-  npcDiv.className = 'npc-avatar';
-  npcDiv.style.width = '64px';
-  npcDiv.style.height = '64px';
+function randomNpcAvatar(spriteData) {
+  const avatar = {};
 
-  // Character base
-  const charImg = document.createElement('img');
-  charImg.src = fallbackNpcCharacters[Math.floor(Math.random() * fallbackNpcCharacters.length)];
-  charImg.className = 'avatar-layer';
-  charImg.style.width = '64px';
-  charImg.style.height = '64px';
-  npcDiv.appendChild(charImg);
+  // Characters (flat array)
+  if (spriteData.characters && spriteData.characters.length > 0) {
+    const char = getRandomElement(spriteData.characters);
+    avatar.characters = { name: char.name, img: char.img };
+  }
 
-  // Clothes
-  const clothesImg = document.createElement('img');
-  clothesImg.src = fallbackNpcClothes[Math.floor(Math.random() * fallbackNpcClothes.length)];
-  clothesImg.className = 'avatar-layer';
-  clothesImg.style.width = '64px';
-  clothesImg.style.height = '64px';
-  npcDiv.appendChild(clothesImg);
+  // Other categories (grouped by subcat)
+  ['clothes', 'hair', 'face', 'acc'].forEach(category => {
+    const subcats = spriteData[category];
+    if (subcats && Object.keys(subcats).length > 0) {
+      const subcatNames = Object.keys(subcats);
+      const subcat = getRandomElement(subcatNames);
+      const options = subcats[subcat];
+      if (options && options.length > 0) {
+        const part = getRandomElement(options);
+        if (!avatar[category]) avatar[category] = {};
+        avatar[category][subcat] = { name: part.name, img: part.img };
+      }
+    }
+  });
 
-  // Hair
-  const hairImg = document.createElement('img');
-  hairImg.src = fallbackNpcHair[Math.floor(Math.random() * fallbackNpcHair.length)];
-  hairImg.className = 'avatar-layer';
-  hairImg.style.width = '64px';
-  hairImg.style.height = '64px';
-  npcDiv.appendChild(hairImg);
-
-  // Face
-  const faceImg = document.createElement('img');
-  faceImg.src = fallbackNpcFace[Math.floor(Math.random() * fallbackNpcFace.length)];
-  faceImg.className = 'avatar-layer';
-  faceImg.style.width = '64px';
-  faceImg.style.height = '64px';
-  npcDiv.appendChild(faceImg);
-
-  // Set initial position
-  const pos = getRandomPosition();
-  npcDiv.style.position = 'absolute';
-  npcDiv.style.left = pos.x + 'px';
-  npcDiv.style.top = pos.y + 'px';
-
-  map.appendChild(npcDiv);
-  npcElements.push(npcDiv);
+  return avatar;
 }
 
 // Animate NPCs
