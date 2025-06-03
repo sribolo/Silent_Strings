@@ -391,17 +391,6 @@ def profile():
         "acc": "glasses001"
     }
 
-    def extract_name(val):
-        if isinstance(val, dict):
-            for v in val.values():
-                if isinstance(v, dict) and 'name' in v:
-                    return v['name']
-                elif isinstance(v, str):
-                    return v
-        elif isinstance(val, str):
-            return val
-        return None
-
     if "user" in session:
         username = session["user"]["username"]
         email = session["user"]["email"]
@@ -410,7 +399,7 @@ def profile():
         user = User.query.filter_by(email=email).first()
         if user:
             avatar_parts = {
-                part: extract_name(getattr(user, f"avatar_{part}" if part != "characters" else "avatar_character"))
+                part: getattr(user, f"avatar_{part}" if part != "characters" else "avatar_character")
                 for part in LAYER_ORDER
             }
     elif session.get("guest"):
@@ -420,7 +409,7 @@ def profile():
 
         raw_parts = session.get("avatar_parts", {})
         for part in LAYER_ORDER:
-            avatar_parts[part] = extract_name(raw_parts.get(part)) or FALLBACKS[part]
+            avatar_parts[part] = raw_parts.get(part) or FALLBACKS[part]
     else:
         return redirect(url_for('login'))
 
@@ -469,17 +458,6 @@ def game():
         "acc": "glasses001"
     }
 
-    def extract_name(val):
-        if isinstance(val, dict):
-            for v in val.values():
-                if isinstance(v, dict) and 'name' in v:
-                    return v['name']
-                elif isinstance(v, str):
-                    return v
-        elif isinstance(val, str):
-            return val
-        return None
-
     if "user" in session:
         username = session["user"]["username"]
         email = session["user"]["email"]
@@ -487,7 +465,7 @@ def game():
         user = User.query.filter_by(email=email).first()
         if user:
             avatar_parts = {
-                part: extract_name(getattr(user, f"avatar_{part}" if part != "characters" else "avatar_character"))
+                part: getattr(user, f"avatar_{part}" if part != "characters" else "avatar_character")
                 for part in LAYER_ORDER
             }
     elif session.get("guest"):
@@ -495,7 +473,7 @@ def game():
         is_guest = True
         raw_parts = session.get("avatar_parts", {})
         for part in LAYER_ORDER:
-            avatar_parts[part] = extract_name(raw_parts.get(part)) or FALLBACKS[part]
+            avatar_parts[part] = raw_parts.get(part) or FALLBACKS[part]
     else:
         return redirect(url_for('login'))
 

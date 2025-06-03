@@ -16,17 +16,14 @@
                         {% set value = avatar_parts.get(part) %}
                         {% if value %}
                             {% if part == "characters" %}
-                                <img src="{{ url_for('static', filename='images/avatar_parts/characters/' + value + '.png') }}"
+                                <img src="{{ url_for('static', filename='images/avatar_parts/characters/' + (value.name if value is mapping and value.name else value) + '.png') }}"
                                      alt="{{ part }}" class="profile-avatar">
                             {% else %}
-                                {% if value is mapping %}
-                                    {% for subcat, data in value.items() %}
-                                        <img src="{{ url_for('static', filename='images/avatar_parts/' + part + '/' + subcat + '/' + data.name + '.png') }}"
-                                             alt="{{ part }}" class="profile-avatar">
-                                    {% endfor %}
-                                {% else %}
-                                    {# Fallback for old data structure #}
-                                    <img src="{{ url_for('static', filename='images/avatar_parts/' + part + '/default/' + value + '.png') }}"
+                                {% if value is mapping and value.name %}
+                                    <img src="{{ url_for('static', filename='images/avatar_parts/' + part + '/' + value.name + '.png') }}"
+                                         alt="{{ part }}" class="profile-avatar">
+                                {% elif value %}
+                                    <img src="{{ url_for('static', filename='images/avatar_parts/' + part + '/' + value + '.png') }}"
                                          alt="{{ part }}" class="profile-avatar">
                                 {% endif %}
                             {% endif %}

@@ -1,8 +1,8 @@
-"""init
+"""Avatar fields as JSON, no default wrapper
 
-Revision ID: a62d4644fd3f
+Revision ID: 4b3747c1ce99
 Revises: 
-Create Date: 2025-05-26 12:16:13.354262
+Create Date: 2025-06-03 16:20:23.515556
 
 """
 from typing import Sequence, Union
@@ -12,7 +12,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision: str = 'a62d4644fd3f'
+revision: str = '4b3747c1ce99'
 down_revision: Union[str, None] = None
 branch_labels: Union[str, Sequence[str], None] = None
 depends_on: Union[str, Sequence[str], None] = None
@@ -26,6 +26,11 @@ def upgrade() -> None:
     sa.Column('username', sa.String(length=80), nullable=False),
     sa.Column('email', sa.String(length=120), nullable=False),
     sa.Column('pwd_hash', sa.String(length=256), nullable=False),
+    sa.Column('avatar_character', sa.String(length=120), nullable=True),
+    sa.Column('avatar_hair', sa.JSON(), nullable=True),
+    sa.Column('avatar_clothes', sa.JSON(), nullable=True),
+    sa.Column('avatar_acc', sa.JSON(), nullable=True),
+    sa.Column('avatar_face', sa.JSON(), nullable=True),
     sa.PrimaryKeyConstraint('id'),
     sa.UniqueConstraint('email'),
     sa.UniqueConstraint('username')
