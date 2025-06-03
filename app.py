@@ -296,7 +296,25 @@ def save_avatar():
             return jsonify({"error": "Missing avatar data"}), 400
 
         session['agent_name'] = name
-        session['avatar_parts'] = selections
+        # Save avatar parts as strings for guests (session only)
+        def extract_name(val, fallback):
+            if isinstance(val, dict):
+                return val.get('name', fallback)
+            elif isinstance(val, str):
+                return val
+            return fallback
+
+        LAYER_ORDER = ["characters", "clothes", "hair", "face", "acc"]
+        FALLBACKS = {
+            "characters": "char_1",
+            "clothes": "shirt1",
+            "hair": "curly1",
+            "face": "blush1",
+            "acc": "glasses001"
+        }
+        session['avatar_parts'] = {
+            part: extract_name(selections.get(part), FALLBACKS[part]) for part in LAYER_ORDER
+        }
 
         if "user" in session:
             user = User.query.filter_by(email=session["user"]["email"]).first()
