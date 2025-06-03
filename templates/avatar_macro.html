@@ -8,6 +8,12 @@
         {% set name = value.name if value is mapping and value.name else value %}
         <img src="{{ url_for('static', filename='images/avatar_parts/characters/' ~ name ~ '.png') }}"
              alt="{{ part }}" class="avatar-layer">
+      {% elif part == "clothes" and value is mapping %}
+        {# Support multiple clothing subcategories (e.g., shoes, dress, etc.) #}
+        {% for subcat, item in value.items() %}
+          <img src="{{ url_for('static', filename='images/avatar_parts/clothes/' ~ subcat ~ '/' ~ item.name ~ '.png') }}"
+               alt="{{ part }}-{{ subcat }}" class="avatar-layer">
+        {% endfor %}
       {% elif part == "acc" %}
         {% if value is string %}
           <img src="{{ url_for('static', filename='images/avatar_parts/acc/' ~ value ~ '.png') }}"
