@@ -69,7 +69,7 @@ limiter = Limiter( app=app, key_func=get_remote_address, storage_uri=os.getenv("
 def generate_csp_nonce():
     g.csp_nonce = base64.b64encode(os.urandom(16)).decode('ascii')
 
-@app.before_first_request
+@app._got_first_request
 def set_default_avatar_parts():
     base_path = os.path.join(app.root_path, 'static', 'images', 'avatar_parts')
     categories = ['characters', 'clothes', 'hair', 'face', 'acc']
