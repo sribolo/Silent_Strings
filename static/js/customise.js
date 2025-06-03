@@ -181,7 +181,7 @@ document.addEventListener("DOMContentLoaded", () => {
     fetch("/save-avatar", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ name, selections })
+      body: JSON.stringify({ name, selections: flattenSelections(selections) })
     })
     .then(res => {
       if (!res.ok) throw new Error("Save failed");
@@ -409,4 +409,29 @@ function updateAvatarPreview(selections) {
       }
     }
   });
+}
+
+function flattenSelections(selections) {
+  const flat = {};
+  // Characters and acc are simple
+  if (selections.characters && selections.characters.name) {
+    flat.characters = selections.characters.name;
+  }
+  if (selections.acc && selections.acc.name) {
+    flat.acc = selections.acc.name;
+  }
+  // For hair, clothes, face: find the selected subcat and name
+  ["hair", "clothes", "face"].forEach(category => {
+    if (selections[category]) {
+      const subcats = Object.keys(selections[category]);
+      if (subcats.length > 0) {
+        const subcat = subcats[0];
+        const sel = selections[category][subcat];
+        if (sel && sel.name) {
+          flat[category] = { subcategory: subcat, name: sel.name };
+        }
+      }
+    }
+  });
+  return flat;
 }
