@@ -68,7 +68,7 @@ document.addEventListener("DOMContentLoaded", () => {
             img.onclick = () => {
               grid.querySelectorAll('.avatar-choice.selected').forEach(el => el.classList.remove('selected'));
               img.classList.add('selected');
-              selections[category] = { name: option.name, img: option.img };
+              selections[category] = { name: option.name };
               updateAvatarPreview(selections);
             };
             grid.appendChild(img);
@@ -141,7 +141,7 @@ document.addEventListener("DOMContentLoaded", () => {
         imgGrid.querySelectorAll('.avatar-choice.selected').forEach(el => el.classList.remove('selected'));
         img.classList.add('selected');
         if (!selections[category]) selections[category] = {};
-        selections[category][subcat] = { name: option.name, img: option.img };
+        selections[category][subcat] = { name: option.name, subcategory: subcat };
         updateAvatarPreview(selections);
       };
       imgGrid.appendChild(img);
@@ -208,7 +208,7 @@ document.addEventListener("DOMContentLoaded", () => {
     // Randomize characters (flat)
     if (spriteData.characters && spriteData.characters.length > 0) {
       const randChar = spriteData.characters[Math.floor(Math.random() * spriteData.characters.length)];
-      selections.characters = { name: randChar.name, img: randChar.img };
+      selections.characters = { name: randChar.name };
     }
     // --- Outfit logic for clothes ---
     if (spriteData.clothes) {
@@ -219,7 +219,7 @@ document.addEventListener("DOMContentLoaded", () => {
         if (shoesOptions && shoesOptions.length > 0) {
           if (!selections.clothes) selections.clothes = {};
           const randShoes = shoesOptions[Math.floor(Math.random() * shoesOptions.length)];
-          selections.clothes['shoes'] = { name: randShoes.name, img: randShoes.img };
+          selections.clothes['shoes'] = { name: randShoes.name, subcategory: 'shoes' };
         }
       }
       // If there are dresses, pick one and skip shirt/pants/skirts
@@ -228,7 +228,7 @@ document.addEventListener("DOMContentLoaded", () => {
         if (dressOptions && dressOptions.length > 0 && Math.random() < 0.5) { // 50% chance to pick dress
           if (!selections.clothes) selections.clothes = {};
           const randDress = dressOptions[Math.floor(Math.random() * dressOptions.length)];
-          selections.clothes['dress'] = { name: randDress.name, img: randDress.img };
+          selections.clothes['dress'] = { name: randDress.name, subcategory: 'dress' };
           // Do not pick shirt, pants, or skirts if dress is picked
         } else {
           // If not picking dress, check for skirts
@@ -237,13 +237,13 @@ document.addEventListener("DOMContentLoaded", () => {
             if (skirtOptions && skirtOptions.length > 0 && Math.random() < 0.5) { // 50% chance to pick skirt
               if (!selections.clothes) selections.clothes = {};
               const randSkirt = skirtOptions[Math.floor(Math.random() * skirtOptions.length)];
-              selections.clothes['skirts'] = { name: randSkirt.name, img: randSkirt.img };
+              selections.clothes['skirts'] = { name: randSkirt.name, subcategory: 'skirts' };
               // Pick a shirt, but not pants
               if (subcats.includes('basic')) {
                 const shirtOptions = spriteData.clothes['basic'];
                 if (shirtOptions && shirtOptions.length > 0) {
                   const randShirt = shirtOptions[Math.floor(Math.random() * shirtOptions.length)];
-                  selections.clothes['basic'] = { name: randShirt.name, img: randShirt.img };
+                  selections.clothes['basic'] = { name: randShirt.name, subcategory: 'basic' };
                 }
               }
               // Do not pick pants if skirt is picked
@@ -254,13 +254,13 @@ document.addEventListener("DOMContentLoaded", () => {
                 if (shirtOptions && shirtOptions.length > 0) {
                   if (!selections.clothes) selections.clothes = {};
                   const randShirt = shirtOptions[Math.floor(Math.random() * shirtOptions.length)];
-                  selections.clothes['basic'] = { name: randShirt.name, img: randShirt.img };
+                  selections.clothes['basic'] = { name: randShirt.name, subcategory: 'basic' };
                   // Now ensure pants
                   if (subcats.includes('pants')) {
                     const pantOptions = spriteData.clothes['pants'];
                     if (pantOptions && pantOptions.length > 0) {
                       const randPant = pantOptions[Math.floor(Math.random() * pantOptions.length)];
-                      selections.clothes['pants'] = { name: randPant.name, img: randPant.img };
+                      selections.clothes['pants'] = { name: randPant.name, subcategory: 'pants' };
                     }
                   }
                 }
@@ -273,13 +273,13 @@ document.addEventListener("DOMContentLoaded", () => {
               if (shirtOptions && shirtOptions.length > 0) {
                 if (!selections.clothes) selections.clothes = {};
                 const randShirt = shirtOptions[Math.floor(Math.random() * shirtOptions.length)];
-                selections.clothes['basic'] = { name: randShirt.name, img: randShirt.img };
+                selections.clothes['basic'] = { name: randShirt.name, subcategory: 'basic' };
                 // Now ensure pants
                 if (subcats.includes('pants')) {
                   const pantOptions = spriteData.clothes['pants'];
                   if (pantOptions && pantOptions.length > 0) {
                     const randPant = pantOptions[Math.floor(Math.random() * pantOptions.length)];
-                    selections.clothes['pants'] = { name: randPant.name, img: randPant.img };
+                    selections.clothes['pants'] = { name: randPant.name, subcategory: 'pants' };
                   }
                 }
               }
@@ -292,7 +292,7 @@ document.addEventListener("DOMContentLoaded", () => {
         if (skirtOptions && skirtOptions.length > 0 && Math.random() < 0.5) { // 50% chance to pick skirt
           if (!selections.clothes) selections.clothes = {};
           const randSkirt = skirtOptions[Math.floor(Math.random() * skirtOptions.length)];
-          selections.clothes['skirts'] = { name: randSkirt.name, img: randSkirt.img };
+          selections.clothes['skirts'] = { name: randSkirt.name, subcategory: 'skirts' };
           // Do not pick shirt or pants if skirt is picked
         } else {
           // If not picking skirt, pick shirt and ensure pants
@@ -301,13 +301,13 @@ document.addEventListener("DOMContentLoaded", () => {
             if (shirtOptions && shirtOptions.length > 0) {
               if (!selections.clothes) selections.clothes = {};
               const randShirt = shirtOptions[Math.floor(Math.random() * shirtOptions.length)];
-              selections.clothes['basic'] = { name: randShirt.name, img: randShirt.img };
+              selections.clothes['basic'] = { name: randShirt.name, subcategory: 'basic' };
               // Now ensure pants
               if (subcats.includes('pants')) {
                 const pantOptions = spriteData.clothes['pants'];
                 if (pantOptions && pantOptions.length > 0) {
                   const randPant = pantOptions[Math.floor(Math.random() * pantOptions.length)];
-                  selections.clothes['pants'] = { name: randPant.name, img: randPant.img };
+                  selections.clothes['pants'] = { name: randPant.name, subcategory: 'pants' };
                 }
               }
             }
@@ -320,13 +320,13 @@ document.addEventListener("DOMContentLoaded", () => {
           if (shirtOptions && shirtOptions.length > 0) {
             if (!selections.clothes) selections.clothes = {};
             const randShirt = shirtOptions[Math.floor(Math.random() * shirtOptions.length)];
-            selections.clothes['basic'] = { name: randShirt.name, img: randShirt.img };
+            selections.clothes['basic'] = { name: randShirt.name, subcategory: 'basic' };
             // Now ensure pants
             if (subcats.includes('pants')) {
               const pantOptions = spriteData.clothes['pants'];
               if (pantOptions && pantOptions.length > 0) {
                 const randPant = pantOptions[Math.floor(Math.random() * pantOptions.length)];
-                selections.clothes['pants'] = { name: randPant.name, img: randPant.img };
+                selections.clothes['pants'] = { name: randPant.name, subcategory: 'pants' };
               }
             }
           }
@@ -346,7 +346,7 @@ document.addEventListener("DOMContentLoaded", () => {
           if (options && options.length > 0) {
             selections[cat] = {}; // Remove any previous subcat selections
             const randOpt = options[Math.floor(Math.random() * options.length)];
-            selections[cat][randSubcat] = { name: randOpt.name, img: randOpt.img };
+            selections[cat][randSubcat] = { name: randOpt.name, subcategory: randSubcat };
             // Update currentSubheader and re-render grid
             currentSubheader[cat] = randSubcat;
             renderSubcatGrid(cat, randSubcat);
@@ -385,9 +385,9 @@ function updateAvatarPreview(selections) {
   preview.innerHTML = "";
 
   // Always render character first if present
-  if (selections.characters && selections.characters.img) {
+  if (selections.characters && selections.characters.name) {
     const img = document.createElement('img');
-    img.src = selections.characters.img;
+    img.src = getAvatarImgPath('characters', selections.characters);
     img.className = 'avatar-layer';
     preview.appendChild(img);
   }
@@ -398,11 +398,11 @@ function updateAvatarPreview(selections) {
     if (selections[category]) {
       if (typeof selections[category] === 'object' && !Array.isArray(selections[category])) {
         Object.values(selections[category]).forEach(sel => {
-          if (sel && sel.img) {
+          if (sel && sel.name && sel.subcategory) {
             const img = document.createElement('img');
-            img.src = sel.img;
+            img.src = getAvatarImgPath(category, sel);
             img.className = 'avatar-layer';
-            img.onerror = function() { this.style.display = 'none'; }; // Hide broken images
+            img.onerror = function() { this.style.display = 'none'; };
             preview.appendChild(img);
           }
         });
@@ -411,24 +411,29 @@ function updateAvatarPreview(selections) {
   });
 }
 
+function getAvatarImgPath(part, value) {
+  if (!value) return null;
+  if (part === 'characters') {
+    return `/static/images/avatar_parts/characters/${value.name}.png`;
+  } else if (value.subcategory && value.name) {
+    return `/static/images/avatar_parts/${part}/${value.subcategory}/${value.name}.png`;
+  }
+  return null;
+}
+
 function flattenSelections(selections) {
   const flat = {};
-  // Characters and acc are simple
   if (selections.characters && selections.characters.name) {
     flat.characters = selections.characters.name;
   }
-  if (selections.acc && selections.acc.name) {
-    flat.acc = selections.acc.name;
-  }
-  // For hair, clothes, face: find the selected subcat and name
-  ["hair", "clothes", "face"].forEach(category => {
+  ["hair", "clothes", "face", "acc"].forEach(category => {
     if (selections[category]) {
       const subcats = Object.keys(selections[category]);
       if (subcats.length > 0) {
         const subcat = subcats[0];
         const sel = selections[category][subcat];
-        if (sel && sel.name) {
-          flat[category] = { subcategory: subcat, name: sel.name };
+        if (sel && sel.name && sel.subcategory) {
+          flat[category] = { subcategory: sel.subcategory, name: sel.name };
         }
       }
     }

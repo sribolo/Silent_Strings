@@ -299,14 +299,14 @@ def save_avatar():
         # Save avatar parts with subcategory and name for guests (session only)
         def extract_part(val, fallback, use_subcat=False):
             if use_subcat:
-                if isinstance(val, dict):
+                if isinstance(val, dict) and 'subcategory' in val and 'name' in val:
                     return {
                         'subcategory': val.get('subcategory', fallback['subcategory']),
                         'name': val.get('name', fallback['name'])
                     }
                 return fallback
             else:
-                if isinstance(val, dict):
+                if isinstance(val, dict) and 'name' in val:
                     return val.get('name', fallback)
                 elif isinstance(val, str):
                     return val
@@ -325,13 +325,12 @@ def save_avatar():
             'clothes': extract_part(selections.get('clothes'), FALLBACKS['clothes'], use_subcat=True),
             'hair': extract_part(selections.get('hair'), FALLBACKS['hair'], use_subcat=True),
             'face': extract_part(selections.get('face'), FALLBACKS['face'], use_subcat=True),
-            'acc': extract_part(selections.get('acc'), FALLBACKS['acc'])
+            'acc': extract_part(selections.get('acc'), FALLBACKS['acc'], use_subcat=True)
         }
 
         if "user" in session:
             user = User.query.filter_by(email=session["user"]["email"]).first()
             if user:
-                # Store the full selection data including subcategories
                 user.avatar_character = selections.get('characters', {}).get('name')
                 user.avatar_hair = selections.get('hair', {})
                 user.avatar_clothes = selections.get('clothes', {})

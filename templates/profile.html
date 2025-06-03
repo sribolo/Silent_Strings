@@ -16,11 +16,7 @@
                         {% set value = avatar_parts.get(part) %}
                         {% if value %}
                             {% if part == "characters" %}
-                                {% if value is mapping and value.name %}
-                                    <img src="{{ url_for('static', filename='images/avatar_parts/characters/' + value.name + '.png') }}" alt="{{ part }}" class="avatar-layer">
-                                {% elif value is string %}
-                                    <img src="{{ url_for('static', filename='images/avatar_parts/characters/' + value + '.png') }}" alt="{{ part }}" class="avatar-layer">
-                                {% endif %}
+                                <img src="{{ url_for('static', filename='images/avatar_parts/characters/' + (value.name if value is mapping and value.name else value|string) + '.png') }}" alt="{{ part }}" class="avatar-layer">
                             {% elif part == "acc" %}
                                 {% if value is string %}
                                     <img src="{{ url_for('static', filename='images/avatar_parts/acc/' + value + '.png') }}" alt="{{ part }}" class="avatar-layer">
