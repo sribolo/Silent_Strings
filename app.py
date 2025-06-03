@@ -417,8 +417,15 @@ def profile():
 
     def clean_part(val, part):
         if isinstance(val, dict):
-            return val.get("name") or FALLBACKS[part]
-        return val or FALLBACKS[part]
+            # If it's a dict of subcats, get the first subcat's name
+            for v in val.values():
+                if isinstance(v, dict) and 'name' in v:
+                    return v['name']
+                elif isinstance(v, str):
+                    return v
+        elif isinstance(val, str):
+            return val
+        return FALLBACKS[part]
 
     if "user" in session:
         username = session["user"]["username"]
@@ -489,8 +496,14 @@ def game():
 
     def clean_part(val, part):
         if isinstance(val, dict):
-            return val.get("name") or FALLBACKS[part]
-        return val or FALLBACKS[part]
+            for v in val.values():
+                if isinstance(v, dict) and 'name' in v:
+                    return v['name']
+                elif isinstance(v, str):
+                    return v
+        elif isinstance(val, str):
+            return val
+        return FALLBACKS[part]
 
     if "user" in session:
         username = session["user"]["username"]
