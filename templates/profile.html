@@ -21,8 +21,8 @@
                             {% else %}
                                 {# Try to find the subcategory and filename #}
                                 {% set found = false %}
-                                {% for subcat in ['basic', 'skirts', 'pants', 'dress', 'shoes_tiles', 'curly', 'emo', 'extra_long', 'french_curl', 'gentleman', 'spaebuns', 'wavy', 'long_straight', 'midiwave', 'ponytail', 'buzzcut', 'braids', 'bob', 'blush', 'eyes_tiles', 'lipstick', 'glasses', 'beard', 'earring_red', 'earring_emerald', 'earring_red_silver', 'earring_emerald_silver', 'default'] %}
-                                    {% if not found and value in subcat %}
+                                {% for subcat in ['basic', 'skirts', 'pants', 'dress', 'shoes', 'curly', 'emo', 'extra_long', 'french_curl', 'gentleman', 'spacebun', 'wavy', 'long_straight', 'midiwave', 'ponytail', 'buzzcut', 'braids', 'bob', 'blush', 'eyes_tiles', 'lipstick', 'glasses', 'beard', 'earring_red', 'earring_emerald', 'earring_red_silver', 'earring_emerald_silver'] %}
+                                    {% if not found and value.startswith(subcat) %}
                                         <img src="{{ url_for('static', filename='images/avatar_parts/' + part + '/' + subcat + '/' + value + '.png') }}"
                                              alt="{{ part }}" class="profile-avatar">
                                         {% set found = true %}
@@ -30,7 +30,7 @@
                                 {% endfor %}
                                 {# fallback if not found #}
                                 {% if not found %}
-                                    <img src="{{ url_for('static', filename='images/avatar_parts/' + part + '/default/' + value + '.png') }}"
+                                    <img src="{{ url_for('static', filename='images/avatar_parts/' + part + '/' + value + '/' + value + '.png') }}"
                                          alt="{{ part }}" class="profile-avatar">
                                 {% endif %}
                             {% endif %}
