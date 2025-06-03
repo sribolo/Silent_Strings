@@ -19,18 +19,14 @@
                                 <img src="{{ url_for('static', filename='images/avatar_parts/characters/' + value + '.png') }}"
                                      alt="{{ part }}" class="profile-avatar">
                             {% else %}
-                                {# Try to find the subcategory and filename #}
-                                {% set found = false %}
-                                {% for subcat in ['basic', 'skirts', 'pants', 'dress', 'shoes', 'curly', 'emo', 'extra_long', 'french_curl', 'gentleman', 'spacebun', 'wavy', 'long_straight', 'midiwave', 'ponytail', 'buzzcut', 'braids', 'bob', 'blush', 'eyes_tiles', 'lipstick', 'glasses', 'beard', 'earring_red', 'earring_emerald', 'earring_red_silver', 'earring_emerald_silver'] %}
-                                    {% if not found and value.startswith(subcat) %}
-                                        <img src="{{ url_for('static', filename='images/avatar_parts/' + part + '/' + subcat + '/' + value + '.png') }}"
+                                {% if value is mapping %}
+                                    {% for subcat, data in value.items() %}
+                                        <img src="{{ url_for('static', filename='images/avatar_parts/' + part + '/' + subcat + '/' + data.name + '.png') }}"
                                              alt="{{ part }}" class="profile-avatar">
-                                        {% set found = true %}
-                                    {% endif %}
-                                {% endfor %}
-                                {# fallback if not found #}
-                                {% if not found %}
-                                    <img src="{{ url_for('static', filename='images/avatar_parts/' + part + '/' + value + '/' + value + '.png') }}"
+                                    {% endfor %}
+                                {% else %}
+                                    {# Fallback for old data structure #}
+                                    <img src="{{ url_for('static', filename='images/avatar_parts/' + part + '/default/' + value + '.png') }}"
                                          alt="{{ part }}" class="profile-avatar">
                                 {% endif %}
                             {% endif %}

@@ -53,10 +53,10 @@ class User(db.Model):
     email = db.Column(db.String(120), unique=True, nullable=False)
     pwd_hash = db.Column(db.String(256), nullable=False)
     avatar_character = db.Column(db.String(120), nullable=True)
-    avatar_hair = db.Column(db.String(120), nullable=True)
-    avatar_clothes = db.Column(db.String(120), nullable=True)
-    avatar_acc = db.Column(db.String(120), nullable=True)
-    avatar_face = db.Column(db.String(120), nullable=True)
+    avatar_hair = db.Column(db.JSON, nullable=True)  # Store full hair data
+    avatar_clothes = db.Column(db.JSON, nullable=True)  # Store full clothes data
+    avatar_acc = db.Column(db.JSON, nullable=True)  # Store full accessories data
+    avatar_face = db.Column(db.JSON, nullable=True)  # Store full face data
 
 # === CSRF Protection ===
 csrf = CSRFProtect(app)
@@ -297,41 +297,17 @@ def save_avatar():
 
         session['agent_name'] = name
         session['avatar_parts'] = selections
-        print("Avatar saved to session:", session['avatar_parts'])
 
         if "user" in session:
             user = User.query.filter_by(email=session["user"]["email"]).first()
             if user:
-                char = selections.get('characters')
-                # For subcategory-based selections, pick the first selected subcat (if any)
-                def get_first_subcat_name(sel):
-                    if isinstance(sel, dict):
-                        for v in sel.values():
-                            if isinstance(v, dict) and 'name' in v:
-                                return v['name']
-                            elif isinstance(v, str):
-                                return v
-                    return None
-                def get_first_subcat(sel):
-                    if isinstance(sel, dict):
-                        for v in sel.values():
-                            if isinstance(v, dict) and 'name' in v:
-                                return v
-                            elif isinstance(v, str):
-                                return {'name': v, 'img': ''}
-                    return None
-
-                hair = selections.get('hair')
-                clothes = selections.get('clothes')
-                acc = selections.get('acc')
-                face = selections.get('face')
-                user.avatar_character = char['name'] if isinstance(char, dict) else char
-                user.avatar_hair      = get_first_subcat_name(hair)
-                user.avatar_clothes   = get_first_subcat_name(clothes)
-                user.avatar_acc       = get_first_subcat_name(acc)
-                user.avatar_face      = get_first_subcat_name(face)
+                # Store the full selection data including subcategories
+                user.avatar_character = selections.get('characters', {}).get('name')
+                user.avatar_hair = selections.get('hair', {})
+                user.avatar_clothes = selections.get('clothes', {})
+                user.avatar_acc = selections.get('acc', {})
+                user.avatar_face = selections.get('face', {})
                 db.session.commit()
-                print("Avatar saved to database for user:", user.email)
 
         return jsonify(status="ok")
     except Exception as e:

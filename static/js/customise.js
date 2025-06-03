@@ -293,15 +293,7 @@ document.addEventListener("DOMContentLoaded", () => {
           if (!selections.clothes) selections.clothes = {};
           const randSkirt = skirtOptions[Math.floor(Math.random() * skirtOptions.length)];
           selections.clothes['skirts'] = { name: randSkirt.name, img: randSkirt.img };
-          // Pick a shirt, but not pants
-          if (subcats.includes('basic')) {
-            const shirtOptions = spriteData.clothes['basic'];
-            if (shirtOptions && shirtOptions.length > 0) {
-              const randShirt = shirtOptions[Math.floor(Math.random() * shirtOptions.length)];
-              selections.clothes['basic'] = { name: randShirt.name, img: randShirt.img };
-            }
-          }
-          // Do not pick pants if skirt is picked
+          // Do not pick shirt or pants if skirt is picked
         } else {
           // If not picking skirt, pick shirt and ensure pants
           if (subcats.includes('basic')) {

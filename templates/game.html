@@ -15,7 +15,14 @@
               {% if part == "characters" %}
                 <img src="{{ url_for('static', filename='images/avatar_parts/characters/' + value + '.png') }}" alt="{{ part }}" class="avatar-layer">
               {% else %}
-                <img src="{{ url_for('static', filename='images/avatar_parts/' + part + '/default/' + value + '.png') }}" alt="{{ part }}" class="avatar-layer">
+                {% if value is mapping %}
+                  {% for subcat, data in value.items() %}
+                    <img src="{{ url_for('static', filename='images/avatar_parts/' + part + '/' + subcat + '/' + data.name + '.png') }}" alt="{{ part }}" class="avatar-layer">
+                  {% endfor %}
+                {% else %}
+                  {# Fallback for old data structure #}
+                  <img src="{{ url_for('static', filename='images/avatar_parts/' + part + '/default/' + value + '.png') }}" alt="{{ part }}" class="avatar-layer">
+                {% endif %}
               {% endif %}
             {% endif %}
           {% endfor %}

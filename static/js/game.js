@@ -318,15 +318,19 @@ function randomNpcAvatar(spriteData) {
 
   // Other categories (hair, face, acc)
   ['hair', 'face', 'acc'].forEach(category => {
-    const subcats = spriteData[category];
-    if (subcats && Object.keys(subcats).length > 0) {
-      const subcatNames = Object.keys(subcats);
-      const subcat = getRandomElement(subcatNames);
-      const options = subcats[subcat];
-      if (options && options.length > 0) {
-        const part = getRandomElement(options);
-        if (!avatar[category]) avatar[category] = {};
-        avatar[category][subcat] = { name: part.name, img: part.img };
+    if (spriteData[category]) {
+      const subcats = Object.keys(spriteData[category]);
+      if (subcats.length > 0) {
+        // Pick a random subcat with at least one option
+        let validSubcats = subcats.filter(subcat => (spriteData[category][subcat] && spriteData[category][subcat].length > 0));
+        if (validSubcats.length === 0) return;
+        const randSubcat = getRandomElement(validSubcats);
+        const options = spriteData[category][randSubcat];
+        if (options && options.length > 0) {
+          avatar[category] = {}; // Remove any previous subcat selections
+          const randOpt = getRandomElement(options);
+          avatar[category][randSubcat] = { name: randOpt.name, img: randOpt.img };
+        }
       }
     }
   });
