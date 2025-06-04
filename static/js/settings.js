@@ -8,22 +8,22 @@ document.addEventListener('DOMContentLoaded', function() {
     // Immediate effect for music toggle
     if (musicToggle && bgm) {
         // Set initial state based on checkbox
-        bgm.muted = !musicToggle.checked;
         if (!musicToggle.checked) {
             bgm.pause();
+            bgm.muted = true;
         } else {
-            // Only play if not already playing
+            bgm.muted = false;
             if (bgm.paused) bgm.play();
         }
 
         // Listen for changes
         musicToggle.addEventListener('change', function() {
-            bgm.muted = !musicToggle.checked;
             if (!musicToggle.checked) {
                 bgm.pause();
-                // Optionally save to localStorage
+                bgm.muted = true;
                 localStorage.setItem('music_enabled', 'false');
             } else {
+                bgm.muted = false;
                 bgm.play();
                 localStorage.setItem('music_enabled', 'true');
             }
@@ -43,6 +43,16 @@ document.addEventListener('DOMContentLoaded', function() {
             })
             .then(res => res.json())
             .then(data => {
+                // Apply settings immediately after saving
+                if (bgm) {
+                    if (!musicToggle.checked) {
+                        bgm.pause();
+                        bgm.muted = true;
+                    } else {
+                        bgm.muted = false;
+                        if (bgm.paused) bgm.play();
+                    }
+                }
                 alert('Settings saved!');
             })
             .catch(error => {

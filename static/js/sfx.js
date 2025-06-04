@@ -14,6 +14,16 @@ const sfx = {
         const bgm = document.getElementById('bgm');
         if (bgm) {
             bgm.volume = 0.3;
+            
+            // Check localStorage for music state
+            const musicEnabled = localStorage.getItem('music_enabled');
+            if (musicEnabled === 'false') {
+                bgm.pause();
+                bgm.muted = true;
+            } else {
+                bgm.muted = false;
+                if (bgm.paused) bgm.play();
+            }
         }
     },
     
@@ -58,19 +68,11 @@ document.addEventListener('DOMContentLoaded', () => {
             } catch(e) { /* ignore errors */ }
         }
 
-        // Restore music enable/disable state
-        const musicEnabled = localStorage.getItem('music_enabled');
-        if (musicEnabled === 'false') {
-            bgm.muted = true;
-            bgm.pause();
-        } else {
-            bgm.muted = false;
-            if (bgm.paused) bgm.play();
-        }
-
         // Save current BGM time before leaving the page
         window.addEventListener('beforeunload', function() {
-            localStorage.setItem('bgm-time', bgm.currentTime);
+            if (!bgm.muted) {
+                localStorage.setItem('bgm-time', bgm.currentTime);
+            }
         });
     }
     // ==== End BGM Resume & Persistent Enable/Disable Logic ====
