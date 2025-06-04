@@ -430,11 +430,13 @@ function flattenSelections(selections) {
     if (selections[category]) {
       const subcats = Object.keys(selections[category]);
       if (subcats.length > 0) {
-        const subcat = subcats[0];
-        const sel = selections[category][subcat];
-        if (sel && sel.name && sel.subcategory) {
-          flat[category] = { subcategory: sel.subcategory, name: sel.name };
-        }
+        flat[category] = {};
+        subcats.forEach(subcat => {
+          const sel = selections[category][subcat];
+          if (sel && sel.name && sel.subcategory) {
+            flat[category][subcat] = { subcategory: sel.subcategory, name: sel.name };
+          }
+        });
       }
     }
   });
