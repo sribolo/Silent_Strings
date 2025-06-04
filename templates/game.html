@@ -13,15 +13,22 @@
             {% set value = avatar_parts.get(part) %}
             {% if value %}
               {% if part == "characters" %}
-                <img src="{{ url_for('static', filename='images/avatar_parts/characters/' + (value.name if value is mapping and value.name else value|string) + '.png') }}" alt="{{ part }}" class="avatar-layer">
+                <img src="{{ url_for('static', filename='images/avatar_parts/characters/' + (value.name if value is mapping and value.name else value|string) + '.png') }}"
+                     alt="{{ part }}" class="avatar-layer">
               {% else %}
-                {% if value is mapping and value.subcategory and value.name %}
-                  <img src="{{ url_for('static', filename='images/avatar_parts/' + part + '/' + value.subcategory + '/' + value.name + '.png') }}" alt="{{ part }}" class="avatar-layer">
+                {% if value is mapping %}
+                  {# Loop over all subcategories for this part #}
+                  {% for subcat, sel in value.items() %}
+                    {% if sel and sel.name and sel.subcategory %}
+                      <img src="{{ url_for('static', filename='images/avatar_parts/' + part + '/' + sel.subcategory + '/' + sel.name + '.png') }}"
+                           alt="{{ part }}-{{ subcat }}" class="avatar-layer">
+                    {% endif %}
+                  {% endfor %}
                 {% endif %}
               {% endif %}
             {% endif %}
           {% endfor %}
-        </div>
+          
         <!-- Map building buttons -->
         <button class="map-area-btn map-area-bank" data-mission="bank"></button>
         <button class="map-area-btn map-area-school" data-mission="school"></button>
