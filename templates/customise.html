@@ -1,49 +1,49 @@
 {% extends "base.html" %}
-{% block title %}Silent Strings{% endblock %}
-{% block content %}
+
+{% block title %}Customise{% endblock %}
+
 {% block extra_css %}
 <link rel="stylesheet" href="{{ url_for('static', filename='css/game.css') }}">
 {% endblock %}
-{% block content %}
-  <script defer src="{{ url_for('static', filename='js/customise.js') }}"></script>
 
-<body>
-  <div class="bg-container">
+{% block extra_scripts %}
+<script defer src="{{ url_for('static', filename='js/customise.js') }}"></script>
+{% endblock %}
+
+{% block content %}
+<div class="bg-container">
     <img src="{{ url_for('static', filename='images/background.gif') }}" class="background" alt="Background">
     <div class="darken"></div>
-  </div>
+</div>
 
-  <div class="overlay">
+<div class="overlay">
     <div class="customise-container pixelated-border">
-      <h1 class="customise-title">Customise Your Avatar</h1>
-      <form id="customise-form" onsubmit="return false">
-        <div class="customise-flex">
-          <!-- BIG AVATAR PREVIEW ON THE LEFT -->
-          <div>
-            <div id="avatar-preview" class="avatar-preview-big"></div>
-            <input type="text" id="agent-name" name="agent_name" placeholder="Agent Name" required value="{{ name }}">
-            <button id="save-avatar" type="button">Save Avatar</button>
-          </div>
-
-          <!-- CHOICES & TABS ON THE RIGHT -->
-          <div id="character-options">
-            <div class="tab-bar">
-              <button type="button" class="tab-button active" data-category="characters">Characters</button>
-              <button type="button" class="tab-button" data-category="clothes">Clothes</button>
-              <button type="button" class="tab-button" data-category="hair">Hair</button>
-              <button type="button" class="tab-button" data-category="face">Face</button>
-              <button type="button" class="tab-button" data-category="acc">Accessories</button>
+        <h1 class="customise-title">Customise Your Avatar</h1>
+        <form id="customise-form" onsubmit="return false">
+            <div class="customise-flex">
+                <!-- BIG AVATAR PREVIEW ON THE LEFT -->
+                <div>
+                    <div id="avatar-preview" class="avatar-preview-big"></div>
+                    <input type="text" id="agent-name" name="agent_name" placeholder="Agent Name" required value="{{ name }}">
+                    <button id="save-avatar" type="button">Save Avatar</button>
+                </div>
+                <!-- CHOICES & TABS ON THE RIGHT -->
+                <div id="character-options">
+                    <div class="tab-bar">
+                        <button type="button" class="tab-button active" data-category="characters">Characters</button>
+                        <button type="button" class="tab-button" data-category="clothes">Clothes</button>
+                        <button type="button" class="tab-button" data-category="hair">Hair</button>
+                        <button type="button" class="tab-button" data-category="face">Face</button>
+                        <button type="button" class="tab-button" data-category="acc">Accessories</button>
+                    </div>
+                    <div id="grid-characters" class="grid-container"></div>
+                    <div id="grid-clothes" class="grid-container hidden"></div>
+                    <div id="grid-hair" class="grid-container hidden"></div>
+                    <div id="grid-face" class="grid-container hidden"></div>
+                    <div id="grid-acc" class="grid-container hidden"></div>
+                </div>
             </div>
-            <div id="grid-characters" class="grid-container"></div>
-            <div id="grid-clothes" class="grid-container hidden"></div>
-            <div id="grid-hair" class="grid-container hidden"></div>
-            <div id="grid-face" class="grid-container hidden"></div>
-            <div id="grid-acc" class="grid-container hidden"></div>
-          </div>
-        </div>
-      </form>
+        </form>
     </div>
-  </div>
-</body>
-</html>
+</div>
 {% endblock %}
