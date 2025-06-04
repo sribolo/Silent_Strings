@@ -1,11 +1,6 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Settings</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
-    <script src="{{ url_for('static', filename='js/settings.js') }}"></script>
-</head>
+{% extends "base.html" %}
+{% block title %}Settings{% endblock %}
+{% block content %}
 <body>
     <div class="bg-container">
         <img src="{{ url_for('static', filename='images/background.gif') }}" class="background">
@@ -35,3 +30,4 @@
     </div>
 </body>
 </html>
+{% endblock %}

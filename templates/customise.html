@@ -1,11 +1,12 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>Customise Your Avatar</title>
-  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+{% extends "base.html" %}
+{% block title %}Silent Strings{% endblock %}
+{% block content %}
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/game.css') }}">
+{% endblock %}
+{% block content %}
   <script defer src="{{ url_for('static', filename='js/customise.js') }}"></script>
-</head>
+
 <body>
   <div class="bg-container">
     <img src="{{ url_for('static', filename='images/background.gif') }}" class="background" alt="Background">
@@ -45,3 +46,4 @@
   </div>
 </body>
 </html>
+{% endblock %}

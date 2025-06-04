@@ -5,10 +5,10 @@ const sfx = {
     
     // Initialize sound effects
     init() {
-        // Preload UI sounds
-        /*this.loadSound('click', '/static/sfx/click.mp3');
-        this.loadSound('hover', '/static/sfx/hover.mp3');
-        this.loadSound('success', '/static/sfx/success.mp3');*/
+        // Preload UI sounds if needed
+        // this.loadSound('click', '/static/sfx/click.mp3');
+        // this.loadSound('hover', '/static/sfx/hover.mp3');
+        // this.loadSound('success', '/static/sfx/success.mp3');
         
         // Set BGM volume using the HTML audio element
         const bgm = document.getElementById('bgm');
@@ -43,10 +43,28 @@ const sfx = {
     }
 };
 
-// Initialize sounds when document is ready
+// Initialize sounds and BGM sync when document is ready
 document.addEventListener('DOMContentLoaded', () => {
     sfx.init();
     
+    // ==== BGM Resume Logic ====
+    const bgm = document.getElementById('bgm');
+    if (bgm) {
+        // Restore previous BGM time (if available)
+        const lastTime = localStorage.getItem('bgm-time');
+        if (lastTime !== null) {
+            try {
+                bgm.currentTime = parseFloat(lastTime);
+            } catch(e) { /* ignore errors */ }
+        }
+
+        // Save current BGM time before leaving the page
+        window.addEventListener('beforeunload', function() {
+            localStorage.setItem('bgm-time', bgm.currentTime);
+        });
+    }
+    // ==== End BGM Resume Logic ====
+
     // Add hover sound to all pixel buttons
     document.querySelectorAll('.pixel-btn').forEach(btn => {
         btn.addEventListener('mouseenter', () => sfx.play('hover'));
@@ -57,4 +75,4 @@ document.addEventListener('DOMContentLoaded', () => {
     document.querySelectorAll('button').forEach(btn => {
         btn.addEventListener('click', () => sfx.play('click'));
     });
-}); 
+});
