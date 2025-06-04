@@ -1411,18 +1411,15 @@ input::placeholder {
 
 #ui-overlay {
   position: absolute;
-  top: 16px;
-  right: 16px;
-  left: auto;
+  top: 10px;
+  left: 10px;
   z-index: 30;
   color: #fff;
   font-family: 'Share Tech Mono', monospace;
   font-size: 1.2rem;
-  background: rgba(40,32,90,0.72);
-  border-radius: 14px;
-  padding: 10px 20px;
-  border: 2.5px solid #6C5CE7;
-  box-shadow: 0 2px 12px #6C5CE755;
+  background: rgba(40,32,90,0.56);
+  border-radius: 12px;
+  padding: 8px 16px;
 }
 
 /* --- END OF GAME-SPECIFIC STYLES --- */
