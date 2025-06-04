@@ -640,14 +640,20 @@ button:hover {
 }
 
 .avatar-layer {
-  width: 128px;
-  height: 128px;
+  width: 64px;
+  height: 64px;
   position: absolute;
   left: 50%;
   top: 50%;
-  transform: translate(-50%, -50%) scale(3);
+  transform: translate(-50%, -50%);
   image-rendering: pixelated;
   pointer-events: none;
+}
+
+.avatar-preview-big .avatar-layer {
+  width: 128px;
+  height: 128px;
+  transform: translate(-50%, -50%) scale(3);
 }
 
 /* --- Avatar Choice Thumbnails --- */
