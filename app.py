@@ -538,6 +538,8 @@ def game():
         flash("Please select at least one clothing item", "warning")
         return redirect(url_for('customise'))
 
+    print("DEBUG avatar_parts for game:", avatar_parts)
+
     return render_template('game.html', avatar_parts=avatar_parts, is_guest=is_guest, username=username)
 
 # Example mission data (expand as needed)
