@@ -623,8 +623,8 @@ button:hover {
 }
 /* --- Avatar Preview --- */
 .avatar-preview-big {
-  width: 128px;
-  height: 128px;
+  width: 192px;
+  height: 192px;
   position: relative;
   background: #23232b;
   border: 2px solid #6C5CE7;
@@ -644,8 +644,8 @@ button:hover {
   left: 50%;
   top: 50%;
   transform: translate(-50%, -50%);
-  width: 128px;
-  height: 128px;
+  width: 256px;
+  height: 256px;
   image-rendering: pixelated;
   pointer-events: none;
 }
