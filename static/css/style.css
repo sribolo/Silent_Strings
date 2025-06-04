@@ -623,12 +623,9 @@ button:hover {
 }
 /* --- Avatar Preview --- */
 .avatar-preview-big {
-  width: 144px;
-  height: 144px;
-  position: relative;
-  background: #23232b;
-  border: 2px solid #6C5CE7;
-  border-radius: 12px;
+  width: 96px;     /* was 144px */
+  height: 96px;    /* was 144px */
+  border-radius: 10px;
   margin-bottom: 16px;
   box-shadow: 0 2px 8px #0005;
   display: flex;
@@ -637,15 +634,17 @@ button:hover {
   margin-left: auto;
   margin-right: auto;
   overflow: hidden;
+  background: #23232b;
+  border: 2px solid #6C5CE7;
 }
 
 .avatar-preview-big .avatar-layer {
-  width: 96px;
-  height: 96px;
+  width: 48px;
+  height: 48px;
   position: absolute;
   left: 50%;
   top: 50%;
-  transform: translate(-50%, -50%) scale(2);
+  transform: translate(-50%, -50%) scale(1);
   image-rendering: pixelated;
   pointer-events: none;
 }
@@ -717,11 +716,11 @@ button:hover {
 
 #agent-name {
   width: 85%;
-  padding: 8px;
-  margin: 14px 0;
+  padding: 6px;
+  margin: 10px 0;
   border-radius: 8px;
   border: 1.5px solid #18181b;
-  font-size: 1.1em;
+  font-size: 1em;
   background: #1c1c22;
   color: #6C5CE7;
 }
@@ -731,8 +730,8 @@ button:hover {
   color: #23232b;
   border: none;
   border-radius: 8px;
-  padding: 10px 32px;
-  font-size: 1.2em;
+  padding: 8px 24px;
+  font-size: 1em;
   font-family: 'Press Start 2P', monospace;
   cursor: pointer;
   margin-top: 10px;
@@ -766,9 +765,9 @@ button:hover {
 .customise-flex {
   display: flex;
   align-items: flex-start;
-  gap: 32px;
+  gap: 18px;
   justify-content: center;
-  margin-top: 32px;
+  margin-top: 18px;
   width: 100%;
 }
 
@@ -1353,33 +1352,45 @@ input::placeholder {
   background: #23232b;
 }
 
-#game-map .avatar, #game-map #player-avatar, #game-map .npc-avatar, #game-map .npc-avatar img, #game-map .avatar-layer {
-  width: 64px !important;
-  height: 64px !important;
+#game-map .npc-avatar img,
+#game-map .avatar, 
+#game-map #player-avatar, 
+#game-map .npc-avatar, 
+#game-map .avatar-layer {
+  width: 64px;
+  height: 64px;
   image-rendering: pixelated;
 }
 
-#player-avatar {
-  background-repeat: no-repeat;
-  background-size: 256px 128px;
-  left: 100px;
-  top: 100px;
-  transition: top 0.2s linear, left 0.2s linear;
-  z-index: 20;
+/* Main player and all NPC containers: set map sprite size */
+#player-avatar,
+.npc-avatar {
   position: absolute;
+  width: 64px;
+  height: 64px;
+  z-index: 10;
+  pointer-events: none; /* prevent them from blocking clicks */
 }
 
-#game-map .npc-avatar {
-  width: 32px;
-  height: 32px;
-  z-index: 5;
+/* All layered images for player/NPC: perfect stacking! */
+#player-avatar .avatar-layer,
+.npc-avatar .avatar-layer {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 64px;
+  height: 64px;
+  image-rendering: pixelated;
   pointer-events: none;
-  position: absolute;
+  object-fit: none;
+  margin: 0;
+  padding: 0;
+  z-index: 1;
 }
-#game-map .npc-avatar img {
-  width: 32px;
-  height: 32px;
-  image-rendering: pixelated;
+
+/* Optionally, if you want to allow click/hover on player: */
+#player-avatar {
+  pointer-events: auto;
 }
 
 /* Map area buttons */
@@ -1410,16 +1421,20 @@ input::placeholder {
 }
 
 #ui-overlay {
+  z-index: 50;
   position: absolute;
-  top: 10px;
-  left: 10px;
-  z-index: 30;
+  top: 16px;
+  right: 16px;
+  left: auto;
   color: #fff;
   font-family: 'Share Tech Mono', monospace;
   font-size: 1.2rem;
-  background: rgba(40,32,90,0.56);
-  border-radius: 12px;
-  padding: 8px 16px;
+  background: rgba(40,32,90,0.72);
+  border-radius: 14px;
+  padding: 10px 20px;
+  border: 2.5px solid #6C5CE7;
+  box-shadow: 0 2px 12px #6C5CE755;
 }
+
 
 /* --- END OF GAME-SPECIFIC STYLES --- */
