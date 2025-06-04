@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% block title %}Main Game{% endblock %}
 {% block extra_css %}
-  <link rel="stylesheet" href="{{ url_for('static', filename='css/game.css') }}">
+  <!-- Only style.css is needed now -->
 {% endblock %}
 {% block content %}
     <div class="game-viewport">
@@ -16,14 +16,9 @@
                 <img src="{{ url_for('static', filename='images/avatar_parts/characters/' + (value.name if value is mapping and value.name else value|string) + '.png') }}"
                      alt="{{ part }}" class="avatar-layer">
               {% else %}
-                {% if value is mapping %}
-                  {# Loop over all subcategories for this part #}
-                  {% for subcat, sel in value.items() %}
-                    {% if sel and sel.name and sel.subcategory %}
-                      <img src="{{ url_for('static', filename='images/avatar_parts/' + part + '/' + sel.subcategory + '/' + sel.name + '.png') }}"
-                           alt="{{ part }}-{{ subcat }}" class="avatar-layer">
-                    {% endif %}
-                  {% endfor %}
+                {% if value is mapping and value.subcategory and value.name %}
+                  <img src="{{ url_for('static', filename='images/avatar_parts/' + part + '/' + value.subcategory + '/' + value.name + '.png') }}"
+                       alt="{{ part }}" class="avatar-layer">
                 {% endif %}
               {% endif %}
             {% endif %}
