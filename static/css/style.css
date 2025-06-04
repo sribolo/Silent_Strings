@@ -623,8 +623,8 @@ button:hover {
 }
 /* --- Avatar Preview --- */
 .avatar-preview-big {
-  width: 192px;
-  height: 192px;
+  width: 144px;
+  height: 144px;
   position: relative;
   background: #23232b;
   border: 2px solid #6C5CE7;
@@ -639,24 +639,17 @@ button:hover {
   overflow: hidden;
 }
 
-.avatar-layer {
-  width: 64px;
-  height: 64px;
+.avatar-preview-big .avatar-layer {
+  width: 96px;
+  height: 96px;
   position: absolute;
   left: 50%;
   top: 50%;
-  transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%) scale(2);
   image-rendering: pixelated;
   pointer-events: none;
 }
 
-.avatar-preview-big .avatar-layer {
-  width: 128px;
-  height: 128px;
-  transform: translate(-50%, -50%) scale(3);
-}
-
-/* --- Avatar Choice Thumbnails --- */
 .avatar-choice {
   width: 32px;
   height: 32px;
@@ -680,40 +673,46 @@ button:hover {
 .grid-container {
   display: flex;
   flex-wrap: wrap;
-  gap: 6px;
+  gap: 10px;
   margin: 12px 0;
   background: #18181b;
-  padding: 12px;
-  border-radius: 8px;
+  padding: 16px;
+  border-radius: 10px;
   min-height: 48px;
   max-width: 100%;
   width: 100%;
   max-height: 340px;
   overflow-y: auto;
+  justify-content: center;
 }
 
 .tab-bar {
-  margin-bottom: 8px;
+  margin-bottom: 16px;
   display: flex;
-  gap: 8px;
+  gap: 16px;
+  justify-content: center;
 }
 
 .tab-button {
   background: #23232b;
   color: #6C5CE7;
   border: 2px solid #5757B3;
-  border-radius: 6px;
-  padding: 6px 18px;
+  border-radius: 8px;
+  padding: 10px 28px;
   font-family: 'Press Start 2P', monospace;
-  font-size: 0.9em;
+  font-size: 1.1em;
   cursor: pointer;
-  transition: background 0.2s, border 0.2s;
+  transition: background 0.2s, border 0.2s, color 0.2s;
+  margin-bottom: 0;
+  margin-top: 0;
+  box-shadow: 0 2px 8px #0002;
 }
 
 .tab-button.active {
   background: #6C5CE7;
   color: #23232b;
   border: 2px solid #6C5CE7;
+  box-shadow: 0 0 8px #6C5CE7;
 }
 
 #agent-name {
@@ -1062,8 +1061,8 @@ input::placeholder {
   text-shadow: 0 0 6px #ff6b6b77;
 }
 .profile-avatar-wrap {
-  width: 128px;
-  height: 128px;
+  width: 144px;
+  height: 144px;
   margin: 0 auto 24px auto;
   display: flex;
   align-items: center;
@@ -1073,15 +1072,24 @@ input::placeholder {
   border-radius: 18px;
   box-shadow: 0 2px 8px #0005;
   overflow: hidden;
+  position: relative;
+}
+
+.profile-avatar-layer {
+  width: 96px;
+  height: 96px;
+  position: relative;
+  left: unset;
+  top: unset;
+  transform: none;
+  image-rendering: pixelated;
+  pointer-events: none;
 }
 
 .profile-avatar {
-  width: 112px;
-  height: 112px;
-  image-rendering: pixelated;
-  border-radius: 10px;
-  display: block;
+  display: none; /* Hide old single-image avatar if present */
 }
+
 /* Pixel Background (full-page, behind everything) */
 .pixel-bg-wrap {
   position: fixed;
@@ -1403,15 +1411,18 @@ input::placeholder {
 
 #ui-overlay {
   position: absolute;
-  top: 10px;
-  left: 10px;
+  top: 16px;
+  right: 16px;
+  left: auto;
   z-index: 30;
   color: #fff;
   font-family: 'Share Tech Mono', monospace;
   font-size: 1.2rem;
-  background: rgba(40,32,90,0.56);
-  border-radius: 12px;
-  padding: 8px 16px;
+  background: rgba(40,32,90,0.72);
+  border-radius: 14px;
+  padding: 10px 20px;
+  border: 2.5px solid #6C5CE7;
+  box-shadow: 0 2px 12px #6C5CE755;
 }
 
 /* --- END OF GAME-SPECIFIC STYLES --- */

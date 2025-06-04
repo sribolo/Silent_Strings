@@ -6,7 +6,7 @@ const SPRITE_SIZE = 64;
 const FRAMES = 8;
 const ROWS = 4; // down, left, right, up
 
-let x = 100, y = 100; // Start pos
+let x = 16, y = 16; // Start pos
 let direction = 0; // 0=down, 1=left, 2=right, 3=up
 let frame = 0;
 let animInterval = null;
