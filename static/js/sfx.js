@@ -47,7 +47,7 @@ const sfx = {
 document.addEventListener('DOMContentLoaded', () => {
     sfx.init();
     
-    // ==== BGM Resume Logic ====
+    // ==== BGM Resume & Persistent Enable/Disable Logic ====
     const bgm = document.getElementById('bgm');
     if (bgm) {
         // Restore previous BGM time (if available)
@@ -58,12 +58,22 @@ document.addEventListener('DOMContentLoaded', () => {
             } catch(e) { /* ignore errors */ }
         }
 
+        // Restore music enable/disable state
+        const musicEnabled = localStorage.getItem('music_enabled');
+        if (musicEnabled === 'false') {
+            bgm.muted = true;
+            bgm.pause();
+        } else {
+            bgm.muted = false;
+            if (bgm.paused) bgm.play();
+        }
+
         // Save current BGM time before leaving the page
         window.addEventListener('beforeunload', function() {
             localStorage.setItem('bgm-time', bgm.currentTime);
         });
     }
-    // ==== End BGM Resume Logic ====
+    // ==== End BGM Resume & Persistent Enable/Disable Logic ====
 
     // Add hover sound to all pixel buttons
     document.querySelectorAll('.pixel-btn').forEach(btn => {
@@ -75,4 +85,21 @@ document.addEventListener('DOMContentLoaded', () => {
     document.querySelectorAll('button').forEach(btn => {
         btn.addEventListener('click', () => sfx.play('click'));
     });
+
+    // ==== Listen for settings change (only on settings page) ====
+    const musicToggle = document.getElementById('music-toggle');
+    if (musicToggle && bgm) {
+        musicToggle.addEventListener('change', function() {
+            if (musicToggle.checked) {
+                bgm.muted = false;
+                bgm.play();
+                localStorage.setItem('music_enabled', 'true');
+            } else {
+                bgm.muted = true;
+                bgm.pause();
+                localStorage.setItem('music_enabled', 'false');
+            }
+        });
+    }
+    // ==== End settings listener ====
 });
