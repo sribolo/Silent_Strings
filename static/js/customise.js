@@ -20,7 +20,7 @@ document.addEventListener("DOMContentLoaded", () => {
       extra_long: "Extra Long",
       french_curl: "French Curl",
       gentleman: "Gentleman",
-      spaebuns: "Space Buns",
+      spacebun: "Space Buns",
       wavy: "Wavy",
       long_straight: "Long Straight",
       midiwave: "Midi Wave",

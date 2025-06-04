@@ -349,7 +349,11 @@ def save_avatar():
                 char = selections.get('characters')
                 user.avatar_character = char.get('name') if isinstance(char, dict) else char
                 user.avatar_hair = selections.get('hair', {})
-                user.avatar_clothes = selections.get('clothes', {}) if isinstance(selections.get('clothes', {}), dict) else {}
+                clothes = selections.get('clothes', {})
+                if isinstance(clothes, dict):
+                    user.avatar_clothes = clothes
+                else:
+                    user.avatar_clothes = {}
                 user.avatar_acc = selections.get('acc', {})
                 user.avatar_face = selections.get('face', {})
                 db.session.commit()
@@ -362,9 +366,17 @@ def save_avatar():
 @app.route('/get-avatar')
 def get_avatar():
     avatar = session.get("avatar_parts")
-    if avatar:
-        return jsonify(name=session.get("user","Agent"), selections=avatar)
-    return jsonify(error="No avatar data found"), 404
+    if not avatar:
+        return jsonify(error="No avatar data found"), 404
+
+    if "user" in session:
+        name = session["user"].get("username", "Agent")
+    elif "agent_name" in session:
+        name = session.get("agent_name", "Agent")
+    else:
+        name = "Agent"
+    return jsonify(name=name, selections=avatar)
+
 
 @app.route('/set_avatar', methods=['POST'])
 def set_avatar():
@@ -404,7 +416,7 @@ def forgot_password():
 
 @app.route('/reset-password/<token>', methods=['GET', 'POST'])
 def reset_password(token):
-    form = ResetPasswordForm()  # <-- Make sure this exists and is imported!
+    form = ResetPasswordForm() 
     try:
         email = s.loads(token, salt='reset-password', max_age=3600)
     except Exception:
@@ -434,10 +446,11 @@ def profile():
 
         user = User.query.filter_by(email=email).first()
         if user:
+            clothes = user.avatar_clothes if isinstance(user.avatar_clothes, dict) else {}
             avatar_parts = {
                 'characters': user.avatar_character,
                 'hair': user.avatar_hair,
-                'clothes': user.avatar_clothes,
+                'clothes': clothes,
                 'acc': user.avatar_acc,
                 'face': user.avatar_face
             }
@@ -455,6 +468,8 @@ def profile():
         flash("Please complete your avatar customization first", "warning")
         return redirect(url_for('customise'))
 
+    print("DEBUG avatar_parts for profile:", avatar_parts)
+
     return render_template(
         "profile.html",
         username=username,
@@ -470,6 +485,7 @@ def settings():
     return render_template('settings.html', sfx_enabled=sfx_enabled, music_enabled=music_enabled)
 
 @app.route('/save-settings', methods=['POST'])
+@csrf.exempt
 def save_settings():
     data = request.get_json()
     session['sfx_enabled'] = data.get('sfx_enabled', True)

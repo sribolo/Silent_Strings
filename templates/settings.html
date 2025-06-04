@@ -34,6 +34,7 @@
     </div>
     <script>
     function saveSettings() {
+        console.log("Save button clicked!");
         fetch('/save-settings', {
             method: 'POST',
             headers: {'Content-Type': 'application/json'},
