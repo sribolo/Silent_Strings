@@ -640,12 +640,12 @@ button:hover {
 }
 
 .avatar-layer {
+  width: 128px;
+  height: 128px;
   position: absolute;
   left: 50%;
   top: 50%;
-  transform: translate(-50%, -50%);
-  width: 256px;
-  height: 256px;
+  transform: translate(-50%, -50%) scale(3);
   image-rendering: pixelated;
   pointer-events: none;
 }
