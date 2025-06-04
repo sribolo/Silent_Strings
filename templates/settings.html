@@ -1,6 +1,9 @@
 {% extends "base.html" %}
 {% block title %}Settings{% endblock %}
 {% block content %}
+{% block extra_scripts %}
+<script src="{{ url_for('static', filename='js/settings.js') }}"></script>
+{% endblock %}
 <body>
     <div class="bg-container">
         <img src="{{ url_for('static', filename='images/background.gif') }}" class="background">
