@@ -748,7 +748,7 @@ button:hover {
 }
 
 .customise-title {
-  color: #6C5CE7;
+  color: #A499FF;
   font-family: 'Press Start 2P', monospace;
   text-align: center;
   font-size: 2.2em;
@@ -795,8 +795,8 @@ button:hover {
   flex-direction: row;
   align-items: flex-start;
   justify-content: center;
-  min-width: 700px;
-  max-width: 1040px;
+  min-width: 650px;
+  max-width: 900px;
   background: rgba(20, 18, 38, 0.94);
   border-radius: 28px;
   /* Reduce height from 600px to 420px */
