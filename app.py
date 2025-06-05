@@ -432,6 +432,20 @@ def reset_password(token):
     return render_template('reset_password.html', form=form, token=token)
 
 
+def flatten_avatar_parts(avatar_parts):
+    fixed = {}
+    for category, value in avatar_parts.items():
+        if isinstance(value, dict):
+            # Get the first dict value (the selected subcategory)
+            for v in value.values():
+                if isinstance(v, dict):
+                    fixed[category] = v
+                    break
+        else:
+            # Direct value (like 'characters')
+            fixed[category] = value
+    return fixed
+
 @app.route('/profile')
 def profile():
     username = None
@@ -462,6 +476,9 @@ def profile():
     else:
         return redirect(url_for('login'))
 
+    # Flatten avatar_parts so all keys are directly accessible by the template
+    avatar_parts = flatten_avatar_parts(avatar_parts)
+
     # Check if avatar is complete
     required_parts = ['characters', 'clothes', 'hair', 'face', 'acc']
     if not all(part in avatar_parts and avatar_parts[part] for part in required_parts):
@@ -477,6 +494,7 @@ def profile():
         is_guest=is_guest,
         avatar_parts=avatar_parts,
     )
+
 
 @app.route('/settings', methods=['GET', 'POST'])
 def settings():
