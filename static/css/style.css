@@ -669,15 +669,12 @@ button:hover {
 
 .tab-bar {
   display: flex;
-  gap: 20px;
+  gap: 18px;
   justify-content: center;
   align-items: center;
-  margin: 0 auto 18px auto; /* top, right, bottom, left: no top margin, little space below */
-  position: static;         /* Remove relative positioning */
-  top: 0;                   /* Remove top shift */
-  z-index: 2;
+  margin-bottom: 24px;
+  margin-top: 0;
 }
-
 
 
 .tab-button {
@@ -795,17 +792,16 @@ button:hover {
 
 /* Main row: two columns (avatar preview left, options right) */
 .customise-main-row {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  gap: 44px;                    /* space between columns */
-  padding: 40px 36px 36px 36px;
+  flex-direction: column !important;   /* stack vertically */
+  align-items: center !important;
+  justify-content: flex-start;
   min-width: 700px;
   max-width: 1040px;
   background: rgba(20, 18, 38, 0.94);
   border-radius: 28px;
-  height: 600px;                 /* set a fixed height for vertical centering */
+  height: 600px;
   box-sizing: border-box;
+  padding-top: 38px;      /* Space for top section */
 }
 
 /* Left column: avatar preview vertically stacked */
