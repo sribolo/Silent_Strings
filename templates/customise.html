@@ -2,9 +2,6 @@
 
 {% block title %}Customise{% endblock %}
 
-{% block extra_css %}
-<link rel="stylesheet" href="{{ url_for('static', filename='css/game.css') }}">
-{% endblock %}
 
 {% block extra_scripts %}
 <script defer src="{{ url_for('static', filename='js/customise.js') }}"></script>
@@ -17,20 +14,15 @@
 </div>
 
 <div class="overlay">
-    <!-- MAIN FLEX CONTAINER: two columns, just like your whiteboard -->
     <div class="customise-main-row pixelated-border">
-        <!-- LEFT: Avatar Preview and Label -->
+        <!-- Left: Avatar preview & agent name -->
         <div class="customise-col-left">
-            <!-- Avatar Preview -->
             <div id="avatar-preview" class="avatar-preview-big"></div>
-            <!-- Label under preview (if needed) -->
-            <div class="avatar-label">Character</div>
+            <input type="text" id="agent-name" name="agent_name" placeholder="Agent Name" required value="{{ name }}">
         </div>
-        <!-- RIGHT: Title, Tabs, Grid, and Randomize/Save at bottom -->
+        <!-- Right: Tabs, grid, randomize & save -->
         <div class="customise-col-right">
-            <!-- Title at top -->
             <h1 class="customise-title">Customise Your Avatar</h1>
-            <!-- Tabs -->
             <div class="tab-bar">
                 <button type="button" class="tab-button active" data-category="characters">Characters</button>
                 <button type="button" class="tab-button" data-category="clothes">Clothes</button>
@@ -38,19 +30,16 @@
                 <button type="button" class="tab-button" data-category="face">Face</button>
                 <button type="button" class="tab-button" data-category="acc">Accessories</button>
             </div>
-            <!-- Grids for each tab -->
             <div id="grid-characters" class="grid-container"></div>
             <div id="grid-clothes" class="grid-container hidden"></div>
             <div id="grid-hair" class="grid-container hidden"></div>
             <div id="grid-face" class="grid-container hidden"></div>
             <div id="grid-acc" class="grid-container hidden"></div>
-            <!-- Randomize and Save at the bottom, aligned right -->
             <div class="customise-actions-row">
-                <button type="button" id="randomize-avatar" class="randomize-btn">Randomise</button>
-                <input type="text" id="agent-name" name="agent_name" placeholder="Agent Name" required value="{{ name }}">
+                <button type="button" id="randomize-avatar" class="randomize-btn">Randomize</button>
                 <button id="save-avatar" type="button">Save Avatar</button>
             </div>
         </div>
-    </div>
+    </div>    
 </div>
 {% endblock %}
