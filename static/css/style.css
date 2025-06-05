@@ -581,38 +581,6 @@ button:hover {
 }
   
 
-@media (max-width: 850px) {
-  .mission-container {
-    min-width: 90vw;
-    padding: 1.2rem 1rem;
-  }
-  .pixel-input {
-    font-size: 1rem;
-    padding: 12px 6px;
-  }
-  .login-button {
-    min-width: 140px;
-    font-size: 1rem;
-  }
-  .center-stack-container {
-    left: 50%;
-    transform: translate(-50%, -25%);
-    min-width: 90vw;
-    padding: 1.2rem 1rem;
-  }
-  .recaptcha-wrap {
-    max-width: 97vw;
-    width: 97vw;
-  }
-  .recaptcha-wrap .g-recaptcha {
-    transform: scale(0.78);
-    -webkit-transform: scale(0.78);
-  }
-  .welcome-flex {
-    flex-direction: column;
-    gap: 24px;
-  }
-}
 
 #sprite {
   width: 32px;
@@ -840,7 +808,7 @@ button:hover {
   justify-content: flex-start;
   min-width: 185px;
   max-width: 250px;
-  gap: 22px;
+  gap: 28px;
   padding-top: 30px;
 }
 
@@ -1591,5 +1559,37 @@ input::placeholder {
   }
   .customise-actions-row {
       justify-content: center;
+  }
+}
+@media (max-width: 850px) {
+  .mission-container {
+    min-width: 90vw;
+    padding: 1.2rem 1rem;
+  }
+  .pixel-input {
+    font-size: 1rem;
+    padding: 12px 6px;
+  }
+  .login-button {
+    min-width: 140px;
+    font-size: 1rem;
+  }
+  .center-stack-container {
+    left: 50%;
+    transform: translate(-50%, -25%);
+    min-width: 90vw;
+    padding: 1.2rem 1rem;
+  }
+  .recaptcha-wrap {
+    max-width: 97vw;
+    width: 97vw;
+  }
+  .recaptcha-wrap .g-recaptcha {
+    transform: scale(0.78);
+    -webkit-transform: scale(0.78);
+  }
+  .welcome-flex {
+    flex-direction: column;
+    gap: 24px;
   }
 }
