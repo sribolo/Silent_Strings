@@ -10,9 +10,11 @@
         <div class="mission-container pixelated-border">
             <h1 class="profile-title">Agent Profile</h1>
             <div class="profile-avatar-section">
+                {% from "avatar_macro.html" import render_avatar %}
                 <div class="profile-avatar-wrap">
-                    {% from "avatar_macro.html" import render_avatar %}
-                    {{ render_avatar(avatar_parts) }}
+                {{ render_avatar(avatar_parts) }}
+            </div>
+
                 </div>
             </div>
             <!-- Profile Info -->
