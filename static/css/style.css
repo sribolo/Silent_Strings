@@ -622,16 +622,14 @@ button:hover {
 .grid-container {
   display: flex;
   flex-wrap: wrap;
-  gap: 22px;
-  margin: 24px 0 12px 0;
+  gap: 14px;
+  margin: 14px 0 8px 0;  /* reduce top/bottom margin */
   background: rgba(26, 26, 48, 0.96);
-  padding: 24px 16px;
+  padding: 16px 8px;
   border-radius: 22px;
   box-shadow: 0 3px 18px #0002;
-  min-height: 60px;
-  max-width: 100%;
-  width: 100%;
-  max-height: 340px;
+  min-height: 40px;   /* reduce from 60px */
+  max-height: 140px;  /* much smaller */
   overflow-y: auto;
   justify-content: center;
   align-items: center;
@@ -799,26 +797,28 @@ button:hover {
   max-width: 1040px;
   background: rgba(20, 18, 38, 0.94);
   border-radius: 28px;
-  height: 600px;
+  /* Reduce height from 600px to 420px */
+  height: 420px;
   box-sizing: border-box;
   margin-top: 0;
   margin-bottom: 0;
   box-shadow: 0 4px 36px #0a0a20a1;
   padding: 0;
+  overflow: hidden; /* Important for child scroll! */
 }
 
 /* Left column: avatar preview vertically stacked */
+
 .customise-col-left {
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start;
   min-width: 185px;
   max-width: 250px;
-  gap: 28px;
+  gap: 14px; /* reduce vertical gap */
   height: 100%;
 }
-
 /* Label under avatar preview */
 .avatar-label {
   margin-top: 12px;
@@ -837,7 +837,9 @@ button:hover {
   justify-content: flex-start;
   width: 100%;
   margin-top: 0;
+  height: 100%;
 }
+
 
 
 /* Bottom action row: randomize, agent name, save button (aligned right) */
@@ -846,9 +848,10 @@ button:hover {
   flex-direction: row;
   justify-content: flex-end;
   align-items: center;
-  gap: 18px;
-  margin-top: 26px;
+  gap: 14px;
+  margin-top: auto;   /* Push to bottom of column */
   width: 100%;
+  padding-bottom: 12px; /* Add space from bottom edge */
 }
 
 .randomize-btn {
