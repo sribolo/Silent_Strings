@@ -1352,14 +1352,14 @@ input::placeholder {
   background: #23232b;
 }
 
+#game-map .npc-avatar,
 #game-map .npc-avatar img,
-#game-map .avatar, 
-#game-map #player-avatar, 
-#game-map .npc-avatar, 
+#game-map .avatar,
+#game-map #player-avatar,
 #game-map .avatar-layer {
-  width: 64px;
-  height: 64px;
-  image-rendering: pixelated;
+  width: 64px !important;
+  height: 64px !important;
+  image-rendering: pixelated !important;
 }
 
 /* Main player and all NPC containers: set map sprite size */
@@ -1382,7 +1382,7 @@ input::placeholder {
   height: 64px;
   image-rendering: pixelated;
   pointer-events: none;
-  object-fit: none;
+  object-fit: contain;
   margin: 0;
   padding: 0;
   z-index: 1;
