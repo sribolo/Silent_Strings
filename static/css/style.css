@@ -1152,9 +1152,9 @@ input::placeholder {
   text-shadow: 0 0 6px #ff6b6b77;
 }
 .profile-avatar-wrap {
-  width: 144px;
-  height: 144px;
-  margin: 0 auto 24px auto;
+  width: 128px;
+  height: 128px;
+  margin: 0 auto 10px auto;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -1166,19 +1166,17 @@ input::placeholder {
   position: relative;
 }
 
-.profile-avatar-layer {
+/* Ensure all avatar layers stack and center */
+.profile-avatar-wrap .avatar-layer {
   width: 96px;
   height: 96px;
-  position: relative;
-  left: unset;
-  top: unset;
-  transform: none;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
   image-rendering: pixelated;
+  object-fit: contain;
   pointer-events: none;
-}
-
-.profile-avatar {
-  display: none; /* Hide old single-image avatar if present */
 }
 
 /* Pixel Background (full-page, behind everything) */
