@@ -1596,3 +1596,130 @@ input::placeholder {
     gap: 24px;
   }
 }
+
+/* --- Avatar Customisation Layout Fix --- */
+.customise-outer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  width: 100vw;
+  margin-top: 32px;
+}
+
+.customise-page-header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  margin-bottom: 20px;
+}
+
+.customise-title {
+  color: #6C5CE7;
+  font-family: 'Press Start 2P', monospace;
+  text-align: center;
+  font-size: 2.2em;
+  margin-bottom: 16px;
+  letter-spacing: 2px;
+  text-shadow: 0 2px 8px #18181b60;
+  text-transform: lowercase;
+}
+
+/* Centered pill-like tabs */
+.tab-bar {
+  display: flex;
+  gap: 24px;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.tab-button {
+  background: #18182b;
+  color: #fff;
+  border: none;
+  border-radius: 32px;
+  padding: 13px 34px;
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 1.15em;
+  font-weight: bold;
+  cursor: pointer;
+  box-shadow: 0 2px 12px #0002;
+  letter-spacing: 1px;
+  outline: none;
+  margin: 0;
+  transition: 
+    background 0.15s,
+    color 0.15s,
+    box-shadow 0.15s;
+}
+.tab-button.active, .tab-button:focus {
+  background: #fff;
+  color: #18182b;
+  box-shadow: 0 0 24px #a499ff99;
+}
+
+/* Main card row: row on desktop, stacks on small screens */
+.customise-main-row {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  justify-content: center;
+  min-width: 700px;
+  max-width: 1040px;
+  background: rgba(20, 18, 38, 0.94);
+  border-radius: 28px;
+  height: 600px;
+  box-sizing: border-box;
+  margin-top: 0;
+  margin-bottom: 0;
+  box-shadow: 0 4px 36px #0a0a20a1;
+  padding: 0;
+}
+
+/* Left column: avatar preview vertically stacked */
+.customise-col-left {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-width: 185px;
+  max-width: 250px;
+  gap: 28px;
+  height: 100%;
+}
+
+.customise-col-right {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  width: 100%;
+  margin-top: 0;
+}
+
+/* Responsive: stack card below tabs on mobile */
+@media (max-width: 1000px) {
+  .customise-main-row {
+    flex-direction: column;
+    align-items: center;
+    min-width: unset;
+    max-width: 98vw;
+    height: auto;
+    padding: 22px 4vw 16px 4vw;
+  }
+  .customise-col-left,
+  .customise-col-right {
+    min-width: unset;
+    max-width: 98vw;
+    width: 100%;
+    padding-top: 0;
+  }
+  .customise-actions-row {
+    justify-content: center;
+  }
+}
+
+

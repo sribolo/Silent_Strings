@@ -13,36 +13,38 @@
 </div>
 
 <div class="overlay">
-    <!-- Floating header & tab bar -->
-    <div class="customise-page-header">
-        <h1 class="customise-title">customise your avatar</h1>
-        <div class="tab-bar">
-            <button type="button" class="tab-button active" data-category="characters">characters</button>
-            <button type="button" class="tab-button" data-category="clothes">clothes</button>
-            <button type="button" class="tab-button" data-category="hair">hair</button>
-            <button type="button" class="tab-button" data-category="face">face</button>
-            <button type="button" class="tab-button" data-category="acc">accessories</button>
+    <div class="customise-outer">
+        <!-- Floating header & tab bar -->
+        <div class="customise-page-header">
+            <h1 class="customise-title">customise your avatar</h1>
+            <div class="tab-bar">
+                <button type="button" class="tab-button active" data-category="characters">characters</button>
+                <button type="button" class="tab-button" data-category="clothes">clothes</button>
+                <button type="button" class="tab-button" data-category="hair">hair</button>
+                <button type="button" class="tab-button" data-category="face">face</button>
+                <button type="button" class="tab-button" data-category="acc">accessories</button>
+            </div>
         </div>
-    </div>
-    <!-- Card: avatar preview + grid/actions -->
-    <div class="customise-main-row pixelated-border">
-        <!-- Left: Avatar preview & agent name -->
-        <div class="customise-col-left">
-            <div id="avatar-preview" class="avatar-preview-big"></div>
-            <input type="text" id="agent-name" name="agent_name" placeholder="Agent Name" required value="{{ name }}">
-        </div>
-        <!-- Right: Grid & action buttons -->
-        <div class="customise-col-right">
-            <!-- Grid containers -->
-            <div id="grid-characters" class="grid-container"></div>
-            <div id="grid-clothes" class="grid-container hidden"></div>
-            <div id="grid-hair" class="grid-container hidden"></div>
-            <div id="grid-face" class="grid-container hidden"></div>
-            <div id="grid-acc" class="grid-container hidden"></div>
-            <!-- Action buttons -->
-            <div class="customise-actions-row">
-                <button type="button" id="randomize-avatar" class="randomize-btn">Randomize</button>
-                <button id="save-avatar" type="button">Save Avatar</button>
+        <!-- Card: avatar preview + grid/actions -->
+        <div class="customise-main-row pixelated-border">
+            <!-- Left: Avatar preview & agent name -->
+            <div class="customise-col-left">
+                <div id="avatar-preview" class="avatar-preview-big"></div>
+                <input type="text" id="agent-name" name="agent_name" placeholder="Agent Name" required value="{{ name }}">
+            </div>
+            <!-- Right: Grid & action buttons -->
+            <div class="customise-col-right">
+                <!-- Grid containers -->
+                <div id="grid-characters" class="grid-container"></div>
+                <div id="grid-clothes" class="grid-container hidden"></div>
+                <div id="grid-hair" class="grid-container hidden"></div>
+                <div id="grid-face" class="grid-container hidden"></div>
+                <div id="grid-acc" class="grid-container hidden"></div>
+                <!-- Action buttons -->
+                <div class="customise-actions-row">
+                    <button type="button" id="randomize-avatar" class="randomize-btn">Randomize</button>
+                    <button id="save-avatar" type="button">Save Avatar</button>
+                </div>
             </div>
         </div>
     </div>
