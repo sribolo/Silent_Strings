@@ -669,42 +669,39 @@ button:hover {
 
 .tab-bar {
   display: flex;
-  gap: 18px;
+  gap: 24px;
   justify-content: center;
   align-items: center;
-  margin-bottom: 24px;
-  margin-top: 0;
+  margin-bottom: 10px;
 }
+
 
 
 .tab-button {
   background: #18182b;
-  color: #bcb9ff;
-  border: 2px solid #39396a;
-  border-radius: 18px;
-  padding: 14px 38px;
+  color: #fff;
+  border: none;
+  border-radius: 32px;
+  padding: 13px 34px;
   font-family: 'Share Tech Mono', monospace;
-  font-size: 1.11em;
+  font-size: 1.15em;
+  font-weight: bold;
   cursor: pointer;
-  transition: 
-    background 0.18s,
-    border 0.18s,
-    color 0.18s,
-    box-shadow 0.17s;
   box-shadow: 0 2px 12px #0002;
   letter-spacing: 1px;
   outline: none;
-  font-weight: 400;
-  margin-top: 0;
-  margin-bottom: 0;
+  margin: 0;
+  transition: 
+    background 0.15s,
+    color 0.15s,
+    box-shadow 0.15s;
 }
 
+
 .tab-button.active, .tab-button:focus {
-  background: #6C5CE7;
-  color: #fff;
-  border: 2px solid #6C5CE7;
-  box-shadow: 0 0 16px #6C5CE799;
-  filter: brightness(1.07);
+  background: #fff;
+  color: #18182b;
+  box-shadow: 0 0 24px #a499ff99;
 }
 
 
@@ -752,11 +749,13 @@ button:hover {
 
 .customise-title {
   color: #6C5CE7;
-  text-align: center;
   font-family: 'Press Start 2P', monospace;
-  margin-bottom: 20px;
-  font-size: 2em;
-  text-shadow: 1px 2px 2px #18181b70;
+  text-align: center;
+  font-size: 2.2em;
+  margin-bottom: 16px;
+  letter-spacing: 2px;
+  text-shadow: 0 2px 8px #18181b60;
+  text-transform: lowercase;
 }
 
 /* --- Responsive layout for preview+grid --- */
@@ -792,16 +791,20 @@ button:hover {
 
 /* Main row: two columns (avatar preview left, options right) */
 .customise-main-row {
-  flex-direction: column !important;   /* stack vertically */
-  align-items: center !important;
-  justify-content: flex-start;
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  justify-content: center;
   min-width: 700px;
   max-width: 1040px;
   background: rgba(20, 18, 38, 0.94);
   border-radius: 28px;
   height: 600px;
   box-sizing: border-box;
-  padding-top: 38px;      /* Space for top section */
+  margin-top: 0;
+  margin-bottom: 0;
+  box-shadow: 0 4px 36px #0a0a20a1;
+  padding: 0;
 }
 
 /* Left column: avatar preview vertically stacked */
@@ -830,8 +833,8 @@ button:hover {
 .customise-col-right {
   display: flex;
   flex-direction: column;
-  align-items: center;         /* keep tabs and title centered horizontally */
-  justify-content: flex-start; /* <-- THIS aligns content to the top! */
+  align-items: center;
+  justify-content: flex-start;
   width: 100%;
   margin-top: 0;
 }
@@ -1525,24 +1528,24 @@ input::placeholder {
 
 
 /* Responsive fallback for smaller screens */
-@media (max-width: 900px) {
+@media (max-width: 1000px) {
   .customise-main-row {
-      flex-direction: column;
-      align-items: center;
-      min-width: unset;
-      max-width: 98vw;
-      gap: 18px;
-      padding: 22px 4vw 16px 4vw;
+    flex-direction: column;
+    align-items: center;
+    min-width: unset;
+    max-width: 98vw;
+    height: auto;
+    padding: 22px 4vw 16px 4vw;
   }
   .customise-col-left,
   .customise-col-right {
-      min-width: unset;
-      max-width: 98vw;
-      width: 100%;
-      padding-top: 0;
+    min-width: unset;
+    max-width: 98vw;
+    width: 100%;
+    padding-top: 0;
   }
   .customise-actions-row {
-      justify-content: center;
+    justify-content: center;
   }
 }@media (max-width: 900px) {
   .customise-main-row {
@@ -1597,7 +1600,6 @@ input::placeholder {
   }
 }
 
-/* --- Avatar Customisation Layout Fix --- */
 .customise-outer {
   display: flex;
   flex-direction: column;
@@ -1614,112 +1616,6 @@ input::placeholder {
   justify-content: center;
   width: 100%;
   margin-bottom: 20px;
-}
-
-.customise-title {
-  color: #6C5CE7;
-  font-family: 'Press Start 2P', monospace;
-  text-align: center;
-  font-size: 2.2em;
-  margin-bottom: 16px;
-  letter-spacing: 2px;
-  text-shadow: 0 2px 8px #18181b60;
-  text-transform: lowercase;
-}
-
-/* Centered pill-like tabs */
-.tab-bar {
-  display: flex;
-  gap: 24px;
-  justify-content: center;
-  align-items: center;
-  margin-bottom: 10px;
-}
-
-.tab-button {
-  background: #18182b;
-  color: #fff;
-  border: none;
-  border-radius: 32px;
-  padding: 13px 34px;
-  font-family: 'Share Tech Mono', monospace;
-  font-size: 1.15em;
-  font-weight: bold;
-  cursor: pointer;
-  box-shadow: 0 2px 12px #0002;
-  letter-spacing: 1px;
-  outline: none;
-  margin: 0;
-  transition: 
-    background 0.15s,
-    color 0.15s,
-    box-shadow 0.15s;
-}
-.tab-button.active, .tab-button:focus {
-  background: #fff;
-  color: #18182b;
-  box-shadow: 0 0 24px #a499ff99;
-}
-
-/* Main card row: row on desktop, stacks on small screens */
-.customise-main-row {
-  display: flex;
-  flex-direction: row;
-  align-items: flex-start;
-  justify-content: center;
-  min-width: 700px;
-  max-width: 1040px;
-  background: rgba(20, 18, 38, 0.94);
-  border-radius: 28px;
-  height: 600px;
-  box-sizing: border-box;
-  margin-top: 0;
-  margin-bottom: 0;
-  box-shadow: 0 4px 36px #0a0a20a1;
-  padding: 0;
-}
-
-/* Left column: avatar preview vertically stacked */
-.customise-col-left {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  min-width: 185px;
-  max-width: 250px;
-  gap: 28px;
-  height: 100%;
-}
-
-.customise-col-right {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: flex-start;
-  width: 100%;
-  margin-top: 0;
-}
-
-/* Responsive: stack card below tabs on mobile */
-@media (max-width: 1000px) {
-  .customise-main-row {
-    flex-direction: column;
-    align-items: center;
-    min-width: unset;
-    max-width: 98vw;
-    height: auto;
-    padding: 22px 4vw 16px 4vw;
-  }
-  .customise-col-left,
-  .customise-col-right {
-    min-width: unset;
-    max-width: 98vw;
-    width: 100%;
-    padding-top: 0;
-  }
-  .customise-actions-row {
-    justify-content: center;
-  }
 }
 
 
