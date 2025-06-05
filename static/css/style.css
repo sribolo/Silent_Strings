@@ -636,6 +636,7 @@ button:hover {
   align-items: center;
 }
 
+
 .avatar-choice {
   width: 42px;
   height: 42px;
@@ -799,7 +800,7 @@ button:hover {
   background: rgba(20, 18, 38, 0.94);
   border-radius: 28px;
   /* Reduce height from 600px to 420px */
-  height: 700px;
+  height: 620px;
   box-sizing: border-box;
   margin-top: 0;
   margin-bottom: 0;
