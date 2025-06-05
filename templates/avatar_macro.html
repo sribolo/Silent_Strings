@@ -1,3 +1,4 @@
+{# avatar_macro.html #}
 {% macro render_avatar(parts) %}
   {% set LAYER_ORDER = ["characters", "clothes", "hair", "face", "acc"] %}
   {% for part in LAYER_ORDER %}
@@ -7,10 +8,11 @@
         <img src="{{ url_for('static', filename='images/avatar_parts/characters/' + (value.name if value is mapping and value.name else value|string) + '.png') }}"
              alt="{{ part }}" class="avatar-layer profile-avatar-layer">
       {% else %}
+        {# Handle multi-subcategory for layers like hair, face, clothes, acc #}
         {% if value is mapping %}
-          {% for subcat, sel in value.items() %}
-            {% if sel.subcategory and sel.name %}
-              <img src="{{ url_for('static', filename='images/avatar_parts/' + part + '/' + sel.subcategory + '/' + sel.name + '.png') }}"
+          {% for subcat, subvalue in value.items() %}
+            {% if subvalue.name and subvalue.subcategory %}
+              <img src="{{ url_for('static', filename='images/avatar_parts/' + part + '/' + subvalue.subcategory + '/' + subvalue.name + '.png') }}"
                    alt="{{ part }}" class="avatar-layer profile-avatar-layer">
             {% endif %}
           {% endfor %}
