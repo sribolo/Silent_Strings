@@ -1413,16 +1413,24 @@ input::placeholder {
 /* --- START OF GAME-SPECIFIC STYLES (from game.css, deduplicated and namespaced) --- */
 
 .game-viewport {
-  position: relative;
   width: 100vw;
   height: 100vh;
+  position: relative;
   overflow: hidden;
+  background: #25244a;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 #game-map {
-  position: relative;
   width: 100vw;
   height: 100vh;
+  max-width: 100vw;
+  max-height: 100vh;
+  position: relative;
+  border-radius: 32px;
+  overflow: hidden;
 }
 
 #map-bg {
@@ -1474,14 +1482,16 @@ input::placeholder {
 }
 
 /* Optionally, if you want to allow click/hover on player: */
-#player-avatar {
-  position: absolute;
-  left: 0;
-  top: 0;
-  z-index: 10;
-  pointer-events: auto;
-}
 
+#player-avatar.avatar {
+  position: absolute;
+  z-index: 20;        /* Always above map! */
+  left: 16px;         /* You can adjust starting position as needed */
+  top: 16px;
+  width: 64px;
+  height: 64px;
+  pointer-events: none; 
+}
 /* Map area buttons */
 #game-map .map-area-bank,
 #game-map .map-area-school,
