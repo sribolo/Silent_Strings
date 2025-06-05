@@ -800,7 +800,7 @@ button:hover {
   background: rgba(20, 18, 38, 0.94);
   border-radius: 28px;
   /* Reduce height from 600px to 420px */
-  height: 620px;
+  height: 420px;
   box-sizing: border-box;
   margin-top: 0;
   margin-bottom: 0;
