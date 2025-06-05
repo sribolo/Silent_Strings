@@ -8,9 +8,14 @@
         <img src="{{ url_for('static', filename='images/avatar_parts/characters/' + (value.name if value is mapping and value.name else value|string) + '.png') }}"
              alt="{{ part }}" class="avatar-layer profile-avatar-layer">
       {% else %}
-        {% if value is mapping and value.subcategory and value.name %}
-          <img src="{{ url_for('static', filename='images/avatar_parts/' + part + '/' + value.subcategory + '/' + value.name + '.png') }}"
-               alt="{{ part }}" class="avatar-layer profile-avatar-layer">
+        {# Loop over all sub-parts if value is a mapping (dict of dicts) #}
+        {% if value is mapping %}
+          {% for sub in value.values() %}
+            {% if sub.subcategory and sub.name %}
+              <img src="{{ url_for('static', filename='images/avatar_parts/' + part + '/' + sub.subcategory + '/' + sub.name + '.png') }}"
+                   alt="{{ part }}" class="avatar-layer profile-avatar-layer">
+            {% endif %}
+          {% endfor %}
         {% endif %}
       {% endif %}
     {% endif %}
