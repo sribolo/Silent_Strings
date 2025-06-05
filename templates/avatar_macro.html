@@ -1,32 +1,18 @@
-{% macro render_avatar(avatar_parts) %}
+{# avatar_macro.html #}
+{% macro render_avatar(parts) %}
   {% set LAYER_ORDER = ["characters", "clothes", "hair", "face", "acc"] %}
   {% for part in LAYER_ORDER %}
-    {% set value = avatar_parts.get(part) %}
+    {% set value = parts.get(part) %}
     {% if value %}
-      {# Characters: always string or dict with name #}
       {% if part == "characters" %}
-        {% set name = value.name if value is mapping and value.name else value %}
-        <img src="{{ url_for('static', filename='images/avatar_parts/characters/' ~ name ~ '.png') }}"
+        <img src="{{ url_for('static', filename='images/avatar_parts/characters/' + (value.name if value is mapping and value.name else value|string) + '.png') }}"
              alt="{{ part }}" class="avatar-layer profile-avatar-layer">
-      {% elif part == "clothes" and value is mapping %}
-        {# Support multiple clothing subcategories (e.g., shoes, dress, etc.) #}
-        {% for subcat, item in value.items() %}
-          {% if item.name %}
-            <img src="{{ url_for('static', filename='images/avatar_parts/clothes/' ~ subcat ~ '/' ~ item.name ~ '.png') }}"
-                 alt="{{ part }}-{{ subcat }}" class="avatar-layer profile-avatar-layer">
-          {% endif %}
-        {% endfor %}
-      {% elif part == "acc" %}
-        {% if value is string %}
-          <img src="{{ url_for('static', filename='images/avatar_parts/acc/' ~ value ~ '.png') }}"
-               alt="{{ part }}" class="avatar-layer profile-avatar-layer">
-        {% endif %}
       {% else %}
         {% if value is mapping and value.subcategory and value.name %}
-          <img src="{{ url_for('static', filename='images/avatar_parts/' ~ part ~ '/' ~ value.subcategory ~ '/' ~ value.name ~ '.png') }}"
+          <img src="{{ url_for('static', filename='images/avatar_parts/' + part + '/' + value.subcategory + '/' + value.name + '.png') }}"
                alt="{{ part }}" class="avatar-layer profile-avatar-layer">
         {% endif %}
       {% endif %}
     {% endif %}
   {% endfor %}
-{% endmacro %} 
+{% endmacro %}
