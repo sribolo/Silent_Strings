@@ -623,11 +623,11 @@ button:hover {
 }
 /* --- Avatar Preview --- */
 .avatar-preview-big {
-  width: 96px;     /* was 144px */
-  height: 96px;    /* was 144px */
-  border-radius: 10px;
-  margin-bottom: 16px;
-  box-shadow: 0 2px 8px #0005;
+  width: 108px;
+  height: 108px;
+  border-radius: 16px;
+  margin-bottom: 18px;
+  box-shadow: 0 2px 10px #0004;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -635,7 +635,7 @@ button:hover {
   margin-right: auto;
   overflow: hidden;
   background: #23232b;
-  border: 2px solid #6C5CE7;
+  border: 2.5px solid #6C5CE7;
   position: relative;
 }
 
@@ -645,128 +645,140 @@ button:hover {
   position: absolute;
   left: 50%;
   top: 50%;
-  transform: translate(-50%, -50%) scale(2.8);
+  transform: translate(-50%, -50%) scale(3);
   image-rendering: pixelated;
   pointer-events: none;
 }
 
-.avatar-choice {
-  width: 38px;
-  height: 38px;
-  margin: 2px;
-  border: 2.5px solid transparent;
-  border-radius: 10px;
-  background: #23232b;
-  box-shadow: 0 2px 6px #0002;
-  cursor: pointer;
-  image-rendering: pixelated;
-  transition: border 0.17s, box-shadow 0.18s, filter 0.17s;
-  filter: brightness(1.05);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.avatar-choice.selected {
-  border: 2.5px solid #6C5CE7;
-  box-shadow: 0 0 12px #6C5CE799;
-  background: #39395c;
-  filter: brightness(1.1);
-}
-
-/* --- Grid Layout for Avatars --- */
 .grid-container {
   display: flex;
   flex-wrap: wrap;
-  gap: 16px;
-  margin: 20px 0 14px 0;
-  background: rgba(24,24,27,0.95);
-  padding: 18px;
-  border-radius: 16px;
-  box-shadow: 0 2px 12px #0002;
-  min-height: 56px;
+  gap: 22px;
+  margin: 24px 0 12px 0;
+  background: rgba(26, 26, 48, 0.96);
+  padding: 24px 16px;
+  border-radius: 22px;
+  box-shadow: 0 3px 18px #0002;
+  min-height: 60px;
   max-width: 100%;
   width: 100%;
-  max-height: 360px;
+  max-height: 340px;
   overflow-y: auto;
   justify-content: center;
   align-items: center;
 }
 
+.avatar-choice {
+  width: 42px;
+  height: 42px;
+  border: 2.5px solid transparent;
+  border-radius: 12px;
+  background: #22223a;
+  box-shadow: 0 1px 8px #0003;
+  cursor: pointer;
+  image-rendering: pixelated;
+  transition: 
+    border 0.17s, 
+    box-shadow 0.17s, 
+    filter 0.16s, 
+    background 0.18s;
+  filter: brightness(1.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 2px;
+}
+
+.avatar-choice.selected, .avatar-choice:focus {
+  border: 2.5px solid #6C5CE7;
+  box-shadow: 0 0 10px #6C5CE799;
+  background: #302f4c;
+  filter: brightness(1.2);
+  outline: none;
+}
+
+
 .tab-bar {
   margin-bottom: 24px;
   display: flex;
-  gap: 18px;
+  gap: 20px;
   justify-content: center;
 }
 
 .tab-button {
-  background: #23232b;
+  background: #18182b;
   color: #bcb9ff;
-  border: 2px solid #5757B3;
-  border-radius: 14px;
-  padding: 12px 34px;
-  font-family: 'Press Start 2P', monospace;
-  font-size: 1.1em;
+  border: 2px solid #39396a;
+  border-radius: 18px;
+  padding: 14px 38px;
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 1.11em;
   cursor: pointer;
   transition: 
-    background 0.17s,
-    border 0.17s,
-    color 0.17s,
-    box-shadow 0.18s;
-  margin-bottom: 0;
-  margin-top: 0;
-  box-shadow: 0 2px 10px #0003;
+    background 0.18s,
+    border 0.18s,
+    color 0.18s,
+    box-shadow 0.17s;
+  box-shadow: 0 2px 12px #0002;
   letter-spacing: 1px;
+  outline: none;
+  font-weight: 400;
+  margin-top: 0;
+  margin-bottom: 0;
 }
 
-.tab-button.active {
+.tab-button.active, .tab-button:focus {
   background: #6C5CE7;
   color: #fff;
   border: 2px solid #6C5CE7;
   box-shadow: 0 0 16px #6C5CE799;
-  filter: brightness(1.08);
+  filter: brightness(1.07);
 }
 
+
 #agent-name {
-  width: 88%;
-  padding: 11px;
-  margin: 15px 0 10px 0;
-  border-radius: 9px;
-  border: 2px solid #23232b;
-  font-size: 1.13em;
-  background: #171726;
+  width: 90%;
+  padding: 12px;
+  margin: 18px 0 10px 0;
+  border-radius: 11px;
+  border: 2px solid #22223a;
+  font-size: 1.15em;
+  background: #18172b;
   color: #bcb9ff;
   outline: none;
   box-shadow: 0 2px 8px #0001;
+  font-family: 'Share Tech Mono', monospace;
 }
-
 #agent-name:focus {
   border: 2px solid #6C5CE7;
   background: #22223b;
   color: #fff;
+  outline: none;
 }
+
 
 #save-avatar {
   background: #6C5CE7;
   color: #fff;
   border: none;
-  border-radius: 12px;
-  padding: 14px 38px;
+  border-radius: 15px;
+  padding: 18px 45px;
   font-size: 1.23em;
-  font-family: 'Press Start 2P', monospace;
+  font-family: 'Share Tech Mono', monospace;
   cursor: pointer;
-  margin-top: 14px;
+  margin-top: 16px;
   margin-bottom: 8px;
-  box-shadow: 0 2px 12px #6C5CE755;
+  box-shadow: 0 2px 14px #6C5CE733;
   letter-spacing: 1.5px;
+  font-weight: 600;
   transition: background 0.18s, color 0.18s, box-shadow 0.15s;
 }
 
-#save-avatar:hover {
+#save-avatar:hover, #save-avatar:focus {
   background: #8A2BE2;
   color: #fff;
-  box-shadow: 0 0 18px #8A2BE2;
+  box-shadow: 0 0 22px #8A2BE2cc;
+  outline: none;
 }
 
 .customise-title {
