@@ -668,11 +668,18 @@ button:hover {
 
 
 .tab-bar {
-  margin-bottom: 24px;
   display: flex;
   gap: 20px;
   justify-content: center;
+  align-items: center;
+  margin: 0 auto;
+  margin-bottom: 20px;
+  margin-top: 0;          /* Remove space above tab-bar */
+  position: relative;
+  top: -35px;             /* This moves it upwards! Adjust as needed (try -30px, -40px, etc.) */
+  z-index: 2;
 }
+
 
 .tab-button {
   background: #18182b;
@@ -828,12 +835,10 @@ button:hover {
 .customise-col-right {
   display: flex;
   flex-direction: column;
-  flex: 1;
-  align-items: stretch;
-  gap: 18px;
-  min-width: 400px;
-  max-width: 720px;
-  padding-top: 12px;
+  align-items: center;
+  justify-content: flex-start;
+  margin-top: -20px;  /* Move whole right col up if needed */
+  width: 100%;
 }
 
 /* Bottom action row: randomize, agent name, save button (aligned right) */
