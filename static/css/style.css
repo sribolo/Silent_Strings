@@ -1514,7 +1514,7 @@ input::placeholder {
 
 #ui-overlay {
   z-index: 50;
-  position: absolute;
+  position: fixed;
   top: 16px;
   right: 16px;
   left: auto;
