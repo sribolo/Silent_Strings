@@ -645,103 +645,128 @@ button:hover {
   position: absolute;
   left: 50%;
   top: 50%;
-  transform: translate(-50%, -50%) scale(2);
+  transform: translate(-50%, -50%) scale(2.8);
   image-rendering: pixelated;
   pointer-events: none;
 }
 
 .avatar-choice {
-  width: 32px;
-  height: 32px;
-  margin: 4px;
-  border: 2px solid transparent;
-  border-radius: 6px;
-  background: #18181b;
-  box-shadow: 0 2px 4px #0002;
+  width: 38px;
+  height: 38px;
+  margin: 2px;
+  border: 2.5px solid transparent;
+  border-radius: 10px;
+  background: #23232b;
+  box-shadow: 0 2px 6px #0002;
   cursor: pointer;
   image-rendering: pixelated;
-  transition: border 0.15s, box-shadow 0.15s;
+  transition: border 0.17s, box-shadow 0.18s, filter 0.17s;
+  filter: brightness(1.05);
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .avatar-choice.selected {
-  border: 2px solid #6C5CE7;
-  box-shadow: 0 0 8px #18181b;
-  background: #282833;
+  border: 2.5px solid #6C5CE7;
+  box-shadow: 0 0 12px #6C5CE799;
+  background: #39395c;
+  filter: brightness(1.1);
 }
 
 /* --- Grid Layout for Avatars --- */
 .grid-container {
   display: flex;
   flex-wrap: wrap;
-  gap: 10px;
-  margin: 12px 0;
-  background: #18181b;
-  padding: 16px;
-  border-radius: 10px;
-  min-height: 48px;
+  gap: 16px;
+  margin: 20px 0 14px 0;
+  background: rgba(24,24,27,0.95);
+  padding: 18px;
+  border-radius: 16px;
+  box-shadow: 0 2px 12px #0002;
+  min-height: 56px;
   max-width: 100%;
   width: 100%;
-  max-height: 340px;
+  max-height: 360px;
   overflow-y: auto;
   justify-content: center;
+  align-items: center;
 }
 
 .tab-bar {
-  margin-bottom: 16px;
+  margin-bottom: 24px;
   display: flex;
-  gap: 16px;
+  gap: 18px;
   justify-content: center;
 }
 
 .tab-button {
   background: #23232b;
-  color: #6C5CE7;
+  color: #bcb9ff;
   border: 2px solid #5757B3;
-  border-radius: 8px;
-  padding: 10px 28px;
+  border-radius: 14px;
+  padding: 12px 34px;
   font-family: 'Press Start 2P', monospace;
   font-size: 1.1em;
   cursor: pointer;
-  transition: background 0.2s, border 0.2s, color 0.2s;
+  transition: 
+    background 0.17s,
+    border 0.17s,
+    color 0.17s,
+    box-shadow 0.18s;
   margin-bottom: 0;
   margin-top: 0;
-  box-shadow: 0 2px 8px #0002;
+  box-shadow: 0 2px 10px #0003;
+  letter-spacing: 1px;
 }
 
 .tab-button.active {
   background: #6C5CE7;
-  color: #23232b;
+  color: #fff;
   border: 2px solid #6C5CE7;
-  box-shadow: 0 0 8px #6C5CE7;
+  box-shadow: 0 0 16px #6C5CE799;
+  filter: brightness(1.08);
 }
 
 #agent-name {
-  width: 85%;
-  padding: 6px;
-  margin: 10px 0;
-  border-radius: 8px;
-  border: 1.5px solid #18181b;
-  font-size: 1em;
-  background: #1c1c22;
-  color: #6C5CE7;
+  width: 88%;
+  padding: 11px;
+  margin: 15px 0 10px 0;
+  border-radius: 9px;
+  border: 2px solid #23232b;
+  font-size: 1.13em;
+  background: #171726;
+  color: #bcb9ff;
+  outline: none;
+  box-shadow: 0 2px 8px #0001;
+}
+
+#agent-name:focus {
+  border: 2px solid #6C5CE7;
+  background: #22223b;
+  color: #fff;
 }
 
 #save-avatar {
   background: #6C5CE7;
-  color: #23232b;
+  color: #fff;
   border: none;
-  border-radius: 8px;
-  padding: 8px 24px;
-  font-size: 1em;
+  border-radius: 12px;
+  padding: 14px 38px;
+  font-size: 1.23em;
   font-family: 'Press Start 2P', monospace;
   cursor: pointer;
-  margin-top: 10px;
-  transition: background 0.2s, color 0.2s;
+  margin-top: 14px;
+  margin-bottom: 8px;
+  box-shadow: 0 2px 12px #6C5CE755;
+  letter-spacing: 1.5px;
+  transition: background 0.18s, color 0.18s, box-shadow 0.15s;
 }
 
 #save-avatar:hover {
-  background: #6C5CE7;
-  color: #18181b;
+  background: #8A2BE2;
+  color: #fff;
+  box-shadow: 0 0 18px #8A2BE2;
 }
 
 .customise-title {
@@ -781,7 +806,6 @@ button:hover {
 .subcat-grid {
   max-width: 100%;
   width: 100%;
-  max-height: 340px;
   overflow-y: auto;
 }
 
@@ -795,7 +819,7 @@ button:hover {
   box-shadow: 0 4px 20px #0008;
   font-family: 'Share Tech Mono', monospace;
   color: #e0e0e0;
-  border: 2px solid #6C5CE7;
+  border: 2px solid #6C5CE7; 
   text-align: center;
 }
 .form-container h2 {
