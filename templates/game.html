@@ -4,41 +4,42 @@
   <!-- Only style.css is needed now -->
 {% endblock %}
 {% block content %}
-    <div class="game-viewport">
-      <div id="game-map">
-        <img id="map-bg" src="{{ url_for('static', filename='images/pixel_town_1280x720.png') }}" alt="Town Map">
-        <div id="player-avatar" class="avatar">
-          {% set LAYER_ORDER = ["characters", "clothes", "hair", "face", "acc"] %}
-          {% for part in LAYER_ORDER %}
-            {% set value = avatar_parts.get(part) %}
-            {% if value %}
-              {% if part == "characters" %}
-                <img src="{{ url_for('static', filename='images/avatar_parts/characters/' + (value.name if value is mapping and value.name else value|string) + '.png') }}"
-                     alt="{{ part }}" class="avatar-layer">
-              {% else %}
-                {% if value is mapping and value.subcategory and value.name %}
-                  <img src="{{ url_for('static', filename='images/avatar_parts/' + part + '/' + value.subcategory + '/' + value.name + '.png') }}"
-                       alt="{{ part }}" class="avatar-layer">
-                {% endif %}
-              {% endif %}
+<div class="game-viewport">
+  <div id="game-map">
+    <img id="map-bg" src="{{ url_for('static', filename='images/pixel_town_1280x720.png') }}" alt="Town Map">
+    <div id="player-avatar" class="avatar">
+      {% set LAYER_ORDER = ["characters", "clothes", "hair", "face", "acc"] %}
+      {% for part in LAYER_ORDER %}
+        {% set value = avatar_parts.get(part) %}
+        {% if value %}
+          {% if part == "characters" %}
+            <img src="{{ url_for('static', filename='images/avatar_parts/characters/' + (value.name if value is mapping and value.name else value|string) + '.png') }}"
+                alt="{{ part }}" class="avatar-layer">
+          {% else %}
+            {% if value is mapping and value.subcategory and value.name %}
+              <img src="{{ url_for('static', filename='images/avatar_parts/' + part + '/' + value.subcategory + '/' + value.name + '.png') }}"
+                  alt="{{ part }}" class="avatar-layer">
             {% endif %}
-          {% endfor %}
-          
-        <!-- Map building buttons -->
-        <button class="map-area-btn map-area-bank" data-mission="bank"></button>
-        <button class="map-area-btn map-area-school" data-mission="school"></button>
-        <button class="map-area-btn map-area-company" data-mission="company"></button>
-        <button class="map-area-btn map-area-cafe" data-mission="cafe"></button>
-        <button class="map-area-btn map-area-news" data-mission="news"></button>
-        <button class="map-area-btn map-area-government" data-mission="government"></button>
-        <button class="map-area-btn map-area-transport" data-mission="transport"></button>
-        <button class="map-area-btn map-area-hq" data-mission="hq"></button>
-        <div id="ui-overlay">
-          <a href="{{ url_for('profile') }}" id="profile-btn" title="Your Profile">
-            <img src="{{ url_for('static', filename='images/profile.png') }}" alt="Profile" class="profile-icon">
-          </a>
-      </div>
+          {% endif %}
+        {% endif %}
+      {% endfor %}
     </div>
+    <!-- Map building buttons -->
+    <button class="map-area-btn map-area-bank" data-mission="bank"></button>
+    <button class="map-area-btn map-area-school" data-mission="school"></button>
+    <button class="map-area-btn map-area-company" data-mission="company"></button>
+    <button class="map-area-btn map-area-cafe" data-mission="cafe"></button>
+    <button class="map-area-btn map-area-news" data-mission="news"></button>
+    <button class="map-area-btn map-area-government" data-mission="government"></button>
+    <button class="map-area-btn map-area-transport" data-mission="transport"></button>
+    <button class="map-area-btn map-area-hq" data-mission="hq"></button>
   </div>
-  <script src="{{ url_for('static', filename='js/game.js') }}"></script>
+  <!-- Overlay moved OUTSIDE #game-map -->
+  <div id="ui-overlay">
+    <a href="{{ url_for('profile') }}" id="profile-btn" title="Your Profile">
+      <img src="{{ url_for('static', filename='images/profile.png') }}" alt="Profile" class="profile-icon">
+    </a>
+  </div>
+</div>
+<script src="{{ url_for('static', filename='js/game.js') }}"></script>
 {% endblock %}
