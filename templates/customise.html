@@ -17,33 +17,40 @@
 </div>
 
 <div class="overlay">
-    <div class="customise-container pixelated-border">
-        <h1 class="customise-title">Customise Your Avatar</h1>
-        <form id="customise-form" onsubmit="return false">
-            <div class="customise-flex">
-                <!-- BIG AVATAR PREVIEW ON THE LEFT -->
-                <div>
-                    <div id="avatar-preview" class="avatar-preview-big"></div>
-                    <input type="text" id="agent-name" name="agent_name" placeholder="Agent Name" required value="{{ name }}">
-                    <button id="save-avatar" type="button">Save Avatar</button>
-                </div>
-                <!-- CHOICES & TABS ON THE RIGHT -->
-                <div id="character-options">
-                    <div class="tab-bar">
-                        <button type="button" class="tab-button active" data-category="characters">Characters</button>
-                        <button type="button" class="tab-button" data-category="clothes">Clothes</button>
-                        <button type="button" class="tab-button" data-category="hair">Hair</button>
-                        <button type="button" class="tab-button" data-category="face">Face</button>
-                        <button type="button" class="tab-button" data-category="acc">Accessories</button>
-                    </div>
-                    <div id="grid-characters" class="grid-container"></div>
-                    <div id="grid-clothes" class="grid-container hidden"></div>
-                    <div id="grid-hair" class="grid-container hidden"></div>
-                    <div id="grid-face" class="grid-container hidden"></div>
-                    <div id="grid-acc" class="grid-container hidden"></div>
-                </div>
+    <!-- MAIN FLEX CONTAINER: two columns, just like your whiteboard -->
+    <div class="customise-main-row pixelated-border">
+        <!-- LEFT: Avatar Preview and Label -->
+        <div class="customise-col-left">
+            <!-- Avatar Preview -->
+            <div id="avatar-preview" class="avatar-preview-big"></div>
+            <!-- Label under preview (if needed) -->
+            <div class="avatar-label">Character</div>
+        </div>
+        <!-- RIGHT: Title, Tabs, Grid, and Randomize/Save at bottom -->
+        <div class="customise-col-right">
+            <!-- Title at top -->
+            <h1 class="customise-title">Customise Your Avatar</h1>
+            <!-- Tabs -->
+            <div class="tab-bar">
+                <button type="button" class="tab-button active" data-category="characters">Characters</button>
+                <button type="button" class="tab-button" data-category="clothes">Clothes</button>
+                <button type="button" class="tab-button" data-category="hair">Hair</button>
+                <button type="button" class="tab-button" data-category="face">Face</button>
+                <button type="button" class="tab-button" data-category="acc">Accessories</button>
             </div>
-        </form>
+            <!-- Grids for each tab -->
+            <div id="grid-characters" class="grid-container"></div>
+            <div id="grid-clothes" class="grid-container hidden"></div>
+            <div id="grid-hair" class="grid-container hidden"></div>
+            <div id="grid-face" class="grid-container hidden"></div>
+            <div id="grid-acc" class="grid-container hidden"></div>
+            <!-- Randomize and Save at the bottom, aligned right -->
+            <div class="customise-actions-row">
+                <button type="button" id="randomize-avatar" class="randomize-btn">Randomise</button>
+                <input type="text" id="agent-name" name="agent_name" placeholder="Agent Name" required value="{{ name }}">
+                <button id="save-avatar" type="button">Save Avatar</button>
+            </div>
+        </div>
     </div>
 </div>
 {% endblock %}

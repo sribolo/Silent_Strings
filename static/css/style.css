@@ -821,6 +821,86 @@ button:hover {
   overflow-y: auto;
 }
 
+/* Main row: two columns (avatar preview left, options right) */
+.customise-main-row {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  gap: 40px;                    /* space between columns */
+  padding: 36px 32px 32px 32px;
+  min-width: 700px;
+  max-width: 980px;
+}
+
+/* Left column: avatar preview vertically stacked */
+.customise-col-left {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 180px;
+  max-width: 220px;
+  padding-top: 24px;
+}
+
+/* Label under avatar preview */
+.avatar-label {
+  margin-top: 12px;
+  font-family: 'Press Start 2P', monospace;
+  font-size: 1.11em;
+  color: #bcb9ff;
+  text-align: center;
+  letter-spacing: 1px;
+}
+
+/* Right column: all options stacked vertically */
+.customise-col-right {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  align-items: stretch;
+  gap: 16px;
+  min-width: 400px;
+  max-width: 700px;
+}
+
+/* Bottom action row: randomize, agent name, save button (aligned right) */
+.customise-actions-row {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 16px;
+  margin-top: 22px;
+  width: 100%;
+}
+
+/* Optional: tweak randomize button look (uses your button styles) */
+.randomize-btn {
+  margin-right: 10px;
+}
+
+/* Responsive fallback for smaller screens */
+@media (max-width: 900px) {
+  .customise-main-row {
+      flex-direction: column;
+      align-items: center;
+      min-width: unset;
+      max-width: 98vw;
+      gap: 18px;
+      padding: 22px 4vw 16px 4vw;
+  }
+  .customise-col-left,
+  .customise-col-right {
+      min-width: unset;
+      max-width: 98vw;
+      width: 100%;
+      padding-top: 0;
+  }
+  .customise-actions-row {
+      justify-content: center;
+  }
+}
+
 /* Form Container */
 .form-container {
   max-width: 360px;
