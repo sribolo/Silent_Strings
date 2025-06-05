@@ -12,12 +12,10 @@
             <div class="profile-avatar-section">
                 {% from "avatar_macro.html" import render_avatar %}
                 <div class="profile-avatar-wrap">
-                {{ render_avatar(avatar_parts) }}
-            </div>
-
+                    {{ render_avatar(avatar_parts) }}
                 </div>
             </div>
-            <!-- Profile Info -->
+            <!-- Profile Info (now inside the card) -->
             <div class="profile-info">
                 <div>
                     <span class="profile-label">Username:</span>
@@ -35,7 +33,7 @@
                     {% endif %}
                 </div>
             </div>
-            <!-- Profile Actions -->
+            <!-- Profile Actions (now inside the card) -->
             <div class="profile-actions">
                 <a href="{{ url_for('settings') }}" class="pixel-btn">
                     <i class="fa-solid fa-gear"></i>
