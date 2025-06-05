@@ -196,20 +196,16 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   });
 
-  // === Add Randomize Button ===
-  const previewContainer = document.getElementById('avatar-preview').parentNode;
-  const randomBtn = document.createElement('button');
-  randomBtn.textContent = 'Randomize';
-  randomBtn.className = 'pixel-btn';
-  randomBtn.style.marginBottom = '12px';
-  randomBtn.type = 'button'; // Prevent form submission
-  randomBtn.onclick = (e) => {
-    e.preventDefault(); // Prevent any default action
+  // === Attach randomize logic to the bottom-right button ===
+  document.getElementById("randomize-avatar").onclick = function(e) {
+    e.preventDefault();
+
     // Randomize characters (flat)
     if (spriteData.characters && spriteData.characters.length > 0) {
       const randChar = spriteData.characters[Math.floor(Math.random() * spriteData.characters.length)];
       selections.characters = { name: randChar.name };
     }
+
     // --- Outfit logic for clothes ---
     if (spriteData.clothes) {
       const subcats = Object.keys(spriteData.clothes);
@@ -225,20 +221,17 @@ document.addEventListener("DOMContentLoaded", () => {
       // If there are dresses, pick one and skip shirt/pants/skirts
       if (subcats.includes('dress')) {
         const dressOptions = spriteData.clothes['dress'];
-        if (dressOptions && dressOptions.length > 0 && Math.random() < 0.5) { // 50% chance to pick dress
+        if (dressOptions && dressOptions.length > 0 && Math.random() < 0.5) {
           if (!selections.clothes) selections.clothes = {};
           const randDress = dressOptions[Math.floor(Math.random() * dressOptions.length)];
           selections.clothes['dress'] = { name: randDress.name, subcategory: 'dress' };
-          // Do not pick shirt, pants, or skirts if dress is picked
         } else {
-          // If not picking dress, check for skirts
           if (subcats.includes('skirts')) {
             const skirtOptions = spriteData.clothes['skirts'];
-            if (skirtOptions && skirtOptions.length > 0 && Math.random() < 0.5) { // 50% chance to pick skirt
+            if (skirtOptions && skirtOptions.length > 0 && Math.random() < 0.5) {
               if (!selections.clothes) selections.clothes = {};
               const randSkirt = skirtOptions[Math.floor(Math.random() * skirtOptions.length)];
               selections.clothes['skirts'] = { name: randSkirt.name, subcategory: 'skirts' };
-              // Pick a shirt, but not pants
               if (subcats.includes('basic')) {
                 const shirtOptions = spriteData.clothes['basic'];
                 if (shirtOptions && shirtOptions.length > 0) {
@@ -246,16 +239,13 @@ document.addEventListener("DOMContentLoaded", () => {
                   selections.clothes['basic'] = { name: randShirt.name, subcategory: 'basic' };
                 }
               }
-              // Do not pick pants if skirt is picked
             } else {
-              // If not picking dress or skirt, pick shirt and ensure pants
               if (subcats.includes('basic')) {
                 const shirtOptions = spriteData.clothes['basic'];
                 if (shirtOptions && shirtOptions.length > 0) {
                   if (!selections.clothes) selections.clothes = {};
                   const randShirt = shirtOptions[Math.floor(Math.random() * shirtOptions.length)];
                   selections.clothes['basic'] = { name: randShirt.name, subcategory: 'basic' };
-                  // Now ensure pants
                   if (subcats.includes('pants')) {
                     const pantOptions = spriteData.clothes['pants'];
                     if (pantOptions && pantOptions.length > 0) {
@@ -267,14 +257,12 @@ document.addEventListener("DOMContentLoaded", () => {
               }
             }
           } else {
-            // If no skirts, pick shirt and ensure pants
             if (subcats.includes('basic')) {
               const shirtOptions = spriteData.clothes['basic'];
               if (shirtOptions && shirtOptions.length > 0) {
                 if (!selections.clothes) selections.clothes = {};
                 const randShirt = shirtOptions[Math.floor(Math.random() * shirtOptions.length)];
                 selections.clothes['basic'] = { name: randShirt.name, subcategory: 'basic' };
-                // Now ensure pants
                 if (subcats.includes('pants')) {
                   const pantOptions = spriteData.clothes['pants'];
                   if (pantOptions && pantOptions.length > 0) {
@@ -287,22 +275,18 @@ document.addEventListener("DOMContentLoaded", () => {
           }
         }
       } else if (subcats.includes('skirts')) {
-        // If no dresses, but skirts exist
         const skirtOptions = spriteData.clothes['skirts'];
-        if (skirtOptions && skirtOptions.length > 0 && Math.random() < 0.5) { // 50% chance to pick skirt
+        if (skirtOptions && skirtOptions.length > 0 && Math.random() < 0.5) {
           if (!selections.clothes) selections.clothes = {};
           const randSkirt = skirtOptions[Math.floor(Math.random() * skirtOptions.length)];
           selections.clothes['skirts'] = { name: randSkirt.name, subcategory: 'skirts' };
-          // Do not pick shirt or pants if skirt is picked
         } else {
-          // If not picking skirt, pick shirt and ensure pants
           if (subcats.includes('basic')) {
             const shirtOptions = spriteData.clothes['basic'];
             if (shirtOptions && shirtOptions.length > 0) {
               if (!selections.clothes) selections.clothes = {};
               const randShirt = shirtOptions[Math.floor(Math.random() * shirtOptions.length)];
               selections.clothes['basic'] = { name: randShirt.name, subcategory: 'basic' };
-              // Now ensure pants
               if (subcats.includes('pants')) {
                 const pantOptions = spriteData.clothes['pants'];
                 if (pantOptions && pantOptions.length > 0) {
@@ -314,14 +298,12 @@ document.addEventListener("DOMContentLoaded", () => {
           }
         }
       } else {
-        // If no dresses or skirts, pick shirt and ensure pants
         if (subcats.includes('basic')) {
           const shirtOptions = spriteData.clothes['basic'];
           if (shirtOptions && shirtOptions.length > 0) {
             if (!selections.clothes) selections.clothes = {};
             const randShirt = shirtOptions[Math.floor(Math.random() * shirtOptions.length)];
             selections.clothes['basic'] = { name: randShirt.name, subcategory: 'basic' };
-            // Now ensure pants
             if (subcats.includes('pants')) {
               const pantOptions = spriteData.clothes['pants'];
               if (pantOptions && pantOptions.length > 0) {
@@ -333,28 +315,29 @@ document.addEventListener("DOMContentLoaded", () => {
         }
       }
     }
+
     // Randomize other categories (with subcats)
     ["hair", "face", "acc"].forEach(cat => {
       if (spriteData[cat]) {
         const subcats = Object.keys(spriteData[cat]);
         if (subcats.length > 0) {
-          // Pick a random subcat with at least one option
           let validSubcats = subcats.filter(subcat => (spriteData[cat][subcat] && spriteData[cat][subcat].length > 0));
           if (validSubcats.length === 0) return;
           const randSubcat = validSubcats[Math.floor(Math.random() * validSubcats.length)];
           const options = spriteData[cat][randSubcat];
           if (options && options.length > 0) {
-            selections[cat] = {}; // Remove any previous subcat selections
+            selections[cat] = {};
             const randOpt = options[Math.floor(Math.random() * options.length)];
             selections[cat][randSubcat] = { name: randOpt.name, subcategory: randSubcat };
-            // Update currentSubheader and re-render grid
             currentSubheader[cat] = randSubcat;
             renderSubcatGrid(cat, randSubcat);
           }
         }
       }
     });
+
     updateAvatarPreview(selections);
+
     // Highlight selected in UI
     categories.forEach(category => {
       const grid = document.getElementById(`grid-${category}`);
@@ -376,8 +359,8 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     });
   };
-  previewContainer.insertBefore(randomBtn, previewContainer.firstChild);
-});
+
+}); // end DOMContentLoaded
 
 // === Function to update the big preview on the left ===
 function updateAvatarPreview(selections) {
