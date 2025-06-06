@@ -8,12 +8,12 @@
         <img src="{{ url_for('static', filename='images/avatar_parts/characters/' + (value.name if value is mapping and value.name else value|string) + '.png') }}"
              alt="{{ part }}" class="avatar-layer profile-avatar-layer">
       {% else %}
-        {# Handle multi-subcategory for layers like hair, face, clothes, acc #}
+        {# Handle nested subcategories for non-character parts #}
         {% if value is mapping %}
           {% for subcat, subvalue in value.items() %}
             {% if subvalue.name and subvalue.subcategory %}
               <img src="{{ url_for('static', filename='images/avatar_parts/' + part + '/' + subvalue.subcategory + '/' + subvalue.name + '.png') }}"
-                   alt="{{ part }}" class="avatar-layer profile-avatar-layer">
+                   alt="{{ part ~ '-' ~ subcat }}" class="avatar-layer profile-avatar-layer">
             {% endif %}
           {% endfor %}
         {% endif %}

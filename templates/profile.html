@@ -10,12 +10,31 @@
         <div class="mission-container pixelated-border">
             <h1 class="profile-title">Agent Profile</h1>
             <div class="profile-avatar-section">
-                {% from "avatar_macro.html" import render_avatar %}
                 <div class="profile-avatar-wrap">
-                    {{ render_avatar(avatar_parts) }}
+                    {# ---- AVATAR LAYER STACK START ---- #}
+                    {% set LAYER_ORDER = ["characters", "clothes", "hair", "face", "acc"] %}
+                    {% for part in LAYER_ORDER %}
+                      {% set value = avatar_parts.get(part) %}
+                      {% if value %}
+                        {% if part == "characters" %}
+                          <img src="{{ url_for('static', filename='images/avatar_parts/characters/' + (value.name if value is mapping and value.name else value|string) + '.png') }}"
+                               class="avatar-layer profile-avatar-layer" alt="{{ part }}">
+                        {% else %}
+                          {% if value is mapping %}
+                            {% for subcat, subvalue in value.items() %}
+                              {% if subvalue.name and subvalue.subcategory %}
+                                <img src="{{ url_for('static', filename='images/avatar_parts/' + part + '/' + subvalue.subcategory + '/' + subvalue.name + '.png') }}"
+                                     class="avatar-layer profile-avatar-layer" alt="{{ part }}">
+                              {% endif %}
+                            {% endfor %}
+                          {% endif %}
+                        {% endif %}
+                      {% endif %}
+                    {% endfor %}
+                    {# ---- AVATAR LAYER STACK END ---- #}
                 </div>
             </div>
-            <!-- Profile Info (now inside the card) -->
+            <!-- Profile Info -->
             <div class="profile-info">
                 <div>
                     <span class="profile-label">Username:</span>
@@ -33,7 +52,7 @@
                     {% endif %}
                 </div>
             </div>
-            <!-- Profile Actions (now inside the card) -->
+            <!-- Profile Actions -->
             <div class="profile-actions">
                 <a href="{{ url_for('settings') }}" class="pixel-btn">
                     <i class="fa-solid fa-gear"></i>
