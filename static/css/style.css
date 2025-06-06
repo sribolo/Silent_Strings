@@ -1471,7 +1471,7 @@ input::placeholder {
   pointer-events: none; 
 }
 /* Map area buttons */
-.map-area-cafe {
+.map-area-bank {
   position: absolute;
   /* Approximate position for your circled cafe. Tune these values until it fits! */
   left: 740px;   /* X position (px from the left of the map image container) */
@@ -1496,7 +1496,7 @@ input::placeholder {
   cursor: pointer;
 }
 
-.map-area-bank {
+.map-area-cafe {
   position: absolute;
   left: 80px;     /* Move horizontally from the left edge of the map */
   top: 520px;     /* Move vertically from the top edge of the map */
