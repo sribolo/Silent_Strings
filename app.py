@@ -545,6 +545,8 @@ def game():
     else:
         return redirect(url_for('login'))
 
+    avatar_parts = flatten_avatar_parts(avatar_parts)
+
     # Check if avatar is complete
     required_parts = ['characters', 'clothes', 'hair', 'face', 'acc']
     if not all(part in avatar_parts and avatar_parts[part] for part in required_parts):
@@ -557,6 +559,7 @@ def game():
         return redirect(url_for('customise'))
 
     print("DEBUG avatar_parts for game:", avatar_parts)
+    print("DEBUG avatar_parts for game (flattened):", avatar_parts)
 
     return render_template('game.html', avatar_parts=avatar_parts, is_guest=is_guest, username=username)
 

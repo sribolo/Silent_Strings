@@ -1464,8 +1464,13 @@ input::placeholder {
 #player-avatar {
   background-repeat: no-repeat;
   background-size: 256px 128px; /* 8 columns x 32px, 4 rows x 32px */
-  left: 500px;
-  top: 300px;
+  position: absolute;
+  width: 64px;
+  height: 64px;
+  z-index: 10;
+  pointer-events: none;
+  left: 16px;  /* starting pos, updated by JS */
+  top: 16px;
   transition: top 0.2s linear, left 0.2s linear;
 }
 /* Map area buttons */
