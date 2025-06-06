@@ -60,18 +60,7 @@ html, body {
   justify-content: center; /* Horizontally center */
 }
 
-.overlay-building {
-  position: absolute;
-  /* Adjust these values to match the POST office position and size */
-  left: 520px;    /* X position from the left (tweak as needed) */
-  top: 255px;     /* Y position from the top (tweak as needed) */
-  width: 200px;   /* Target width */
-  height: 145px;  /* Target height */
-  z-index: 11;    /* Above the map but below overlays/UI */
-  pointer-events: none; /* Don't block clicks */
-  filter: hue-rotate(-40deg) saturate(1.3) brightness(0.9); /* Tint towards purple (tweak!) */
-  opacity: 0.96;  /* Slight transparency for blend */
-}
+
 .center-container {
   min-height: 100vh;
   width: 100vw;

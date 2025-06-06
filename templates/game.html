@@ -7,13 +7,7 @@
 <div class="game-viewport">
   <div id="game-map">
     <img id="map-bg" src="{{ url_for('static', filename='images/pixel_town_1280x720.png') }}" alt="Town Map">
-
-    <!-- OVERLAY NEW BUILDING ON POST OFFICE SPOT -->
-    <img
-      src="{{ url_for('static', filename='images/shop.png') }}"
-      class="overlay-building"
-      alt="New Building">
-
+    
     <!-- PLAYER AVATAR (ALWAYS ON TOP OF MAP, NOT OVERLAY) -->
     <div id="player-avatar" class="avatar">
       {% set LAYER_ORDER = ["characters", "clothes", "hair", "face", "acc"] %}
