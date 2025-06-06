@@ -32,13 +32,11 @@ document.addEventListener("DOMContentLoaded", () => {
     },
     face: {
       blush: "Blush",
-      eyes_tiles: "Eyes",
       lipstick: "Lipstick",
       default: "Other Face"
     },
     acc: {
       glasses: "Glasses",
-      beard: "Beard",
       earring_red: "Red Earrings",
       earring_emerald: "Emerald Earrings",
       earring_red_silver: "Red/Silver Earrings",
@@ -141,7 +139,8 @@ document.addEventListener("DOMContentLoaded", () => {
         imgGrid.querySelectorAll('.avatar-choice.selected').forEach(el => el.classList.remove('selected'));
         img.classList.add('selected');
         if (!selections[category]) selections[category] = {};
-        selections[category][subcat] = { name: option.name, subcategory: subcat };
+        // --- PATCH: Always set subcategory to default if falsy
+        selections[category][subcat] = { name: option.name, subcategory: subcat || "default" };
         updateAvatarPreview(selections);
       };
       imgGrid.appendChild(img);
@@ -328,7 +327,8 @@ document.addEventListener("DOMContentLoaded", () => {
           if (options && options.length > 0) {
             selections[cat] = {};
             const randOpt = options[Math.floor(Math.random() * options.length)];
-            selections[cat][randSubcat] = { name: randOpt.name, subcategory: randSubcat };
+            // PATCH: always set subcategory to default if falsy
+            selections[cat][randSubcat] = { name: randOpt.name, subcategory: randSubcat || "default" };
             currentSubheader[cat] = randSubcat;
             renderSubcatGrid(cat, randSubcat);
           }
@@ -381,9 +381,10 @@ function updateAvatarPreview(selections) {
     if (selections[category]) {
       if (typeof selections[category] === 'object' && !Array.isArray(selections[category])) {
         Object.values(selections[category]).forEach(sel => {
-          if (sel && sel.name && sel.subcategory) {
+          if (sel && sel.name) {
+            // PATCH: use "default" if subcategory is empty
             const img = document.createElement('img');
-            img.src = getAvatarImgPath(category, sel);
+            img.src = getAvatarImgPath(category, { ...sel, subcategory: sel.subcategory || "default" });
             img.className = 'avatar-layer';
             img.onerror = function() { this.style.display = 'none'; };
             preview.appendChild(img);
@@ -398,8 +399,9 @@ function getAvatarImgPath(part, value) {
   if (!value) return null;
   if (part === 'characters') {
     return `/static/images/avatar_parts/characters/${value.name}.png`;
-  } else if (value.subcategory && value.name) {
-    return `/static/images/avatar_parts/${part}/${value.subcategory}/${value.name}.png`;
+  } else if (value.name) {
+    const subcat = value.subcategory || "default";
+    return `/static/images/avatar_parts/${part}/${subcat}/${value.name}.png`;
   }
   return null;
 }
@@ -415,10 +417,13 @@ function flattenSelections(selections) {
       if (subcats.length > 0) {
         flat[category] = {};
         subcats.forEach(subcat => {
-        const sel = selections[category][subcat];
-        if (sel && sel.name && sel.subcategory) {
-            flat[category][subcat] = { subcategory: sel.subcategory, name: sel.name };
-        }
+          const sel = selections[category][subcat];
+          if (sel && sel.name) {
+            flat[category][subcat] = {
+              subcategory: sel.subcategory || "default",
+              name: sel.name
+            };
+          }
         });
       }
     }
