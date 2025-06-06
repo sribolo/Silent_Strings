@@ -1393,7 +1393,7 @@ input::placeholder {
   height: 100vh;
   position: relative;
   overflow: hidden;
-  background: #25244a;
+  background: #0d0d0d;
   display: flex;
   align-items: center;
   justify-content: center;
