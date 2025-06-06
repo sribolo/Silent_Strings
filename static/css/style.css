@@ -1471,15 +1471,101 @@ input::placeholder {
   pointer-events: none; 
 }
 /* Map area buttons */
-#game-map .map-area-bank,
-#game-map .map-area-school,
-#game-map .map-area-company,
-#game-map .map-area-cafe,
-#game-map .map-area-news,
-#game-map .map-area-government,
-#game-map .map-area-transport,
-#game-map .map-area-hq {
+.map-area-cafe {
   position: absolute;
+  /* Approximate position for your circled cafe. Tune these values until it fits! */
+  left: 740px;   /* X position (px from the left of the map image container) */
+  top: 370px;    /* Y position (px from the top of the map image container) */
+  width: 210px;  /* Width of the button box (adjust as needed) */
+  height: 150px; /* Height of the button box (adjust as needed) */
+  z-index: 20;
+  background: rgba(255,255,255,0.01); /* Almost invisible, but clickable */
+  border: none;
+  cursor: pointer;
+}
+
+.map-area-school {
+  position: absolute;
+  left: 95px;    /* Move horizontally - adjust until box fits */
+  top: 50px;     /* Move vertically - adjust until box fits */
+  width: 240px;  /* Width of the clickable area - adjust until it covers the school */
+  height: 170px; /* Height of the clickable area - adjust until it covers the school */
+  z-index: 20;
+  background: rgba(0,255,0,0.15); /* For testing only! Set to rgba(0,0,0,0) or 0.01 when done */
+  border: none;
+  cursor: pointer;
+}
+
+.map-area-bank {
+  position: absolute;
+  left: 80px;     /* Move horizontally from the left edge of the map */
+  top: 520px;     /* Move vertically from the top edge of the map */
+  width: 190px;   /* Width of the clickable area - adjust if needed */
+  height: 125px;  /* Height of the clickable area - adjust if needed */
+  z-index: 20;
+  background: rgba(0,255,0,0.18); /* For testing, make 0 or 0.01 for production */
+  border: none;
+  cursor: pointer;
+}
+
+.map-area-transport {
+  position: absolute;
+  left: 530px;   /* Horizontal position (tweak if needed) */
+  top: 410px;    /* Vertical position (tweak if needed) */
+  width: 115px;  /* Width of clickable area */
+  height: 60px;  /* Height of clickable area */
+  z-index: 20;
+  background: rgba(0,255,0,0.18); /* Testing only! Set to transparent for production */
+  border: none;
+  cursor: pointer;
+}
+
+.map-area-company {
+  position: absolute;
+  left: 340px;    /* Horizontal position (adjust as needed) */
+  top: 205px;     /* Vertical position (adjust as needed) */
+  width: 220px;   /* Width of clickable area */
+  height: 150px;  /* Height of clickable area */
+  z-index: 20;
+  background: rgba(0,255,0,0.18); /* For testing, make 0.01 for production */
+  border: none;
+  cursor: pointer;
+}
+
+.map-area-hq {
+  position: absolute;
+  left: 600px;   /* Move horizontally (adjust if needed) */
+  top: 75px;     /* Move vertically (adjust if needed) */
+  width: 210px;  /* Width of the clickable area */
+  height: 145px; /* Height of the clickable area */
+  z-index: 20;
+  background: rgba(0,255,0,0.18); /* For testing; make 0 or 0.01 for production */
+  border: none;
+  cursor: pointer;
+}
+
+.map-area-government {
+  position: absolute;
+  left: 880px;   /* Horizontal position - adjust if needed */
+  top: 170px;    /* Vertical position - adjust if needed */
+  width: 235px;  /* Width of clickable area */
+  height: 185px; /* Height of clickable area */
+  z-index: 20;
+  background: rgba(0,255,0,0.18); /* For testing, use 0.01 for production */
+  border: none;
+  cursor: pointer;
+}
+
+.map-area-news {
+  position: absolute;
+  left: 85px;     /* Horizontal position - adjust if needed */
+  top: 260px;     /* Vertical position - adjust if needed */
+  width: 225px;   /* Width of clickable area */
+  height: 160px;  /* Height of clickable area */
+  z-index: 20;
+  background: rgba(0,255,0,0.18); /* For testing; use 0.01 for production */
+  border: none;
+  cursor: pointer;
 }
 
 #game-map .map-area-btn {
