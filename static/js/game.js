@@ -2,7 +2,7 @@ const player = document.getElementById('player-avatar');
 const map = document.getElementById('game-map');
 
 // Sprite sheet config
-const SPRITE_SIZE = 64;
+const SPRITE_SIZE = 32;
 const FRAMES = 8;
 const ROWS = 4; // down, left, right, up
 
@@ -11,86 +11,12 @@ let direction = 0; // 0=down, 1=left, 2=right, 3=up
 let frame = 0;
 let animInterval = null;
 
-// Number of NPCs to spawn
-const NUM_NPCS = 5;
-const npcAvatars = [];
-const npcElements = [];
-
-let spriteData = null;
-
-fetch('/get_sprites')
-  .then(res => res.json())
-  .then(data => {
-    spriteData = data;
-    spawnNpcs();
-  });
-
-function spawnNpcs() {
-  for (let i = 0; i < NUM_NPCS; i++) {
-    const npcDiv = document.createElement('div');
-    npcDiv.className = 'npc-avatar';
-    npcDiv.style.width = '64px';
-    npcDiv.style.height = '64px';
-
-    // Generate a random avatar
-    const npcAvatar = randomNpcAvatar(spriteData);
-
-    // Render character base
-    if (npcAvatar.characters && npcAvatar.characters.img) {
-      const charImg = document.createElement('img');
-      charImg.src = npcAvatar.characters.img;
-      charImg.className = 'avatar-layer';
-      charImg.style.width = '64px';
-      charImg.style.height = '64px';
-      npcDiv.appendChild(charImg);
-    }
-
-    // Render other layers
-    ['clothes', 'hair', 'face', 'acc'].forEach(category => {
-      if (npcAvatar[category]) {
-        Object.values(npcAvatar[category]).forEach(sel => {
-          if (sel && sel.img) {
-            const img = document.createElement('img');
-            img.src = sel.img;
-            img.className = 'avatar-layer';
-            img.style.width = '64px';
-            img.style.height = '64px';
-            img.onerror = function() { this.style.display = 'none'; };
-            npcDiv.appendChild(img);
-          }
-        });
-      }
-    });
-
-    // Set initial position
-    const pos = getRandomPosition();
-    npcDiv.style.position = 'absolute';
-    npcDiv.style.left = pos.x + 'px';
-    npcDiv.style.top = pos.y + 'px';
-
-    map.appendChild(npcDiv);
-    npcElements.push(npcDiv);
-  }
-}
-
-// Animate a layered sprite (player or NPC)
-function setLayeredSpriteFrame(container, direction, frame) {
-  // container: the div containing the avatar layers (e.g., #player-avatar)
-  // direction: 0=down, 1=left, 2=right, 3=up
-  // frame: 0-7
-  const layers = container.querySelectorAll('img');
-  layers.forEach(img => {
-    img.style.objectFit = 'none';
-    img.style.objectPosition = `-${frame * SPRITE_SIZE}px -${direction * SPRITE_SIZE}px`;
-  });
-}
-
-// Helper: Set sprite sheet background position (for layered sprite)
+// Helper: Set sprite sheet background position
 function setPlayerFrame(dir, frame) {
-  setLayeredSpriteFrame(player, dir, frame);
+  player.style.backgroundPosition = `-${frame*SPRITE_SIZE}px -${dir*SPRITE_SIZE}px`;
 }
 
-// Animate walking (for layered sprite)
+// Animate walking
 function animateWalk(dir) {
   clearInterval(animInterval);
   frame = 0;
@@ -98,9 +24,10 @@ function animateWalk(dir) {
   animInterval = setInterval(() => {
     frame = (frame + 1) % FRAMES;
     setPlayerFrame(dir, frame);
-  }, 200); // Slower animation speed
+  }, 100); // Adjust animation speed
 }
 
+// Keyboard move
 document.addEventListener('keydown', function(e) {
   let moved = false;
   if (e.key === "ArrowRight") { x += 10; direction = 2; moved = true; }
@@ -113,7 +40,7 @@ document.addEventListener('keydown', function(e) {
     player.style.left = x + "px";
     player.style.top = y + "px";
     animateWalk(direction);
-    setTimeout(() => { clearInterval(animInterval); setPlayerFrame(direction, 0); }, 700); // Slower stop
+    setTimeout(() => { clearInterval(animInterval); setPlayerFrame(direction, 0); }, 400);
   }
 });
 
@@ -141,8 +68,7 @@ map.addEventListener('click', function(e) {
 
 // Start mission on button click
 function startMission(location) {
-  console.log("Starting mission for location:", location);
-  window.location.href = `/mission/${location}`;
+  alert("Start mission at: " + location); // Replace with actual modal or page navigation
 }
 
 // Initialize standing frame
@@ -153,220 +79,3 @@ window.onload = function() {
   bgm.volume = 0.3; // Set volume (0.0 to 1.0)
   // bgm.play(); // If you want to trigger play via JS
 };
-
-document.addEventListener('DOMContentLoaded', function() {
-    document.querySelectorAll('.map-area-btn').forEach(function(btn) {
-        btn.addEventListener('click', function() {
-            const mission = btn.getAttribute('data-mission');
-            if (mission) startMission(mission);
-        });
-    });
-});
-
-// Helper: get random position within map bounds
-function getRandomPosition() {
-  const mapRect = map.getBoundingClientRect();
-  const x = Math.random() * (map.offsetWidth - 32);
-  const y = Math.random() * (map.offsetHeight - 32);
-  return { x, y };
-}
-
-function getRandomElement(arr) {
-  return arr[Math.floor(Math.random() * arr.length)];
-}
-
-function randomNpcAvatar(spriteData) {
-  const avatar = {};
-
-  // Characters (flat array)
-  if (spriteData.characters && spriteData.characters.length > 0) {
-    const char = getRandomElement(spriteData.characters);
-    avatar.characters = { name: char.name, img: char.img };
-  }
-
-  // --- Outfit logic for clothes ---
-  if (spriteData.clothes) {
-    const subcats = Object.keys(spriteData.clothes);
-    // Always pick shoes if available
-    if (subcats.includes('shoes')) {
-      const shoesOptions = spriteData.clothes['shoes'];
-      if (shoesOptions && shoesOptions.length > 0) {
-        if (!avatar.clothes) avatar.clothes = {};
-        const randShoes = getRandomElement(shoesOptions);
-        avatar.clothes['shoes'] = { name: randShoes.name, img: randShoes.img };
-      }
-    }
-    // If there are dresses, pick one and skip shirt/pants/skirts
-    if (subcats.includes('dress')) {
-      const dressOptions = spriteData.clothes['dress'];
-      if (dressOptions && dressOptions.length > 0 && Math.random() < 0.5) { // 50% chance to pick dress
-        if (!avatar.clothes) avatar.clothes = {};
-        const randDress = getRandomElement(dressOptions);
-        avatar.clothes['dress'] = { name: randDress.name, img: randDress.img };
-        // Do not pick shirt, pants, or skirts if dress is picked
-      } else {
-        // If not picking dress, check for skirts
-        if (subcats.includes('skirts')) {
-          const skirtOptions = spriteData.clothes['skirts'];
-          if (skirtOptions && skirtOptions.length > 0 && Math.random() < 0.5) { // 50% chance to pick skirt
-            if (!avatar.clothes) avatar.clothes = {};
-            const randSkirt = getRandomElement(skirtOptions);
-            avatar.clothes['skirts'] = { name: randSkirt.name, img: randSkirt.img };
-            // Pick a shirt, but not pants
-            if (subcats.includes('basic')) {
-              const shirtOptions = spriteData.clothes['basic'];
-              if (shirtOptions && shirtOptions.length > 0) {
-                const randShirt = getRandomElement(shirtOptions);
-                avatar.clothes['basic'] = { name: randShirt.name, img: randShirt.img };
-              }
-            }
-            // Do not pick pants if skirt is picked
-          } else {
-            // If not picking dress or skirt, pick shirt and ensure pants
-            if (subcats.includes('basic')) {
-              const shirtOptions = spriteData.clothes['basic'];
-              if (shirtOptions && shirtOptions.length > 0) {
-                if (!avatar.clothes) avatar.clothes = {};
-                const randShirt = getRandomElement(shirtOptions);
-                avatar.clothes['basic'] = { name: randShirt.name, img: randShirt.img };
-                // Now ensure pants
-                if (subcats.includes('pants')) {
-                  const pantOptions = spriteData.clothes['pants'];
-                  if (pantOptions && pantOptions.length > 0) {
-                    const randPant = getRandomElement(pantOptions);
-                    avatar.clothes['pants'] = { name: randPant.name, img: randPant.img };
-                  }
-                }
-              }
-            }
-          }
-        } else {
-          // If no skirts, pick shirt and ensure pants
-          if (subcats.includes('basic')) {
-            const shirtOptions = spriteData.clothes['basic'];
-            if (shirtOptions && shirtOptions.length > 0) {
-              if (!avatar.clothes) avatar.clothes = {};
-              const randShirt = getRandomElement(shirtOptions);
-              avatar.clothes['basic'] = { name: randShirt.name, img: randShirt.img };
-              // Now ensure pants
-              if (subcats.includes('pants')) {
-                const pantOptions = spriteData.clothes['pants'];
-                if (pantOptions && pantOptions.length > 0) {
-                  const randPant = getRandomElement(pantOptions);
-                  avatar.clothes['pants'] = { name: randPant.name, img: randPant.img };
-                }
-              }
-            }
-          }
-        }
-      }
-    } else if (subcats.includes('skirts')) {
-      // If no dresses, but skirts exist
-      const skirtOptions = spriteData.clothes['skirts'];
-      if (skirtOptions && skirtOptions.length > 0 && Math.random() < 0.5) { // 50% chance to pick skirt
-        if (!avatar.clothes) avatar.clothes = {};
-        const randSkirt = getRandomElement(skirtOptions);
-        avatar.clothes['skirts'] = { name: randSkirt.name, img: randSkirt.img };
-        // Pick a shirt, but not pants
-        if (subcats.includes('basic')) {
-          const shirtOptions = spriteData.clothes['basic'];
-          if (shirtOptions && shirtOptions.length > 0) {
-            const randShirt = getRandomElement(shirtOptions);
-            avatar.clothes['basic'] = { name: randShirt.name, img: randShirt.img };
-          }
-        }
-        // Do not pick pants if skirt is picked
-      } else {
-        // If not picking skirt, pick shirt and ensure pants
-        if (subcats.includes('basic')) {
-          const shirtOptions = spriteData.clothes['basic'];
-          if (shirtOptions && shirtOptions.length > 0) {
-            if (!avatar.clothes) avatar.clothes = {};
-            const randShirt = getRandomElement(shirtOptions);
-            avatar.clothes['basic'] = { name: randShirt.name, img: randShirt.img };
-            // Now ensure pants
-            if (subcats.includes('pants')) {
-              const pantOptions = spriteData.clothes['pants'];
-              if (pantOptions && pantOptions.length > 0) {
-                const randPant = getRandomElement(pantOptions);
-                avatar.clothes['pants'] = { name: randPant.name, img: randPant.img };
-              }
-            }
-          }
-        }
-      }
-    } else {
-      // If no dresses or skirts, pick shirt and ensure pants
-      if (subcats.includes('basic')) {
-        const shirtOptions = spriteData.clothes['basic'];
-        if (shirtOptions && shirtOptions.length > 0) {
-          if (!avatar.clothes) avatar.clothes = {};
-          const randShirt = getRandomElement(shirtOptions);
-          avatar.clothes['basic'] = { name: randShirt.name, img: randShirt.img };
-          // Now ensure pants
-          if (subcats.includes('pants')) {
-            const pantOptions = spriteData.clothes['pants'];
-            if (pantOptions && pantOptions.length > 0) {
-              const randPant = getRandomElement(pantOptions);
-              avatar.clothes['pants'] = { name: randPant.name, img: randPant.img };
-            }
-          }
-        }
-      }
-    }
-  }
-
-  // Other categories (hair, face, acc)
-  ['hair', 'face', 'acc'].forEach(category => {
-    if (spriteData[category]) {
-      const subcats = Object.keys(spriteData[category]);
-      if (subcats.length > 0) {
-        // Pick a random subcat with at least one option
-        let validSubcats = subcats.filter(subcat => (spriteData[category][subcat] && spriteData[category][subcat].length > 0));
-        if (validSubcats.length === 0) return;
-        const randSubcat = getRandomElement(validSubcats);
-        const options = spriteData[category][randSubcat];
-        if (options && options.length > 0) {
-          avatar[category] = {}; // Remove any previous subcat selections
-          const randOpt = getRandomElement(options);
-          avatar[category][randSubcat] = { name: randOpt.name, img: randOpt.img };
-        }
-      }
-    }
-  });
-
-  return avatar;
-}
-
-// Animate NPCs
-function moveNpc(npcDiv) {
-  const currentLeft = parseFloat(npcDiv.style.left);
-  const currentTop = parseFloat(npcDiv.style.top);
-  const moveDistance = 32; // move by one tile (adjust as needed)
-  let newLeft = currentLeft;
-  let newTop = currentTop;
-  // Randomly choose to move horizontally or vertically
-  if (Math.random() < 0.5) {
-    // Move horizontally
-    if (Math.random() < 0.5) {
-      newLeft = Math.max(0, Math.min(currentLeft + moveDistance, map.offsetWidth - SPRITE_SIZE));
-    } else {
-      newLeft = Math.max(0, Math.min(currentLeft - moveDistance, map.offsetWidth - SPRITE_SIZE));
-    }
-  } else {
-    // Move vertically
-    if (Math.random() < 0.5) {
-      newTop = Math.max(0, Math.min(currentTop + moveDistance, map.offsetHeight - SPRITE_SIZE));
-    } else {
-      newTop = Math.max(0, Math.min(currentTop - moveDistance, map.offsetHeight - SPRITE_SIZE));
-    }
-  }
-  npcDiv.style.transition = 'left 1.2s linear, top 1.2s linear';
-  npcDiv.style.left = newLeft + 'px';
-  npcDiv.style.top = newTop + 'px';
-}
-
-// Move all NPCs every few seconds
-setInterval(() => {
-  npcElements.forEach(moveNpc);
-}, 5000); // Slower movement
