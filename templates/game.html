@@ -9,23 +9,31 @@
     <img id="map-bg" src="{{ url_for('static', filename='images/pixel_town_1280x720.png') }}" alt="Town Map">
     
     <!-- PLAYER AVATAR (ALWAYS ON TOP OF MAP, NOT OVERLAY) -->
-    <div id="player-avatar" class="avatar">
-      {% set LAYER_ORDER = ["characters", "clothes", "hair", "face", "acc"] %}
-      {% for part in LAYER_ORDER %}
-        {% set value = avatar_parts.get(part) %}
-        {% if value %}
-          {% if part == "characters" %}
-            <img src="{{ url_for('static', filename='images/avatar_parts/characters/' + (value.name if value is mapping and value.name else value|string) + '.png') }}"
-                 alt="{{ part }}" class="avatar-layer">
+  <div id="player-avatar" class="avatar">
+    {% set LAYER_ORDER = ["characters", "clothes", "hair", "face", "acc"] %}
+    {% for part in LAYER_ORDER %}
+      {% set value = avatar_parts.get(part) %}
+      {% if value %}
+        {% if part == "characters" %}
+          <img src="{{ url_for('static', filename='images/avatar_parts/characters/' + (value.name if value is mapping and value.name else value|string) + '.png') }}"
+              alt="{{ part }}" class="avatar-layer">
+        {% else %}
+          {# Try direct "subcategory"/"name" dict first (your new structure) #}
+          {% if value is mapping and value.subcategory and value.name %}
+            <img src="{{ url_for('static', filename='images/avatar_parts/' + part + '/' + value.subcategory + '/' + value.name + '.png') }}"
+                alt="{{ part }}" class="avatar-layer">
           {% else %}
-            {% if value is mapping and value.subcategory and value.name %}
-              <img src="{{ url_for('static', filename='images/avatar_parts/' + part + '/' + value.subcategory + '/' + value.name + '.png') }}"
-                   alt="{{ part }}" class="avatar-layer">
-            {% endif %}
+            {# If legacy dict-of-dicts (multiple subcategories), render all subcat choices #}
+            {% for subcat, subval in value.items() if subval.name %}
+              <img src="{{ url_for('static', filename='images/avatar_parts/' + part + '/' + subcat + '/' + subval.name + '.png') }}"
+                  alt="{{ part }}" class="avatar-layer">
+            {% endfor %}
           {% endif %}
         {% endif %}
-      {% endfor %}
-    </div>
+      {% endif %}
+    {% endfor %}
+  </div>
+
 
     <!-- MAP BUILDING BUTTONS (STILL ON MAP, NOT OVERLAY) -->
     <button class="map-area-btn map-area-bank" data-mission="bank"></button>

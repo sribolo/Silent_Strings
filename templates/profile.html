@@ -3,6 +3,10 @@
 {% block title %}Agent Profile{% endblock %}
 
 {% block content %}
+<div class="bg-container">
+    <img src="{{ url_for('static', filename='images/background.gif') }}" class="background">
+    <div class="darken"></div>
+    <div class="overlay">
         <div class="mission-container pixelated-border">
             <h1 class="profile-title">Agent Profile</h1>
             <div class="profile-avatar-section">
@@ -14,21 +18,25 @@
                       {% if value %}
                         {% if part == "characters" %}
                           <img src="{{ url_for('static', filename='images/avatar_parts/characters/' + (value.name if value is mapping and value.name else value|string) + '.png') }}"
-                               class="avatar-layer profile-avatar-layer" alt="{{ part }}">
+                               alt="{{ part }}" class="avatar-layer">
                         {% else %}
-                          {% if value is mapping %}
-                            {% for subcat, subvalue in value.items() %}
-                              {% if subvalue.name and subvalue.subcategory %}
-                                <img src="{{ url_for('static', filename='images/avatar_parts/' + part + '/' + subvalue.subcategory + '/' + subvalue.name + '.png') }}"
-                                     class="avatar-layer profile-avatar-layer" alt="{{ part }}">
-                              {% endif %}
+                          {# Handle both single part and legacy dict-of-dicts #}
+                          {% if value is mapping and value.subcategory and value.name %}
+                            <img src="{{ url_for('static', filename='images/avatar_parts/' + part + '/' + value.subcategory + '/' + value.name + '.png') }}"
+                                 alt="{{ part }}" class="avatar-layer">
+                          {% else %}
+                            {# Legacy: dict-of-dicts for multiple subcategories #}
+                            {% for subcat, subval in value.items() if subval.name %}
+                              <img src="{{ url_for('static', filename='images/avatar_parts/' + part + '/' + subcat + '/' + subval.name + '.png') }}"
+                                   alt="{{ part }}" class="avatar-layer">
                             {% endfor %}
                           {% endif %}
                         {% endif %}
                       {% endif %}
                     {% endfor %}
                     {# ---- AVATAR LAYER STACK END ---- #}
-                </div>
+                  </div>
+                  
             </div>
             <!-- Profile Info -->
             <div class="profile-info">
