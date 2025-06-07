@@ -399,12 +399,16 @@ function getAvatarImgPath(part, value) {
   if (!value) return null;
   if (part === 'characters') {
     return `/static/images/avatar_parts/characters/${value.name}.png`;
+  } else if (part === 'acc' && value.name) {
+    // For accessories: NO subfolder, just the file name!
+    return `/static/images/avatar_parts/acc/${value.name}.png`;
   } else if (value.name) {
     const subcat = value.subcategory || "default";
     return `/static/images/avatar_parts/${part}/${subcat}/${value.name}.png`;
   }
   return null;
 }
+
 
 function flattenSelections(selections) {
   const flat = {};

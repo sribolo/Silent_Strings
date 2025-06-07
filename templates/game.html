@@ -14,24 +14,21 @@
     {% for part in LAYER_ORDER %}
       {% set value = avatar_parts.get(part) %}
       {% if value %}
-        {% if part == "characters" %}
+        {% if part == "acc" %}
+          <img src="{{ url_for('static', filename='images/avatar_parts/acc/' + value.name + '.png') }}"
+               alt="{{ part }}" class="avatar-layer">
+        {% elif part == "characters" %}
           <img src="{{ url_for('static', filename='images/avatar_parts/characters/' + (value.name if value is mapping and value.name else value|string) + '.png') }}"
-              alt="{{ part }}" class="avatar-layer">
+               alt="{{ part }}" class="avatar-layer">
         {% else %}
-          {# Try direct "subcategory"/"name" dict first (your new structure) #}
           {% if value is mapping and value.subcategory and value.name %}
             <img src="{{ url_for('static', filename='images/avatar_parts/' + part + '/' + value.subcategory + '/' + value.name + '.png') }}"
-                alt="{{ part }}" class="avatar-layer">
-          {% else %}
-            {# If legacy dict-of-dicts (multiple subcategories), render all subcat choices #}
-            {% for subcat, subval in value.items() if subval.name %}
-              <img src="{{ url_for('static', filename='images/avatar_parts/' + part + '/' + subcat + '/' + subval.name + '.png') }}"
-                  alt="{{ part }}" class="avatar-layer">
-            {% endfor %}
+                 alt="{{ part }}" class="avatar-layer">
           {% endif %}
         {% endif %}
       {% endif %}
     {% endfor %}
+    
   </div>
 
 
