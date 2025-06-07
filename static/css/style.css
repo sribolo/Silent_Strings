@@ -1433,6 +1433,20 @@ input::placeholder {
 
 /* Optionally, if you want to allow click/hover on player: */
 
+#player-avatar .avatar-layer {
+  width: 64px !important;
+  height: 64px !important;
+  position: absolute;
+  top: 0;
+  left: 0;
+  image-rendering: pixelated;
+  object-fit: contain;
+  pointer-events: none;
+  margin: 0;
+  padding: 0;
+  z-index: 1;
+}
+
 #player-avatar {
   background-repeat: no-repeat;
   background-size: 256px 128px; /* 8 columns x 32px, 4 rows x 32px */
