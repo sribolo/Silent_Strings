@@ -1373,18 +1373,16 @@ input::placeholder {
 .game-viewport {
   width: 100vw;
   height: 100vh;
-  background: #19193a; /* Your side padding color */
   display: flex;
   align-items: center;
   justify-content: center;
   overflow: hidden;
+  background: #181944;
 }
 
 #game-map {
   width: 1280px;
   height: 720px;
-  max-width: 98vw;   /* Prevent overflow on small screens */
-  max-height: 98vh;
   aspect-ratio: 16 / 9;
   background: #23232b;
   border-radius: 32px;
