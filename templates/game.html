@@ -9,7 +9,7 @@
     <img id="map-bg" src="{{ url_for('static', filename='images/pixel_town_1280x720.png') }}" alt="Town Map">
     
     <!-- PLAYER AVATAR (ALWAYS ON TOP OF MAP, NOT OVERLAY) -->
-    <div id="profile-avatar-wrap" class="avatar">
+    <div id="player-avatar" class="avatar">
       {% set LAYER_ORDER = ["characters", "clothes", "hair", "face", "acc"] %}
     {% for part in LAYER_ORDER %}
       {% set value = avatar_parts.get(part) %}

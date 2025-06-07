@@ -1,87 +1,177 @@
 {% extends "base.html" %}
 {% block title %}{{ mission.title if mission else "Mission" }}{% endblock %}
-{% block content %}
-    <div class="mission-container">
-        {% if error %}
-            <h2>{{ error }}</h2>
-            <a href="{{ url_for('game') }}" class="back-btn">Back to Map</a>
-        {% else %}
-            <h1>{{ mission.title }}</h1>
-            <h3>Objectives:</h3>
-            <ul class="objectives-list">
-                {% for obj in mission.objectives %}
-                    <li>{{ obj }}</li>
-                {% endfor %}
-            </ul>
-            <h3>NPC Dialogue:</h3>
-            <div class="npc-dialogue-area">
-                <div id="dialogue-text"></div>
-                <div id="options"></div>
-            </div>
-            <a href="{{ url_for('game') }}" class="back-btn">Back to Map</a>
-        {% endif %}
-    </div>
-    <script src="{{ url_for('static', filename='js/dialogues.js') }}"></script>
-    {% if mission %}
-    <script>
-        console.log("Mission data:", JSON.parse('{{ mission|tojson|safe }}'));
-        // Pass the dialogue key to JS (always a string or null)
-        const npcDialogueKey = "{{ mission.npc_dialogue_key|tojson|safe }}";
-        
-        if (npcDialogueKey && typeof levelDialogues !== 'undefined') {
-            const dialogueArea = document.getElementById('dialogue-text');
-            const optionsBox = document.getElementById('options');
-            const npcs = Object.keys(levelDialogues[npcDialogueKey]);
-            let npcIndex = 0;
-            let lineIndex = 0;
 
-            function showDialogue() {
-                const npc = npcs[npcIndex];
-                const lines = levelDialogues[npcDialogueKey][npc];
-                const line = lines[lineIndex];
-                dialogueArea.innerHTML = `<b>${npc.replace(/_/g, ' ')}:</b> ${line.text}`;
-                optionsBox.innerHTML = '';
-                
-                if (line.clue) {
-                    const clueDiv = document.createElement('div');
-                    clueDiv.textContent = 'Clue: ' + line.clue;
-                    clueDiv.style.color = '#A3FFB0';
-                    clueDiv.style.marginTop = '8px';
-                    optionsBox.appendChild(clueDiv);
-                }
-                
-                // Next/Prev buttons
-                if (lineIndex < lines.length - 1) {
-                    const nextBtn = document.createElement('button');
-                    nextBtn.textContent = 'Next';
-                    nextBtn.className = 'back-btn';
-                    nextBtn.onclick = () => { lineIndex++; showDialogue(); };
-                    optionsBox.appendChild(nextBtn);
-                } else if (npcIndex < npcs.length - 1) {
-                    const nextNpcBtn = document.createElement('button');
-                    nextNpcBtn.textContent = 'Next NPC';
-                    nextNpcBtn.className = 'back-btn';
-                    nextNpcBtn.onclick = () => { npcIndex++; lineIndex = 0; showDialogue(); };
-                    optionsBox.appendChild(nextNpcBtn);
-                }
-                
-                if (lineIndex > 0) {
-                    const prevBtn = document.createElement('button');
-                    prevBtn.textContent = 'Previous';
-                    prevBtn.className = 'back-btn';
-                    prevBtn.onclick = () => { lineIndex--; showDialogue(); };
-                    optionsBox.appendChild(prevBtn);
-                } else if (npcIndex > 0) {
-                    const prevNpcBtn = document.createElement('button');
-                    prevNpcBtn.textContent = 'Previous NPC';
-                    prevNpcBtn.className = 'back-btn';
-                    prevNpcBtn.onclick = () => { npcIndex--; lineIndex = 0; showDialogue(); };
-                    optionsBox.appendChild(prevNpcBtn);
-                }
-            }
-            
-            showDialogue();
-        }
-    </script>
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/mission.css') }}">
+{% endblock %}
+
+{% block content %}
+<div class="mission-container">
+    {% if error %}
+        <h2>{{ error }}</h2>
+        <a href="{{ url_for('game') }}" class="back-btn">Back to Map</a>
+    {% else %}
+        <h1>{{ mission.title }}</h1>
+        <div id="mission-timer" class="mission-timer-bar">
+            Time Left: <span id="timer-value"></span>
+        </div>
+        <h3>Objectives:</h3>
+        <ul class="objectives-list" id="objectives-list">
+            {% for obj in mission.objectives %}
+            <li data-index="{{ loop.index0 }}" {% if loop.index0 in completed_objectives %}class="completed"{% endif %}>
+                <span class="objective-status">
+                    [{{ '✓' if loop.index0 in completed_objectives else ' ' }}]
+                </span>
+                {{ obj }}
+            </li>
+            {% endfor %}
+        </ul>
+        {% if mission.tools_available %}
+        <h3>Available Tools:</h3>
+        <div class="tools-list">
+            {% for tool in mission.tools_available %}
+            <button class="tool-btn" data-tool="{{ tool|lower|replace(' ', '-') }}">{{ tool }}</button>
+            {% endfor %}
+        </div>
+        <div id="tool-interfaces">
+            {% if 'Network Scanner' in mission.tools_available %}
+            <div class="tool-interface" id="network-scanner-interface" style="display: none;">
+                <h4>Network Scanner</h4>
+                <button id="start-demo-scan">Scan Network</button>
+                <div id="scan-demo-status"></div>
+            </div>
+            {% endif %}
+            {% if 'Log Analyzer' in mission.tools_available %}
+            <div class="tool-interface" id="log-analyzer-interface" style="display: none;">
+                <h4>Log Analyzer</h4>
+                <button id="start-demo-log">Analyze Logs</button>
+                <div id="log-demo-status"></div>
+            </div>
+            {% endif %}
+            {% if 'Password Cracker' in mission.tools_available %}
+            <div class="tool-interface" id="password-cracker-interface" style="display: none;">
+                <h4>Password Cracker</h4>
+                <button id="start-demo-crack">Crack Password</button>
+                <div id="crack-demo-status"></div>
+            </div>
+            {% endif %}
+            {% if 'File Recovery' in mission.tools_available %}
+            <div class="tool-interface" id="file-recovery-interface" style="display: none;">
+                <h4>File Recovery</h4>
+                <button id="start-demo-recover">Recover File</button>
+                <div id="recover-demo-status"></div>
+            </div>
+            {% endif %}
+        </div>
+        {% endif %}
+        <h3>NPC Dialogue:</h3>
+        <div class="npc-dialogue-area">
+            <div id="dialogue-text"></div>
+            <div id="options"></div>
+        </div>
+        <a href="{{ url_for('game') }}" class="back-btn">Back to Map</a>
     {% endif %}
-{% endblock %} 
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+const completedObjectives = JSON.parse('{{ completed_objectives|tojson|safe }}');
+const totalObjectives = parseInt('{{ mission.objectives|length }}');
+let timeLeft = parseInt('{{ mission.timeLimit if mission and mission.timeLimit else 1800 }}');
+
+// --- Timer ---
+function updateTimer() {
+    const timerValue = document.getElementById('timer-value');
+    if (!timerValue) return;
+    let min = Math.floor(timeLeft / 60);
+    let sec = timeLeft % 60;
+    timerValue.textContent = `${min}:${sec.toString().padStart(2,'0')}`;
+    if (timeLeft > 0) {
+        timeLeft--;
+        setTimeout(updateTimer, 1000);
+    } else {
+        document.getElementById('mission-timer').textContent = "Mission Failed!";
+    }
+}
+if (document.getElementById('timer-value')) updateTimer();
+
+// --- Mark Objective Complete & Save Progress ---
+function markObjectiveComplete(index) {
+    if (!completedObjectives.includes(index)) {
+        completedObjectives.push(index);
+        saveObjectives();
+    }
+    const objList = document.getElementById('objectives-list');
+    if (!objList) return;
+    const li = objList.querySelector(`li[data-index="${index}"]`);
+    if (li) {
+        li.querySelector('.objective-status').textContent = '[✓]';
+        li.classList.add('completed');
+        showObjectiveToast("Objective completed!");
+    }
+    if (completedObjectives.length === totalObjectives) {
+        showObjectiveToast("All objectives completed!");
+    }
+}
+function showObjectiveToast(msg) {
+    let toast = document.createElement('div');
+    toast.textContent = msg;
+    toast.style.position = 'fixed';
+    toast.style.bottom = '28px';
+    toast.style.left = '50%';
+    toast.style.transform = 'translateX(-50%)';
+    toast.style.background = '#232323';
+    toast.style.color = '#38d39f';
+    toast.style.padding = '12px 24px';
+    toast.style.borderRadius = '12px';
+    toast.style.zIndex = 9999;
+    toast.style.fontSize = '1.1em';
+    toast.style.boxShadow = '0 2px 16px #0008';
+    document.body.appendChild(toast);
+    setTimeout(() => { toast.remove(); }, 1500);
+}
+function saveObjectives() {
+    fetch(window.location.pathname, {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({completed: completedObjectives})
+    });
+}
+
+// --- Tools UI ---
+document.addEventListener('DOMContentLoaded', function() {
+    document.querySelectorAll('.tool-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+            document.querySelectorAll('.tool-interface').forEach(div => div.style.display = 'none');
+            const toolId = btn.getAttribute('data-tool');
+            const interfaceDiv = document.getElementById(`${toolId}-interface`);
+            if (interfaceDiv) interfaceDiv.style.display = 'block';
+        });
+    });
+
+    // DEMO: Complete objectives
+    const scanBtn = document.getElementById('start-demo-scan');
+    if (scanBtn) scanBtn.onclick = function() {
+        document.getElementById('scan-demo-status').textContent = "Network scan completed!";
+        markObjectiveComplete(0);
+    };
+    const logBtn = document.getElementById('start-demo-log');
+    if (logBtn) logBtn.onclick = function() {
+        document.getElementById('log-demo-status').textContent = "Logs analyzed!";
+        markObjectiveComplete(1);
+    };
+    const crackBtn = document.getElementById('start-demo-crack');
+    if (crackBtn) crackBtn.onclick = function() {
+        document.getElementById('crack-demo-status').textContent = "Password cracked!";
+        markObjectiveComplete(2);
+    };
+    const recoverBtn = document.getElementById('start-demo-recover');
+    if (recoverBtn) recoverBtn.onclick = function() {
+        document.getElementById('recover-demo-status').textContent = "File recovered!";
+        markObjectiveComplete(3);
+    };
+});
+</script>
+<script src="{{ url_for('static', filename='js/dialogues.js') }}"></script>
+{% endblock %}

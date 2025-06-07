@@ -591,12 +591,31 @@ MISSIONS = {
     # Add more missions as needed...
 }
 
-@app.route('/mission/<location>')
+from flask import request, jsonify
+
+@app.route('/mission/<location>', methods=['GET', 'POST'])
 def mission(location):
+    # Load mission data as before
     mission_data = MISSIONS.get(location)
     if not mission_data:
         return render_template('mission.html', error="Mission not found.", location=location)
-    return render_template('mission.html', mission=mission_data, location=location)
+
+    # Save/check progress in session
+    progress_key = f'progress_{location}'
+    if request.method == 'POST':
+        # Receive updated completed objectives from JS
+        completed = request.json.get('completed', [])
+        session[progress_key] = completed
+        session.modified = True
+        return jsonify({"status": "ok"})
+
+    completed_objectives = session.get(progress_key, [])
+    return render_template(
+        'mission.html',
+        mission=mission_data,
+        location=location,
+        completed_objectives=completed_objectives
+    )
 
 def login_required(f):
     @wraps(f)
