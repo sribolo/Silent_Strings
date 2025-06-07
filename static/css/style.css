@@ -1447,12 +1447,17 @@ input::placeholder {
   z-index: 1;
 }
 
+
 #player-avatar {
-  position: absolute;
   width: 64px;
   height: 64px;
-  z-index: 10;
-  pointer-events: none; 
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  image-rendering: pixelated;
+  object-fit: contain;
+  pointer-events: none;
 }
 /* Map area buttons */
 .map-area-bank {

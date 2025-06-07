@@ -1,4 +1,5 @@
 const player = document.getElementById('player-avatar');
+const npc = document.getElementById('npc-avatar');
 const map = document.getElementById('game-map');
 
 // Sprite sheet config
