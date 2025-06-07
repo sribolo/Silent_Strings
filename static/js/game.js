@@ -1,4 +1,4 @@
-const player = document.getElementById('player-avatar');
+const player = document.getElementById('profile-avatar-wrap');
 const map = document.getElementById('game-map');
 
 // Avatar config
