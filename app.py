@@ -433,16 +433,19 @@ def reset_password(token):
 
 
 def flatten_avatar_parts(avatar_parts):
+    """
+    Only flatten character (to string), keep dicts for clothes, hair, face, acc.
+    """
     fixed = {}
     for category, value in avatar_parts.items():
-        if isinstance(value, dict):
-            # Get the first dict value (the selected subcategory)
-            for v in value.values():
-                if isinstance(v, dict):
-                    fixed[category] = v
-                    break
+        if category == 'characters':
+            # For character, extract 'name' if it's a dict, else just the value
+            if isinstance(value, dict):
+                fixed[category] = value.get('name', value)
+            else:
+                fixed[category] = value
         else:
-            # Direct value (like 'characters')
+            # For clothes/hair/face/acc, keep full dict
             fixed[category] = value
     return fixed
 
