@@ -10,8 +10,7 @@
         <div class="mission-container pixelated-border">
             <h1 class="profile-title">Agent Profile</h1>
             <div class="profile-avatar-section">
-                <div class="profile-avatar-wrap">
-                    <div id="player-avatar" class="avatar">
+                <div class="profile-avatar-wrap" class="avatar">
                         {% set LAYER_ORDER = ["characters", "clothes", "hair", "face", "acc"] %}
                         {% for part in LAYER_ORDER %}
                           {% set value = avatar_parts.get(part) %}
@@ -33,10 +32,7 @@
                               {% endfor %}
                             {% endif %}
                           {% endif %}
-                        {% endfor %}
-                        
-                      </div>
-                      
+                        {% endfor %}                  
                 </div>
             </div>
             <!-- Profile Info -->

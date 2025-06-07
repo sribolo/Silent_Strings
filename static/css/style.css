@@ -1204,26 +1204,6 @@ input::placeholder {
   text-align: center;
   margin-bottom: 24px;
 }
-.profile-avatar-wrap {
-  width: 128px;
-  height: 128px;
-  margin: 0 auto 10px auto;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: #23232b;
-  border: 2.5px solid #6C5CE7;
-  border-radius: 18px;
-  box-shadow: 0 2px 8px #0005;
-  overflow: hidden;
-}
-.profile-avatar {
-  width: 112px;
-  height: 112px;
-  image-rendering: pixelated;
-  border-radius: 10px;
-  display: block;
-}
 .avatar-thumbnails {
   margin-top: 10px;
   display: flex;
