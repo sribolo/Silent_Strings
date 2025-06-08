@@ -269,6 +269,21 @@ game-title {
   color: #38d39f;
 }
 
+.objective-status {
+  color: #aaa;
+}
+
+.objective-status.completed {
+  color: #38d39f;
+}
+
+.objectives-list li {
+  margin-bottom: 8px;
+}
+
+.objectives-list li.completed {
+  opacity: 0.8;
+} 
 .tools-list {
   list-style: none;
   gap: 14px;
