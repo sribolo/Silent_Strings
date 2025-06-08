@@ -1,5 +1,10 @@
 // Tool Management
-let tools = { scanInterval: null, crackInterval: null, recoveryInterval: null };
+const tools = {
+    currentTool: null,
+    scanInterval: null,
+    crackInterval: null,
+    recoveryInterval: null
+};
 
 // Initialize tools
 document.addEventListener('DOMContentLoaded', () => {
@@ -27,6 +32,7 @@ function switchTool(toolId) {
     const selectedTool = document.getElementById(`${toolId}-interface`);
     if (selectedTool) {
         selectedTool.style.display = 'block';
+        tools.currentTool = toolId;
     }
 }
 
@@ -63,26 +69,28 @@ function initializeToolActions() {
 function startNetworkScan() {
     const startBtn = document.getElementById('start-scan');
     const stopBtn = document.getElementById('stop-scan');
-    const progressBar = document.querySelector('#network-scanner-interface .progress-bar-fill');
-    const status = document.querySelector('#network-scanner-interface .scan-status');
+    const progressBar = document.querySelector('#scanner-interface .progress-bar-fill');
+    const status = document.querySelector('#scanner-interface .scan-status');
     const output = document.getElementById('scan-output');
+
     startBtn.disabled = true;
     stopBtn.disabled = false;
     let progress = 0;
-    output.textContent = '';
-    status.textContent = 'Scanning... 0%';
-    progressBar.style.width = '0%';
+
     tools.scanInterval = setInterval(() => {
         progress += 5;
         progressBar.style.width = `${progress}%`;
         status.textContent = `Scanning... ${progress}%`;
+
+        // Simulate finding devices
         if (progress % 20 === 0) {
-            output.textContent += `Found device: ${generateRandomDevice()}\n`;
+            const device = generateRandomDevice();
+            output.textContent += `Found device: ${device}\n`;
         }
+
         if (progress >= 100) {
             stopNetworkScan();
             status.textContent = 'Scan complete';
-            if (typeof window.markObjectiveComplete === 'function') window.markObjectiveComplete(0);
         }
     }, 500);
 }
@@ -90,7 +98,8 @@ function startNetworkScan() {
 function stopNetworkScan() {
     const startBtn = document.getElementById('start-scan');
     const stopBtn = document.getElementById('stop-scan');
-    const status = document.querySelector('#network-scanner-interface .scan-status');
+    const status = document.querySelector('#scanner-interface .scan-status');
+
     clearInterval(tools.scanInterval);
     startBtn.disabled = false;
     stopBtn.disabled = true;
@@ -104,9 +113,15 @@ function analyzeLogs() {
     const timeStart = document.getElementById('log-time-start').value;
     const timeEnd = document.getElementById('log-time-end').value;
     const output = document.getElementById('log-output');
-    output.textContent = `Analyzing ${logType} logs...\nSearch term: ${searchTerm}\nTime range: ${timeStart} to ${timeEnd}\n\n`;
-    output.textContent += generateSampleLogs(logType).join('\n');
-    if (typeof window.markObjectiveComplete === 'function') window.markObjectiveComplete(1);
+
+    // Simulate log analysis
+    output.textContent = `Analyzing ${logType} logs...\n`;
+    output.textContent += `Search term: ${searchTerm}\n`;
+    output.textContent += `Time range: ${timeStart} to ${timeEnd}\n\n`;
+
+    // Generate sample logs
+    const logs = generateSampleLogs(logType);
+    output.textContent += logs.join('\n');
 }
 
 // Password Cracker Functions
@@ -115,22 +130,25 @@ function crackPassword() {
     const progressBar = document.querySelector('#password-cracker-interface .progress-bar-fill');
     const status = document.querySelector('#password-cracker-interface .crack-status');
     const output = document.getElementById('crack-output');
+
     if (!hashInput.value) {
         output.textContent = 'Please enter a hash to crack';
         return;
     }
+
     let progress = 0;
     status.textContent = 'Cracking...';
     output.textContent = '';
+
     tools.crackInterval = setInterval(() => {
         progress += 2;
         progressBar.style.width = `${progress}%`;
+
         if (progress >= 100) {
             clearInterval(tools.crackInterval);
             const crackedPassword = generateRandomPassword();
             output.textContent = `Hash cracked!\nOriginal hash: ${hashInput.value}\nPassword: ${crackedPassword}`;
             status.textContent = 'Complete';
-            if (typeof window.markObjectiveComplete === 'function') window.markObjectiveComplete(2);
         }
     }, 100);
 }
@@ -141,22 +159,25 @@ function recoverFile() {
     const progressBar = document.querySelector('#file-recovery-interface .progress-bar-fill');
     const status = document.querySelector('#file-recovery-interface .recovery-status');
     const output = document.getElementById('recovery-output');
+
     if (!filePath.value) {
         output.textContent = 'Please enter a file path';
         return;
     }
+
     let progress = 0;
     status.textContent = 'Recovering...';
     output.textContent = '';
+
     tools.recoveryInterval = setInterval(() => {
         progress += 3;
         progressBar.style.width = `${progress}%`;
+
         if (progress >= 100) {
             clearInterval(tools.recoveryInterval);
             const recoveredContent = generateRecoveredFile();
             output.textContent = `File recovered!\nPath: ${filePath.value}\n\nContent:\n${recoveredContent}`;
             status.textContent = 'Complete';
-            if (typeof window.markObjectiveComplete === 'function') window.markObjectiveComplete(3);
         }
     }, 100);
 }
