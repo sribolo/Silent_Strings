@@ -1,0 +1,99 @@
+/* Mission Container */
+.mission-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+    border: 3px solid var(--primary);
+    background-color: rgba(0, 0, 0, 0.8);
+    border-radius: 8px;
+    padding: 24px 30px;
+    text-align: center;
+    color: var(--text);
+    font-family: var(--font-secondary);
+    width: 95vw;
+    max-width: 400px;
+    max-height: 94vh;
+    box-sizing: border-box;
+    overflow-y: auto;
+}
+
+/* Mission Timer */
+.mission-timer-bar {
+    font-family: monospace;
+    font-size: 1.2em;
+    color: #FFD700;
+    margin-bottom: 16px;
+    background: var(--primary-dark);
+    border-radius: 7px;
+    display: inline-block;
+    padding: 6px 18px;
+    box-shadow: 0 2px 16px #0002;
+}
+
+/* Objectives List */
+.objectives-list {
+    list-style: none;
+    padding-left: 0;
+    margin-bottom: 16px;
+}
+
+.objectives-list li {
+    transition: all 0.2s;
+    margin-bottom: 8px;
+    opacity: 0.7;
+    padding: 3px 0;
+    font-size: 1.05em;
+    display: flex;
+    align-items: center;
+}
+
+.objectives-list li.completed {
+    color: var(--success);
+    opacity: 1;
+    font-weight: bold;
+    background: #232f27;
+    border-radius: 6px;
+}
+
+/* Objective Status */
+.objective-status {
+    font-family: monospace;
+    margin-right: 9px;
+    min-width: 28px;
+    color: var(--text-muted);
+}
+
+.objective-status.completed {
+    color: var(--success);
+}
+
+/* Mini Report Panel */
+.mini-report-panel {
+    background: var(--surface);
+    color: var(--text);
+    border-radius: 12px;
+    padding: 18px;
+    margin-bottom: 16px;
+    box-shadow: 0 2px 16px #0004;
+    min-width: 220px;
+}
+
+.mini-report-panel ul {
+    list-style: disc inside;
+    margin: 8px 0 0 0;
+    padding-left: 0;
+}
+
+.mini-report-panel li {
+    margin-bottom: 4px;
+    color: var(--success);
+}
+
+/* Responsive Design */
+@media (max-width: 850px) {
+    .mission-container {
+        min-width: 90vw;
+        padding: 1.2rem 1rem;
+    }
+}

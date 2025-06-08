@@ -2,21 +2,21 @@
 .tools-container {
     display: flex;
     height: calc(100vh - 60px);
-    background: #1a1a1a;
-    color: #fff;
-    font-family: 'Courier New', monospace;
+    background: var(--background);
+    color: var(--text);
+    font-family: var(--font-secondary);
 }
 
 /* Tools Sidebar */
 .tools-sidebar {
     width: 250px;
-    background: #2c2c2c;
+    background: var(--surface-light);
     padding: 1rem;
-    border-right: 1px solid #3c3c3c;
+    border-right: 1px solid var(--surface);
 }
 
 .tools-sidebar h3 {
-    color: #A3FFB0;
+    color: var(--success);
     margin-bottom: 1rem;
     font-size: 1.2rem;
 }
@@ -28,8 +28,8 @@
 }
 
 .tool-btn {
-    background: #3c3c3c;
-    color: #fff;
+    background: var(--surface);
+    color: var(--text);
     border: none;
     padding: 0.8rem 1rem;
     border-radius: 5px;
@@ -39,13 +39,13 @@
 }
 
 .tool-btn:hover {
-    background: #4c4c4c;
+    background: var(--surface-light);
     transform: translateX(5px);
 }
 
 .tool-btn.active {
-    background: #A3FFB0;
-    color: #1a1a1a;
+    background: var(--success);
+    color: var(--background);
 }
 
 /* Tool Workspace */
@@ -57,7 +57,7 @@
 
 /* Tool Interface */
 .tool-interface {
-    background: #2c2c2c;
+    background: var(--surface-light);
     border-radius: 10px;
     padding: 1.5rem;
     height: 100%;
@@ -71,11 +71,11 @@
     align-items: center;
     margin-bottom: 1.5rem;
     padding-bottom: 1rem;
-    border-bottom: 1px solid #3c3c3c;
+    border-bottom: 1px solid var(--surface);
 }
 
 .tool-header h2 {
-    color: #A3FFB0;
+    color: var(--success);
     margin: 0;
     font-size: 1.5rem;
 }
@@ -87,8 +87,8 @@
 }
 
 .tool-action-btn {
-    background: #4c4c4c;
-    color: #fff;
+    background: var(--surface);
+    color: var(--text);
     border: none;
     padding: 0.5rem 1rem;
     border-radius: 5px;
@@ -97,11 +97,11 @@
 }
 
 .tool-action-btn:hover {
-    background: #5c5c5c;
+    background: var(--surface-light);
 }
 
 .tool-action-btn:disabled {
-    background: #3c3c3c;
+    background: var(--surface);
     cursor: not-allowed;
     opacity: 0.5;
 }
@@ -118,14 +118,14 @@
 .progress-bar {
     width: 100%;
     height: 8px;
-    background: #3c3c3c;
+    background: var(--surface);
     border-radius: 4px;
     overflow: hidden;
 }
 
 .progress-bar-fill {
     height: 100%;
-    background: #A3FFB0;
+    background: var(--success);
     transition: width 0.3s ease;
 }
 
@@ -133,7 +133,7 @@
 .scan-status,
 .crack-status,
 .recovery-status {
-    color: #A3FFB0;
+    color: var(--success);
     font-size: 0.9rem;
     margin-top: 0.5rem;
 }
@@ -143,7 +143,7 @@
 .log-results,
 .crack-results,
 .recovery-results {
-    background: #1a1a1a;
+    background: var(--background);
     border-radius: 5px;
     padding: 1rem;
     flex: 1;
@@ -153,8 +153,8 @@
 pre {
     margin: 0;
     white-space: pre-wrap;
-    font-family: 'Courier New', monospace;
-    color: #A3FFB0;
+    font-family: var(--font-secondary);
+    color: var(--success);
 }
 
 /* Log Filters */
@@ -166,18 +166,18 @@ pre {
 
 .log-filters input,
 .log-filters select {
-    background: #3c3c3c;
-    border: 1px solid #4c4c4c;
-    color: #fff;
+    background: var(--surface);
+    border: 1px solid var(--surface-light);
+    color: var(--text);
     padding: 0.5rem;
     border-radius: 5px;
-    font-family: 'Courier New', monospace;
+    font-family: var(--font-secondary);
 }
 
 .log-filters input:focus,
 .log-filters select:focus {
     outline: none;
-    border-color: #A3FFB0;
+    border-color: var(--success);
 }
 
 /* Tool-specific Styles */
@@ -210,7 +210,7 @@ pre {
     .tools-sidebar {
         width: 100%;
         border-right: none;
-        border-bottom: 1px solid #3c3c3c;
+        border-bottom: 1px solid var(--surface);
     }
 
     .tool-list {

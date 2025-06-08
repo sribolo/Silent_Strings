@@ -1,10 +1,6 @@
 {% extends "base.html" %}
 {% block title %}{{ mission.title if mission else "Mission" }}{% endblock %}
 
-{% block extra_css %}
-<link rel="stylesheet" href="{{ url_for('static', filename='css/mission.css') }}">
-{% endblock %}
-
 {% block content %}
 <div class="mission-container">
     {% if error %}
@@ -19,47 +15,110 @@
         <ul class="objectives-list" id="objectives-list">
             {% for obj in mission.objectives %}
             <li data-index="{{ loop.index0 }}" {% if loop.index0 in completed_objectives %}class="completed"{% endif %}>
-                <span class="objective-status">
+                <span class="objective-status {% if loop.index0 in completed_objectives %}completed{% endif %}">
                     [{{ '✓' if loop.index0 in completed_objectives else ' ' }}]
-                </span>
-                {{ obj }}
+                </span> {{ obj }}
             </li>
             {% endfor %}
         </ul>
         {% if mission.tools_available %}
         <h3>Available Tools:</h3>
-        <div class="tools-list">
-            {% for tool in mission.tools_available %}
-            <button class="tool-btn" data-tool="{{ tool|lower|replace(' ', '-') }}">{{ tool }}</button>
-            {% endfor %}
+        <div class="tools-list" style="display: flex; gap: 18px; margin-bottom: 20px;">
+            {% if 'Network Scanner' in mission.tools_available %}
+            <button class="tool-btn" data-tool="network-scanner">Network Scanner</button>
+            {% endif %}
+            {% if 'Log Analyzer' in mission.tools_available %}
+            <button class="tool-btn" data-tool="log-analyzer">Log Analyzer</button>
+            {% endif %}
+            {% if 'Password Cracker' in mission.tools_available %}
+            <button class="tool-btn" data-tool="password-cracker">Password Cracker</button>
+            {% endif %}
+            {% if 'File Recovery' in mission.tools_available %}
+            <button class="tool-btn" data-tool="file-recovery">File Recovery</button>
+            {% endif %}
         </div>
         <div id="tool-interfaces">
             {% if 'Network Scanner' in mission.tools_available %}
             <div class="tool-interface" id="network-scanner-interface" style="display: none;">
                 <h4>Network Scanner</h4>
-                <button id="start-demo-scan">Scan Network</button>
-                <div id="scan-demo-status"></div>
+                <div class="tool-controls">
+                    <button class="tool-action-btn" id="start-scan">Start Scan</button>
+                    <button class="tool-action-btn" id="stop-scan" disabled>Stop</button>
+                </div>
+                <div class="tool-content">
+                    <div class="scan-progress">
+                        <div class="progress-bar">
+                            <div class="progress-bar-fill" style="width: 0%"></div>
+                        </div>
+                        <div class="scan-status">Ready to scan</div>
+                    </div>
+                    <div class="scan-results">
+                        <pre id="scan-output"></pre>
+                    </div>
+                </div>
             </div>
             {% endif %}
             {% if 'Log Analyzer' in mission.tools_available %}
             <div class="tool-interface" id="log-analyzer-interface" style="display: none;">
                 <h4>Log Analyzer</h4>
-                <button id="start-demo-log">Analyze Logs</button>
-                <div id="log-demo-status"></div>
+                <div class="tool-controls">
+                    <select id="log-type">
+                        <option value="system">System Logs</option>
+                        <option value="security">Security Logs</option>
+                        <option value="application">Application Logs</option>
+                    </select>
+                    <button class="tool-action-btn" id="analyze-logs">Analyze</button>
+                </div>
+                <div class="tool-content">
+                    <div class="log-filters">
+                        <input type="text" id="log-search" placeholder="Search logs...">
+                        <input type="datetime-local" id="log-time-start">
+                        <input type="datetime-local" id="log-time-end">
+                    </div>
+                    <div class="log-results">
+                        <pre id="log-output"></pre>
+                    </div>
+                </div>
             </div>
             {% endif %}
             {% if 'Password Cracker' in mission.tools_available %}
             <div class="tool-interface" id="password-cracker-interface" style="display: none;">
                 <h4>Password Cracker</h4>
-                <button id="start-demo-crack">Crack Password</button>
-                <div id="crack-demo-status"></div>
+                <div class="tool-controls">
+                    <input type="text" id="hash-input" placeholder="Enter hash...">
+                    <button class="tool-action-btn" id="crack-hash">Crack</button>
+                </div>
+                <div class="tool-content">
+                    <div class="crack-progress">
+                        <div class="progress-bar">
+                            <div class="progress-bar-fill" style="width: 0%"></div>
+                        </div>
+                        <div class="crack-status">Ready</div>
+                    </div>
+                    <div class="crack-results">
+                        <pre id="crack-output"></pre>
+                    </div>
+                </div>
             </div>
             {% endif %}
             {% if 'File Recovery' in mission.tools_available %}
             <div class="tool-interface" id="file-recovery-interface" style="display: none;">
                 <h4>File Recovery</h4>
-                <button id="start-demo-recover">Recover File</button>
-                <div id="recover-demo-status"></div>
+                <div class="tool-controls">
+                    <input type="text" id="file-path" placeholder="Enter file path...">
+                    <button class="tool-action-btn" id="recover-file">Recover</button>
+                </div>
+                <div class="tool-content">
+                    <div class="recovery-progress">
+                        <div class="progress-bar">
+                            <div class="progress-bar-fill" style="width: 0%"></div>
+                        </div>
+                        <div class="recovery-status">Ready</div>
+                    </div>
+                    <div class="recovery-results">
+                        <pre id="recovery-output"></pre>
+                    </div>
+                </div>
             </div>
             {% endif %}
         </div>
@@ -76,11 +135,11 @@
 
 {% block extra_js %}
 <script>
-const completedObjectives = JSON.parse('{{ completed_objectives|tojson|safe }}');
-const totalObjectives = parseInt('{{ mission.objectives|length }}');
+window.completedObjectives = JSON.parse('{{ completed_objectives|tojson|safe }}');
+window.totalObjectives = parseInt('{{ mission.objectives|length }}');
+window.missionLocation = "{{ location }}";
+// Timer
 let timeLeft = parseInt('{{ mission.timeLimit if mission and mission.timeLimit else 1800 }}');
-
-// --- Timer ---
 function updateTimer() {
     const timerValue = document.getElementById('timer-value');
     if (!timerValue) return;
@@ -95,26 +154,27 @@ function updateTimer() {
     }
 }
 if (document.getElementById('timer-value')) updateTimer();
-
-// --- Mark Objective Complete & Save Progress ---
-function markObjectiveComplete(index) {
-    if (!completedObjectives.includes(index)) {
-        completedObjectives.push(index);
-        saveObjectives();
+// Toast/markObjective/saveObjectives globally
+window.markObjectiveComplete = function(index) {
+    if (!window.completedObjectives.includes(index)) {
+        window.completedObjectives.push(index);
+        window.saveObjectives();
+        const objList = document.getElementById('objectives-list');
+        if (objList) {
+            const li = objList.querySelector(`li[data-index="${index}"]`);
+            if (li) {
+                li.querySelector('.objective-status').textContent = '[✓]';
+                li.querySelector('.objective-status').style.color = '#38d39f';
+                li.classList.add('completed');
+                showObjectiveToast("Objective completed!");
+            }
+        }
+        if (window.completedObjectives.length === window.totalObjectives) {
+            showObjectiveToast("All objectives completed!");
+        }
     }
-    const objList = document.getElementById('objectives-list');
-    if (!objList) return;
-    const li = objList.querySelector(`li[data-index="${index}"]`);
-    if (li) {
-        li.querySelector('.objective-status').textContent = '[✓]';
-        li.classList.add('completed');
-        showObjectiveToast("Objective completed!");
-    }
-    if (completedObjectives.length === totalObjectives) {
-        showObjectiveToast("All objectives completed!");
-    }
-}
-function showObjectiveToast(msg) {
+};
+window.showObjectiveToast = function(msg) {
     let toast = document.createElement('div');
     toast.textContent = msg;
     toast.style.position = 'fixed';
@@ -130,48 +190,28 @@ function showObjectiveToast(msg) {
     toast.style.boxShadow = '0 2px 16px #0008';
     document.body.appendChild(toast);
     setTimeout(() => { toast.remove(); }, 1500);
-}
-function saveObjectives() {
+};
+window.saveObjectives = function() {
     fetch(window.location.pathname, {
         method: 'POST',
         headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify({completed: completedObjectives})
+        body: JSON.stringify({completed: window.completedObjectives})
     });
-}
-
-// --- Tools UI ---
-document.addEventListener('DOMContentLoaded', function() {
-    document.querySelectorAll('.tool-btn').forEach(btn => {
-        btn.addEventListener('click', function() {
-            document.querySelectorAll('.tool-interface').forEach(div => div.style.display = 'none');
-            const toolId = btn.getAttribute('data-tool');
-            const interfaceDiv = document.getElementById(`${toolId}-interface`);
-            if (interfaceDiv) interfaceDiv.style.display = 'block';
-        });
+};
+// Tools tab switching
+document.querySelectorAll('.tool-btn').forEach(btn => {
+    btn.addEventListener('click', function() {
+        document.querySelectorAll('.tool-interface').forEach(div => div.style.display = 'none');
+        const toolId = btn.getAttribute('data-tool');
+        const interfaceDiv = document.getElementById(`${toolId}-interface`);
+        if (interfaceDiv) interfaceDiv.style.display = 'block';
     });
-
-    // DEMO: Complete objectives
-    const scanBtn = document.getElementById('start-demo-scan');
-    if (scanBtn) scanBtn.onclick = function() {
-        document.getElementById('scan-demo-status').textContent = "Network scan completed!";
-        markObjectiveComplete(0);
-    };
-    const logBtn = document.getElementById('start-demo-log');
-    if (logBtn) logBtn.onclick = function() {
-        document.getElementById('log-demo-status').textContent = "Logs analyzed!";
-        markObjectiveComplete(1);
-    };
-    const crackBtn = document.getElementById('start-demo-crack');
-    if (crackBtn) crackBtn.onclick = function() {
-        document.getElementById('crack-demo-status').textContent = "Password cracked!";
-        markObjectiveComplete(2);
-    };
-    const recoverBtn = document.getElementById('start-demo-recover');
-    if (recoverBtn) recoverBtn.onclick = function() {
-        document.getElementById('recover-demo-status').textContent = "File recovered!";
-        markObjectiveComplete(3);
-    };
 });
 </script>
+<script src="{{ url_for('static', filename='js/tools.js') }}"></script>
 <script src="{{ url_for('static', filename='js/dialogues.js') }}"></script>
+{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/mission.css') }}">
 {% endblock %}
