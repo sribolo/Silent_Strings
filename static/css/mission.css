@@ -97,3 +97,62 @@
         padding: 1.2rem 1rem;
     }
 }
+
+/* --- Hero/Landing Page Typography & Button --- */
+.game-title {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 5rem;
+    color: #FFFFFF;
+    text-shadow:
+        0 0 5px #A499FF,
+        0 0 10px #A499FF,
+        0 0 20px #6C5CE7;
+    animation: pixelIntro 2s ease-out, pulseGlow 2.5s ease-in-out infinite;
+    position: relative;
+    display: inline-block;
+    margin-bottom: 1.5rem;
+}
+@keyframes pixelIntro {
+    0% { opacity: 0; transform: translateY(-50px); }
+    50% { opacity: 0.5; transform: translateY(10px); }
+    100% { opacity: 1; transform: translateY(0); }
+}
+@keyframes pulseGlow {
+    0%, 100% {
+        text-shadow: 0 0 5px #A499FF, 0 0 10px #A499FF, 0 0 20px #6C5CE7;
+    }
+    50% {
+        text-shadow: 0 0 15px #A499FF, 0 0 25px #6C5CE7, 0 0 30px #6C5CE7;
+    }
+}
+.tagline {
+    color: #fff;
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 1.8vw;
+    margin-bottom: 2.5rem;
+    letter-spacing: 1px;
+    text-align: center;
+    text-shadow: 0 0 8px #232369;
+}
+.start-button {
+    background: #6C5CE7;
+    border: none;
+    color: white;
+    padding: 15px 35px;
+    font-size: 1.2rem;
+    border-radius: 8px;
+    margin-top: 20px;
+    cursor: pointer;
+    font-family: 'Press Start 2P', monospace;
+    box-shadow: 0 0 15px rgba(140, 82, 255, 0.5), 0 0 25px rgba(140, 82, 255, 0.3);
+    transition: all 0.3s ease-in-out;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    text-decoration: none;
+    display: inline-block;
+}
+.start-button:hover, .start-button:focus {
+    background: #8A2BE2;
+    box-shadow: 0 0 20px #8A2BE2;
+    transform: scale(1.05);
+}
