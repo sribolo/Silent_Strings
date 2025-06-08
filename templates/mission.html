@@ -15,8 +15,8 @@
         <ul class="objectives-list" id="objectives-list">
             {% for obj in mission.objectives %}
             <li data-index="{{ loop.index0 }}" {% if loop.index0 in completed_objectives %}class="completed"{% endif %}>
-                <span class="objective-status {% if loop.index0 in completed_objectives %}completed{% endif %}">
-                    [{{ '✓' if loop.index0 in completed_objectives else ' ' }}]
+                <span class="objective-status" style="color:{{ '#38d39f' if loop.index0 in completed_objectives else '#aaa' }};">
+                  [{{ '✓' if loop.index0 in completed_objectives else ' ' }}]
                 </span> {{ obj }}
             </li>
             {% endfor %}
