@@ -2,12 +2,15 @@
 {% extends "base.html" %}
 {% block title %}Dialogue{% endblock %}
 {% block content %}
-  <div class="dialogue-box-outer">
-    <div class="dialogue-box-header" id="dialogue-npc"></div>
-    <div class="dialogue-box-content-row">
-      <img id="dialogue-portrait" class="dialogue-portrait" src="" alt="Portrait" style="display:none;" />
-      <div class="dialogue-box-inner" id="dialogue-text"></div>
+  <div class="dialogue-box-outer" id="dialogueBox">
+    <img class="dialogue-portrait" id="dialoguePortrait" src="" alt="Portrait" style="display:none;" />
+    <div class="dialogue-content">
+      <div class="dialogue-speaker" id="dialogueSpeaker"></div>
+      <div class="dialogue-text" id="dialogueText"></div>
+      <div class="dialogue-options" id="dialogueOptions"></div>
+      <button id="hint-btn" style="margin-top:12px;">Hint</button>
     </div>
-    <div id="options" class="dialogue-options"></div>
   </div>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/dialogue.css') }}">
+  <script src="{{ url_for('static', filename='js/dialogue_advanced.js') }}"></script>
 {% endblock %}

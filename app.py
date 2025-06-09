@@ -19,6 +19,12 @@ from flask_migrate import Migrate
 from itsdangerous import URLSafeTimedSerializer
 from flask_mail import Mail, Message
 from functools import wraps
+from sqlalchemy.dialects.postgresql import JSON
+from flask_login import login_required, current_user
+try:
+    from sqlalchemy import PickleType
+except ImportError:
+    PickleType = None
 
 
 # === Load Environment Variables ===
@@ -57,6 +63,8 @@ class User(db.Model):
     avatar_clothes = db.Column(db.JSON, nullable=True)  # Store full clothes data
     avatar_acc = db.Column(db.JSON, nullable=True)  # Store full accessories data
     avatar_face = db.Column(db.JSON, nullable=True)  # Store full face data
+    achievements = db.Column(JSON if JSON else PickleType, default=list)
+    unlocks = db.Column(JSON if JSON else PickleType, default=list)
 
 # === CSRF Protection ===
 csrf = CSRFProtect(app)
@@ -496,6 +504,7 @@ def profile():
         email=email,
         is_guest=is_guest,
         avatar_parts=avatar_parts,
+        is_logged_in=("user" in session)
     )
 
 
@@ -653,7 +662,7 @@ MISSIONS = {
             "Identify Patient Zero",
             "Find the ransomware note and sample",
             "Collect evidence of intrusion",
-            "Trace the attack’s origin",
+            "Trace the attack's origin",
             "Restore banking services"
         ],
         "npc_dialogue_key": "level3",
@@ -830,7 +839,7 @@ MISSIONS = {
         "target": "Dark Web",
         "objectives": [
             "Locate PH4NT0M forum posts",
-            "Identify Ghostline’s aliases",
+            "Identify Ghostline's aliases",
             "Decrypt hidden messages",
             "Trace zero-day auction"
         ],
@@ -900,7 +909,7 @@ MISSIONS = {
             "Disarm Silent Strings protocol",
             "Trace global worm propagation",
             "Restore critical systems",
-            "Identify Ghostline’s last move"
+            "Identify Ghostline's last move"
         ],
         "npc_dialogue_key": "level10",
         "tools_available": [
@@ -963,6 +972,22 @@ def login_required(f):
 @login_required
 def tools():
     return render_template('tools.html')
+
+@app.route('/api/achievements', methods=['GET', 'POST'])
+@login_required
+def api_achievements():
+    user = User.query.filter_by(email=current_user.email).first()
+    if request.method == 'GET':
+        return jsonify({
+            "achievements": user.achievements or [],
+            "unlocks": user.unlocks or []
+        })
+    elif request.method == 'POST':
+        data = request.get_json()
+        user.achievements = data.get('achievements', [])
+        user.unlocks = data.get('unlocks', [])
+        db.session.commit()
+        return jsonify({"status": "ok"})
 
 # === RUN SERVER ===
 if __name__ == "__main__":

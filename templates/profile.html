@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-{% block title %}Agent Profile{% endblock %}
+{% block title %}Profile{% endblock %}
 
 {% block content %}
 <div class="bg-container">
@@ -68,7 +68,35 @@
                     Logout
                 </a>
             </div>
+            <h3>Achievements</h3>
+            <div id="achievements-list"></div>
+            <h3>Unlocks</h3>
+            <div id="unlocks-list">(Coming soon!)</div>
         </div>
     </div>
 </div>
+<link rel="stylesheet" href="{{ url_for('static', filename='css/achievements.css') }}">
+<script src="{{ url_for('static', filename='js/achievements.js') }}"></script>
+<div id="user-data" data-logged-in="{{ is_logged_in|default(false)|tojson }}"></div>
+<script>
+  function loadAchievementsFromBackend() {
+    fetch('/api/achievements')
+      .then(res => res.json())
+      .then(data => {
+        localStorage.setItem('achievements', JSON.stringify(data.achievements || []));
+        localStorage.setItem('unlocks', JSON.stringify(data.unlocks || []));
+        renderAchievements('achievements-list');
+      });
+  }
+  document.addEventListener('DOMContentLoaded', function() {
+    const userData = document.getElementById('user-data');
+    const isLoggedIn = userData ? JSON.parse(userData.dataset.loggedIn) : false;
+    
+    if (isLoggedIn) {
+      loadAchievementsFromBackend();
+    } else {
+      renderAchievements('achievements-list');
+    }
+  });
+</script>
 {% endblock %}

@@ -13,7 +13,25 @@
     <audio id="bgm" src="{{ url_for('static', filename='sfx/bgm.mp3') }}" autoplay loop>
         Your browser does not support the audio element.
     </audio>
-    {% block content %}{% endblock %}
+    {% block content %}
+    <div id="hint-box"></div>
+    <button id="help-btn" style="position:fixed;bottom:30px;right:30px;z-index:10001;">Help</button>
+    <div id="help-modal">
+      <div id="help-modal-content">
+        <span id="help-close">&times;</span>
+        <h2>Game Guide</h2>
+        <ul>
+          <li>Make choices to progress through the story.</li>
+          <li>Look for clues in dialogue and options.</li>
+          <li>Unlock achievements by exploring and making unique choices.</li>
+          <li>Use the Hint button for help on tricky steps.</li>
+          <li>Your progress and achievements are saved automatically.</li>
+        </ul>
+      </div>
+    </div>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/hints.css') }}">
+    <script src="{{ url_for('static', filename='js/hints.js') }}"></script>
+    {% endblock %}
     
     <!-- Common Scripts -->
     <script src="{{ url_for('static', filename='js/sfx.js') }}" defer></script>

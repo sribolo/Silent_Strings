@@ -1,0 +1,56 @@
+body {
+  margin: 0;
+  padding: 0;
+  background: #2d1e3a;
+}
+.dialogue-box-outer {
+  position: fixed;
+  left: 0; right: 0; bottom: 0;
+  width: 100vw;
+  background: #fbe8d3;
+  border-top: 8px solid #c2a477;
+  display: flex;
+  align-items: flex-end;
+  padding: 32px;
+  box-sizing: border-box;
+  z-index: 10;
+}
+.dialogue-portrait {
+  width: 96px;
+  height: 96px;
+  border-radius: 12px;
+  border: 4px solid #c2a477;
+  margin-right: 24px;
+  background: #fff;
+  object-fit: cover;
+  display: block;
+}
+.dialogue-content {
+  flex: 1;
+}
+.dialogue-speaker {
+  font-weight: bold;
+  color: #7a5c2e;
+  font-size: 1.1em;
+}
+.dialogue-text {
+  font-size: 1.3em;
+  margin: 8px 0;
+}
+.dialogue-options {
+  margin-top: 16px;
+}
+.choice-btn {
+  display: block;
+  background: #e2c49a;
+  border: 2px solid #c2a477;
+  border-radius: 8px;
+  padding: 8px 16px;
+  margin: 6px 0;
+  font-size: 1em;
+  cursor: pointer;
+  text-align: left;
+}
+.choice-btn:hover {
+  background: #f5e1c0;
+} 
