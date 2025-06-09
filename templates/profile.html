@@ -52,6 +52,12 @@
                         <span class="email-label">{{ email }}</span>
                     {% endif %}
                 </div>
+              </div>
+              <h3>Achievements</h3>
+              <div id="achievements-list"></div>
+              <h3>Unlocks</h3>
+              <div id="unlocks-list">(Coming soon!)</div>
+          </div>
             </div>
             <!-- Profile Actions -->
             <div class="profile-actions">
@@ -67,12 +73,7 @@
                     <i class="fa-solid fa-right-from-bracket"></i>
                     Logout
                 </a>
-            </div>
-            <h3>Achievements</h3>
-            <div id="achievements-list"></div>
-            <h3>Unlocks</h3>
-            <div id="unlocks-list">(Coming soon!)</div>
-        </div>
+
     </div>
 </div>
 <link rel="stylesheet" href="{{ url_for('static', filename='css/achievements.css') }}">
