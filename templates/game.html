@@ -38,14 +38,18 @@
 
 
     <!-- MAP BUILDING BUTTONS (STILL ON MAP, NOT OVERLAY) -->
-    <button class="map-area-btn map-area-bank" data-mission="bank"></button>
-    <button class="map-area-btn map-area-school" data-mission="school"></button>
-    <button class="map-area-btn map-area-company" data-mission="company"></button>
-    <button class="map-area-btn map-area-cafe" data-mission="cafe"></button>
-    <button class="map-area-btn map-area-news" data-mission="news"></button>
-    <button class="map-area-btn map-area-government" data-mission="government"></button>
-    <button class="map-area-btn map-area-transport" data-mission="transport"></button>
-    <button class="map-area-btn map-area-hq" data-mission="hq"></button>
+    <button class="map-area-btn map-area-bank" data-mission="level3" title="PhishNet - Bank Investigation"></button>
+    <button class="map-area-btn map-area-school" data-mission="level6" title="Dark Tunn3l - School Network"></button>
+    <button class="map-area-btn map-area-company" data-mission="level4" title="Shadow Repo - Software Company"></button>
+    <button class="map-area-btn map-area-cafe" data-mission="level7" title="Crypto Café - Digital Currency"></button>
+    <button class="map-area-btn map-area-news" data-mission="level2" title="Operation Deadlink - News Outlet"></button>
+    <button class="map-area-btn map-area-government" data-mission="level5" title="Trojan Trap - Government Server"></button>
+    <button class="map-area-btn map-area-transport" data-mission="level9" title="Silent Rails - Transport Systems"></button>
+    <button class="map-area-btn map-area-hq" data-mission="level1" title="Breach at Base - SECTOR-9 HQ"></button>
+    
+    <!-- Additional buttons for level8 and level10 - we'll overlay them on existing buildings -->
+    <button class="map-area-btn map-area-hospital" data-mission="level8" title="Code Blue - Hospital Systems" style="position: absolute; left: 45%; top: 35%; width: 80px; height: 60px; background: rgba(255,100,100,0.3); border: 2px solid #ff6464; border-radius: 8px;"></button>
+    <button class="map-area-btn map-area-global" data-mission="level10" title="Final String - Global Network" style="position: absolute; left: 50%; top: 50%; width: 100px; height: 100px; background: rgba(255,215,0,0.4); border: 3px solid #ffd700; border-radius: 50%; z-index: 100;"></button>
     
     <!-- OVERLAY: TOP-RIGHT CORNER ONLY, FLOATS ABOVE MAP, NEVER MOVES -->
     <div id="ui-overlay">
