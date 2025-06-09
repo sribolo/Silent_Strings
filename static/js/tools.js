@@ -91,6 +91,10 @@ function startNetworkScan() {
         if (progress >= 100) {
             stopNetworkScan();
             status.textContent = 'Scan complete';
+            // Auto-complete network scanning objective
+            if (window.markObjectiveComplete) {
+                window.markObjectiveComplete(0); // First objective
+            }
         }
     }, 500);
 }
@@ -122,6 +126,11 @@ function analyzeLogs() {
     // Generate sample logs
     const logs = generateSampleLogs(logType);
     output.textContent += logs.join('\n');
+    
+    // Auto-complete log analysis objective
+    if (window.markObjectiveComplete) {
+        window.markObjectiveComplete(1); // Second objective
+    }
 }
 
 // Password Cracker Functions
@@ -149,6 +158,11 @@ function crackPassword() {
             const crackedPassword = generateRandomPassword();
             output.textContent = `Hash cracked!\nOriginal hash: ${hashInput.value}\nPassword: ${crackedPassword}`;
             status.textContent = 'Complete';
+            
+            // Auto-complete password cracking objective
+            if (window.markObjectiveComplete) {
+                window.markObjectiveComplete(2); // Third objective
+            }
         }
     }, 100);
 }
@@ -178,6 +192,11 @@ function recoverFile() {
             const recoveredContent = generateRecoveredFile();
             output.textContent = `File recovered!\nPath: ${filePath.value}\n\nContent:\n${recoveredContent}`;
             status.textContent = 'Complete';
+            
+            // Auto-complete file recovery objective
+            if (window.markObjectiveComplete) {
+                window.markObjectiveComplete(3); // Fourth objective
+            }
         }
     }, 100);
 }

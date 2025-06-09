@@ -207,6 +207,37 @@ document.querySelectorAll('.tool-btn').forEach(btn => {
         if (interfaceDiv) interfaceDiv.style.display = 'block';
     });
 });
+
+// Objectives are automatically completed through gameplay actions
+
+// Add mission start functionality
+let missionStarted = false;
+function startMission() {
+    if (!missionStarted) {
+        missionStarted = true;
+        showObjectiveToast("Mission started! Use tools and investigate to complete objectives.");
+        
+        // Enable all interactive elements
+        document.querySelectorAll('.tool-btn').forEach(btn => {
+            btn.disabled = false;
+            btn.style.opacity = '1';
+        });
+        
+        // Start timer
+        if (document.getElementById('timer-value')) updateTimer();
+        
+        // Hide start button
+        const startBtn = document.getElementById('start-mission-btn');
+        if (startBtn) startBtn.style.display = 'none';
+    }
+}
+
+// Auto-start mission (or add start button if preferred)
+window.addEventListener('load', function() {
+    setTimeout(() => {
+        startMission();
+    }, 500);
+});
 </script>
 <script src="{{ url_for('static', filename='js/tools.js') }}"></script>
 <script src="{{ url_for('static', filename='js/dialogues.js') }}"></script>
