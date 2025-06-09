@@ -378,6 +378,10 @@ tbody tr:hover {
     transform: translateY(-1px);
 }
 
+.inline-form {
+    display: inline;
+}
+
 .btn-danger {
     background: #f44336;
     color: #fff;

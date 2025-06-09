@@ -1729,6 +1729,68 @@ input::placeholder {
   box-shadow: none !important;
 }
 
+/* Completed missions styling */
+#game-map .map-area-btn.completed {
+  background: rgba(0, 255, 0, 0.3) !important;
+  border: 2px solid #00ff00 !important;
+  box-shadow: 0 0 10px rgba(0, 255, 0, 0.5) !important;
+  border-radius: 8px;
+}
+
+#game-map .map-area-btn.completed:hover {
+  box-shadow: 0 0 15px rgba(0, 255, 0, 0.7) !important;
+}
+
+/* Unlock animation for final level */
+@keyframes pulse {
+  0% { 
+    box-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+    transform: scale(1);
+  }
+  50% { 
+    box-shadow: 0 0 20px rgba(255, 215, 0, 0.8);
+    transform: scale(1.05);
+  }
+  100% { 
+    box-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+    transform: scale(1);
+  }
+}
+
+/* Global level (level10) styling */
+.map-area-global {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 100px;
+  height: 100px;
+  background: rgba(255,215,0,0.6);
+  border: 3px solid #ffd700;
+  border-radius: 50%;
+  z-index: 100;
+  animation: pulse 2s infinite;
+}
+
+/* Locked level styling */
+.map-area-locked {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 100px;
+  height: 100px;
+  background: rgba(128,128,128,0.3);
+  border: 3px solid #666;
+  border-radius: 50%;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #666;
+  font-size: 2em;
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
 #ui-overlay {
   z-index: 50;
   position: fixed;

@@ -582,7 +582,17 @@ def game():
     print("DEBUG avatar_parts for game:", avatar_parts)
     print("DEBUG avatar_parts for game (flattened):", avatar_parts)
 
-    return render_template('game.html', avatar_parts=avatar_parts, is_guest=is_guest, username=username)
+    # Get completed missions for progression tracking
+    completed_missions = session.get('completed_missions', [])
+    required_levels = ['level1', 'level2', 'level3', 'level4', 'level5', 'level6', 'level7', 'level8', 'level9']
+    level10_unlocked = all(level in completed_missions for level in required_levels)
+
+    return render_template('game.html', 
+                         avatar_parts=avatar_parts, 
+                         is_guest=is_guest, 
+                         username=username,
+                         completed_missions=completed_missions,
+                         level10_unlocked=level10_unlocked)
 
 # Example mission data (expand as needed)
 MISSIONS = {
@@ -776,138 +786,154 @@ MISSIONS = {
         "timeLimit": 1800
     },
     "level6": {
-        "title": "Dark Tunn3l",
-        "target": "Power Grid",
+        "title": "School Network Breach",
+        "target": "Riverside Academy",
         "objectives": [
-            "Find rogue USB device",
-            "Analyze firmware changes",
-            "Trace remote access",
-            "Restore alarm system"
+            "Investigate compromised student records",
+            "Check library computer lab intrusion",
+            "Trace unauthorized grade changes",
+            "Secure the school's WiFi network"
         ],
         "npc_dialogue_key": "level6",
         "tools_available": [
-            "USB Analyzer",
-            "Firmware Scanner"
+            "Database Analyzer",
+            "Network Scanner",
+            "Log Analyzer"
         ],
         "evidence_locations": [
-            "Control Room",
-            "Monitoring Station"
+            "Principal's Office",
+            "Computer Lab",
+            "IT Server Room",
+            "Teacher's Lounge"
         ],
         "clues": {
             "required": [
-                "USB drive",
-                "Firmware diff",
-                "Remote access log"
+                "Modified grade database",
+                "Keylogger on teacher PC",
+                "Student WiFi logs"
             ],
             "optional": [
-                "Tampered alarm config"
+                "Printed grade reports",
+                "USB drive in lab"
             ]
         },
         "success_criteria": {
             "evidence_threshold": 3,
-            "required_objectives": 3
+            "required_objectives": 4
         },
         "timeLimit": 1800
     },
     "level7": {
-        "title": "Ghost Protocol",
-        "target": "SECTOR-9 Insider Threat",
+        "title": "Crypto Café Heist",
+        "target": "BitBean Coffee Shop",
         "objectives": [
-            "Identify rogue agent",
-            "Analyze credential access logs",
-            "Recover encrypted note",
-            "Prevent data exfiltration"
+            "Investigate stolen cryptocurrency wallets",
+            "Check compromised point-of-sale system",
+            "Trace the crypto mining malware",
+            "Recover customer payment data"
         ],
         "npc_dialogue_key": "level7",
         "tools_available": [
-            "Credential Monitor",
-            "Encryption Cracker"
+            "Blockchain Analyzer",
+            "Malware Scanner",
+            "Payment Forensics"
         ],
         "evidence_locations": [
-            "Agent's Terminal",
-            "HR Office"
+            "Register Terminal",
+            "Customer WiFi Router",
+            "Manager's Office",
+            "Back Office Server"
         ],
         "clues": {
             "required": [
-                "Encrypted locker note",
-                "Access log",
-                "Process hash"
+                "Crypto wallet private keys",
+                "Skimmer device",
+                "Mining software logs"
             ],
             "optional": [
-                "Overheard conversation"
+                "Customer complaint forms",
+                "Security camera footage"
             ]
         },
         "success_criteria": {
             "evidence_threshold": 3,
-            "required_objectives": 3
+            "required_objectives": 4
         },
         "timeLimit": 1800
     },
     "level8": {
-        "title": "Deep Dive",
-        "target": "Dark Web",
+        "title": "Code Blue: Hospital Ransomware",
+        "target": "Central Medical Center",
         "objectives": [
-            "Locate PH4NT0M forum posts",
-            "Identify Ghostline's aliases",
-            "Decrypt hidden messages",
-            "Trace zero-day auction"
+            "Restore encrypted patient records",
+            "Investigate medical device tampering",
+            "Trace the ransomware deployment",
+            "Secure critical life support systems"
         ],
         "npc_dialogue_key": "level8",
         "tools_available": [
-            "OSINT Suite",
-            "Message Decryptor"
+            "Ransomware Decryptor",
+            "Medical Device Scanner",
+            "Network Forensics"
         ],
         "evidence_locations": [
-            "Onion Forum",
-            "Marketplace"
+            "IT Department",
+            "Nurse Station",
+            "Medical Records Office",
+            "Equipment Room"
         ],
         "clues": {
             "required": [
-                "Encrypted forum post",
-                "Alias log",
-                "Auction data"
+                "Ransomware note",
+                "Infected USB device",
+                "Network intrusion logs"
             ],
             "optional": [
-                "Private chat log"
+                "Staff email phishing",
+                "Backup server status"
             ]
         },
         "success_criteria": {
             "evidence_threshold": 3,
-            "required_objectives": 3
+            "required_objectives": 4
         },
         "timeLimit": 1800
     },
     "level9": {
-        "title": "Red Flag",
-        "target": "Public Transport",
+        "title": "Silent Rails: Transit Hijack",
+        "target": "Metro Transit Authority",
         "objectives": [
-            "Restore control center",
-            "Analyze attack message",
-            "Secure passenger data",
-            "Patch exploited service"
+            "Restore hijacked train control systems",
+            "Investigate passenger payment fraud",
+            "Secure the scheduling database",
+            "Trace signal system tampering"
         ],
         "npc_dialogue_key": "level9",
         "tools_available": [
-            "DDoS Mitigator",
-            "Service Patch Tool"
+            "SCADA Analyzer",
+            "Payment Fraud Detector",
+            "Signal Tracker"
         ],
         "evidence_locations": [
-            "Control Center",
-            "Train Router"
+            "Central Control Room",
+            "Ticket Office",
+            "Signal Box",
+            "Maintenance Depot"
         ],
         "clues": {
             "required": [
-                "DDoS log",
-                "Service exploit",
-                "WiFi config"
+                "Manipulated train schedules",
+                "Cloned payment cards",
+                "Signal override codes"
             ],
             "optional": [
-                "Passenger complaint log"
+                "CCTV footage gaps",
+                "Maintenance log alterations"
             ]
         },
         "success_criteria": {
             "evidence_threshold": 3,
-            "required_objectives": 3
+            "required_objectives": 4
         },
         "timeLimit": 1800
     },
@@ -955,12 +981,34 @@ def mission(location):
     mission_data = MISSIONS.get(location)
     if not mission_data:
         return render_template('mission.html', error="Mission not found.", location=location)
+    
+    # Check if level10 is locked
+    if location == 'level10':
+        required_levels = ['level1', 'level2', 'level3', 'level4', 'level5', 'level6', 'level7', 'level8', 'level9']
+        completed_missions = session.get('completed_missions', [])
+        
+        if not all(level in completed_missions for level in required_levels):
+            return render_template('mission.html', 
+                                 error="Access Denied: Complete all previous missions to unlock the Final String.", 
+                                 location=location)
+    
     progress_key = f'progress_{location}'
     if request.method == 'POST':
         completed = request.json.get('completed', [])
         session[progress_key] = completed
         session.modified = True
+        
+        # Check if mission is completed (all objectives done)
+        total_objectives = len(mission_data.get('objectives', []))
+        if len(completed) == total_objectives:
+            completed_missions = session.get('completed_missions', [])
+            if location not in completed_missions:
+                completed_missions.append(location)
+                session['completed_missions'] = completed_missions
+                session.modified = True
+        
         return jsonify({"status": "ok"})
+    
     completed_objectives = session.get(progress_key, [])
     return render_template(
         'mission.html',
@@ -1084,6 +1132,18 @@ def admin_api_stats():
         'avg_achievements': round(avg_achievements, 2),
         'guest_sessions': len([s for s in session.keys() if 'guest' in str(s)])
     })
+
+@app.route('/admin/reset_progress', methods=['POST'])
+@admin_required
+def admin_reset_progress():
+    """Reset mission progress for testing"""
+    session.pop('completed_missions', None)
+    for key in list(session.keys()):
+        if key.startswith('progress_'):
+            session.pop(key, None)
+    session.modified = True
+    flash("Mission progress reset successfully", "success")
+    return redirect(url_for('game'))
 
 # === RUN SERVER ===
 if __name__ == "__main__":
