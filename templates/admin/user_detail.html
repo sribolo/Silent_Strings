@@ -1,0 +1,111 @@
+{% extends "admin/base.html" %}
+{% block title %}User Details - {{ user.username }}{% endblock %}
+{% block page_title %}User Details: {{ user.username }}{% endblock %}
+
+{% block content %}
+<div class="user-detail">
+    <!-- User Info Card -->
+    <div class="user-info-card">
+        <div class="user-header">
+            <div class="user-avatar-large">
+                {% if user.avatar_character %}
+                    <img src="{{ url_for('static', filename='images/avatar_parts/characters/' + user.avatar_character + '.png') }}" alt="Avatar">
+                {% else %}
+                    <div class="default-avatar-large"><i class="fas fa-user"></i></div>
+                {% endif %}
+            </div>
+            <div class="user-basic-info">
+                <h2>{{ user.username }}</h2>
+                <p class="user-email">{{ user.email }}</p>
+                <div class="user-status">
+                    {% if user.is_admin %}
+                        <span class="badge badge-admin">Administrator</span>
+                    {% else %}
+                        <span class="badge badge-user">Regular User</span>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <div class="user-stats">
+            <div class="stat-item">
+                <h4>User ID</h4>
+                <p>{{ user.id }}</p>
+            </div>
+            <div class="stat-item">
+                <h4>Achievements</h4>
+                <p>{{ (user.achievements|length) if user.achievements else 0 }}</p>
+            </div>
+            <div class="stat-item">
+                <h4>Unlocks</h4>
+                <p>{{ (user.unlocks|length) if user.unlocks else 0 }}</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Avatar Details -->
+    {% if user.avatar_character or user.avatar_hair or user.avatar_clothes %}
+    <div class="avatar-details">
+        <h3>Avatar Configuration</h3>
+        <div class="avatar-info">
+            {% if user.avatar_character %}
+                <p><strong>Character:</strong> {{ user.avatar_character }}</p>
+            {% endif %}
+            {% if user.avatar_hair %}
+                <p><strong>Hair:</strong> {{ user.avatar_hair|string }}</p>
+            {% endif %}
+            {% if user.avatar_clothes %}
+                <p><strong>Clothes:</strong> {{ user.avatar_clothes|string }}</p>
+            {% endif %}
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- Achievements -->
+    {% if user.achievements %}
+    <div class="achievements-section">
+        <h3>Achievements ({{ user.achievements|length }})</h3>
+        <div class="achievements-list">
+            {% for achievement in user.achievements %}
+                <div class="achievement-item">
+                    <i class="fas fa-trophy"></i>
+                    <span>{{ achievement }}</span>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- Admin Actions -->
+    <div class="admin-actions">
+        <h3>Admin Actions</h3>
+        <div class="action-buttons">
+            {% if not user.is_admin %}
+                <form action="{{ url_for('admin_toggle_user_admin', user_id=user.id) }}" method="POST" style="display: inline;">
+                    <button type="submit" class="btn btn-primary" onclick="return confirm('Grant admin access to this user?')">
+                        <i class="fas fa-user-shield"></i> Grant Admin
+                    </button>
+                </form>
+            {% else %}
+                <form action="{{ url_for('admin_toggle_user_admin', user_id=user.id) }}" method="POST" style="display: inline;">
+                    <button type="submit" class="btn btn-warning" onclick="return confirm('Revoke admin access from this user?')">
+                        <i class="fas fa-user-minus"></i> Revoke Admin
+                    </button>
+                </form>
+            {% endif %}
+
+            {% if not user.is_admin %}
+                <form action="{{ url_for('admin_delete_user', user_id=user.id) }}" method="POST" style="display: inline;">
+                    <button type="submit" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete this user? This action cannot be undone.')">
+                        <i class="fas fa-trash"></i> Delete User
+                    </button>
+                </form>
+            {% endif %}
+
+            <a href="{{ url_for('admin_users') }}" class="btn btn-secondary">
+                <i class="fas fa-arrow-left"></i> Back to Users
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %} 

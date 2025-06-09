@@ -65,6 +65,7 @@ class User(db.Model):
     avatar_face = db.Column(db.JSON, nullable=True)  # Store full face data
     achievements = db.Column(JSON if JSON else PickleType, default=list)
     unlocks = db.Column(JSON if JSON else PickleType, default=list)
+    is_admin = db.Column(db.Boolean, default=False)
 
 # === CSRF Protection ===
 csrf = CSRFProtect(app)
@@ -498,13 +499,21 @@ def profile():
 
     print("DEBUG avatar_parts for profile:", avatar_parts)
 
+    # Check if user is admin
+    is_admin = False
+    if "user" in session:
+        user = User.query.filter_by(email=session["user"]["email"]).first()
+        if user:
+            is_admin = user.is_admin
+
     return render_template(
         "profile.html",
         username=username,
         email=email,
         is_guest=is_guest,
         avatar_parts=avatar_parts,
-        is_logged_in=("user" in session)
+        is_logged_in=("user" in session),
+        is_admin=is_admin
     )
 
 
@@ -988,6 +997,93 @@ def api_achievements():
         user.unlocks = data.get('unlocks', [])
         db.session.commit()
         return jsonify({"status": "ok"})
+
+def admin_required(f):
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        if "user" not in session:
+            flash("Please log in to access this page.", "error")
+            return redirect(url_for('login'))
+        
+        user = User.query.filter_by(email=session["user"]["email"]).first()
+        if not user or not user.is_admin:
+            flash("Admin access required.", "error")
+            return redirect(url_for('home'))
+        return f(*args, **kwargs)
+    return decorated_function
+
+@app.route('/admin')
+@admin_required
+def admin_dashboard():
+    # Get statistics
+    total_users = User.query.count()
+    total_admins = User.query.filter_by(is_admin=True).count()
+    guest_sessions = len([s for s in session.keys() if 'guest' in str(s)])
+    
+    # Recent users (last 10)
+    recent_users = User.query.order_by(User.id.desc()).limit(10).all()
+    
+    return render_template('admin/dashboard.html', 
+                         total_users=total_users,
+                         total_admins=total_admins,
+                         guest_sessions=guest_sessions,
+                         recent_users=recent_users)
+
+@app.route('/admin/users')
+@admin_required
+def admin_users():
+    page = request.args.get('page', 1, type=int)
+    users = User.query.paginate(page=page, per_page=20, error_out=False)
+    return render_template('admin/users.html', users=users)
+
+@app.route('/admin/users/<int:user_id>')
+@admin_required
+def admin_user_detail(user_id):
+    user = User.query.get_or_404(user_id)
+    return render_template('admin/user_detail.html', user=user)
+
+@app.route('/admin/users/<int:user_id>/toggle_admin', methods=['POST'])
+@admin_required
+def admin_toggle_user_admin(user_id):
+    user = User.query.get_or_404(user_id)
+    user.is_admin = not user.is_admin
+    db.session.commit()
+    flash(f"{'Granted' if user.is_admin else 'Revoked'} admin access for {user.username}", "success")
+    return redirect(url_for('admin_user_detail', user_id=user_id))
+
+@app.route('/admin/users/<int:user_id>/delete', methods=['POST'])
+@admin_required
+def admin_delete_user(user_id):
+    user = User.query.get_or_404(user_id)
+    if user.is_admin:
+        flash("Cannot delete admin users", "error")
+        return redirect(url_for('admin_user_detail', user_id=user_id))
+    
+    username = user.username
+    db.session.delete(user)
+    db.session.commit()
+    flash(f"Deleted user {username}", "success")
+    return redirect(url_for('admin_users'))
+
+@app.route('/admin/api/stats')
+@admin_required
+def admin_api_stats():
+    """API endpoint for admin dashboard statistics"""
+    total_users = User.query.count()
+    total_admins = User.query.filter_by(is_admin=True).count()
+    
+    # Calculate achievement statistics
+    users_with_achievements = User.query.filter(User.achievements.isnot(None)).all()
+    total_achievements = sum(len(user.achievements or []) for user in users_with_achievements)
+    avg_achievements = total_achievements / total_users if total_users > 0 else 0
+    
+    return jsonify({
+        'total_users': total_users,
+        'total_admins': total_admins,
+        'total_achievements': total_achievements,
+        'avg_achievements': round(avg_achievements, 2),
+        'guest_sessions': len([s for s in session.keys() if 'guest' in str(s)])
+    })
 
 # === RUN SERVER ===
 if __name__ == "__main__":

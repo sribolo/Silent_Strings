@@ -61,6 +61,12 @@
           </div>
             <!-- Profile Actions -->
             <div class="profile-actions">
+                {% if is_admin %}
+                <a href="{{ url_for('admin_dashboard') }}" class="pixel-btn admin-btn">
+                    <i class="fa-solid fa-shield-alt"></i>
+                    Admin Panel
+                </a>
+                {% endif %}
                 <a href="{{ url_for('settings') }}" class="pixel-btn">
                     <i class="fa-solid fa-gear"></i>
                     Settings

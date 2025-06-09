@@ -1278,6 +1278,18 @@ input::placeholder {
   color: #23232b;
 }
 
+.pixel-btn.admin-btn {
+  background-color: #6C5CE7;
+  border: 2px solid #6C5CE7;
+  color: #fff;
+}
+
+.pixel-btn.admin-btn:hover {
+  background-color: #5B4BD5;
+  border-color: #5B4BD5;
+  color: #fff;
+}
+
 .profile-divider {
   display: none;
 }

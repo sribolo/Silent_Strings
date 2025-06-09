@@ -1,0 +1,120 @@
+{% extends "admin/base.html" %}
+{% block title %}User Management{% endblock %}
+{% block page_title %}User Management{% endblock %}
+
+{% block content %}
+<!-- Search and Filters -->
+<div class="admin-toolbar">
+    <div class="search-bar">
+        <input type="text" id="user-search" placeholder="Search users..." onkeyup="filterUsers()">
+        <i class="fas fa-search"></i>
+    </div>
+    <div class="filter-controls">
+        <select id="admin-filter" onchange="filterUsers()">
+            <option value="">All Users</option>
+            <option value="admin">Admins Only</option>
+            <option value="user">Regular Users</option>
+        </select>
+    </div>
+</div>
+
+<!-- Users Table -->
+<div class="users-table">
+    <table id="users-table">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Avatar</th>
+                <th>Username</th>
+                <th>Email</th>
+                <th>Status</th>
+                <th>Achievements</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for user in users.items %}
+            <tr data-user-type="{{ 'admin' if user.is_admin else 'user' }}">
+                <td>{{ user.id }}</td>
+                <td>
+                    <div class="user-avatar">
+                        {% if user.avatar_character %}
+                            <img src="{{ url_for('static', filename='images/avatar_parts/characters/' + user.avatar_character + '.png') }}" alt="Avatar">
+                        {% else %}
+                            <div class="default-avatar"><i class="fas fa-user"></i></div>
+                        {% endif %}
+                    </div>
+                </td>
+                <td class="username">{{ user.username }}</td>
+                <td class="email">{{ user.email }}</td>
+                <td>
+                    {% if user.is_admin %}
+                        <span class="badge badge-admin">Admin</span>
+                    {% else %}
+                        <span class="badge badge-user">User</span>
+                    {% endif %}
+                </td>
+                <td>
+                    <span class="achievement-count">
+                        {{ (user.achievements|length) if user.achievements else 0 }}
+                    </span>
+                </td>
+                <td class="actions">
+                    <a href="{{ url_for('admin_user_detail', user_id=user.id) }}" class="btn-small btn-view">
+                        <i class="fas fa-eye"></i> View
+                    </a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<!-- Pagination -->
+{% if users.pages > 1 %}
+<div class="pagination">
+    {% if users.has_prev %}
+        <a href="{{ url_for('admin_users', page=users.prev_num) }}" class="page-btn">&laquo; Previous</a>
+    {% endif %}
+    
+    {% for page_num in users.iter_pages() %}
+        {% if page_num %}
+            {% if page_num != users.page %}
+                <a href="{{ url_for('admin_users', page=page_num) }}" class="page-btn">{{ page_num }}</a>
+            {% else %}
+                <span class="page-btn active">{{ page_num }}</span>
+            {% endif %}
+        {% else %}
+            <span class="page-btn disabled">...</span>
+        {% endif %}
+    {% endfor %}
+    
+    {% if users.has_next %}
+        <a href="{{ url_for('admin_users', page=users.next_num) }}" class="page-btn">Next &raquo;</a>
+    {% endif %}
+</div>
+{% endif %}
+
+<script>
+function filterUsers() {
+    const searchTerm = document.getElementById('user-search').value.toLowerCase();
+    const adminFilter = document.getElementById('admin-filter').value;
+    const rows = document.querySelectorAll('#users-table tbody tr');
+    
+    rows.forEach(row => {
+        const username = row.querySelector('.username').textContent.toLowerCase();
+        const email = row.querySelector('.email').textContent.toLowerCase();
+        const userType = row.getAttribute('data-user-type');
+        
+        const matchesSearch = username.includes(searchTerm) || email.includes(searchTerm);
+        const matchesFilter = adminFilter === '' || userType === adminFilter;
+        
+        if (matchesSearch && matchesFilter) {
+            row.style.display = '';
+        } else {
+            row.style.display = 'none';
+        }
+    });
+}
+</script>
+{% endblock %} 
