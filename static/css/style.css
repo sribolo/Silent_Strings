@@ -167,11 +167,10 @@ game-title {
   color: white;
   font-family: 'Share Tech Mono', monospace;
   width: 95vw;
-  max-width: 500px;
-  max-height: none;
-  min-height: 80vh;
+  max-width: 400px;
+  max-height: 94vh;
   box-sizing: border-box;
-  overflow-y: auto;
+  overflow-y: auto; /* So it never leaves screen */
 }
 
 .center-stack-container {
