@@ -39,7 +39,35 @@
                 <td>
                     <div class="user-avatar">
                         {% if user.avatar_character %}
-                            <img src="{{ url_for('static', filename='images/avatar_parts/characters/' + user.avatar_character + '.png') }}" alt="Avatar">
+                            <!-- Character base layer -->
+                            <img src="{{ url_for('static', filename='images/avatar_parts/characters/' + user.avatar_character + '.png') }}" alt="Character" class="avatar-layer">
+                            
+                            <!-- Hair layer -->
+                            {% if user.avatar_hair %}
+                                {% for subcat, hair_item in user.avatar_hair.items() %}
+                                    {% if hair_item.name %}
+                                        <img src="{{ url_for('static', filename='images/avatar_parts/hair/' + (hair_item.subcategory or subcat) + '/' + hair_item.name + '.png') }}" alt="Hair" class="avatar-layer">
+                                    {% endif %}
+                                {% endfor %}
+                            {% endif %}
+                            
+                            <!-- Clothes layers -->
+                            {% if user.avatar_clothes %}
+                                {% for subcat, clothes_item in user.avatar_clothes.items() %}
+                                    {% if clothes_item.name %}
+                                        <img src="{{ url_for('static', filename='images/avatar_parts/clothes/' + (clothes_item.subcategory or subcat) + '/' + clothes_item.name + '.png') }}" alt="Clothes" class="avatar-layer">
+                                    {% endif %}
+                                {% endfor %}
+                            {% endif %}
+                            
+                            <!-- Accessories layer -->
+                            {% if user.avatar_acc %}
+                                {% for subcat, acc_item in user.avatar_acc.items() %}
+                                    {% if acc_item.name %}
+                                        <img src="{{ url_for('static', filename='images/avatar_parts/acc/' + acc_item.name + '.png') }}" alt="Accessory" class="avatar-layer">
+                                    {% endif %}
+                                {% endfor %}
+                            {% endif %}
                         {% else %}
                             <div class="default-avatar"><i class="fas fa-user"></i></div>
                         {% endif %}
