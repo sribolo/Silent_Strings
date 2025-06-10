@@ -164,64 +164,85 @@ function getRandomVariant(layer) {
 // Setup events
 function setupEvents() {
     // Hamburger menu toggle
-    document.getElementById('hamburger-menu').addEventListener('click', function() {
-        const dropdown = document.getElementById('dropdown-menu');
-        dropdown.classList.toggle('hidden');
-    });
+    const hamburger = document.getElementById('hamburger-menu');
+    const dropdown = document.getElementById('dropdown-menu');
+    if (hamburger && dropdown) {
+        hamburger.addEventListener('click', function(e) {
+            e.stopPropagation();
+            dropdown.classList.toggle('hidden');
+        });
+    } else {
+        console.warn('Hamburger menu or dropdown-menu not found in DOM');
+    }
 
     // Click outside to close menu
     document.addEventListener('click', function(e) {
         if (!e.target.closest('.hamburger-menu') && !e.target.closest('.dropdown-menu')) {
-            document.getElementById('dropdown-menu').classList.add('hidden');
+            if (dropdown) dropdown.classList.add('hidden');
         }
     });
 
     // Tool buttons
-    document.getElementById('interview-btn').addEventListener('click', function() { 
-        document.getElementById('dropdown-menu').classList.add('hidden');
-        startInterview(); 
-    });
-    
-    document.getElementById('scan-btn').addEventListener('click', function() { 
-        document.getElementById('dropdown-menu').classList.add('hidden');
-        showToolModal('Evidence Scanner', `
-            <button onclick="runScan()" class="action-btn">
-                <i class="fas fa-search"></i> Run System Scan
-            </button>
-            <div id="scan-result" class="result-container"></div>
-        `);
-    });
-    
-    document.getElementById('analyze-btn').addEventListener('click', function() { 
-        document.getElementById('dropdown-menu').classList.add('hidden');
-        showToolModal('Digital Analysis', `
-            <button onclick="runAnalysis()" class="action-btn">
-                <i class="fas fa-microscope"></i> Analyze Evidence
-            </button>
-            <div id="analysis-result" class="result-container"></div>
-        `);
-    });
-    
-    document.getElementById('notes-btn').addEventListener('click', function() { 
-        document.getElementById('dropdown-menu').classList.add('hidden');
-        const notes = localStorage.getItem('investigationNotes') || '';
-        showToolModal('Mission Notes', `
-            <textarea id="notes-text" placeholder="Record your findings..." class="notes-textarea">${notes}</textarea>
-            <button onclick="saveNotes()" class="action-btn notes-save-btn">
-                <i class="fas fa-save"></i> Save Notes
-            </button>
-        `);
-    });
+    const interviewBtn = document.getElementById('interview-btn');
+    if (interviewBtn) {
+        interviewBtn.addEventListener('click', function() { 
+            if (dropdown) dropdown.classList.add('hidden');
+            startInterview(); 
+        });
+    }
+    const scanBtn = document.getElementById('scan-btn');
+    if (scanBtn) {
+        scanBtn.addEventListener('click', function() { 
+            if (dropdown) dropdown.classList.add('hidden');
+            showToolModal('Evidence Scanner', `
+                <button onclick="runScan()" class="action-btn">
+                    <i class="fas fa-search"></i> Run System Scan
+                </button>
+                <div id="scan-result" class="result-container"></div>
+            `);
+        });
+    }
+    const analyzeBtn = document.getElementById('analyze-btn');
+    if (analyzeBtn) {
+        analyzeBtn.addEventListener('click', function() { 
+            if (dropdown) dropdown.classList.add('hidden');
+            showToolModal('Digital Analysis', `
+                <button onclick="runAnalysis()" class="action-btn">
+                    <i class="fas fa-microscope"></i> Analyze Evidence
+                </button>
+                <div id="analysis-result" class="result-container"></div>
+            `);
+        });
+    }
+    const notesBtn = document.getElementById('notes-btn');
+    if (notesBtn) {
+        notesBtn.addEventListener('click', function() { 
+            if (dropdown) dropdown.classList.add('hidden');
+            const notes = localStorage.getItem('investigationNotes') || '';
+            showToolModal('Mission Notes', `
+                <textarea id="notes-text" placeholder="Record your findings..." class="notes-textarea">${notes}</textarea>
+                <button onclick="saveNotes()" class="action-btn notes-save-btn">
+                    <i class="fas fa-save"></i> Save Notes
+                </button>
+            `);
+        });
+    }
 
     // Close modal
-    document.getElementById('close-modal').addEventListener('click', function() {
-        document.getElementById('tool-modal').classList.add('hidden');
-    });
+    const closeModal = document.getElementById('close-modal');
+    if (closeModal) {
+        closeModal.addEventListener('click', function() {
+            document.getElementById('tool-modal').classList.add('hidden');
+        });
+    }
 
     // Continue dialogue
-    document.getElementById('dialogue-continue').addEventListener('click', function() {
-        document.getElementById('dialogue-continue').classList.add('hidden');
-    });
+    const dialogueContinue = document.getElementById('dialogue-continue');
+    if (dialogueContinue) {
+        dialogueContinue.addEventListener('click', function() {
+            dialogueContinue.classList.add('hidden');
+        });
+    }
 }
 
 // Tool functions
