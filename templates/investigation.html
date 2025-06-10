@@ -64,14 +64,18 @@
                     {% set value = avatar_parts.get(part) %}
                     {% if value %}
                         {% if part == "characters" %}
-                            {% if value.name %}
-                                <img class="avatar-layer" src="/static/images/avatar_parts/characters/{{ value.name }}.png" alt="{{ part }}">
-                            {% endif %}
-                        {% elif value is mapping %}
+                            <img src="{{ url_for('static', filename='images/avatar_parts/characters/' + (value.name if value is mapping and value.name else value|string) + '.png') }}"
+                                 alt="{{ part }}" class="avatar-layer">
+                        {% elif part in ["clothes", "hair", "face", "acc"] and value is mapping %}
                             {% for subcat, item in value.items() %}
-                                {% if item.name %}
-                                    {% set subcategory = item.subcategory or subcat or 'default' %}
-                                    <img class="avatar-layer" src="/static/images/avatar_parts/{{ part }}/{{ subcategory }}/{{ item.name }}.png" alt="{{ part }}-{{ subcat }}">
+                                {% if item.name and (part != 'acc' or item.name != 'default') %}
+                                    {% if part == "acc" %}
+                                        <img src="{{ url_for('static', filename='images/avatar_parts/acc/' + item.name + '.png') }}"
+                                             alt="{{ subcat }}" class="avatar-layer">
+                                    {% else %}
+                                        <img src="{{ url_for('static', filename='images/avatar_parts/' + part + '/' + (item.subcategory or subcat) + '/' + item.name + '.png') }}"
+                                             alt="{{ subcat }}" class="avatar-layer">
+                                    {% endif %}
                                 {% endif %}
                             {% endfor %}
                         {% endif %}
@@ -114,25 +118,32 @@ document.addEventListener('DOMContentLoaded', function() {
 function setBackgroundImage() {
     const backgroundDiv = document.querySelector('.location-background');
     const location = backgroundDiv.getAttribute('data-location');
-    
-    // Map location names to actual background image files 
     const levelToLocationMap = {
-        'hq': 'hq',               // SECTOR-9 HQ
-        'news': 'company_1',      // Daily Herald
-        'bank': 'bank',           // Quantum Bank
-        'cafe': 'cafe',           // BitBean Coffee Shop
-        'transport': 'transport', // Metro Authority  
-        'school': 'school',       // Riverside Academy
-        'government': 'government', // City Hall
-        'hospital': 'company',    // Central Medical
-        'company': 'company',     // TechCorp Industries
-        'global': 'hq'            // Global Network
+        'hq': 'hq',
+        'news': 'company_1',
+        'bank': 'bank',
+        'cafe': 'cafe',
+        'transport': 'transport',
+        'school': 'school',
+        'government': 'government',
+        'hospital': 'company',
+        'company': 'company',
+        'global': 'hq'
     };
-    
-    const actualLocation = levelToLocationMap[location] || location;
-    backgroundDiv.style.backgroundImage = `url('/static/images/backgrounds/${actualLocation}.png')`;
-    
-    console.log(`Location: ${location}, Mapped to: ${actualLocation}`);
+    const actualLocation = levelToLocationMap[location] || 'hq';
+    const imgUrl = `/static/images/backgrounds/${actualLocation}.png`;
+
+    // Preload image to check if it exists
+    const img = new Image();
+    img.onload = function() {
+        backgroundDiv.style.backgroundImage = `url('${imgUrl}')`;
+    };
+    img.onerror = function() {
+        backgroundDiv.style.backgroundImage = `url('/static/images/backgrounds/hq.png')`;
+    };
+    img.src = imgUrl;
+
+    console.log(`Location: ${location}, Mapped to: ${actualLocation}, URL: ${imgUrl}`);
 }
 
 // Generate NPC portrait
