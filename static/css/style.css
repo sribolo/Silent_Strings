@@ -189,7 +189,8 @@ game-title {
   pointer-events: none;
 }
 
-.center-stack-container .mission-container {
+.center-stack-container .mission-container,
+.center-stack-container .mission-buttons {
   pointer-events: all;
 }
 .mission-box {
