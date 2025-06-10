@@ -123,67 +123,90 @@
             {% endif %}
         </div>
         {% endif %}
-        <!-- Visual Novel Style Dialogue System -->
-        <div id="dialogue-overlay" class="dialogue-overlay" style="display: none;">
-            <div class="dialogue-container">
-                <div class="dialogue-portrait-section">
-                    <div class="npc-portrait-frame">
-                        <div id="npc-portrait" class="npc-portrait"></div>
-                    </div>
-                    <div class="npc-name-plate">
-                        <span id="npc-name">NPC Name</span>
-                    </div>
-                </div>
-                
-                <div class="dialogue-box">
-                    <div class="dialogue-text-area">
-                        <p id="dialogue-text"></p>
-                    </div>
-                    <div class="dialogue-choices" id="dialogue-choices">
-                        <!-- Choice buttons will be added here -->
-                    </div>
-                    <div class="dialogue-continue" id="dialogue-continue" style="display: none;">
-                        <span>Click to continue...</span>
-                    </div>
-                </div>
+        
+        <!-- Mission Start Interface -->
+        <div id="mission-start-interface" class="mission-start-interface">
+            <div class="mission-briefing">
+                <h3>Mission Briefing</h3>
+                <p>Review the objectives above and prepare your investigation tools. Click the button below when ready to begin.</p>
             </div>
+            
+            <button id="start-mission-btn" class="start-mission-btn">
+                <i class="fas fa-play"></i>
+                Start Investigation
+            </button>
         </div>
 
-        <!-- Enhanced Tool Panel -->
-        <div class="game-tools-panel">
-            <h3>Investigation Tools</h3>
-            <div class="tools-grid">
-                <button id="start-dialogue-btn" class="game-tool-btn dialogue-tool">
-                    <i class="fas fa-comments"></i>
-                    <span>Interview Contacts</span>
-                </button>
-                
-                <button id="evidence-scanner-btn" class="game-tool-btn scanner-tool">
-                    <i class="fas fa-search"></i>
-                    <span>Evidence Scanner</span>
-                </button>
-                
-                <button id="forensics-kit-btn" class="game-tool-btn forensics-tool">
-                    <i class="fas fa-microscope"></i>
-                    <span>Digital Forensics</span>
-                </button>
-                
-                <button id="intel-database-btn" class="game-tool-btn intel-tool">
-                    <i class="fas fa-database"></i>
-                    <span>Intel Database</span>
-                </button>
-                
-                <button id="threat-analyzer-btn" class="game-tool-btn threat-tool">
-                    <i class="fas fa-shield-alt"></i>
-                    <span>Threat Analysis</span>
-                </button>
-                
-                <button id="mission-notes-btn" class="game-tool-btn notes-tool">
-                    <i class="fas fa-sticky-note"></i>
-                    <span>Mission Notes</span>
-                </button>
+        <!-- Investigation Interface (hidden initially) -->
+        <div id="investigation-interface" class="investigation-interface" style="display: none;">
+            <!-- Visual Novel Style Dialogue System -->
+            <div id="dialogue-overlay" class="dialogue-overlay" style="display: none;">
+                <div class="dialogue-container">
+                    <div class="dialogue-portrait-section">
+                        <div class="npc-portrait-frame">
+                            <div id="npc-portrait" class="npc-portrait"></div>
+                        </div>
+                        <div class="npc-name-plate">
+                            <span id="npc-name">NPC Name</span>
+                        </div>
+                    </div>
+                    
+                    <div class="dialogue-box">
+                        <div class="dialogue-text-area">
+                            <p id="dialogue-text"></p>
+                        </div>
+                        <div class="dialogue-choices" id="dialogue-choices">
+                            <!-- Choice buttons will be added here -->
+                        </div>
+                        <div class="dialogue-continue" id="dialogue-continue" style="display: none;">
+                            <span>Click to continue...</span>
+                        </div>
+                    </div>
+                </div>
             </div>
+
+            <!-- Enhanced Tool Panel -->
+            <div class="game-tools-panel">
+                <h3>Investigation Tools</h3>
+                <div class="tools-grid">
+                    <button id="start-dialogue-btn" class="game-tool-btn dialogue-tool">
+                        <i class="fas fa-comments"></i>
+                        <span>Interview Contacts</span>
+                    </button>
+                    
+                    <button id="evidence-scanner-btn" class="game-tool-btn scanner-tool">
+                        <i class="fas fa-search"></i>
+                        <span>Evidence Scanner</span>
+                    </button>
+                    
+                    <button id="forensics-kit-btn" class="game-tool-btn forensics-tool">
+                        <i class="fas fa-microscope"></i>
+                        <span>Digital Forensics</span>
+                    </button>
+                    
+                    <button id="intel-database-btn" class="game-tool-btn intel-tool">
+                        <i class="fas fa-database"></i>
+                        <span>Intel Database</span>
+                    </button>
+                    
+                    <button id="threat-analyzer-btn" class="game-tool-btn threat-tool">
+                        <i class="fas fa-shield-alt"></i>
+                        <span>Threat Analysis</span>
+                    </button>
+                    
+                    <button id="mission-notes-btn" class="game-tool-btn notes-tool">
+                        <i class="fas fa-sticky-note"></i>
+                        <span>Mission Notes</span>
+                    </button>
+                </div>
+            </div>
+            
+            <button id="back-to-briefing-btn" class="back-to-briefing-btn">
+                <i class="fas fa-arrow-left"></i>
+                Back to Briefing
+            </button>
         </div>
+        
         <a href="{{ url_for('game') }}" class="back-btn">Back to Map</a>
     {% endif %}
 </div>
@@ -265,38 +288,57 @@ document.querySelectorAll('.tool-btn').forEach(btn => {
 });
 
 
-// Add mission start functionality
-let missionStarted = false;
-function startMission() {
-    if (!missionStarted) {
-        missionStarted = true;
-        showObjectiveToast("Mission started! Use tools and investigate to complete objectives.");
+// Mission management variables
+let investigationActive = false;
+
+// Mission Interface Management
+
+// Mission Start Button
+document.getElementById('start-mission-btn').addEventListener('click', function() {
+    startInvestigation();
+});
+
+// Back to Briefing Button
+document.getElementById('back-to-briefing-btn').addEventListener('click', function() {
+    backToBriefing();
+});
+
+function startInvestigation() {
+    if (!investigationActive) {
+        investigationActive = true;
         
-        // Enable all interactive elements
-        document.querySelectorAll('.tool-btn').forEach(btn => {
-            btn.disabled = false;
-            btn.style.opacity = '1';
-        });
+        // Hide mission start interface
+        document.getElementById('mission-start-interface').style.display = 'none';
         
-        // Start timer
+        // Show investigation interface with animation
+        const investigationInterface = document.getElementById('investigation-interface');
+        investigationInterface.style.display = 'block';
+        
+        // Start mission timer
         if (document.getElementById('timer-value')) updateTimer();
         
-        // Hide start button
-        const startBtn = document.getElementById('start-mission-btn');
-        if (startBtn) startBtn.style.display = 'none';
+        // Show success message
+        showObjectiveToast("Investigation started! Use the tools below to gather evidence and interview contacts.");
     }
 }
 
-// Auto-start mission (or add start button if preferred)
-window.addEventListener('load', function() {
-    setTimeout(() => {
-        startMission();
-    }, 500);
-});
+function backToBriefing() {
+    // Hide investigation interface
+    document.getElementById('investigation-interface').style.display = 'none';
+    
+    // Show mission start interface
+    document.getElementById('mission-start-interface').style.display = 'block';
+    
+    // Hide any open dialogues
+    document.getElementById('dialogue-overlay').style.display = 'none';
+    
+    investigationActive = false;
+}
 
 // Visual Novel Dialogue System
 let currentDialogue = null;
 let currentNPC = null;
+let continueClickHandler = null;
 
 function showDialogue(npcName, dialogueText, choices = []) {
     const overlay = document.getElementById('dialogue-overlay');
@@ -335,7 +377,18 @@ function showDialogue(npcName, dialogueText, choices = []) {
         });
     } else {
         continueEl.style.display = 'block';
-        continueEl.addEventListener('click', hideDialogue);
+        // Remove any existing event listener
+        if (continueClickHandler) {
+            continueEl.removeEventListener('click', continueClickHandler);
+        }
+        // Create new handler and add it
+        continueClickHandler = function(event) {
+            console.log('Continue clicked!');
+            event.preventDefault();
+            event.stopPropagation();
+            hideDialogue();
+        };
+        continueEl.addEventListener('click', continueClickHandler);
     }
     
     overlay.style.display = 'flex';

@@ -1957,6 +1957,15 @@ input::placeholder {
   font-size: 0.85rem;
   text-align: right;
   animation: blink 1.5s infinite;
+  cursor: pointer;
+  padding: 10px;
+  user-select: none;
+  transition: color 0.3s ease;
+}
+
+.dialogue-continue:hover {
+  color: #8B7355;
+  transform: scale(1.05);
 }
 
 @media (max-width: 768px) {
@@ -2065,6 +2074,111 @@ input::placeholder {
   
   .game-tool-btn i {
     font-size: 1.2rem;
+  }
+}
+
+/* Mission Start Interface */
+.mission-start-interface {
+  background: #1a1a2e;
+  border: 2px solid #6C5CE7;
+  border-radius: 12px;
+  padding: 30px;
+  margin: 20px 0;
+  text-align: center;
+  box-shadow: 0 4px 20px rgba(108, 92, 231, 0.3);
+}
+
+.mission-briefing h3 {
+  color: #A499FF;
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 1.3rem;
+  margin-bottom: 15px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.mission-briefing p {
+  color: #ffffff;
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 1rem;
+  line-height: 1.6;
+  margin-bottom: 25px;
+  opacity: 0.9;
+}
+
+.start-mission-btn {
+  background: linear-gradient(145deg, #28a745, #20c997);
+  border: 3px solid #20c997;
+  border-radius: 15px;
+  padding: 20px 40px;
+  color: white;
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 1.2rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  margin: 0 auto;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  box-shadow: 0 4px 15px rgba(40, 167, 69, 0.3);
+}
+
+.start-mission-btn:hover {
+  background: linear-gradient(145deg, #20c997, #17a2b8);
+  transform: translateY(-3px);
+  box-shadow: 0 6px 25px rgba(40, 167, 69, 0.5);
+  border-color: #17a2b8;
+}
+
+.start-mission-btn:active {
+  transform: translateY(-1px);
+  box-shadow: 0 3px 15px rgba(40, 167, 69, 0.4);
+}
+
+.start-mission-btn i {
+  font-size: 1.3rem;
+}
+
+.back-to-briefing-btn {
+  background: linear-gradient(145deg, #6c757d, #5a6268);
+  border: 2px solid #6c757d;
+  border-radius: 10px;
+  padding: 12px 25px;
+  color: white;
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin: 20px auto 0;
+  width: fit-content;
+}
+
+.back-to-briefing-btn:hover {
+  background: linear-gradient(145deg, #5a6268, #495057);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 15px rgba(108, 117, 125, 0.3);
+}
+
+.investigation-interface {
+  animation: fadeInSlide 0.5s ease-out;
+}
+
+@keyframes fadeInSlide {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
   }
 }
 
