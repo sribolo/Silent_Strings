@@ -59,13 +59,22 @@
         <!-- Player Avatar in Scene -->
         <div class="player-avatar" id="player-avatar">
             {% if avatar_parts %}
-                {% for category, part in avatar_parts.items() %}
-                    {% if category == 'characters' %}
-                        <img class="avatar-layer" src="/static/images/avatar_parts/{{ category }}/{{ part.name if part is mapping else part }}.png" alt="{{ category }}">
-                    {% else %}
-                        {% set part_name = part.name if part is mapping else 'default' %}
-                        {% set subcategory = part.subcategory if part is mapping else 'default' %}
-                        <img class="avatar-layer" src="/static/images/avatar_parts/{{ category }}/{{ subcategory }}/{{ part_name }}.png" alt="{{ category }}">
+                {% set LAYER_ORDER = ["characters", "clothes", "hair", "face", "acc"] %}
+                {% for part in LAYER_ORDER %}
+                    {% set value = avatar_parts.get(part) %}
+                    {% if value %}
+                        {% if part == "characters" %}
+                            {% if value.name %}
+                                <img class="avatar-layer" src="/static/images/avatar_parts/characters/{{ value.name }}.png" alt="{{ part }}">
+                            {% endif %}
+                        {% elif value is mapping %}
+                            {% for subcat, item in value.items() %}
+                                {% if item.name %}
+                                    {% set subcategory = item.subcategory or subcat or 'default' %}
+                                    <img class="avatar-layer" src="/static/images/avatar_parts/{{ part }}/{{ subcategory }}/{{ item.name }}.png" alt="{{ part }}-{{ subcat }}">
+                                {% endif %}
+                            {% endfor %}
+                        {% endif %}
                     {% endif %}
                 {% endfor %}
             {% endif %}
