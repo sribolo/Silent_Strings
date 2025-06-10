@@ -38,19 +38,19 @@
 
 
     <!-- MAP BUILDING BUTTONS (STILL ON MAP, NOT OVERLAY) -->
-    <button class="map-area-btn map-area-bank{% if 'level3' in completed_missions %} completed{% endif %}" data-mission="level3" title="PhishNet - Bank Investigation{% if 'level3' in completed_missions %} ✅ COMPLETED{% endif %}"></button>
-    <button class="map-area-btn map-area-school{% if 'level6' in completed_missions %} completed{% endif %}" data-mission="level6" title="School Network Breach - Riverside Academy{% if 'level6' in completed_missions %} ✅ COMPLETED{% endif %}"></button>
-    <button class="map-area-btn map-area-company{% if 'level4' in completed_missions %} completed{% endif %}" data-mission="level4" title="Shadow Repo - Software Company{% if 'level4' in completed_missions %} ✅ COMPLETED{% endif %}"></button>
-    <button class="map-area-btn map-area-cafe{% if 'level7' in completed_missions %} completed{% endif %}" data-mission="level7" title="Crypto Café Heist - BitBean Coffee Shop{% if 'level7' in completed_missions %} ✅ COMPLETED{% endif %}"></button>
-    <button class="map-area-btn map-area-news{% if 'level2' in completed_missions %} completed{% endif %}" data-mission="level2" title="Operation Deadlink - News Outlet{% if 'level2' in completed_missions %} ✅ COMPLETED{% endif %}"></button>
-    <button class="map-area-btn map-area-government{% if 'level5' in completed_missions %} completed{% endif %}" data-mission="level5" title="Trojan Trap - Government Server{% if 'level5' in completed_missions %} ✅ COMPLETED{% endif %}"></button>
-    <button class="map-area-btn map-area-transport{% if 'level9' in completed_missions %} completed{% endif %}" data-mission="level9" title="Silent Rails: Transit Hijack - Metro Authority{% if 'level9' in completed_missions %} ✅ COMPLETED{% endif %}"></button>
-    <button class="map-area-btn map-area-hq{% if 'level1' in completed_missions %} completed{% endif %}" data-mission="level1" title="Breach at Base - SECTOR-9 HQ{% if 'level1' in completed_missions %} ✅ COMPLETED{% endif %}"></button>
-    <button class="map-area-btn map-area-hospital{% if 'level8' in completed_missions %} completed{% endif %}" data-mission="level8" title="Code Blue: Hospital Ransomware - Central Medical{% if 'level8' in completed_missions %} ✅ COMPLETED{% endif %}"></button>
+    <button class="map-area-btn map-area-bank{% if 'bank' in completed_missions %} completed{% endif %}" data-mission="bank" title="PhishNet - Quantum Bank{% if 'bank' in completed_missions %} ✅ COMPLETED{% endif %}"></button>
+    <button class="map-area-btn map-area-school{% if 'school' in completed_missions %} completed{% endif %}" data-mission="school" title="School Network Breach - Riverside Academy{% if 'school' in completed_missions %} ✅ COMPLETED{% endif %}"></button>
+    <button class="map-area-btn map-area-company{% if 'company' in completed_missions %} completed{% endif %}" data-mission="company" title="Shadow Repo - TechCorp Industries{% if 'company' in completed_missions %} ✅ COMPLETED{% endif %}"></button>
+    <button class="map-area-btn map-area-cafe{% if 'cafe' in completed_missions %} completed{% endif %}" data-mission="cafe" title="Crypto Café Heist - BitBean Coffee Shop{% if 'cafe' in completed_missions %} ✅ COMPLETED{% endif %}"></button>
+    <button class="map-area-btn map-area-news{% if 'news' in completed_missions %} completed{% endif %}" data-mission="news" title="Operation Deadlink - Daily Herald{% if 'news' in completed_missions %} ✅ COMPLETED{% endif %}"></button>
+    <button class="map-area-btn map-area-government{% if 'government' in completed_missions %} completed{% endif %}" data-mission="government" title="Trojan Trap - City Hall{% if 'government' in completed_missions %} ✅ COMPLETED{% endif %}"></button>
+    <button class="map-area-btn map-area-transport{% if 'transport' in completed_missions %} completed{% endif %}" data-mission="transport" title="Silent Rails: Transit Hijack - Metro Authority{% if 'transport' in completed_missions %} ✅ COMPLETED{% endif %}"></button>
+    <button class="map-area-btn map-area-hq{% if 'hq' in completed_missions %} completed{% endif %}" data-mission="hq" title="Breach at Base - SECTOR-9 HQ{% if 'hq' in completed_missions %} ✅ COMPLETED{% endif %}"></button>
+    <button class="map-area-btn map-area-hospital{% if 'hospital' in completed_missions %} completed{% endif %}" data-mission="hospital" title="Code Blue: Hospital Ransomware - Central Medical{% if 'hospital' in completed_missions %} ✅ COMPLETED{% endif %}"></button>
     
     <!-- Final level - only show if all others completed -->
-    {% if level10_unlocked %}
-    <button class="map-area-btn map-area-global{% if 'level10' in completed_missions %} completed{% endif %} unlocked" data-mission="level10" title="Final String - Global Network{% if 'level10' in completed_missions %} ✅ COMPLETED{% endif %}"></button>
+    {% if global_unlocked %}
+    <button class="map-area-btn map-area-global{% if 'global' in completed_missions %} completed{% endif %} unlocked" data-mission="global" title="Final String - Global Network{% if 'global' in completed_missions %} ✅ COMPLETED{% endif %}"></button>
     {% else %}
     <div class="map-area-locked" title="🔒 Complete all 9 missions to unlock the Final String">🔒</div>
     {% endif %}

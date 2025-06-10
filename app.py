@@ -641,24 +641,24 @@ def game():
 
     # Get completed missions for progression tracking
     completed_missions = session.get('completed_missions', [])
-    required_levels = ['level1', 'level2', 'level3', 'level4', 'level5', 'level6', 'level7', 'level8', 'level9']
-    level10_unlocked = all(level in completed_missions for level in required_levels)
+    required_locations = ['hq', 'news', 'bank', 'cafe', 'transport', 'school', 'government', 'hospital', 'company']
+    global_unlocked = all(loc in completed_missions for loc in required_locations)
 
     return render_template('game.html', 
                          avatar_parts=avatar_parts, 
                          is_guest=is_guest, 
                          username=username,
                          completed_missions=completed_missions,
-                         level10_unlocked=level10_unlocked)
+                         global_unlocked=global_unlocked)
 
 # Example mission data (expand as needed)
 MISSIONS = {
-    "level1": {
+    "hq": {
         "title": "Breach at Base",
         "target": "SECTOR-9 HQ",
         "objectives": [
             "Identify the initial breach point",
-            "Analyze suspicious login attempts",
+            "Analyze suspicious login attempts", 
             "Trace the attacker's IP address",
             "Recover deleted system logs",
             "Secure the compromised accounts"
@@ -666,14 +666,14 @@ MISSIONS = {
         "npc_dialogue_key": "level1",
         "tools_available": [
             "Network Scanner",
-            "Log Analyzer",
+            "Log Analyzer", 
             "Password Cracker",
             "File Recovery Tool"
         ],
         "evidence_locations": [
             "Server Room",
             "Security Office",
-            "Network Hub",
+            "Network Hub", 
             "Admin Workstation"
         ],
         "clues": {
@@ -695,9 +695,9 @@ MISSIONS = {
         },
         "timeLimit": 1800
     },
-    "level2": {
+    "news": {
         "title": "Operation Deadlink",
-        "target": "News Outlet",
+        "target": "Daily Herald",
         "objectives": [
             "Identify website defacement source",
             "Analyze injected JavaScript",
@@ -731,9 +731,9 @@ MISSIONS = {
         },
         "timeLimit": 1800
     },
-    "level3": {
+    "bank": {
         "title": "PhishNet",
-        "target": "Bank",
+        "target": "Quantum Bank",
         "objectives": [
             "Identify Patient Zero",
             "Find the ransomware note and sample",
@@ -769,52 +769,129 @@ MISSIONS = {
         },
         "timeLimit": 1800
     },
-    "level4": {
-        "title": "Shadow Repo",
-        "target": "Software Company",
+    "cafe": {
+        "title": "Crypto Café Heist", 
+        "target": "BitBean Coffee Shop",
         "objectives": [
-            "Detect code injection in repo",
-            "Audit CI/CD pipeline",
-            "Identify compromised developer account",
-            "Revert malicious commits"
+            "Investigate stolen cryptocurrency wallets",
+            "Check compromised point-of-sale system",
+            "Trace the crypto mining malware",
+            "Recover customer payment data"
         ],
         "npc_dialogue_key": "level4",
         "tools_available": [
-            "Code Diff Tool",
-            "Pipeline Monitor"
+            "Blockchain Analyzer",
+            "Malware Scanner", 
+            "Payment Forensics"
         ],
         "evidence_locations": [
-            "Code Repository",
-            "Build Server",
-            "Dev's Laptop"
+            "Register Terminal",
+            "Customer WiFi Router",
+            "Manager's Office",
+            "Back Office Server"
         ],
         "clues": {
             "required": [
-                "Compromised repo commit",
-                "Pipeline warning logs",
-                "Credential reuse"
+                "Crypto wallet private keys",
+                "Skimmer device",
+                "Mining software logs"
             ],
             "optional": [
-                "Unapproved SSH key",
-                "Suspicious merge history"
+                "Customer complaint forms",
+                "Security camera footage"
             ]
         },
         "success_criteria": {
             "evidence_threshold": 3,
-            "required_objectives": 3
+            "required_objectives": 4
         },
         "timeLimit": 1800
     },
-    "level5": {
+    "transport": {
+        "title": "Silent Rails: Transit Hijack",
+        "target": "Metro Authority",
+        "objectives": [
+            "Restore hijacked train control systems",
+            "Investigate passenger payment fraud", 
+            "Secure the scheduling database",
+            "Trace signal system tampering"
+        ],
+        "npc_dialogue_key": "level5",
+        "tools_available": [
+            "SCADA Analyzer",
+            "Payment Fraud Detector",
+            "Signal Tracker"
+        ],
+        "evidence_locations": [
+            "Central Control Room",
+            "Ticket Office", 
+            "Signal Box",
+            "Maintenance Depot"
+        ],
+        "clues": {
+            "required": [
+                "Manipulated train schedules",
+                "Cloned payment cards",
+                "Signal override codes"
+            ],
+            "optional": [
+                "CCTV footage gaps",
+                "Maintenance log alterations"
+            ]
+        },
+        "success_criteria": {
+            "evidence_threshold": 3,
+            "required_objectives": 4
+        },
+        "timeLimit": 1800
+    },
+    "school": {
+        "title": "School Network Breach",
+        "target": "Riverside Academy", 
+        "objectives": [
+            "Secure compromised student portal",
+            "Investigate grade tampering",
+            "Trace unauthorized admin access",
+            "Restore network integrity"
+        ],
+        "npc_dialogue_key": "level6",
+        "tools_available": [
+            "Portal Scanner",
+            "Grade Audit Tool",
+            "Access Logger"
+        ],
+        "evidence_locations": [
+            "Computer Lab",
+            "Principal's Office",
+            "IT Closet"
+        ],
+        "clues": {
+            "required": [
+                "Modified grade records",
+                "Unauthorized login attempts", 
+                "Suspicious network traffic"
+            ],
+            "optional": [
+                "Student USB device",
+                "Temp admin password"
+            ]
+        },
+        "success_criteria": {
+            "evidence_threshold": 3,
+            "required_objectives": 4
+        },
+        "timeLimit": 1800
+    },
+    "government": {
         "title": "Trojan Trap",
-        "target": "Government Server",
+        "target": "City Hall",
         "objectives": [
             "Find persistent malware",
             "Analyze unauthorized scheduled tasks",
             "Recover deleted database records",
             "Trace admin privilege escalation"
         ],
-        "npc_dialogue_key": "level5",
+        "npc_dialogue_key": "level7",
         "tools_available": [
             "Malware Sandbox",
             "File Recovery",
@@ -842,112 +919,35 @@ MISSIONS = {
         },
         "timeLimit": 1800
     },
-    "level6": {
-        "title": "School Network Breach",
-        "target": "Riverside Academy",
-        "objectives": [
-            "Investigate compromised student records",
-            "Check library computer lab intrusion",
-            "Trace unauthorized grade changes",
-            "Secure the school's WiFi network"
-        ],
-        "npc_dialogue_key": "level6",
-        "tools_available": [
-            "Database Analyzer",
-            "Network Scanner",
-            "Log Analyzer"
-        ],
-        "evidence_locations": [
-            "Principal's Office",
-            "Computer Lab",
-            "IT Server Room",
-            "Teacher's Lounge"
-        ],
-        "clues": {
-            "required": [
-                "Modified grade database",
-                "Keylogger on teacher PC",
-                "Student WiFi logs"
-            ],
-            "optional": [
-                "Printed grade reports",
-                "USB drive in lab"
-            ]
-        },
-        "success_criteria": {
-            "evidence_threshold": 3,
-            "required_objectives": 4
-        },
-        "timeLimit": 1800
-    },
-    "level7": {
-        "title": "Crypto Café Heist",
-        "target": "BitBean Coffee Shop",
-        "objectives": [
-            "Investigate stolen cryptocurrency wallets",
-            "Check compromised point-of-sale system",
-            "Trace the crypto mining malware",
-            "Recover customer payment data"
-        ],
-        "npc_dialogue_key": "level7",
-        "tools_available": [
-            "Blockchain Analyzer",
-            "Malware Scanner",
-            "Payment Forensics"
-        ],
-        "evidence_locations": [
-            "Register Terminal",
-            "Customer WiFi Router",
-            "Manager's Office",
-            "Back Office Server"
-        ],
-        "clues": {
-            "required": [
-                "Crypto wallet private keys",
-                "Skimmer device",
-                "Mining software logs"
-            ],
-            "optional": [
-                "Customer complaint forms",
-                "Security camera footage"
-            ]
-        },
-        "success_criteria": {
-            "evidence_threshold": 3,
-            "required_objectives": 4
-        },
-        "timeLimit": 1800
-    },
-    "level8": {
+    "hospital": {
         "title": "Code Blue: Hospital Ransomware",
-        "target": "Central Medical Center",
+        "target": "Central Medical",
         "objectives": [
-            "Restore encrypted patient records",
-            "Investigate medical device tampering",
-            "Trace the ransomware deployment",
-            "Secure critical life support systems"
+            "Restore patient database access",
+            "Identify ransomware entry point",
+            "Secure medical equipment network",
+            "Decrypt critical patient files"
         ],
         "npc_dialogue_key": "level8",
         "tools_available": [
             "Ransomware Decryptor",
-            "Medical Device Scanner",
-            "Network Forensics"
+            "Network Isolator",
+            "Medical Device Scanner"
         ],
         "evidence_locations": [
-            "IT Department",
-            "Nurse Station",
-            "Medical Records Office",
-            "Equipment Room"
+            "Patient Database Server",
+            "Nursing Station",
+            "Medical Equipment Network"
         ],
         "clues": {
             "required": [
-                "Ransomware note",
-                "Infected USB device",
-                "Network intrusion logs"
+                "Ransomware signature",
+                "Phishing email to staff",
+                "Encrypted patient files"
             ],
             "optional": [
-                "Staff email phishing",
-                "Backup server status"
+                "Backup system logs",
+                "USB device at reception"
             ]
         },
         "success_criteria": {
@@ -956,47 +956,45 @@ MISSIONS = {
         },
         "timeLimit": 1800
     },
-    "level9": {
-        "title": "Silent Rails: Transit Hijack",
-        "target": "Metro Transit Authority",
+    "company": {
+        "title": "Shadow Repo",
+        "target": "TechCorp Industries",
         "objectives": [
-            "Restore hijacked train control systems",
-            "Investigate passenger payment fraud",
-            "Secure the scheduling database",
-            "Trace signal system tampering"
+            "Detect code injection in repo",
+            "Audit CI/CD pipeline",
+            "Identify compromised developer account",
+            "Revert malicious commits"
         ],
         "npc_dialogue_key": "level9",
         "tools_available": [
-            "SCADA Analyzer",
-            "Payment Fraud Detector",
-            "Signal Tracker"
+            "Code Diff Tool",
+            "Pipeline Monitor"
         ],
         "evidence_locations": [
-            "Central Control Room",
-            "Ticket Office",
-            "Signal Box",
-            "Maintenance Depot"
+            "Code Repository",
+            "Build Server",
+            "Dev's Laptop"
         ],
         "clues": {
             "required": [
-                "Manipulated train schedules",
-                "Cloned payment cards",
-                "Signal override codes"
+                "Compromised repo commit",
+                "Pipeline warning logs",
+                "Credential reuse"
             ],
             "optional": [
-                "CCTV footage gaps",
-                "Maintenance log alterations"
+                "Unapproved SSH key",
+                "Suspicious merge history"
             ]
         },
         "success_criteria": {
             "evidence_threshold": 3,
-            "required_objectives": 4
+            "required_objectives": 3
         },
         "timeLimit": 1800
     },
-    "level10": {
+    "global": {
         "title": "Final String",
-        "target": "Global Systems",
+        "target": "Global Network",
         "objectives": [
             "Disarm Silent Strings protocol",
             "Trace global worm propagation",
@@ -1039,12 +1037,12 @@ def mission(location):
     if not mission_data:
         return render_template('mission.html', error="Mission not found.", location=location)
     
-    # Check if level10 is locked
-    if location == 'level10':
-        required_levels = ['level1', 'level2', 'level3', 'level4', 'level5', 'level6', 'level7', 'level8', 'level9']
+    # Check if global mission is locked
+    if location == 'global':
+        required_locations = ['hq', 'news', 'bank', 'cafe', 'transport', 'school', 'government', 'hospital', 'company']
         completed_missions = session.get('completed_missions', [])
         
-        if not all(level in completed_missions for level in required_levels):
+        if not all(loc in completed_missions for loc in required_locations):
             return render_template('mission.html', 
                                  error="Access Denied: Complete all previous missions to unlock the Final String.", 
                                  location=location)

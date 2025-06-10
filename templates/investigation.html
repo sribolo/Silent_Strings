@@ -106,18 +106,18 @@ function setBackgroundImage() {
     const backgroundDiv = document.querySelector('.location-background');
     const location = backgroundDiv.getAttribute('data-location');
     
-    // Map level numbers to actual location names that match available image files
+    // Map location names to actual background image files 
     const levelToLocationMap = {
-        'level1': 'company',      // TechCorp Industries
-        'level2': 'company_1',    // Daily Herald
-        'level3': 'bank',         // Quantum Bank
-        'level4': 'cafe',         // BitBean Coffee Shop
-        'level5': 'transport',    // Metro Authority  
-        'level6': 'school',       // Riverside Academy
-        'level7': 'government',   // City Hall
-        'level8': 'company',      // Central Medical
-        'level9': 'hq',           // SECTOR-9 HQ
-        'level10': 'hq'           // Global Network
+        'hq': 'hq',               // SECTOR-9 HQ
+        'news': 'company_1',      // Daily Herald
+        'bank': 'bank',           // Quantum Bank
+        'cafe': 'cafe',           // BitBean Coffee Shop
+        'transport': 'transport', // Metro Authority  
+        'school': 'school',       // Riverside Academy
+        'government': 'government', // City Hall
+        'hospital': 'company',    // Central Medical
+        'company': 'company',     // TechCorp Industries
+        'global': 'hq'            // Global Network
     };
     
     const actualLocation = levelToLocationMap[location] || location;
@@ -350,9 +350,9 @@ function typeText(text, element) {
 // Location mapping
 function getDialogueLevelKey(location) {
     const locationToLevel = {
-        'company': 'level1', 'news': 'level2', 'bank': 'level3',
-        'school': 'level6', 'cafe': 'level4', 'transport': 'level5',
-        'hospital': 'level8', 'government': 'level7', 'hq': 'level9',
+        'hq': 'level1', 'news': 'level2', 'bank': 'level3',
+        'cafe': 'level4', 'transport': 'level5', 'school': 'level6',
+        'government': 'level7', 'hospital': 'level8', 'company': 'level9',
         'global': 'level10'
     };
     return locationToLevel[location] || 'level1';
