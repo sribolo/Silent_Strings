@@ -1,3 +1,152 @@
+// Mission-specific dialogues with proper NPC names for visual novel system
+window.missionDialogues = {
+    'level1': {
+        'Marcus Chen - IT Analyst': {
+            text: "I noticed weird traffic in the logs at 2AM, but our monitoring alert didn't trigger. Something's not right here.",
+            choices: [
+                {
+                    text: "Show me those logs immediately.",
+                    action: () => window.markObjectiveComplete(0),
+                    nextDialogue: {
+                        npc: 'Marcus Chen - IT Analyst',
+                        text: "Here's the suspicious activity. Someone accessed our servers remotely during off-hours. I've never seen this pattern before.",
+                        choices: [
+                            { text: "I'll trace this IP address.", action: () => window.markObjectiveComplete(1) },
+                            { text: "Let me check for phishing attempts." }
+                        ]
+                    }
+                },
+                {
+                    text: "Did anyone else notice unusual activity?",
+                    nextDialogue: {
+                        npc: 'Marcus Chen - IT Analyst',
+                        text: "The security guard mentioned finding a USB drive at reception. Could be connected to this breach.",
+                        choices: [
+                            { text: "I need to examine that USB immediately.", action: () => window.markObjectiveComplete(2) },
+                            { text: "Let's quarantine the affected systems first." }
+                        ]
+                    }
+                }
+            ]
+        },
+        'Sarah Wilson - Security Guard': {
+            text: "No one reported anything unusual during my shift, but I did find something strange at the reception desk.",
+            choices: [
+                {
+                    text: "What did you find?",
+                    nextDialogue: {
+                        npc: 'Sarah Wilson - Security Guard',
+                        text: "A USB drive was left behind. No one claimed it. I was about to put it in lost and found, but maybe you should look at it first?",
+                        choices: [
+                            { text: "Yes, that could be evidence. I'll analyze it.", action: () => window.markObjectiveComplete(3) },
+                            { text: "Did you see who might have left it?" }
+                        ]
+                    }
+                },
+                {
+                    text: "Any unusual visitors today?",
+                    nextDialogue: {
+                        npc: 'Sarah Wilson - Security Guard',
+                        text: "Just the usual staff and a delivery person. Oh, and the backup generator restarted suddenly around 2 AM. Might be related?",
+                        choices: [
+                            { text: "Check the generator logs.", action: () => console.log("Checking generator") },
+                            { text: "Let's focus on the USB for now." }
+                        ]
+                    }
+                }
+            ]
+        }
+    },
+    'level2': {
+        'Emma Rodriguez - Web Editor': {
+            text: "This is a nightmare! Our website was completely defaced. All the headlines now say 'PH4NT0M WAS HERE' instead of our news stories!",
+            choices: [
+                {
+                    text: "When did you first notice the defacement?",
+                    action: () => window.markObjectiveComplete(0),
+                    nextDialogue: {
+                        npc: 'Emma Rodriguez - Web Editor',
+                        text: "About an hour ago when I was updating the morning news. The JavaScript in our news ticker has been completely replaced with malicious code!",
+                        choices: [
+                            { text: "I'll analyze the injected code.", action: () => window.markObjectiveComplete(1) },
+                            { text: "Show me the admin panel access logs." }
+                        ]
+                    }
+                },
+                {
+                    text: "Did anyone on your team receive suspicious emails recently?",
+                    nextDialogue: {
+                        npc: 'Emma Rodriguez - Web Editor',
+                        text: "Actually, yes! We got an email from what looked like IT asking us to reset our passwords. The intern clicked on it yesterday...",
+                        choices: [
+                            { text: "That was likely a phishing attack.", action: () => window.markObjectiveComplete(2) },
+                            { text: "I need to check that intern's workstation immediately." }
+                        ]
+                    }
+                }
+            ]
+        },
+        'David Kim - IT Support': {
+            text: "We patched a major vulnerability last week, but someone postponed the server reboot. The patch never took effect.",
+            choices: [
+                {
+                    text: "Who postponed the reboot?",
+                    nextDialogue: {
+                        npc: 'David Kim - IT Support',
+                        text: "Management said it would disrupt operations. Now look what happened. The attackers exploited that exact vulnerability.",
+                        choices: [
+                            { text: "I need to patch and reboot immediately.", action: () => window.markObjectiveComplete(3) },
+                            { text: "Show me the vulnerability details first." }
+                        ]
+                    }
+                },
+                {
+                    text: "Have you found any other traces of the attack?",
+                    nextDialogue: {
+                        npc: 'David Kim - IT Support',
+                        text: "Check the JavaScript in our news ticker. That's where they embedded their malicious code. It's spreading to visitor browsers.",
+                        choices: [
+                            { text: "I'll clean the infected code.", action: () => console.log("Cleaning code") },
+                            { text: "First, let me trace how they got admin access." }
+                        ]
+                    }
+                }
+            ]
+        }
+    },
+    'level3': {
+        'Jennifer Park - Bank Teller': {
+            text: "I'm so sorry! I received what looked like an urgent email from HR about updating our security protocols. The attachment seemed legitimate...",
+            choices: [
+                {
+                    text: "Show me that email.",
+                    action: () => window.markObjectiveComplete(0),
+                    nextDialogue: {
+                        npc: 'Jennifer Park - Bank Teller',
+                        text: "Here it is. The sender address was hr-security@firstbanc.com but now I notice it should be firstbank.com. My workstation locked up right after I opened the PDF.",
+                        choices: [
+                            { text: "This was a sophisticated phishing attack.", action: () => window.markObjectiveComplete(1) },
+                            { text: "I need to isolate your workstation immediately." }
+                        ]
+                    }
+                },
+                {
+                    text: "Did other staff receive similar emails?",
+                    nextDialogue: {
+                        npc: 'Jennifer Park - Bank Teller',
+                        text: "Yes! At least three other tellers got the same message. We all thought it was legitimate since it looked so official.",
+                        choices: [
+                            { text: "This is a coordinated attack on multiple targets.", action: () => window.markObjectiveComplete(2) },
+                            { text: "We need to check all affected workstations." }
+                        ]
+                    }
+                }
+            ]
+        }
+    }
+};
+
+// Legacy dialogue system (keeping for backwards compatibility)
 const levelDialogues = {
   "level1": {
     "IT_Analyst": [

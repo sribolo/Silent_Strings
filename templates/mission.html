@@ -123,10 +123,66 @@
             {% endif %}
         </div>
         {% endif %}
-        <h3>NPC Dialogue:</h3>
-        <div class="npc-dialogue-area">
-            <div id="dialogue-text"></div>
-            <div id="options"></div>
+        <!-- Visual Novel Style Dialogue System -->
+        <div id="dialogue-overlay" class="dialogue-overlay" style="display: none;">
+            <div class="dialogue-container">
+                <div class="dialogue-portrait-section">
+                    <div class="npc-portrait-frame">
+                        <div id="npc-portrait" class="npc-portrait"></div>
+                    </div>
+                    <div class="npc-name-plate">
+                        <span id="npc-name">NPC Name</span>
+                    </div>
+                </div>
+                
+                <div class="dialogue-box">
+                    <div class="dialogue-text-area">
+                        <p id="dialogue-text"></p>
+                    </div>
+                    <div class="dialogue-choices" id="dialogue-choices">
+                        <!-- Choice buttons will be added here -->
+                    </div>
+                    <div class="dialogue-continue" id="dialogue-continue" style="display: none;">
+                        <span>Click to continue...</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Enhanced Tool Panel -->
+        <div class="game-tools-panel">
+            <h3>Investigation Tools</h3>
+            <div class="tools-grid">
+                <button id="start-dialogue-btn" class="game-tool-btn dialogue-tool">
+                    <i class="fas fa-comments"></i>
+                    <span>Interview Contacts</span>
+                </button>
+                
+                <button id="evidence-scanner-btn" class="game-tool-btn scanner-tool">
+                    <i class="fas fa-search"></i>
+                    <span>Evidence Scanner</span>
+                </button>
+                
+                <button id="forensics-kit-btn" class="game-tool-btn forensics-tool">
+                    <i class="fas fa-microscope"></i>
+                    <span>Digital Forensics</span>
+                </button>
+                
+                <button id="intel-database-btn" class="game-tool-btn intel-tool">
+                    <i class="fas fa-database"></i>
+                    <span>Intel Database</span>
+                </button>
+                
+                <button id="threat-analyzer-btn" class="game-tool-btn threat-tool">
+                    <i class="fas fa-shield-alt"></i>
+                    <span>Threat Analysis</span>
+                </button>
+                
+                <button id="mission-notes-btn" class="game-tool-btn notes-tool">
+                    <i class="fas fa-sticky-note"></i>
+                    <span>Mission Notes</span>
+                </button>
+            </div>
         </div>
         <a href="{{ url_for('game') }}" class="back-btn">Back to Map</a>
     {% endif %}
@@ -236,6 +292,287 @@ window.addEventListener('load', function() {
     setTimeout(() => {
         startMission();
     }, 500);
+});
+
+// Visual Novel Dialogue System
+let currentDialogue = null;
+let currentNPC = null;
+
+function showDialogue(npcName, dialogueText, choices = []) {
+    const overlay = document.getElementById('dialogue-overlay');
+    const npcNameEl = document.getElementById('npc-name');
+    const dialogueTextEl = document.getElementById('dialogue-text');
+    const choicesContainer = document.getElementById('dialogue-choices');
+    const continueEl = document.getElementById('dialogue-continue');
+    
+    // Set NPC name and dialogue
+    npcNameEl.textContent = npcName;
+    
+    // Type out dialogue text
+    typeDialogueText(dialogueText, dialogueTextEl);
+    
+    // Generate NPC portrait
+    generateNPCPortrait(npcName);
+    
+    // Clear previous choices
+    choicesContainer.innerHTML = '';
+    
+    if (choices.length > 0) {
+        continueEl.style.display = 'none';
+        choices.forEach((choice, index) => {
+            const choiceBtn = document.createElement('button');
+            choiceBtn.className = 'dialogue-choice-btn';
+            choiceBtn.textContent = choice.text;
+            choiceBtn.addEventListener('click', () => {
+                if (choice.action) choice.action();
+                if (choice.nextDialogue) {
+                    showDialogue(choice.nextDialogue.npc, choice.nextDialogue.text, choice.nextDialogue.choices);
+                } else {
+                    hideDialogue();
+                }
+            });
+            choicesContainer.appendChild(choiceBtn);
+        });
+    } else {
+        continueEl.style.display = 'block';
+        continueEl.addEventListener('click', hideDialogue);
+    }
+    
+    overlay.style.display = 'flex';
+}
+
+function hideDialogue() {
+    document.getElementById('dialogue-overlay').style.display = 'none';
+}
+
+function typeDialogueText(text, element) {
+    element.textContent = '';
+    let index = 0;
+    const speed = 30; // milliseconds per character
+    
+    function typeChar() {
+        if (index < text.length) {
+            element.textContent += text.charAt(index);
+            index++;
+            setTimeout(typeChar, speed);
+        }
+    }
+    
+    typeChar();
+}
+
+function generateNPCPortrait(npcName) {
+    const portraitEl = document.getElementById('npc-portrait');
+    
+    // Create random avatar layers for the NPC
+    const avatarLayers = ['character', 'hair', 'clothes', 'face', 'accessories'];
+    portraitEl.innerHTML = '';
+    
+    avatarLayers.forEach(layer => {
+        const img = document.createElement('img');
+        img.className = 'avatar-layer';
+        img.src = `/static/images/avatar_parts/${layer}/${getNPCVariant(npcName, layer)}.png`;
+        img.onerror = function() { this.style.display = 'none'; }; // Hide if image doesn't exist
+        portraitEl.appendChild(img);
+    });
+}
+
+function getNPCVariant(npcName, layer) {
+    // Generate consistent avatar parts based on NPC name
+    const hash = npcName.split('').reduce((a, b) => { a = ((a << 5) - a) + b.charCodeAt(0); return a & a }, 0);
+    const variants = {
+        'character': ['character1', 'character2', 'character3'],
+        'hair': ['hair1', 'hair2', 'hair3', 'hair4'],
+        'clothes': ['clothes1', 'clothes2', 'clothes3', 'clothes4'],
+        'face': ['face1', 'face2', 'face3'],
+        'accessories': ['glasses', 'hat', 'scarf', 'none']
+    };
+    
+    const layerVariants = variants[layer] || ['default'];
+    return layerVariants[Math.abs(hash) % layerVariants.length];
+}
+
+// Mission dialogues are loaded from dialogues.js
+
+// Enhanced Investigation Tools
+document.getElementById('evidence-scanner-btn').addEventListener('click', function() {
+    showToolInterface('Evidence Scanner', 'Scanning for digital evidence and artifacts...', [
+        { name: 'Scan File System', action: () => scanFileSystem() },
+        { name: 'Analyze Network Traffic', action: () => analyzeTraffic() },
+        { name: 'Check Registry Keys', action: () => checkRegistry() }
+    ]);
+});
+
+document.getElementById('forensics-kit-btn').addEventListener('click', function() {
+    showToolInterface('Digital Forensics Kit', 'Advanced forensic analysis tools for deep investigation.', [
+        { name: 'Memory Dump Analysis', action: () => memoryAnalysis() },
+        { name: 'Timeline Construction', action: () => buildTimeline() },
+        { name: 'Hash Verification', action: () => verifyHashes() }
+    ]);
+});
+
+document.getElementById('intel-database-btn').addEventListener('click', function() {
+    showToolInterface('Intelligence Database', 'Access SECTOR-9 threat intelligence and historical data.', [
+        { name: 'Search Known Threats', action: () => searchThreats() },
+        { name: 'Check IOCs', action: () => checkIOCs() },
+        { name: 'View Case History', action: () => viewHistory() }
+    ]);
+});
+
+document.getElementById('threat-analyzer-btn').addEventListener('click', function() {
+    showToolInterface('Threat Analysis Engine', 'AI-powered threat detection and analysis system.', [
+        { name: 'Behavioral Analysis', action: () => behaviorAnalysis() },
+        { name: 'Malware Detection', action: () => malwareDetection() },
+        { name: 'Attribution Analysis', action: () => attributionAnalysis() }
+    ]);
+});
+
+document.getElementById('mission-notes-btn').addEventListener('click', function() {
+    showMissionNotes();
+});
+
+function showToolInterface(toolName, description, actions) {
+    // Create a modal-like interface for tools
+    const overlay = document.createElement('div');
+    overlay.className = 'tool-overlay';
+    overlay.style.cssText = `
+        position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+        background: rgba(0,0,0,0.8); z-index: 2000; display: flex;
+        align-items: center; justify-content: center;
+    `;
+    
+    const panel = document.createElement('div');
+    panel.className = 'tool-panel';
+    panel.style.cssText = `
+        background: #1a1a2e; border: 3px solid #6C5CE7; border-radius: 15px;
+        padding: 30px; max-width: 500px; width: 90%; color: white;
+        font-family: 'Share Tech Mono', monospace;
+    `;
+    
+    panel.innerHTML = `
+        <h2 style="color: #A499FF; margin-bottom: 15px; text-align: center;">${toolName}</h2>
+        <p style="margin-bottom: 20px; line-height: 1.6; opacity: 0.9;">${description}</p>
+        <div class="tool-actions" style="display: flex; flex-direction: column; gap: 10px; margin-bottom: 20px;">
+            ${actions.map(action => `
+                <button class="tool-action-btn" style="
+                    background: #2c2c54; border: 1px solid #6C5CE7; border-radius: 8px;
+                    padding: 12px 20px; color: white; cursor: pointer; transition: all 0.3s;
+                    font-family: 'Share Tech Mono', monospace;
+                " onmouseover="this.style.background='#6C5CE7'" 
+                   onmouseout="this.style.background='#2c2c54'"
+                   onclick="(${action.action.toString()})(); document.body.removeChild(document.querySelector('.tool-overlay'));">
+                    ${action.name}
+                </button>
+            `).join('')}
+        </div>
+        <button onclick="document.body.removeChild(document.querySelector('.tool-overlay'))" 
+                style="background: #dc3545; border: none; border-radius: 8px; padding: 10px 20px; 
+                       color: white; cursor: pointer; width: 100%; font-family: 'Share Tech Mono', monospace;">
+            Close
+        </button>
+    `;
+    
+    overlay.appendChild(panel);
+    document.body.appendChild(overlay);
+}
+
+// Tool Functions
+function scanFileSystem() {
+    window.markObjectiveComplete(0);
+    alert('🔍 File system scan complete! Suspicious files detected in temp directory.');
+}
+
+function analyzeTraffic() {
+    window.markObjectiveComplete(1);
+    alert('📡 Network analysis complete! Anomalous outbound connections identified.');
+}
+
+function checkRegistry() {
+    window.markObjectiveComplete(2);
+    alert('🔑 Registry scan complete! Unauthorized persistence mechanisms found.');
+}
+
+function memoryAnalysis() {
+    window.markObjectiveComplete(1);
+    alert('🧠 Memory dump analysis complete! Injected code detected in explorer.exe.');
+}
+
+function buildTimeline() {
+    alert('⏰ Timeline constructed! Attack sequence: Initial access → Privilege escalation → Data exfiltration.');
+}
+
+function verifyHashes() {
+    alert('🔐 Hash verification complete! 3 files modified, 1 file replaced with malicious version.');
+}
+
+function searchThreats() {
+    alert('🎯 Threat database search complete! Pattern matches APT group "PH4NT0M" tactics.');
+}
+
+function checkIOCs() {
+    window.markObjectiveComplete(3);
+    alert('⚠️ IOC check complete! 5 indicators match known PH4NT0M infrastructure.');
+}
+
+function viewHistory() {
+    alert('📚 Case history loaded! Previous PH4NT0M attacks show similar modus operandi.');
+}
+
+function behaviorAnalysis() {
+    alert('🤖 Behavioral analysis complete! Detected lateral movement and data staging activities.');
+}
+
+function malwareDetection() {
+    window.markObjectiveComplete(2);
+    alert('🦠 Malware detected! Custom RAT with C2 communication capabilities identified.');
+}
+
+function attributionAnalysis() {
+    alert('🕵️ Attribution analysis complete! High confidence attribution to PH4NT0M group based on TTPs.');
+}
+
+function showMissionNotes() {
+    const notes = localStorage.getItem('missionNotes') || 'No notes yet. Click to add your observations...';
+    const newNotes = prompt('Mission Notes:', notes);
+    if (newNotes !== null) {
+        localStorage.setItem('missionNotes', newNotes);
+        alert('Notes saved successfully!');
+    }
+}
+
+// Start dialogue button - now shows NPC selection
+document.getElementById('start-dialogue-btn').addEventListener('click', function() {
+    const levelKey = window.missionLocation;
+    const dialogues = window.missionDialogues ? window.missionDialogues[levelKey] : null;
+    
+    if (dialogues) {
+        const npcNames = Object.keys(dialogues);
+        
+        if (npcNames.length === 1) {
+            // Only one NPC available, start dialogue directly
+            const npcName = npcNames[0];
+            const npcDialogue = dialogues[npcName];
+            showDialogue(npcName, npcDialogue.text, npcDialogue.choices);
+        } else {
+            // Multiple NPCs available, let player choose
+            const choices = npcNames.map(npcName => ({
+                text: `Talk to ${npcName}`,
+                nextDialogue: {
+                    npc: npcName,
+                    text: dialogues[npcName].text,
+                    choices: dialogues[npcName].choices
+                }
+            }));
+            
+            showDialogue('SECTOR-9 HQ', 'Agent, you have multiple contacts available for this mission. Who would you like to interview first?', choices);
+        }
+    } else {
+        // Default dialogue for levels without specific NPCs
+        showDialogue('SECTOR-9 Command', 'Agent, intelligence is limited for this mission. Proceed with your investigation using available tools.', [
+            { text: "Understood. Beginning investigation.", action: () => console.log("Starting investigation") },
+            { text: "Any additional intel I should know about?" }
+        ]);
+    }
 });
 </script>
 <script src="{{ url_for('static', filename='js/tools.js') }}"></script>
