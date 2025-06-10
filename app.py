@@ -272,6 +272,39 @@ def dialogue(location):
                          location_name=current_location['name'],
                          location_context=current_location['context'])
 
+@app.route('/investigation/<location>')
+def investigation(location):
+    if "user" not in session and "agent_name" not in session:
+        return redirect(url_for("login"))
+    
+    name = session["user"]["username"] if "user" in session else session.get("agent_name", "Agent")
+    
+    # Map locations to their display names and contexts
+    location_info = {
+        'bank': {'name': 'Quantum Bank', 'context': 'financial_system'},
+        'school': {'name': 'Riverside Academy', 'context': 'education_network'},  
+        'cafe': {'name': 'BitBean Coffee Shop', 'context': 'cafe_network'},
+        'transport': {'name': 'Metro Authority', 'context': 'transit_system'},
+        'company': {'name': 'TechCorp Industries', 'context': 'corporate_network'},
+        'hospital': {'name': 'Central Medical', 'context': 'healthcare_system'},
+        'hq': {'name': 'SECTOR-9 HQ', 'context': 'headquarters'},
+        'government': {'name': 'City Hall', 'context': 'government_network'},
+        'news': {'name': 'Daily Herald', 'context': 'media_network'},
+        'global': {'name': 'Global Network', 'context': 'worldwide_system'}
+    }
+    
+    current_location = location_info.get(location, {'name': location.title(), 'context': 'unknown'})
+    
+    # Get avatar parts for player
+    avatar_parts = session.get('avatar_parts', {})
+    
+    return render_template('investigation.html', 
+                         name=name, 
+                         location=location,
+                         location_name=current_location['name'],
+                         location_context=current_location['context'],
+                         avatar_parts=avatar_parts)
+
 @app.route('/get_sprites')
 def get_sprites():
     base_path = os.path.join(app.root_path, 'static', 'images', 'avatar_parts')
