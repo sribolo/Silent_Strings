@@ -900,7 +900,7 @@ function showDialogue() {
   const npcHeader = document.getElementById('dialogue-npc');
   const portraitImg = document.getElementById('dialogue-portrait');
 
-  if (!currentDialogueState.level || !currentDialogueState.npc) {
+  if (!currentDialogueState.level || !currentDialogueState.npc || !dialogueArea || !optionsBox) {
     return;
   }
 
@@ -909,7 +909,9 @@ function showDialogue() {
   const line = lines[currentDialogueState.lineIndex];
 
   // Set NPC name in header
-  npcHeader.textContent = npc.replace(/_/g, ' ');
+  if (npcHeader) {
+    npcHeader.textContent = npc.replace(/_/g, ' ');
+  }
 
   // --- Randomized NPC Avatar ---
   fetchNpcSpriteData(spriteData => {
@@ -917,20 +919,22 @@ function showDialogue() {
       npcAvatars[npc] = randomizeNpcAvatar();
     }
     // Render composite avatar in the portrait area
-    portraitImg.style.display = 'none';
-    let avatarDiv = document.getElementById('npc-avatar-composite');
-    if (!avatarDiv) {
-      avatarDiv = document.createElement('div');
-      avatarDiv.id = 'npc-avatar-composite';
-      avatarDiv.style.position = 'relative';
-      avatarDiv.style.width = '72px';
-      avatarDiv.style.height = '72px';
-      avatarDiv.style.marginRight = '18px';
-      avatarDiv.style.display = 'inline-block';
-      portraitImg.parentNode.insertBefore(avatarDiv, portraitImg);
+    if (portraitImg) {
+      portraitImg.style.display = 'none';
+      let avatarDiv = document.getElementById('npc-avatar-composite');
+      if (!avatarDiv) {
+        avatarDiv = document.createElement('div');
+        avatarDiv.id = 'npc-avatar-composite';
+        avatarDiv.style.position = 'relative';
+        avatarDiv.style.width = '72px';
+        avatarDiv.style.height = '72px';
+        avatarDiv.style.marginRight = '18px';
+        avatarDiv.style.display = 'inline-block';
+        portraitImg.parentNode.insertBefore(avatarDiv, portraitImg);
+      }
+      renderNpcAvatar(npcAvatars[npc], avatarDiv);
+      avatarDiv.style.display = 'block';
     }
-    renderNpcAvatar(npcAvatars[npc], avatarDiv);
-    avatarDiv.style.display = 'block';
   });
 
   // Use typewriter effect for dialogue

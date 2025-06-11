@@ -4,6 +4,9 @@
 let objectivesCompleted = 0;
 const totalObjectives = 4;
 
+// Avatar sprite data fetched from the backend
+let spriteData = null;
+
 // Map location keys to background filenames
 const levelToLocationMap = {
   'hq': 'hq',
@@ -22,8 +25,18 @@ const levelToLocationMap = {
 window.addEventListener('DOMContentLoaded', () => {
   console.log('investigation.js loaded');
   setBackgroundImage();
-  generateNPC();
   setupEvents();
+
+  // Fetch sprite data first, then spawn NPC portrait
+  fetch('/get_sprites')
+    .then(res => res.json())
+    .then(data => {
+      spriteData = data;
+      generateNpcPortrait();
+    })
+    .catch(err => {
+      console.error('Failed to fetch sprites', err);
+    });
 });
 
 // -------------------- BACKGROUND --------------------
@@ -40,28 +53,124 @@ function setBackgroundImage() {
 }
 
 // -------------------- NPC PORTRAIT --------------------
-function generateNPC() {
+function generateNpcPortrait() {
   const portrait = document.getElementById('npc-portrait');
-  if (!portrait) return;
-  portrait.innerHTML = '';
-  ['character', 'hair', 'clothes', 'face'].forEach(layer => {
+  if (!portrait || !spriteData) return;
+  const npcAvatar = randomNpcAvatar(spriteData);
+  renderAvatarLayers(portrait, npcAvatar);
+}
+
+// Helper: render layered avatar (adapted from game.js)
+function renderAvatarLayers(container, avatar) {
+  container.innerHTML = '';
+  const addLayer = (src) => {
     const img = document.createElement('img');
+    img.src = src;
     img.className = 'avatar-layer';
-    img.src = `/static/images/avatar_parts/${layer}/${getRandomVariant(layer)}.png`;
     img.onerror = () => (img.style.display = 'none');
-    portrait.appendChild(img);
+    container.appendChild(img);
+  };
+
+  // Base character
+  if (avatar.characters && avatar.characters.img) {
+    addLayer(avatar.characters.img);
+  }
+
+  // Clothes, hair, face, acc
+  ['clothes', 'hair', 'face', 'acc'].forEach(category => {
+    if (avatar[category]) {
+      Object.values(avatar[category]).forEach(sel => {
+        if (sel && sel.img) addLayer(sel.img);
+      });
+    }
   });
 }
 
-function getRandomVariant(layer) {
-  const variants = {
-    character: ['character1', 'character2', 'character3'],
-    hair: ['hair1', 'hair2', 'hair3', 'hair4'],
-    clothes: ['clothes1', 'clothes2', 'clothes3', 'clothes4'],
-    face: ['face1', 'face2', 'face3']
-  };
-  const arr = variants[layer] || ['default'];
+// Utility helpers (copied from game.js)
+function getRandomElement(arr) {
   return arr[Math.floor(Math.random() * arr.length)];
+}
+
+function randomNpcAvatar(spriteData) {
+  const avatar = {};
+
+  // Base character
+  if (spriteData.characters && spriteData.characters.length > 0) {
+    const char = getRandomElement(spriteData.characters);
+    avatar.characters = { name: char.name, img: char.img };
+  }
+
+  // Clothes setup
+  avatar.clothes = {};
+  let hasDress = false;
+  if (spriteData.clothes && spriteData.clothes.dress && spriteData.clothes.dress.length > 0 && Math.random() < 0.5) {
+    const dress = getRandomElement(spriteData.clothes.dress);
+    avatar.clothes.dress = { name: dress.name, img: dress.img };
+    hasDress = true;
+  }
+  if (!hasDress && spriteData.clothes) {
+    if (spriteData.clothes.basic && spriteData.clothes.basic.length > 0) {
+      const shirt = getRandomElement(spriteData.clothes.basic);
+      avatar.clothes.basic = { name: shirt.name, img: shirt.img };
+    }
+    if (spriteData.clothes.pants && spriteData.clothes.pants.length > 0) {
+      const pants = getRandomElement(spriteData.clothes.pants);
+      avatar.clothes.pants = { name: pants.name, img: pants.img };
+    } else if (spriteData.clothes.skirts && spriteData.clothes.skirts.length > 0) {
+      const skirt = getRandomElement(spriteData.clothes.skirts);
+      avatar.clothes.skirts = { name: skirt.name, img: skirt.img };
+    }
+  }
+
+  // Hair
+  if (spriteData.hair) {
+    const subcats = Object.keys(spriteData.hair);
+    if (subcats.length > 0) {
+      const randSubcat = getRandomElement(subcats);
+      const options = spriteData.hair[randSubcat];
+      if (options && options.length > 0) {
+        avatar.hair = {};
+        const randOpt = getRandomElement(options);
+        avatar.hair[randSubcat] = { name: randOpt.name, img: randOpt.img };
+      }
+    }
+  }
+
+  // Face
+  if (spriteData.face) {
+    const subcats = Object.keys(spriteData.face);
+    if (subcats.length > 0) {
+      const randSubcat = getRandomElement(subcats);
+      const options = spriteData.face[randSubcat];
+      if (options && options.length > 0) {
+        avatar.face = {};
+        const randOpt = getRandomElement(options);
+        avatar.face[randSubcat] = { name: randOpt.name, img: randOpt.img };
+      }
+    }
+  }
+
+  // Accessories
+  if (spriteData.acc) {
+    const subcats = Object.keys(spriteData.acc);
+    if (subcats.length > 0) {
+      const randSubcat = getRandomElement(subcats);
+      const options = spriteData.acc[randSubcat];
+      if (options && options.length > 0) {
+        avatar.acc = {};
+        const randOpt = getRandomElement(options);
+        avatar.acc[randSubcat] = { name: randOpt.name, img: randOpt.img };
+      }
+    }
+  }
+
+  // Shoes optional
+  if (spriteData.clothes && spriteData.clothes.shoes && spriteData.clothes.shoes.length > 0) {
+    const shoes = getRandomElement(spriteData.clothes.shoes);
+    avatar.clothes.shoes = { name: shoes.name, img: shoes.img };
+  }
+
+  return avatar;
 }
 
 // -------------------- EVENTS --------------------
