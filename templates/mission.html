@@ -6,7 +6,7 @@
 {% endblock %}
 
 {% block content %}
-<div class="mission-container">
+<div class="mission-page-container">
     {% if error %}
         <h2>{{ error }}</h2>
         <a href="{{ url_for('game') }}" class="back-btn">Back to Map</a>
@@ -15,16 +15,27 @@
         <div id="mission-timer" class="mission-timer-bar">
             Time Left: <span id="timer-value"></span>
         </div>
-        <h3>Objectives:</h3>
-        <ul class="objectives-list" id="objectives-list">
-            {% for obj in mission.objectives %}
-            <li data-index="{{ loop.index0 }}" {% if loop.index0 in completed_objectives %}class="completed"{% endif %}>
-                <span class="objective-status {% if loop.index0 in completed_objectives %}completed{% endif %}">
-                  [{{ '✓' if loop.index0 in completed_objectives else ' ' }}]
-                </span> {{ obj }}
-            </li>
-            {% endfor %}
-        </ul>
+        <div class="mission-body">
+            <div class="mission-objectives">
+                <h3>Objectives:</h3>
+                <ul class="objectives-list" id="objectives-list">
+                    {% for obj in mission.objectives %}
+                    <li data-index="{{ loop.index0 }}" {% if loop.index0 in completed_objectives %}class="completed"{% endif %}>
+                        <span class="objective-status {% if loop.index0 in completed_objectives %}completed{% endif %}">
+                          [{{ '✓' if loop.index0 in completed_objectives else ' ' }}]
+                        </span> {{ obj }}
+                    </li>
+                    {% endfor %}
+                </ul>
+            </div>
+            <!-- Start Button on right -->
+            <div class="mission-start-wrapper">
+                <a href="/investigation/{{ location }}" class="start-mission-btn start-mission-link">
+                    <i class="fas fa-play"></i>
+                    Start Investigation
+                </a>
+            </div>
+        </div>
         {% if mission.tools_available %}
         <h3>Available Tools:</h3>
         <div class="tools-list">
