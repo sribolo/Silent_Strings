@@ -116,3 +116,9 @@
         justify-content: flex-start;
     }
 }
+
+/* Hide sections not needed */
+.mission-page-container #tool-interfaces,
+.mission-page-container #mission-start-interface {
+    display: none;
+}
