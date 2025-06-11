@@ -11,146 +11,150 @@
         <h2>{{ error }}</h2>
         <a href="{{ url_for('game') }}" class="back-btn">Back to Map</a>
     {% else %}
-        <h1>{{ mission.title }}</h1>
-        <div id="mission-timer" class="mission-timer-bar">
-            Time Left: <span id="timer-value"></span>
-        </div>
-        <div class="mission-body">
-            <div class="mission-objectives">
-                <h3>Objectives:</h3>
-                <ul class="objectives-list" id="objectives-list">
-                    {% for obj in mission.objectives %}
-                    <li data-index="{{ loop.index0 }}" {% if loop.index0 in completed_objectives %}class="completed"{% endif %}>
-                        <span class="objective-status {% if loop.index0 in completed_objectives %}completed{% endif %}">
-                          [{{ '✓' if loop.index0 in completed_objectives else ' ' }}]
-                        </span> {{ obj }}
-                    </li>
-                    {% endfor %}
-                </ul>
+        <div class="mission-briefing-box pixelated-border">
+            <h1>{{ mission.title }}</h1>
+            <div id="mission-timer" class="mission-timer-bar">
+                Time Left: <span id="timer-value"></span>
             </div>
-            <!-- Start Button on right -->
-            <div class="mission-start-wrapper">
-                <p class="mission-brief-text">Review the objectives above and prepare your investigation tools. Click start investigation when ready to begin.</p>
+            <div class="mission-body">
+                <div class="mission-objectives">
+                    <h3>Objectives:</h3>
+                    <ul class="objectives-list" id="objectives-list">
+                        {% for obj in mission.objectives %}
+                        <li data-index="{{ loop.index0 }}" {% if loop.index0 in completed_objectives %}class="completed"{% endif %}>
+                            <span class="objective-status {% if loop.index0 in completed_objectives %}completed{% endif %}">
+                              [{{ '✓' if loop.index0 in completed_objectives else ' ' }}]
+                            </span> {{ obj }}
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+                <!-- Start Button on right -->
+                <div class="mission-start-wrapper">
+                    <p class="mission-brief-text">Review the objectives and prepare your investigation tools. Click start investigation when you are ready to begin.</p>
+                    <a href="/investigation/{{ location }}" class="start-mission-btn start-mission-link">
+                        <i class="fas fa-play"></i>
+                        Start Investigation
+                    </a>
+                </div>
+            </div>
+            {% if mission.tools_available %}
+            <div class="available-tools-section">
+                <h3>Available Tools:</h3>
+                <div class="tools-list">
+                    {% if 'Network Scanner' in mission.tools_available %}
+                    <button class="tool-btn" data-tool="network-scanner">Network Scanner</button>
+                    {% endif %}
+                    {% if 'Log Analyzer' in mission.tools_available %}
+                    <button class="tool-btn" data-tool="log-analyzer">Log Analyzer</button>
+                    {% endif %}
+                    {% if 'Password Cracker' in mission.tools_available %}
+                    <button class="tool-btn" data-tool="password-cracker">Password Cracker</button>
+                    {% endif %}
+                    {% if 'File Recovery' in mission.tools_available %}
+                    <button class="tool-btn" data-tool="file-recovery">File Recovery</button>
+                    {% endif %}
+                </div>
+                <div id="tool-interfaces">
+                    {% if 'Network Scanner' in mission.tools_available %}
+                    <div class="tool-interface" id="network-scanner-interface">
+                        <h4>Network Scanner</h4>
+                        <div class="tool-controls">
+                            <button class="tool-action-btn" id="start-scan">Start Scan</button>
+                            <button class="tool-action-btn" id="stop-scan" disabled>Stop</button>
+                        </div>
+                        <div class="tool-content">
+                            <div class="scan-progress">
+                                <div class="progress-bar">
+                                    <div class="progress-bar-fill"></div>
+                                </div>
+                                <div class="scan-status">Ready to scan</div>
+                            </div>
+                            <div class="scan-results">
+                                <pre id="scan-output"></pre>
+                            </div>
+                        </div>
+                    </div>
+                    {% endif %}
+                    {% if 'Log Analyzer' in mission.tools_available %}
+                    <div class="tool-interface" id="log-analyzer-interface">
+                        <h4>Log Analyzer</h4>
+                        <div class="tool-controls">
+                            <select id="log-type">
+                                <option value="system">System Logs</option>
+                                <option value="security">Security Logs</option>
+                                <option value="application">Application Logs</option>
+                            </select>
+                            <button class="tool-action-btn" id="analyze-logs">Analyze</button>
+                        </div>
+                        <div class="tool-content">
+                            <div class="log-filters">
+                                <input type="text" id="log-search" placeholder="Search logs...">
+                                <input type="datetime-local" id="log-time-start">
+                                <input type="datetime-local" id="log-time-end">
+                            </div>
+                            <div class="log-results">
+                                <pre id="log-output"></pre>
+                            </div>
+                        </div>
+                    </div>
+                    {% endif %}
+                    {% if 'Password Cracker' in mission.tools_available %}
+                    <div class="tool-interface" id="password-cracker-interface">
+                        <h4>Password Cracker</h4>
+                        <div class="tool-controls">
+                            <input type="text" id="hash-input" placeholder="Enter hash...">
+                            <button class="tool-action-btn" id="crack-hash">Crack</button>
+                        </div>
+                        <div class="tool-content">
+                            <div class="crack-progress">
+                                <div class="progress-bar">
+                                    <div class="progress-bar-fill"></div>
+                                </div>
+                                <div class="crack-status">Ready</div>
+                            </div>
+                            <div class="crack-results">
+                                <pre id="crack-output"></pre>
+                            </div>
+                        </div>
+                    </div>
+                    {% endif %}
+                    {% if 'File Recovery' in mission.tools_available %}
+                    <div class="tool-interface" id="file-recovery-interface">
+                        <h4>File Recovery</h4>
+                        <div class="tool-controls">
+                            <input type="text" id="file-path" placeholder="Enter file path...">
+                            <button class="tool-action-btn" id="recover-file">Recover</button>
+                        </div>
+                        <div class="tool-content">
+                            <div class="recovery-progress">
+                                <div class="progress-bar">
+                                    <div class="progress-bar-fill"></div>
+                                </div>
+                                <div class="recovery-status">Ready</div>
+                            </div>
+                            <div class="recovery-results">
+                                <pre id="recovery-output"></pre>
+                            </div>
+                        </div>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+            {% endif %}
+            
+            <!-- Mission Start Interface -->
+            <div id="mission-start-interface" class="mission-start-interface">
+                <div class="mission-briefing">
+                    <h3>Mission Briefing</h3>
+                    <p>Review the objectives above and prepare your investigation tools. Click start investigation when ready to begin.</p>
+                </div>
+                
                 <a href="/investigation/{{ location }}" class="start-mission-btn start-mission-link">
                     <i class="fas fa-play"></i>
                     Start Investigation
                 </a>
             </div>
-        </div>
-        {% if mission.tools_available %}
-        <h3>Available Tools:</h3>
-        <div class="tools-list">
-            {% if 'Network Scanner' in mission.tools_available %}
-            <button class="tool-btn" data-tool="network-scanner">Network Scanner</button>
-            {% endif %}
-            {% if 'Log Analyzer' in mission.tools_available %}
-            <button class="tool-btn" data-tool="log-analyzer">Log Analyzer</button>
-            {% endif %}
-            {% if 'Password Cracker' in mission.tools_available %}
-            <button class="tool-btn" data-tool="password-cracker">Password Cracker</button>
-            {% endif %}
-            {% if 'File Recovery' in mission.tools_available %}
-            <button class="tool-btn" data-tool="file-recovery">File Recovery</button>
-            {% endif %}
-        </div>
-        <div id="tool-interfaces">
-            {% if 'Network Scanner' in mission.tools_available %}
-            <div class="tool-interface" id="network-scanner-interface">
-                <h4>Network Scanner</h4>
-                <div class="tool-controls">
-                    <button class="tool-action-btn" id="start-scan">Start Scan</button>
-                    <button class="tool-action-btn" id="stop-scan" disabled>Stop</button>
-                </div>
-                <div class="tool-content">
-                    <div class="scan-progress">
-                        <div class="progress-bar">
-                            <div class="progress-bar-fill"></div>
-                        </div>
-                        <div class="scan-status">Ready to scan</div>
-                    </div>
-                    <div class="scan-results">
-                        <pre id="scan-output"></pre>
-                    </div>
-                </div>
-            </div>
-            {% endif %}
-            {% if 'Log Analyzer' in mission.tools_available %}
-            <div class="tool-interface" id="log-analyzer-interface">
-                <h4>Log Analyzer</h4>
-                <div class="tool-controls">
-                    <select id="log-type">
-                        <option value="system">System Logs</option>
-                        <option value="security">Security Logs</option>
-                        <option value="application">Application Logs</option>
-                    </select>
-                    <button class="tool-action-btn" id="analyze-logs">Analyze</button>
-                </div>
-                <div class="tool-content">
-                    <div class="log-filters">
-                        <input type="text" id="log-search" placeholder="Search logs...">
-                        <input type="datetime-local" id="log-time-start">
-                        <input type="datetime-local" id="log-time-end">
-                    </div>
-                    <div class="log-results">
-                        <pre id="log-output"></pre>
-                    </div>
-                </div>
-            </div>
-            {% endif %}
-            {% if 'Password Cracker' in mission.tools_available %}
-            <div class="tool-interface" id="password-cracker-interface">
-                <h4>Password Cracker</h4>
-                <div class="tool-controls">
-                    <input type="text" id="hash-input" placeholder="Enter hash...">
-                    <button class="tool-action-btn" id="crack-hash">Crack</button>
-                </div>
-                <div class="tool-content">
-                    <div class="crack-progress">
-                        <div class="progress-bar">
-                            <div class="progress-bar-fill"></div>
-                        </div>
-                        <div class="crack-status">Ready</div>
-                    </div>
-                    <div class="crack-results">
-                        <pre id="crack-output"></pre>
-                    </div>
-                </div>
-            </div>
-            {% endif %}
-            {% if 'File Recovery' in mission.tools_available %}
-            <div class="tool-interface" id="file-recovery-interface">
-                <h4>File Recovery</h4>
-                <div class="tool-controls">
-                    <input type="text" id="file-path" placeholder="Enter file path...">
-                    <button class="tool-action-btn" id="recover-file">Recover</button>
-                </div>
-                <div class="tool-content">
-                    <div class="recovery-progress">
-                        <div class="progress-bar">
-                            <div class="progress-bar-fill"></div>
-                        </div>
-                        <div class="recovery-status">Ready</div>
-                    </div>
-                    <div class="recovery-results">
-                        <pre id="recovery-output"></pre>
-                    </div>
-                </div>
-            </div>
-            {% endif %}
-        </div>
-        {% endif %}
-        
-        <!-- Mission Start Interface -->
-        <div id="mission-start-interface" class="mission-start-interface">
-            <div class="mission-briefing">
-                <h3>Mission Briefing</h3>
-                <p>Review the objectives above and prepare your investigation tools. Click start investigation when ready to begin.</p>
-            </div>
-            
-            <a href="/investigation/{{ location }}" class="start-mission-btn start-mission-link">
-                <i class="fas fa-play"></i>
-                Start Investigation
-            </a>
         </div>
 
         <a href="{{ url_for('game') }}" class="back-btn">Back to Map</a>

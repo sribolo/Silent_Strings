@@ -33,9 +33,8 @@
 
 .mission-body {
     display: flex;
-    flex-direction: column;
     align-items: flex-start;
-    gap: 25px;
+    gap: 40px;
 }
 
 .mission-objectives {
@@ -137,4 +136,15 @@
 
 .mission-start-wrapper .start-mission-btn {
     margin-top: 8px;
+}
+
+.mission-briefing-box {
+    margin: 20px;
+    padding: 25px;
+}
+
+.available-tools-section {
+    margin-top: 20px;
+    padding-top: 15px;
+    border-top: 1px solid #6C5CE7;
 }
