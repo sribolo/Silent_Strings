@@ -58,6 +58,7 @@ function generateNpcPortrait() {
   if (!portrait || !spriteData) return;
   const npcAvatar = randomNpcAvatar(spriteData);
   renderAvatarLayers(portrait, npcAvatar);
+  renderPlayerBubbleAvatar();
 }
 
 // Helper: render layered avatar (adapted from game.js)
@@ -329,4 +330,31 @@ function getDialogueLevelKey(loc) {
 }
 
 // Export for other scripts if needed
-window.markObjectiveComplete = () => completeObjective(); 
+window.markObjectiveComplete = () => completeObjective();
+
+function renderPlayerBubbleAvatar() {
+  const playerSrcLayers = Array.from(document.querySelectorAll('#player-avatar img')).map(img => img.src);
+  const playerContainer = document.getElementById('speaker-player');
+  if (!playerContainer) return;
+  playerContainer.innerHTML = '';
+  playerSrcLayers.forEach(src => {
+    const img = document.createElement('img');
+    img.className = 'avatar-layer';
+    img.src = src;
+    img.onerror = () => (img.style.display = 'none');
+    playerContainer.appendChild(img);
+  });
+}
+
+function setActiveSpeaker(isPlayer) {
+  const p = document.getElementById('speaker-player');
+  const n = document.getElementById('speaker-npc');
+  if (!p || !n) return;
+  if (isPlayer) {
+    p.classList.remove('inactive');
+    n.classList.add('inactive');
+  } else {
+    n.classList.remove('inactive');
+    p.classList.add('inactive');
+  }
+} 

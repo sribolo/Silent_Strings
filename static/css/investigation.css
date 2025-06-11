@@ -98,12 +98,12 @@
 /* Center Characters Conversing */
 .character-portrait {
     position: absolute;
-    left: 30%;
-    top: 50%;
-    transform: translateY(-50%);
-    width: 120px;
-    height: 160px;
-    z-index: 50;
+    bottom: -40px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 64px;
+    height: 64px;
+    z-index: 150; /* above bubble */
 }
 
 .portrait-avatar {
@@ -145,12 +145,14 @@
     border: 2px solid #6C5CE7;
     border-radius: 15px;
     padding: 25px 30px;
+    padding-bottom: 60px; /* leave space for portrait */
     backdrop-filter: blur(10px);
     box-shadow: 0 4px 20px rgba(0,0,0,0.3);
     height: 100%;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
+    position: relative; /* enable absolute children positioning */
 }
 
 .npc-name {
@@ -162,7 +164,7 @@
 
 .dialogue-text {
     color: white;
-    font-size: 1.1rem;
+    font-size: 1.25rem;
     line-height: 1.6;
     margin-bottom: 15px;
     min-height: 80px;
@@ -356,4 +358,35 @@
         font-size: 0.8rem;
         padding: 8px 15px;
     }
+}
+
+.bubble-avatars {
+    position: absolute;
+    top: -40px; /* raise above bubble */
+    left: 0;
+    right: 0;
+    display: flex;
+    justify-content: space-between;
+    padding: 0 28px;
+    pointer-events: none;
+}
+
+.bubble-avatar {
+    position: relative;
+    width: 64px;
+    height: 64px;
+}
+
+.bubble-avatar .avatar-layer {
+    width: 64px !important;
+    height: 64px !important;
+    position: absolute;
+    top: 0;
+    left: 0;
+    image-rendering: pixelated;
+    object-fit: contain;
+}
+
+.bubble-avatar.inactive {
+    opacity: 0.3;
 } 
