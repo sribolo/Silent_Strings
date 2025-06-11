@@ -362,7 +362,7 @@
 
 .bubble-avatars {
     position: absolute;
-    top: -40px; /* raise above bubble */
+    top: -32px; /* raise above bubble */
     left: 0;
     right: 0;
     display: flex;

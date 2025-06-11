@@ -54,11 +54,12 @@ function setBackgroundImage() {
 
 // -------------------- NPC PORTRAIT --------------------
 function generateNpcPortrait() {
-  const portrait = document.getElementById('npc-portrait');
-  if (!portrait || !spriteData) return;
+  const npcContainer = document.getElementById('speaker-npc');
+  if (!npcContainer || !spriteData) return;
   const npcAvatar = randomNpcAvatar(spriteData);
-  renderAvatarLayers(portrait, npcAvatar);
+  renderAvatarLayers(npcContainer, npcAvatar);
   renderPlayerBubbleAvatar();
+  setActiveSpeaker(false);
 }
 
 // Helper: render layered avatar (adapted from game.js)
