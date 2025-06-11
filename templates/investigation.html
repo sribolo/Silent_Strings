@@ -174,13 +174,19 @@ function getRandomVariant(layer) {
 
 // Setup events
 function setupEvents() {
+    console.log('Setting up events...');
+    
     // Hamburger menu toggle
     const hamburger = document.getElementById('hamburger-menu');
     const dropdown = document.getElementById('dropdown-menu');
+    console.log('Hamburger:', hamburger, 'Dropdown:', dropdown);
+    
     if (hamburger && dropdown) {
         hamburger.addEventListener('click', function(e) {
+            console.log('Hamburger clicked!');
             e.stopPropagation();
             dropdown.classList.toggle('hidden');
+            console.log('Dropdown hidden class:', dropdown.classList.contains('hidden'));
         });
     } else {
         console.warn('Hamburger menu or dropdown-menu not found in DOM');
@@ -253,6 +259,29 @@ function setupEvents() {
         dialogueContinue.addEventListener('click', function() {
             dialogueContinue.classList.add('hidden');
         });
+    }
+
+    // Set background image based on location
+    const locationBg = document.querySelector('.location-background');
+    if (locationBg) {
+        const location = locationBg.dataset.location;
+        // Define levelToLocationMap here to ensure it's available
+        const levelToLocationMap = {
+            'hq': 'hq',
+            'news': 'company_1',
+            'bank': 'bank',
+            'cafe': 'cafe',
+            'transport': 'transport',
+            'school': 'school',
+            'government': 'government',
+            'hospital': 'company',
+            'company': 'company',
+            'global': 'hq'
+        };
+        const actualLocation = levelToLocationMap[location] || location;
+        const imagePath = `/static/images/backgrounds/${actualLocation}.png`;
+        locationBg.style.backgroundImage = `url('${imagePath}')`;
+        console.log(`Setting background for ${location} to ${imagePath}`);
     }
 }
 
