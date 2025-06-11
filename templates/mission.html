@@ -147,80 +147,9 @@
 {% endblock %}
 
 {% block extra_js %}
-<script>
-window.completedObjectives = JSON.parse('{{ completed_objectives|tojson|safe }}');
-window.totalObjectives = parseInt('{{ mission.objectives|length }}');
-window.missionLocation = "{{ location }}";
-// Timer
-let timeLeft = parseInt('{{ mission.timeLimit if mission and mission.timeLimit else 1800 }}');
-function updateTimer() {
-    const timerValue = document.getElementById('timer-value');
-    if (!timerValue) return;
-    let min = Math.floor(timeLeft / 60);
-    let sec = timeLeft % 60;
-    timerValue.textContent = `${min}:${sec.toString().padStart(2,'0')}`;
-    if (timeLeft > 0) {
-        timeLeft--;
-        setTimeout(updateTimer, 1000);
-    } else {
-        document.getElementById('mission-timer').textContent = "Mission Failed!";
-    }
-}
-if (document.getElementById('timer-value')) updateTimer();
-// Toast/markObjective/saveObjectives globally
-window.markObjectiveComplete = function(index) {
-    if (!window.completedObjectives.includes(index)) {
-        window.completedObjectives.push(index);
-        window.saveObjectives();
-        const objList = document.getElementById('objectives-list');
-        if (objList) {
-            const li = objList.querySelector(`li[data-index="${index}"]`);
-            if (li) {
-                li.querySelector('.objective-status').textContent = '[✓]';
-                li.querySelector('.objective-status').style.color = '#38d39f';
-                li.classList.add('completed');
-                showObjectiveToast("Objective completed!");
-            }
-        }
-        if (window.completedObjectives.length === window.totalObjectives) {
-            showObjectiveToast("All objectives completed!");
-        }
-    }
-};
-window.showObjectiveToast = function(msg) {
-    let toast = document.createElement('div');
-    toast.textContent = msg;
-    toast.style.position = 'fixed';
-    toast.style.bottom = '28px';
-    toast.style.left = '50%';
-    toast.style.transform = 'translateX(-50%)';
-    toast.style.background = '#232323';
-    toast.style.color = '#38d39f';
-    toast.style.padding = '12px 24px';
-    toast.style.borderRadius = '12px';
-    toast.style.zIndex = 9999;
-    toast.style.fontSize = '1.1em';
-    toast.style.boxShadow = '0 2px 16px #0008';
-    document.body.appendChild(toast);
-    setTimeout(() => { toast.remove(); }, 1500);
-};
-window.saveObjectives = function() {
-    fetch(window.location.pathname, {
-        method: 'POST',
-        headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify({completed: window.completedObjectives})
-    });
-};
-// Tools tab switching
-document.querySelectorAll('.tool-btn').forEach(btn => {
-    btn.addEventListener('click', function() {
-        document.querySelectorAll('.tool-interface').forEach(div => div.style.display = 'none');
-        const toolId = btn.getAttribute('data-tool');
-        const interfaceDiv = document.getElementById(`${toolId}-interface`);
-        if (interfaceDiv) interfaceDiv.style.display = 'block';
-    });
-});
-</script>
-<script src="{{ url_for('static', filename='js/tools.js') }}"></script>
-<script src="{{ url_for('static', filename='js/dialogues.js') }}"></script>
+{% set completed_json = completed_objectives|tojson|safe %}
+<div id="mission-data" data-completed='{{ completed_json }}' data-total="{{ mission.objectives|length }}" data-location="{{ location }}" data-time="{{ mission.timeLimit if mission and mission.timeLimit else 1800 }}"></div>
+<script src="{{ url_for('static', filename='js/mission.js') }}" defer></script>
+<script src="{{ url_for('static', filename='js/tools.js') }}" defer></script>
+<script src="{{ url_for('static', filename='js/dialogues.js') }}" defer></script>
 {% endblock %}
