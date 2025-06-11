@@ -322,11 +322,12 @@ function startInterview() {
         nextDialogue: { npc: n, text: dialogues[n].text, choices: dialogues[n].choices }
       })));
     } else {
-      showDialogue('No Contacts', 'No contacts available at this location.', []);
+      alert('No dialogue available for this location.');
+      return;
     }
   } else {
-    const name = bg ? bg.dataset.locationName : 'this location';
-    showDialogue('Local Contact', `Welcome to ${name}. The situation is critical.`, [{ text: "I'll investigate immediately.", action: () => {} }]);
+    alert('No dialogue available for this location.');
+    return;
   }
 }
 
