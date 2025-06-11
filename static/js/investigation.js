@@ -215,23 +215,39 @@ function setupEvents() {
 function addToolEvent(id, handler) {
   const btn = document.getElementById(id);
   const dropdown = document.getElementById('dropdown-menu');
-  if (btn) btn.addEventListener('click', () => { dropdown.classList.add('hidden'); handler(); });
+  if (btn) {
+    console.log(`Setting up event for ${id}`);
+    btn.addEventListener('click', () => { 
+      console.log(`Button ${id} clicked`);
+      dropdown.classList.add('hidden'); 
+      try {
+        handler(); 
+      } catch (error) {
+        console.error(`Error in handler for ${id}:`, error);
+      }
+    });
+  } else {
+    console.error(`Button with id ${id} not found`);
+  }
 }
 
 // -------------------- TOOL ACTIONS --------------------
 function runScan() {
+  console.log('runScan called');
   completeObjective();
   const el = document.getElementById('scan-result');
   if (el) el.innerHTML = '<div class="success-message"><strong>Scan Complete:</strong> Suspicious files detected.</div>';
 }
 
 function runAnalysis() {
+  console.log('runAnalysis called');
   completeObjective();
   const el = document.getElementById('analysis-result');
   if (el) el.innerHTML = '<div class="warning-message"><strong>Analysis Complete:</strong> Malware signatures found.</div>';
 }
 
 function saveNotes() {
+  console.log('saveNotes called');
   const notes = document.getElementById('notes-text').value;
   localStorage.setItem('investigationNotes', notes);
   showToast('Notes saved!');
@@ -251,13 +267,25 @@ function showToast(msg) {
 }
 
 function showToolModal(title, content) {
-  document.getElementById('modal-title').textContent = title;
-  document.getElementById('modal-body').innerHTML = content;
-  document.getElementById('tool-modal').classList.remove('hidden');
+  console.log('showToolModal called with title:', title);
+  const modal = document.getElementById('tool-modal');
+  const modalTitle = document.getElementById('modal-title');
+  const modalBody = document.getElementById('modal-body');
+  
+  if (!modal || !modalTitle || !modalBody) {
+    console.error('Modal elements not found');
+    alert(`${title}: Feature not available`);
+    return;
+  }
+  
+  modalTitle.textContent = title;
+  modalBody.innerHTML = content;
+  modal.classList.remove('hidden');
 }
 
 // -------------------- DIALOGUE --------------------
 function startInterview() {
+  console.log('startInterview called');
   const bg = document.querySelector('.location-background');
   const missionLocation = bg ? bg.dataset.location : 'hq';
   const levelKey = getDialogueLevelKey(missionLocation);
@@ -358,4 +386,9 @@ function setActiveSpeaker(isPlayer) {
     n.classList.remove('inactive');
     p.classList.add('inactive');
   }
-} 
+}
+
+// Make functions globally accessible for onclick handlers
+window.runScan = runScan;
+window.runAnalysis = runAnalysis;
+window.saveNotes = saveNotes; 
