@@ -122,3 +122,18 @@
 .mission-page-container #mission-start-interface {
     display: none;
 }
+
+.mission-page-container .tool-interface {
+    display:none !important;
+}
+
+.mission-brief-text {
+    font-size: 0.9rem;
+    margin-bottom: 12px;
+    color: #ccc;
+    max-width: 260px;
+}
+
+.mission-start-wrapper .start-mission-btn {
+    margin-top: 8px;
+}
