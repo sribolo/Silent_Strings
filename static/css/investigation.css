@@ -490,4 +490,16 @@
     margin: 100px auto;
     color: white;
     position: relative;
+}
+
+.help-hint-container {
+    display: flex;
+    flex-direction: column;
+    position: absolute;
+    right: 10px;
+    top: 10px;
+}
+
+.help-button, .hint-button {
+    margin-bottom: 10px;
 } 
