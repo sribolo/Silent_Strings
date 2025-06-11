@@ -429,9 +429,8 @@
 
 /* Hint/Help UI */
 #hint-box {
-    display: none;
     position: absolute;
-    top: -60px;
+    top: -48px;
     left: 50%;
     transform: translateX(-50%);
     background: #23232b;
@@ -443,10 +442,9 @@
 }
 #hint-btn, #help-btn {
     position: absolute;
-    top: -48px;
-    z-index: 3001;
+    top: 16px;
     right: 24px;
-    margin-left: 8px;
+    z-index: 3001;
     min-width: 60px;
     font-size: 1rem;
     padding: 8px 18px;
