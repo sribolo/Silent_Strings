@@ -55,6 +55,26 @@
                     <span>Click to continue...</span>
                 </div>
             </div>
+
+            <!-- Advanced Dialogue UI -->
+            <div id="advanced-dialogue-ui">
+                <img id="dialoguePortrait" />
+                <div id="dialogueSpeaker" class="npc-name"></div>
+                <div id="dialogueText" class="dialogue-text"></div>
+                <div id="dialogueOptions" class="dialogue-choices"></div>
+            </div>
+
+            <!-- Hints/Help UI -->
+            <div id="hint-box"></div>
+            <button id="hint-btn" class="action-btn">Hint</button>
+            <button id="help-btn" class="action-btn">Help</button>
+            <div id="help-modal">
+                <div class="modal-inner">
+                    <h2>Help</h2>
+                    <p>This is the investigation help modal. Add your help text here.</p>
+                    <button id="help-close" class="action-btn">Close</button>
+                </div>
+            </div>
         </div>
 
         <!-- Player Avatar in Scene -->
@@ -103,6 +123,8 @@
 {% block extra_scripts %}
     <script src="{{ url_for('static', filename='js/investigation.js') }}" defer></script>
     <script src="{{ url_for('static', filename='js/dialogues.js') }}" defer></script>
+    <script src="{{ url_for('static', filename='js/dialogue_advanced.js') }}" defer></script>
+    <script src="{{ url_for('static', filename='js/hints.js') }}" defer></script>
 {% endblock %}
 
 {% block extra_css %}

@@ -84,6 +84,7 @@
     font-family: 'Share Tech Mono', monospace;
     font-size: 0.9rem;
     transition: background 0.2s ease;
+    pointer-events: auto;
 }
 
 .menu-item:hover {
@@ -389,4 +390,78 @@
 
 .bubble-avatar.inactive {
     opacity: 0.3;
+}
+
+/* Advanced Dialogue UI */
+#advanced-dialogue-ui {
+    display: none;
+    position: relative;
+    margin-bottom: 16px;
+}
+#dialoguePortrait {
+    display: none;
+    width: 80px;
+    height: 80px;
+    float: left;
+    margin-right: 16px;
+}
+#dialogueSpeaker {
+    font-weight: bold;
+    color: #A499FF;
+    margin-bottom: 6px;
+}
+#dialogueText {
+    color: #fff;
+    font-size: 1.1rem;
+    margin-bottom: 10px;
+}
+#dialogueOptions {
+    margin-top: 10px;
+}
+
+/* Hint/Help UI */
+#hint-box {
+    display: none;
+    position: absolute;
+    top: -60px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #23232b;
+    color: #A499FF;
+    padding: 10px 18px;
+    border-radius: 8px;
+    z-index: 3000;
+    font-family: 'Share Tech Mono', monospace;
+}
+#hint-btn, #help-btn {
+    position: absolute;
+    top: -40px;
+    z-index: 3001;
+}
+#hint-btn {
+    right: 10px;
+}
+#help-btn {
+    right: 80px;
+}
+#help-modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0,0,0,0.7);
+    z-index: 4000;
+    align-items: center;
+    justify-content: center;
+}
+#help-modal .modal-inner {
+    background: #23232b;
+    padding: 30px 40px;
+    border-radius: 16px;
+    max-width: 400px;
+    margin: 100px auto;
+    color: white;
+    position: relative;
 } 

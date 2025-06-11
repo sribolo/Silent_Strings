@@ -185,7 +185,11 @@ function setupEvents() {
       dropdown.classList.toggle('hidden');
     });
     document.addEventListener('click', e => {
-      if (!e.target.closest('.hamburger-menu') && !e.target.closest('.dropdown-menu')) {
+      // Only close if not clicking a menu-item inside the dropdown
+      if (
+        !e.target.closest('.hamburger-menu') &&
+        !e.target.closest('.dropdown-menu .menu-item')
+      ) {
         dropdown.classList.add('hidden');
       }
     });
@@ -193,16 +197,16 @@ function setupEvents() {
 
   addToolEvent('interview-btn', startInterview);
   addToolEvent('scan-btn', () => showToolModal('Evidence Scanner', `
-      <button onclick="runScan()" class="action-btn"><i class="fas fa-search"></i> Run System Scan</button>
+      <button id="run-scan-btn" class="action-btn"><i class="fas fa-search"></i> Run System Scan</button>
       <div id="scan-result" class="result-container"></div>`));
   addToolEvent('analyze-btn', () => showToolModal('Digital Analysis', `
-      <button onclick="runAnalysis()" class="action-btn"><i class="fas fa-microscope"></i> Analyze Evidence</button>
+      <button id="run-analysis-btn" class="action-btn"><i class="fas fa-microscope"></i> Analyze Evidence</button>
       <div id="analysis-result" class="result-container"></div>`));
   addToolEvent('notes-btn', () => {
     const notes = localStorage.getItem('investigationNotes') || '';
     showToolModal('Mission Notes', `
       <textarea id="notes-text" placeholder="Record your findings..." class="notes-textarea">${notes}</textarea>
-      <button onclick="saveNotes()" class="action-btn notes-save-btn"><i class="fas fa-save"></i> Save Notes</button>`);
+      <button id="save-notes-btn" class="action-btn notes-save-btn"><i class="fas fa-save"></i> Save Notes</button>`);
   });
 
   const closeModal = document.getElementById('close-modal');
@@ -217,6 +221,11 @@ function addToolEvent(id, handler) {
   const dropdown = document.getElementById('dropdown-menu');
   if (btn) {
     console.log(`Setting up event for ${id}`);
+    
+    // Add multiple event types to debug
+    btn.addEventListener('mousedown', () => console.log(`${id} mousedown`));
+    btn.addEventListener('mouseup', () => console.log(`${id} mouseup`));
+    
     btn.addEventListener('click', () => { 
       console.log(`Button ${id} clicked`);
       dropdown.classList.add('hidden'); 
@@ -281,6 +290,18 @@ function showToolModal(title, content) {
   modalTitle.textContent = title;
   modalBody.innerHTML = content;
   modal.classList.remove('hidden');
+
+  // Attach event listeners for modal buttons (CSP-safe)
+  if (title === 'Evidence Scanner') {
+    const runScanBtn = document.getElementById('run-scan-btn');
+    if (runScanBtn) runScanBtn.onclick = runScan;
+  } else if (title === 'Digital Analysis') {
+    const runAnalysisBtn = document.getElementById('run-analysis-btn');
+    if (runAnalysisBtn) runAnalysisBtn.onclick = runAnalysis;
+  } else if (title === 'Mission Notes') {
+    const saveNotesBtn = document.getElementById('save-notes-btn');
+    if (saveNotesBtn) saveNotesBtn.onclick = saveNotes;
+  }
 }
 
 // -------------------- DIALOGUE --------------------
