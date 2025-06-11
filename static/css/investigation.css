@@ -144,7 +144,10 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    padding: 20px;
+    padding: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+    max-height: 30vh;
+    overflow-y: auto;
 }
 
 .dialogue-bubble {
@@ -494,13 +497,13 @@
 }
 
 .help-hint-container {
-    display: flex;
-    flex-direction: column;
-    position: absolute;
+    position: fixed;
+    bottom: 10px;
     right: 10px;
-    top: 10px;
 }
 
 .help-button, .hint-button {
-    margin-bottom: 10px;
+    margin-bottom: 5px;
+    padding: 5px 10px;
+    font-size: 0.9em;
 } 

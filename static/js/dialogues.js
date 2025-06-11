@@ -1131,6 +1131,8 @@ function typeText(text, callback) {
 }
 
 function loadDialogue(key) {
+  window.currentKey = key;
+  window.dialogues = dialogues;
   const dlg = dialogues[key];
   optionsBox.innerHTML = "";
 
