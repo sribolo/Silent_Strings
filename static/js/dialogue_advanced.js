@@ -2,440 +2,480 @@
 // Mission-specific dialogues with proper NPC names for visual novel system
 window.missionDialogues = {
   'level1': {
-      'Marcus Chen - IT Analyst': {
-          text: "I noticed weird traffic in the logs at 2AM, but our monitoring alert didn't trigger. Something's not right here.",
-          choices: [
-              {
-                  text: "Show me those logs immediately.",
-                  action: () => window.markObjectiveComplete(0),
-                  nextDialogue: {
-                      npc: 'Marcus Chen - IT Analyst',
-                      text: "Here's the suspicious activity. Someone accessed our servers remotely during off-hours. I've never seen this pattern before.",
-                      choices: [
-                          { text: "I'll trace this IP address.", action: () => window.markObjectiveComplete(1) },
-                          { text: "Let me check for phishing attempts." }
-                      ]
-                  }
-              },
-              {
-                  text: "Did anyone else notice unusual activity?",
-                  nextDialogue: {
-                      npc: 'Marcus Chen - IT Analyst',
-                      text: "The security guard mentioned finding a USB drive at reception. Could be connected to this breach.",
-                      choices: [
-                          { text: "I need to examine that USB immediately.", action: () => window.markObjectiveComplete(2) },
-                          { text: "Let's quarantine the affected systems first." }
-                      ]
-                  }
-              }
-          ]
-      },
-      'Sarah Wilson - Security Guard': {
-          text: "No one reported anything unusual during my shift, but I did find something strange at the reception desk.",
-          choices: [
-              {
-                  text: "What did you find?",
-                  nextDialogue: {
-                      npc: 'Sarah Wilson - Security Guard',
-                      text: "A USB drive was left behind. No one claimed it. I was about to put it in lost and found, but maybe you should look at it first?",
-                      choices: [
-                          { text: "Yes, that could be evidence. I'll analyze it.", action: () => window.markObjectiveComplete(3) },
-                          { text: "Did you see who might have left it?" }
-                      ]
-                  }
-              },
-              {
-                  text: "Any unusual visitors today?",
-                  nextDialogue: {
-                      npc: 'Sarah Wilson - Security Guard',
-                      text: "Just the usual staff and a delivery person. Oh, and the backup generator restarted suddenly around 2 AM. Might be related?",
-                      choices: [
-                          { text: "Check the generator logs.", action: () => console.log("Checking generator") },
-                          { text: "Let's focus on the USB for now." }
-                      ]
-                  }
-              }
-          ]
-      }
+    'Marcus Chen - IT Analyst': {
+      text: "I noticed weird traffic in the logs at 2AM, but our monitoring alert didn't trigger. Something's not right here.",
+      choices: [
+        {
+          text: "Show me those logs immediately.",
+          action: () => window.markObjectiveComplete(0),
+          nextDialogue: {
+            npc: 'Marcus Chen - IT Analyst',
+            text: "Here's the suspicious activity. Someone accessed our servers remotely during off-hours. I've never seen this pattern before.",
+            clue: "Clue: Unusual remote server access from an unknown IP at 2AM.",
+            choices: [
+              { text: "I'll trace this IP address.", action: () => window.markObjectiveComplete(1) },
+              { text: "Let me check for phishing attempts." }
+            ]
+          }
+        },
+        {
+          text: "Did anyone else notice unusual activity?",
+          nextDialogue: {
+            npc: 'Marcus Chen - IT Analyst',
+            text: "The security guard mentioned finding a USB drive at reception. Could be connected to this breach.",
+            clue: "Clue: Security guard discovered an unclaimed USB drive at reception.",
+            choices: [
+              { text: "I need to examine that USB immediately.", action: () => window.markObjectiveComplete(2) },
+              { text: "Let's quarantine the affected systems first." }
+            ]
+          }
+        }
+      ]
+    },
+    'Sarah Wilson - Security Guard': {
+      text: "No one reported anything unusual during my shift, but I did find something strange at the reception desk.",
+      choices: [
+        {
+          text: "What did you find?",
+          nextDialogue: {
+            npc: 'Sarah Wilson - Security Guard',
+            text: "A USB drive was left behind. No one claimed it. I was about to put it in lost and found, but maybe you should look at it first?",
+            clue: "Clue: Evidence recovered – USB drive potentially related to breach.",
+            choices: [
+              { text: "Yes, that could be evidence. I'll analyze it.", action: () => window.markObjectiveComplete(3) },
+              { text: "Did you see who might have left it?" }
+            ]
+          }
+        },
+        {
+          text: "Any unusual visitors today?",
+          nextDialogue: {
+            npc: 'Sarah Wilson - Security Guard',
+            text: "Just the usual staff and a delivery person. Oh, and the backup generator restarted suddenly around 2 AM. Might be related?",
+            clue: "Clue: Backup generator unexpectedly restarted at 2 AM.",
+            choices: [
+              { text: "Check the generator logs.", action: () => console.log("Checking generator") },
+              { text: "Let's focus on the USB for now." }
+            ]
+          }
+        }
+      ]
+    }
   },
   'level2': {
-      'Emma Rodriguez - Web Editor': {
-          text: "This is a nightmare! Our website was completely defaced. All the headlines now say 'PH4NT0M WAS HERE' instead of our news stories!",
-          choices: [
-              {
-                  text: "When did you first notice the defacement?",
-                  action: () => window.markObjectiveComplete(0),
-                  nextDialogue: {
-                      npc: 'Emma Rodriguez - Web Editor',
-                      text: "About an hour ago when I was updating the morning news. The JavaScript in our news ticker has been completely replaced with malicious code!",
-                      choices: [
-                          { text: "I'll analyze the injected code.", action: () => window.markObjectiveComplete(1) },
-                          { text: "Show me the admin panel access logs." }
-                      ]
-                  }
-              },
-              {
-                  text: "Did anyone on your team receive suspicious emails recently?",
-                  nextDialogue: {
-                      npc: 'Emma Rodriguez - Web Editor',
-                      text: "Actually, yes! We got an email from what looked like IT asking us to reset our passwords. The intern clicked on it yesterday...",
-                      choices: [
-                          { text: "That was likely a phishing attack.", action: () => window.markObjectiveComplete(2) },
-                          { text: "I need to check that intern's workstation immediately." }
-                      ]
-                  }
-              }
-          ]
-      },
-      'David Kim - IT Support': {
-          text: "We patched a major vulnerability last week, but someone postponed the server reboot. The patch never took effect.",
-          choices: [
-              {
-                  text: "Who postponed the reboot?",
-                  nextDialogue: {
-                      npc: 'David Kim - IT Support',
-                      text: "Management said it would disrupt operations. Now look what happened. The attackers exploited that exact vulnerability.",
-                      choices: [
-                          { text: "I need to patch and reboot immediately.", action: () => window.markObjectiveComplete(3) },
-                          { text: "Show me the vulnerability details first." }
-                      ]
-                  }
-              },
-              {
-                  text: "Have you found any other traces of the attack?",
-                  nextDialogue: {
-                      npc: 'David Kim - IT Support',
-                      text: "Check the JavaScript in our news ticker. That's where they embedded their malicious code. It's spreading to visitor browsers.",
-                      choices: [
-                          { text: "I'll clean the infected code.", action: () => console.log("Cleaning code") },
-                          { text: "First, let me trace how they got admin access." }
-                      ]
-                  }
-              }
-          ]
-      }
+    'Emma Rodriguez - Web Editor': {
+      text: "This is a nightmare! Our website was completely defaced. All the headlines now say 'PH4NT0M WAS HERE' instead of our news stories!",
+      choices: [
+        {
+          text: "When did you first notice the defacement?",
+          action: () => window.markObjectiveComplete(0),
+          nextDialogue: {
+            npc: 'Emma Rodriguez - Web Editor',
+            text: "About an hour ago when I was updating the morning news. The JavaScript in our news ticker has been completely replaced with malicious code!",
+            clue: "Clue: Malicious JavaScript injected into the news ticker.",
+            choices: [
+              { text: "I'll analyze the injected code.", action: () => window.markObjectiveComplete(1) },
+              { text: "Show me the admin panel access logs." }
+            ]
+          }
+        },
+        {
+          text: "Did anyone on your team receive suspicious emails recently?",
+          nextDialogue: {
+            npc: 'Emma Rodriguez - Web Editor',
+            text: "Actually, yes! We got an email from what looked like IT asking us to reset our passwords. The intern clicked on it yesterday...",
+            clue: "Clue: Phishing email targeting web team; intern clicked suspicious link.",
+            choices: [
+              { text: "That was likely a phishing attack.", action: () => window.markObjectiveComplete(2) },
+              { text: "I need to check that intern's workstation immediately." }
+            ]
+          }
+        }
+      ]
+    },
+    'David Kim - IT Support': {
+      text: "We patched a major vulnerability last week, but someone postponed the server reboot. The patch never took effect.",
+      choices: [
+        {
+          text: "Who postponed the reboot?",
+          nextDialogue: {
+            npc: 'David Kim - IT Support',
+            text: "Management said it would disrupt operations. Now look what happened. The attackers exploited that exact vulnerability.",
+            clue: "Clue: Attackers exploited unpatched server vulnerability.",
+            choices: [
+              { text: "I need to patch and reboot immediately.", action: () => window.markObjectiveComplete(3) },
+              { text: "Show me the vulnerability details first." }
+            ]
+          }
+        },
+        {
+          text: "Have you found any other traces of the attack?",
+          nextDialogue: {
+            npc: 'David Kim - IT Support',
+            text: "Check the JavaScript in our news ticker. That's where they embedded their malicious code. It's spreading to visitor browsers.",
+            clue: "Clue: Malicious code in the news ticker is infecting site visitors.",
+            choices: [
+              { text: "I'll clean the infected code.", action: () => console.log("Cleaning code") },
+              { text: "First, let me trace how they got admin access." }
+            ]
+          }
+        }
+      ]
+    }
   },
   'level3': {
-      'Jennifer Park - Bank Teller': {
-          text: "I'm so sorry! I received what looked like an urgent email from HR about updating our security protocols. The attachment seemed legitimate...",
-          choices: [
-              {
-                  text: "Show me that email.",
-                  action: () => window.markObjectiveComplete(0),
-                  nextDialogue: {
-                      npc: 'Jennifer Park - Bank Teller',
-                      text: "Here it is. The sender address was hr-security@firstbanc.com but now I notice it should be firstbank.com. My workstation locked up right after I opened the PDF.",
-                      choices: [
-                          { text: "This was a sophisticated phishing attack.", action: () => window.markObjectiveComplete(1) },
-                          { text: "I need to isolate your workstation immediately." }
-                      ]
-                  }
-              },
-              {
-                  text: "Did other staff receive similar emails?",
-                  nextDialogue: {
-                      npc: 'Jennifer Park - Bank Teller',
-                      text: "Yes! At least three other tellers got the same message. We all thought it was legitimate since it looked so official.",
-                      choices: [
-                          { text: "This is a coordinated attack on multiple targets.", action: () => window.markObjectiveComplete(2) },
-                          { text: "We need to check all affected workstations." }
-                      ]
-                  }
-              }
-          ]
-      }
+    'Jennifer Park - Bank Teller': {
+      text: "I'm so sorry! I received what looked like an urgent email from HR about updating our security protocols. The attachment seemed legitimate...",
+      choices: [
+        {
+          text: "Show me that email.",
+          action: () => window.markObjectiveComplete(0),
+          nextDialogue: {
+            npc: 'Jennifer Park - Bank Teller',
+            text: "Here it is. The sender address was hr-security@firstbanc.com but now I notice it should be firstbank.com. My workstation locked up right after I opened the PDF.",
+            clue: "Clue: Sophisticated phishing email disguised as HR, with a fake domain.",
+            choices: [
+              { text: "This was a sophisticated phishing attack.", action: () => window.markObjectiveComplete(1) },
+              { text: "I need to isolate your workstation immediately." }
+            ]
+          }
+        },
+        {
+          text: "Did other staff receive similar emails?",
+          nextDialogue: {
+            npc: 'Jennifer Park - Bank Teller',
+            text: "Yes! At least three other tellers got the same message. We all thought it was legitimate since it looked so official.",
+            clue: "Clue: Multiple staff received coordinated phishing emails.",
+            choices: [
+              { text: "This is a coordinated attack on multiple targets.", action: () => window.markObjectiveComplete(2) },
+              { text: "We need to check all affected workstations." }
+            ]
+          }
+        }
+      ]
+    }
   },
-'level4': {
-  'Chloe Tan - DevOps Engineer': {
-    text: "Someone pushed a suspicious commit last night that altered our authentication logic.",
-    choices: [
-      {
-        text: "Show me the commit.",
-        nextDialogue: {
-          npc: 'Chloe Tan - DevOps Engineer',
-          text: "Here: 'Added backdoor for testing'. It wasn't reviewed or approved.",
-          choices: [
-            { text: "Revert the commit immediately.", action: () => window.markObjectiveComplete(0) },
-            { text: "Who pushed this commit?" }
-          ]
+  'level4': {
+    'Chloe Tan - DevOps Engineer': {
+      text: "Someone pushed a suspicious commit last night that altered our authentication logic.",
+      choices: [
+        {
+          text: "Show me the commit.",
+          nextDialogue: {
+            npc: 'Chloe Tan - DevOps Engineer',
+            text: "Here: 'Added backdoor for testing'. It wasn't reviewed or approved.",
+            clue: "Clue: Backdoor was added to authentication code via unauthorized commit.",
+            choices: [
+              { text: "Revert the commit immediately.", action: () => window.markObjectiveComplete(0) },
+              { text: "Who pushed this commit?" }
+            ]
+          }
+        },
+        {
+          text: "Any pipeline warnings?",
+          nextDialogue: {
+            npc: 'Chloe Tan - DevOps Engineer',
+            text: "Our CI pipeline failed security checks, but nobody flagged it.",
+            clue: "Clue: CI/CD pipeline flagged a security warning but was ignored.",
+            choices: [
+              { text: "Audit pipeline logs.", action: () => window.markObjectiveComplete(1) },
+              { text: "Check previous builds for tampering." }
+            ]
+          }
         }
-      },
-      {
-        text: "Any pipeline warnings?",
-        nextDialogue: {
-          npc: 'Chloe Tan - DevOps Engineer',
-          text: "Our CI pipeline failed security checks, but nobody flagged it.",
-          choices: [
-            { text: "Audit pipeline logs.", action: () => window.markObjectiveComplete(1) },
-            { text: "Check previous builds for tampering." }
-          ]
+      ]
+    },
+    'Tom Lin - Junior Developer': {
+      text: "I reused my password from an old project. Is that bad?",
+      clue: "Clue: Password reuse by developer; possible credential compromise.",
+      choices: [
+        {
+          text: "Yes. Change it immediately and check for breaches.",
+          action: () => window.markObjectiveComplete(2)
+        },
+        {
+          text: "Did you share credentials with anyone?",
+          nextDialogue: {
+            npc: 'Tom Lin - Junior Developer',
+            text: "No, but I used the same password on my email.",
+            clue: "Clue: Developer used the same password for multiple accounts.",
+            choices: [
+              { text: "Change all your passwords now." }
+            ]
+          }
         }
-      }
-    ]
+      ]
+    }
   },
-  'Tom Lin - Junior Developer': {
-    text: "I reused my password from an old project. Is that bad?",
-    choices: [
-      {
-        text: "Yes. Change it immediately and check for breaches.",
-        action: () => window.markObjectiveComplete(2)
-      },
-      {
-        text: "Did you share credentials with anyone?",
-        nextDialogue: {
-          npc: 'Tom Lin - Junior Developer',
-          text: "No, but I used the same password on my email.",
-          choices: [
-            { text: "Change all your passwords now." }
-          ]
+  'level5': {
+    'Maria Gomez - System Administrator': {
+      text: "A scheduled task called 'totally_safe.exe' appeared overnight. I didn't create it.",
+      clue: "Clue: Suspicious scheduled task 'totally_safe.exe' appeared on system.",
+      choices: [
+        {
+          text: "Remove it and check persistence.",
+          action: () => window.markObjectiveComplete(0)
+        },
+        {
+          text: "Has anyone requested admin privileges recently?",
+          nextDialogue: {
+            npc: 'Maria Gomez - System Administrator',
+            text: "There was an email request for admin rights. It wasn't signed.",
+            clue: "Clue: Unverified request for admin rights via email.",
+            choices: [
+              { text: "Save that email as evidence.", action: () => window.markObjectiveComplete(1) },
+              { text: "Warn the whole team immediately." }
+            ]
+          }
         }
-      }
-    ]
+      ]
+    },
+    'Larry Chua - Records Clerk': {
+      text: "I noticed some data missing from the database and a weird Flash update popup.",
+      clue: "Clue: Data missing from DB and potential malware delivered as fake Flash update.",
+      choices: [
+        {
+          text: "Scan your system for malware.",
+          action: () => window.markObjectiveComplete(2)
+        },
+        {
+          text: "Who else accessed the DB last night?",
+          nextDialogue: {
+            npc: 'Larry Chua - Records Clerk',
+            text: "Only the sysadmin and me, as far as I know.",
+            clue: "Clue: Only two people accessed database during breach window.",
+            choices: [
+              { text: "Check access logs." }
+            ]
+          }
+        }
+      ]
+    }
+  },
+  'level6': {
+    'Rachel Yeo - Grid Operator': {
+      text: "Our SCADA system logged remote access from an unknown IP last night.",
+      clue: "Clue: SCADA logs show remote access from suspicious IP.",
+      choices: [
+        {
+          text: "Trace the IP.",
+          action: () => window.markObjectiveComplete(0)
+        },
+        {
+          text: "Were any alarms triggered?",
+          nextDialogue: {
+            npc: 'Rachel Yeo - Grid Operator',
+            text: "Alarms were disabled remotely around midnight.",
+            clue: "Clue: Security alarms were remotely disabled at midnight.",
+            choices: [
+              { text: "Re-enable all security alarms." },
+              { text: "Check who had access at that time." }
+            ]
+          }
+        }
+      ]
+    },
+    'Hugo Wang - Maintenance Worker': {
+      text: "I found a USB stick plugged into a monitoring station this morning.",
+      clue: "Clue: USB stick found in critical infrastructure—possible infection vector.",
+      choices: [
+        {
+          text: "Quarantine the USB and analyze its contents.",
+          action: () => window.markObjectiveComplete(1)
+        },
+        {
+          text: "Who had access to that room overnight?",
+          nextDialogue: {
+            npc: 'Hugo Wang - Maintenance Worker',
+            text: "Just authorized personnel, but I saw a visitor badge left on the desk.",
+            clue: "Clue: Unauthorized visitor badge found in secure area.",
+            choices: [
+              { text: "Review visitor logs." }
+            ]
+          }
+        }
+      ]
+    }
+  },
+  'level7': {
+    'Anita Lee - Suspect Insider': {
+      text: "Why am I being questioned? I followed all procedures.",
+      clue: "Clue: Suspect claims to follow procedures, but terminal had unauthorized process.",
+      choices: [
+        {
+          text: "Your terminal had an unauthorized process running.",
+          action: () => window.markObjectiveComplete(0)
+        },
+        {
+          text: "Did you notice anything odd recently?",
+          nextDialogue: {
+            npc: 'Anita Lee - Suspect Insider',
+            text: "I found an encrypted note in my locker.",
+            clue: "Clue: Encrypted note found in insider's locker.",
+            choices: [
+              { text: "Give me the note for analysis.", action: () => window.markObjectiveComplete(1) }
+            ]
+          }
+        }
+      ]
+    },
+    'Henry Ng - HR Officer': {
+      text: "Agent Kim requested time off right after the breach.",
+      clue: "Clue: Employee took leave immediately following the incident.",
+      choices: [
+        {
+          text: "Investigate Kim's activity.",
+          action: () => window.markObjectiveComplete(2)
+        },
+        {
+          text: "Who else has been acting suspicious?",
+          nextDialogue: {
+            npc: 'Henry Ng - HR Officer',
+            text: "A few team members accessed restricted files late at night.",
+            clue: "Clue: Multiple users accessed restricted files during suspicious timeframe.",
+            choices: [
+              { text: "Review file access logs." }
+            ]
+          }
+        }
+      ]
+    }
+  },
+  'level8': {
+    'Cipher - Dark Web Informant': {
+      text: "PH4NT0M is auctioning zero-days. Ghostline never uses the same forum twice.",
+      clue: "Clue: PH4NT0M rotates forums for zero-day sales—track .onion links.",
+      choices: [
+        {
+          text: "How do I contact Ghostline?",
+          nextDialogue: {
+            npc: 'Cipher - Dark Web Informant',
+            text: "Look for hidden .onion links in the latest posts.",
+            clue: "Clue: Communication hidden in .onion posts on dark web.",
+            choices: [
+              { text: "Search forums.", action: () => window.markObjectiveComplete(0) }
+            ]
+          }
+        },
+        {
+          text: "What is Silent Strings?",
+          nextDialogue: {
+            npc: 'Cipher - Dark Web Informant',
+            text: "It's not just malware—it's a protocol to disrupt infrastructure at scale.",
+            clue: "Clue: Silent Strings is designed for mass infrastructure disruption.",
+            choices: [
+              { text: "Tell me more about Silent Strings." }
+            ]
+          }
+        }
+      ]
+    },
+    'BitNinja - Fellow Hacker': {
+      text: "This chatroom isn’t safe. Your agency’s network map leaked recently.",
+      clue: "Clue: Agency network map has been leaked to threat actors.",
+      choices: [
+        {
+          text: "How do I secure the agency?",
+          nextDialogue: {
+            npc: 'BitNinja - Fellow Hacker',
+            text: "Change all credentials, and use two-factor everywhere.",
+            clue: "Clue: Immediate credential rotation and 2FA recommended.",
+            choices: [
+              { text: "Start credential rotation.", action: () => window.markObjectiveComplete(1) }
+            ]
+          }
+        }
+      ]
+    }
+  },
+  'level9': {
+    'Lina Sun - Transit Supervisor': {
+      text: "All trains stopped at once. The control center was locked out by the attacker.",
+      clue: "Clue: Attacker remotely locked out control center, halted transit.",
+      choices: [
+        {
+          text: "Check the control system.",
+          action: () => window.markObjectiveComplete(0)
+        },
+        {
+          text: "Interview commuters for suspicious activity.",
+          nextDialogue: {
+            npc: 'Lina Sun - Transit Supervisor',
+            text: "Someone said they saw a person tampering with the WiFi router.",
+            clue: "Clue: Possible physical tampering with WiFi router observed.",
+            choices: [
+              { text: "Inspect WiFi router." }
+            ]
+          }
+        }
+      ]
+    },
+    'Tom Wong - Commuter': {
+      text: "My e-ticket app crashed. Also, a stranger was near the station router.",
+      clue: "Clue: E-ticket app crash and suspicious individual near station equipment.",
+      choices: [
+        {
+          text: "Scan for rogue devices.",
+          action: () => window.markObjectiveComplete(1)
+        }
+      ]
+    }
+  },
+  'level10': {
+    'SECTOR9 Director': {
+      text: "GHOSTLINE is inside our network. This is your final mission, Agent.",
+      clue: "Clue: GHOSTLINE has breached the most secure perimeter.",
+      choices: [
+        {
+          text: "Confront GHOSTLINE.",
+          nextDialogue: {
+            npc: 'GHOSTLINE',
+            text: "You're persistent, Agent. But can you see the pattern in the chaos?",
+            clue: "Clue: GHOSTLINE alludes to a hidden method or backdoor.",
+            choices: [
+              { text: "Challenge GHOSTLINE.", action: () => window.markObjectiveComplete(0) },
+              { text: "Offer an alliance instead." }
+            ]
+          }
+        },
+        {
+          text: "Set a digital trap.",
+          nextDialogue: {
+            npc: 'SECTOR9 Director',
+            text: "Trap set. GHOSTLINE is trying to break free!",
+            clue: "Clue: Trap laid—GHOSTLINE's next move imminent.",
+            choices: [
+              { text: "Spring the trap.", action: () => window.markObjectiveComplete(1) },
+              { text: "Wait for GHOSTLINE’s next move." }
+            ]
+          }
+        }
+      ]
+    },
+    'GHOSTLINE': {
+      text: "Silent Strings isn't just a program—it's the end of trust. What will you choose: preserve a broken system, or let it fall?",
+      clue: "Clue: The final decision will determine the fate of the digital world.",
+      choices: [
+        {
+          text: "Silent Strings ends now.",
+          action: () => window.markObjectiveComplete(2)
+        },
+        {
+          text: "Let it fall.",
+          nextDialogue: {
+            npc: 'GHOSTLINE',
+            text: "You have chosen chaos. Remember, Agent, every system can be rebuilt.",
+            clue: "Clue: GHOSTLINE hints at the rise of a new digital order.",
+            choices: [
+              { text: "The end... or a new beginning?" }
+            ]
+          }
+        }
+      ]
+    }
   }
-},
-'level5': {
-  'Maria Gomez - System Administrator': {
-    text: "A scheduled task called 'totally_safe.exe' appeared overnight. I didn't create it.",
-    choices: [
-      {
-        text: "Remove it and check persistence.",
-        action: () => window.markObjectiveComplete(0)
-      },
-      {
-        text: "Has anyone requested admin privileges recently?",
-        nextDialogue: {
-          npc: 'Maria Gomez - System Administrator',
-          text: "There was an email request for admin rights. It wasn't signed.",
-          choices: [
-            { text: "Save that email as evidence.", action: () => window.markObjectiveComplete(1) },
-            { text: "Warn the whole team immediately." }
-          ]
-        }
-      }
-    ]
-  },
-  'Larry Chua - Records Clerk': {
-    text: "I noticed some data missing from the database and a weird Flash update popup.",
-    choices: [
-      {
-        text: "Scan your system for malware.",
-        action: () => window.markObjectiveComplete(2)
-      },
-      {
-        text: "Who else accessed the DB last night?",
-        nextDialogue: {
-          npc: 'Larry Chua - Records Clerk',
-          text: "Only the sysadmin and me, as far as I know.",
-          choices: [
-            { text: "Check access logs." }
-          ]
-        }
-      }
-    ]
-  }
-},
-'level6': {
-  'Rachel Yeo - Grid Operator': {
-    text: "Our SCADA system logged remote access from an unknown IP last night.",
-    choices: [
-      {
-        text: "Trace the IP.",
-        action: () => window.markObjectiveComplete(0)
-      },
-      {
-        text: "Were any alarms triggered?",
-        nextDialogue: {
-          npc: 'Rachel Yeo - Grid Operator',
-          text: "Alarms were disabled remotely around midnight.",
-          choices: [
-            { text: "Re-enable all security alarms." },
-            { text: "Check who had access at that time." }
-          ]
-        }
-      }
-    ]
-  },
-  'Hugo Wang - Maintenance Worker': {
-    text: "I found a USB stick plugged into a monitoring station this morning.",
-    choices: [
-      {
-        text: "Quarantine the USB and analyze its contents.",
-        action: () => window.markObjectiveComplete(1)
-      },
-      {
-        text: "Who had access to that room overnight?",
-        nextDialogue: {
-          npc: 'Hugo Wang - Maintenance Worker',
-          text: "Just authorized personnel, but I saw a visitor badge left on the desk.",
-          choices: [
-            { text: "Review visitor logs." }
-          ]
-        }
-      }
-    ]
-  }
-},
-'level7': {
-  'Anita Lee - Suspect Insider': {
-    text: "Why am I being questioned? I followed all procedures.",
-    choices: [
-      {
-        text: "Your terminal had an unauthorized process running.",
-        action: () => window.markObjectiveComplete(0)
-      },
-      {
-        text: "Did you notice anything odd recently?",
-        nextDialogue: {
-          npc: 'Anita Lee - Suspect Insider',
-          text: "I found an encrypted note in my locker.",
-          choices: [
-            { text: "Give me the note for analysis.", action: () => window.markObjectiveComplete(1) }
-          ]
-        }
-      }
-    ]
-  },
-  'Henry Ng - HR Officer': {
-    text: "Agent Kim requested time off right after the breach.",
-    choices: [
-      {
-        text: "Investigate Kim's activity.",
-        action: () => window.markObjectiveComplete(2)
-      },
-      {
-        text: "Who else has been acting suspicious?",
-        nextDialogue: {
-          npc: 'Henry Ng - HR Officer',
-          text: "A few team members accessed restricted files late at night.",
-          choices: [
-            { text: "Review file access logs." }
-          ]
-        }
-      }
-    ]
-  }
-},
-'level8': {
-  'Cipher - Dark Web Informant': {
-    text: "PH4NT0M is auctioning zero-days. Ghostline never uses the same forum twice.",
-    choices: [
-      {
-        text: "How do I contact Ghostline?",
-        nextDialogue: {
-          npc: 'Cipher - Dark Web Informant',
-          text: "Look for hidden .onion links in the latest posts.",
-          choices: [
-            { text: "Search forums.", action: () => window.markObjectiveComplete(0) }
-          ]
-        }
-      },
-      {
-        text: "What is Silent Strings?",
-        nextDialogue: {
-          npc: 'Cipher - Dark Web Informant',
-          text: "It's not just malware—it's a protocol to disrupt infrastructure at scale.",
-          choices: [
-            { text: "Tell me more about Silent Strings." }
-          ]
-        }
-      }
-    ]
-  },
-  'BitNinja - Fellow Hacker': {
-    text: "This chatroom isn’t safe. Your agency’s network map leaked recently.",
-    choices: [
-      {
-        text: "How do I secure the agency?",
-        nextDialogue: {
-          npc: 'BitNinja - Fellow Hacker',
-          text: "Change all credentials, and use two-factor everywhere.",
-          choices: [
-            { text: "Start credential rotation.", action: () => window.markObjectiveComplete(1) }
-          ]
-        }
-      }
-    ]
-  }
-},
-'level9': {
-  'Lina Sun - Transit Supervisor': {
-    text: "All trains stopped at once. The control center was locked out by the attacker.",
-    choices: [
-      {
-        text: "Check the control system.",
-        action: () => window.markObjectiveComplete(0)
-      },
-      {
-        text: "Interview commuters for suspicious activity.",
-        nextDialogue: {
-          npc: 'Lina Sun - Transit Supervisor',
-          text: "Someone said they saw a person tampering with the WiFi router.",
-          choices: [
-            { text: "Inspect WiFi router." }
-          ]
-        }
-      }
-    ]
-  },
-  'Tom Wong - Commuter': {
-    text: "My e-ticket app crashed. Also, a stranger was near the station router.",
-    choices: [
-      {
-        text: "Scan for rogue devices.",
-        action: () => window.markObjectiveComplete(1)
-      }
-    ]
-  }
-},
-'level10': {
-  'SECTOR9 Director': {
-    text: "GHOSTLINE is inside our network. This is your final mission, Agent.",
-    choices: [
-      {
-        text: "Confront GHOSTLINE.",
-        nextDialogue: {
-          npc: 'GHOSTLINE',
-          text: "You're persistent, Agent. But can you see the pattern in the chaos?",
-          choices: [
-            { text: "Challenge GHOSTLINE.", action: () => window.markObjectiveComplete(0) },
-            { text: "Offer an alliance instead." }
-          ]
-        }
-      },
-      {
-        text: "Set a digital trap.",
-        nextDialogue: {
-          npc: 'SECTOR9 Director',
-          text: "Trap set. GHOSTLINE is trying to break free!",
-          choices: [
-            { text: "Spring the trap.", action: () => window.markObjectiveComplete(1) },
-            { text: "Wait for GHOSTLINE’s next move." }
-          ]
-        }
-      }
-    ]
-  },
-  'GHOSTLINE': {
-    text: "Silent Strings isn't just a program—it's the end of trust. What will you choose: preserve a broken system, or let it fall?",
-    choices: [
-      {
-        text: "Silent Strings ends now.",
-        action: () => window.markObjectiveComplete(2)
-      },
-      {
-        text: "Let it fall.",
-        nextDialogue: {
-          npc: 'GHOSTLINE',
-          text: "You have chosen chaos. Remember, Agent, every system can be rebuilt.",
-          choices: [
-            { text: "The end... or a new beginning?" }
-          ]
-        }
-      }
-    ]
-  }
-}
 };
+
 
 // Legacy dialogue system (keeping for backwards compatibility)
 const levelDialogues = {
