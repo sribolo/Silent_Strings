@@ -193,21 +193,18 @@ function markObjectiveComplete(idx) {
     // Get & update completed objectives for this level
     let completed = getCompletedObjectives(levelKey);
     if (!completed.includes(idx)) {
-      completed.push(idx);
-      setCompletedObjectives(levelKey, completed);
+        completed.push(idx);
+        setCompletedObjectives(levelKey, completed);
     }
 
-    // Update the UI as before
-    const list = document.getElementById('objectives-list');
-    if (!list) return;
-    const item = list.querySelector(`li[data-index='${idx}']`);
-    if (item && !item.classList.contains('completed')) {
-        item.classList.add('completed');
-        const status = item.querySelector('.objective-status');
-        if (status) status.textContent = '[✓]';
-        showPopup("Objective completed: " + item.textContent.replace('[✓]', '').trim());
-    }
+    // Always re-render objectives so UI is in sync!
+    renderObjectives(levelKey);
+
+    // Show a popup for feedback (optional)
+    const objectives = window.missionObjectives[levelKey] || [];
+    if (objectives[idx]) showPopup("Objective completed: " + objectives[idx]);
 }
+
 
 // --- Dialogue/Storyboard System ---
 // Use window.missionDialogues from dialogue_advanced.js/dialogues.js for all dialogue logic.
