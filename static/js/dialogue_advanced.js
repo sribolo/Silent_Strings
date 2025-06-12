@@ -754,6 +754,7 @@ function setBackground(levelKey) {
 }
 function setPortrait(npcKey) {
   const portrait = document.getElementById('dialoguePortrait');
+  if (!portrait) return;
   portrait.src = `/static/portraits/${npcKey}.png`;
   portrait.style.display = 'block';
 }
