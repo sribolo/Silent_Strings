@@ -122,6 +122,11 @@ function showInterviewMenu() {
     const bg = document.querySelector('.location-background');
     const loc = bg ? bg.dataset.location : 'hq';
     const dialogues = window.missionDialogues[loc] || window.missionDialogues['hq'];
+    if (!dialogues || typeof dialogues !== 'object') {
+        console.error("No dialogues found for location:", loc, dialogues);
+        showDialogue('System', 'No NPCs available for interview at this location.', []);
+        return;
+    }
     const npcNames = Object.keys(dialogues);
     const choices = npcNames.map(n => ({
         text: `Talk to ${n}` + (n === lastInterviewedNpc ? ' (again)' : ''),
