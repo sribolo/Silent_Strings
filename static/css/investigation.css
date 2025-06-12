@@ -1,556 +1,263 @@
-* {
-    box-sizing: border-box;
-}
-
-.investigation-container {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: 100vh;
-    overflow: hidden;
-    font-family: 'Share Tech Mono', monospace;
-    margin: 0;
-    padding: 0;
+/* Investigation Interface Styles */
+.investigation-interface {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  font-family: 'Share Tech Mono', monospace;
+  background: #19193a;
 }
 
 .location-background {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: 100vh;
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  width: 100vw;
+  height: 100vh;
+  background-size: cover;
+  background-position: center;
+  z-index: 1;
+  transition: background-image 0.5s;
 }
 
-/* Hamburger Menu */
+#ui-overlay {
+  position: fixed;
+  top: 24px;
+  right: 32px;
+  z-index: 100;
+  background: rgba(40,32,90,0.85);
+  border-radius: 14px;
+  padding: 10px 18px;
+  border: 2.5px solid #6C5CE7;
+  box-shadow: 0 2px 12px #6C5CE755;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+#ui-overlay button {
+  background: none;
+  border: none;
+  color: #fff;
+  font-size: 1.4rem;
+  cursor: pointer;
+  margin: 0 4px;
+  transition: color 0.2s;
+}
+#ui-overlay button:hover { color: #A499FF; }
+
 .hamburger-menu {
-    position: fixed;
-    top: 20px;
-    right: 20px;
-    background: none;
-    border: none;
-    cursor: pointer;
-    padding: 10px;
-    z-index: 1000;
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
+  font-size: 1.5rem;
+  margin-left: 8px;
 }
 
-.hamburger-menu span {
-    width: 25px;
-    height: 3px;
-    background: white;
-    border-radius: 2px;
-    transition: all 0.3s ease;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.5);
-}
-
-.hamburger-menu:hover span {
-    background: #A499FF;
-}
-
-/* Dropdown Menu */
 .dropdown-menu {
-    position: fixed;
-    top: 60px;
-    right: 20px;
-    background: rgba(26, 26, 46, 0.95);
-    border: 2px solid #6C5CE7;
-    border-radius: 10px;
-    padding: 10px 0;
-    min-width: 200px;
-    z-index: 999;
-    backdrop-filter: blur(10px);
-    box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+  position: absolute;
+  top: 48px;
+  right: 0;
+  background: #232369;
+  border: 2px solid #6C5CE7;
+  border-radius: 10px;
+  box-shadow: 0 2px 12px #6C5CE755;
+  z-index: 200;
+  min-width: 180px;
+  display: flex;
+  flex-direction: column;
+  padding: 8px 0;
 }
-
+.dropdown-menu.hidden { display: none; }
 .menu-item {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    padding: 12px 20px;
-    color: white;
-    text-decoration: none;
-    border: none;
-    background: none;
-    width: 100%;
-    cursor: pointer;
-    font-family: 'Share Tech Mono', monospace;
-    font-size: 0.9rem;
-    transition: background 0.2s ease;
-    pointer-events: auto;
+  color: #fff;
+  padding: 12px 20px;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: background 0.2s, color 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 10px;
 }
+.menu-item:hover { background: #6C5CE7; color: #fff; }
 
-.menu-item:hover {
-    background: rgba(108, 92, 231, 0.3);
+.dialogue-overlay {
+  position: fixed;
+  left: 0; right: 0; bottom: 0;
+  width: 100vw;
+  background: rgba(0,0,0,0.25);
+  z-index: 10;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  padding-bottom: 32px;
 }
-
-.menu-item i {
-    font-size: 1rem;
-    color: #A499FF;
-}
-
-/* Center Characters Conversing */
-.character-portrait {
-    position: absolute;
-    bottom: -40px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 64px;
-    height: 64px;
-    z-index: 150; /* above bubble */
-}
-
-.portrait-avatar {
-    position: relative;
-    width: 100%;
-    height: 100%;
-}
-
-.avatar-layer {
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    object-fit: contain;
-}
-
-/* Player Avatar (if needed separately) */
-.player-avatar {
-    position: absolute;
-    right: 30%;
-    top: 50%;
-    transform: translateY(-50%);
-    width: 80px;
-    height: 100px;
-    z-index: 50;
-}
-
-/* Bottom Dialogue System */
 .dialogue-container {
-    position: fixed;
-    bottom: 10px;
-    left: 50%;
-    transform: translateX(-50%);
-    z-index: 100;
-    height: 250px;
-    width: 95vw;
-    max-width: 800px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding: 10px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
-    max-height: 30vh;
-    overflow-y: auto;
+  width: 90vw;
+  max-width: 1100px;
+  display: flex;
+  gap: 24px;
+  align-items: flex-end;
 }
-
-.dialogue-bubble {
-    background: rgba(26, 26, 46, 0.95);
-    border: 2px solid #6C5CE7;
-    border-radius: 15px;
-    padding: 25px 30px;
-    padding-bottom: 60px; /* leave space for portrait */
-    backdrop-filter: blur(10px);
-    box-shadow: 0 4px 20px rgba(0,0,0,0.3);
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    position: relative; /* enable absolute children positioning */
+.dialogue-portrait-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
 }
-
-.npc-name {
-    color: #A499FF;
-    font-weight: bold;
-    font-size: 1.2rem;
-    margin-bottom: 12px;
+.npc-portrait-frame {
+  width: 120px;
+  height: 120px;
+  background: #2c2c3a;
+  border: 4px solid #8B7355;
+  border-radius: 12px;
+  overflow: hidden;
+  position: relative;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.5);
 }
-
-.dialogue-text {
-    color: white;
-    font-size: 1.25rem;
-    line-height: 1.6;
-    margin-bottom: 15px;
-    min-height: 80px;
-    flex-grow: 1;
+.npc-portrait {
+  width: 100%;
+  height: 100%;
+  background: #3c3c4a;
+  position: relative;
 }
-
+.npc-portrait .avatar-layer {
+  width: 80px;
+  height: 80px;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  image-rendering: pixelated;
+  object-fit: contain;
+}
+.npc-name-plate {
+  background: #F4E4BC;
+  color: #4A3728;
+  padding: 8px 16px;
+  border-radius: 20px;
+  border: 2px solid #8B7355;
+  font-family: 'Share Tech Mono', monospace;
+  font-weight: bold;
+  font-size: 0.9rem;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+  margin-top: 8px;
+}
+.dialogue-box {
+  flex: 1;
+  background: #F4E4BC;
+  border: 4px solid #8B7355;
+  border-radius: 20px;
+  padding: 25px 30px;
+  position: relative;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+  min-height: 150px;
+}
+.dialogue-text-area {
+  font-size: 1.2rem;
+  color: #4A3728;
+  margin-bottom: 18px;
+  min-height: 48px;
+}
 .dialogue-choices {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
-    margin-top: 10px;
+  margin-top: 10px;
 }
-
 .choice-btn {
-    background: linear-gradient(145deg, #6C5CE7, #A499FF);
-    border: none;
-    border-radius: 8px;
-    padding: 10px 18px;
-    color: white;
-    font-family: 'Share Tech Mono', monospace;
-    font-size: 0.85rem;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+  display: block;
+  background: #e2c49a;
+  border: 2px solid #c2a477;
+  border-radius: 8px;
+  padding: 8px 16px;
+  margin: 6px 0;
+  font-size: 1em;
+  cursor: pointer;
+  text-align: left;
+  transition: background 0.2s;
 }
-
-.choice-btn:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(108, 92, 231, 0.4);
-}
-
+.choice-btn:hover { background: #f5e1c0; }
 .dialogue-continue {
-    color: #A499FF;
-    font-size: 0.85rem;
-    font-style: italic;
-    cursor: pointer;
-    text-align: center;
-    padding: 10px;
-    transition: color 0.2s ease;
+  margin-top: 16px;
+  background: #6C5CE7;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: 10px 24px;
+  font-size: 1rem;
+  cursor: pointer;
+  display: block;
+}
+.dialogue-continue.hidden { display: none; }
+
+.objectives-panel {
+  position: absolute;
+  top: 32px;
+  left: 32px;
+  z-index: 50;
+  background: rgba(40,32,90,0.85);
+  border-radius: 14px;
+  padding: 18px 28px;
+  border: 2.5px solid #6C5CE7;
+  box-shadow: 0 2px 12px #6C5CE755;
+  min-width: 220px;
+}
+.objectives-panel h3 {
+  color: #A499FF;
+  margin-top: 0;
+  margin-bottom: 12px;
+  font-size: 1.1rem;
+  letter-spacing: 1px;
+}
+.objectives-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+.objectives-list li {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  margin-bottom: 14px;
+  font-size: 0.98rem;
+  color: #fff;
+}
+.objective-status {
+  width: 24px;
+  color: #A499FF;
 }
 
-.dialogue-continue:hover {
-    color: white;
+/* Modal Styles */
+.modal {
+  display: none;
+  position: fixed;
+  z-index: 2000;
+  left: 0; top: 0; width: 100vw; height: 100vh;
+  background: rgba(0,0,0,0.45);
+  align-items: center;
+  justify-content: center;
 }
-
-/* Tool Modal */
-.tool-modal {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: 100vh;
-    background: rgba(0, 0, 0, 0.8);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 2000;
-}
-
+.modal.active, .modal:not(.hidden) { display: flex; }
 .modal-content {
-    background: #1a1a2e;
-    border: 3px solid #6C5CE7;
-    border-radius: 15px;
-    padding: 25px;
-    max-width: 500px;
-    width: 90%;
-    color: white;
-    font-family: 'Share Tech Mono', monospace;
+  background: #232369;
+  color: #fff;
+  border-radius: 16px;
+  padding: 32px 36px;
+  min-width: 320px;
+  max-width: 90vw;
+  box-shadow: 0 4px 32px #0008;
+  position: relative;
+}
+.modal-close {
+  position: absolute;
+  top: 18px;
+  right: 22px;
+  font-size: 1.5rem;
+  color: #A499FF;
+  cursor: pointer;
 }
 
-.modal-content h3 {
-    color: #A499FF;
-    margin-bottom: 15px;
-    text-align: center;
+/* Responsive Design */
+@media (max-width: 900px) {
+  .dialogue-container { flex-direction: column; gap: 12px; }
+  .objectives-panel { left: 8px; top: 8px; padding: 10px 12px; min-width: 140px; }
+  #ui-overlay { right: 8px; top: 8px; padding: 6px 8px; }
 }
-
-.action-btn {
-    background: #6C5CE7;
-    border: none;
-    border-radius: 8px;
-    padding: 10px 15px;
-    color: white;
-    cursor: pointer;
-    font-family: 'Share Tech Mono', monospace;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    transition: all 0.3s ease;
-}
-
-.action-btn:hover {
-    background: #A499FF;
-}
-
-.close-modal {
-    background: #dc3545;
-    border: none;
-    border-radius: 8px;
-    padding: 10px 20px;
-    color: white;
-    cursor: pointer;
-    width: 100%;
-    margin-top: 15px;
-    font-family: 'Share Tech Mono', monospace;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-}
-
-/* Utility Classes */
-.hidden {
-    display: none !important;
-}
-
-@keyframes fadeInOut {
-    0% { opacity: 0; transform: translateX(-50%) translateY(-10px); }
-    20% { opacity: 1; transform: translateX(-50%) translateY(0); }
-    80% { opacity: 1; transform: translateX(-50%) translateY(0); }
-    100% { opacity: 0; transform: translateX(-50%) translateY(-10px); }
-}
-
-.result-container {
-    margin-top: 15px;
-}
-
-.notes-textarea {
-    width: 100%;
-    height: 150px;
-    background: #2c2c54;
-    color: white;
-    border: 1px solid #6C5CE7;
-    border-radius: 5px;
-    padding: 10px;
-    font-family: 'Share Tech Mono', monospace;
-}
-
-.notes-save-btn {
-    margin-top: 10px;
-}
-
-.success-message {
-    background: #28a745;
-    color: white;
-    padding: 10px;
-    border-radius: 5px;
-}
-
-.warning-message {
-    background: #ffc107;
-    color: black;
-    padding: 10px;
-    border-radius: 5px;
-}
-
-/* Mobile Responsive */
-@media (max-width: 768px) {
-    .character-portrait {
-        left: 10%;
-        width: 100px;
-        height: 130px;
-    }
-    
-    .player-avatar {
-        right: 10%;
-        width: 100px;
-        height: 130px;
-    }
-    
-    .dialogue-container {
-        bottom: 10px;
-        left: 10px;
-        right: 10px;
-    }
-    
-    .dialogue-bubble {
-        padding: 15px 18px;
-    }
-    
-    .dropdown-menu {
-        right: 10px;
-        left: 10px;
-        width: auto;
-    }
-    
-    .hamburger-menu {
-        right: 15px;
-    }
-    
-    .choice-btn {
-        font-size: 0.8rem;
-        padding: 8px 15px;
-    }
-    
-    #hint-btn {
-        right: 80px;
-        font-size: 0.8rem;
-        padding: 6px 12px;
-        min-width: 50px;
-    }
-    
-    #help-btn {
-        right: 15px;
-        font-size: 0.8rem;
-        padding: 6px 12px;
-        min-width: 50px;
-    }
-    
-    #hint-box {
-        max-width: 300px;
-        padding: 10px 15px;
-        font-size: 0.9rem;
-        top: -60px;
-    }
-    
-    #help-modal .modal-inner {
-        margin: 50px 20px;
-        padding: 20px 25px;
-        max-width: none;
-    }
-}
-
-.bubble-avatars {
-    position: absolute;
-    left: 0;
-    right: 0;
-    bottom: 100%;
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-end;
-    padding: 0 32px;
-    pointer-events: none;
-    height: 64px;
-}
-
-.bubble-avatar {
-    position: relative;
-    width: 64px;
-    height: 64px;
-    display: flex;
-    align-items: flex-end;
-}
-
-.bubble-avatar .avatar-layer {
-    width: 64px !important;
-    height: 64px !important;
-    position: absolute;
-    top: 0;
-    left: 0;
-    image-rendering: pixelated;
-    object-fit: contain;
-}
-
-.bubble-avatar.inactive {
-    opacity: 0.3;
-}
-
-/* Advanced Dialogue UI */
-#advanced-dialogue-ui {
-    display: none;
-    position: relative;
-    margin-bottom: 16px;
-    width: 100%;
-    flex-direction: column;
-    align-items: center;
-}
-#advanced-dialogue-ui.active {
-    display: flex;
-}
-#dialoguePortrait {
-    display: none;
-    width: 80px;
-    height: 80px;
-    float: left;
-    margin-right: 16px;
-}
-#dialogueSpeaker {
-    font-weight: bold;
-    color: #A499FF;
-    margin-bottom: 6px;
-}
-#dialogueText {
-    color: #fff;
-    font-size: 1.1rem;
-    margin-bottom: 10px;
-}
-#dialogueOptions {
-    margin-top: 10px;
-}
-
-/* Hint/Help UI */
-#hint-box {
-    position: absolute;
-    top: -68px;
-    left: 50%;
-    transform: translateX(-50%);
-    background: rgba(35, 35, 43, 0.95);
-    color: #A499FF;
-    padding: 12px 20px;
-    border-radius: 8px;
-    border: 1px solid #6C5CE7;
-    z-index: 3000;
-    font-family: 'Share Tech Mono', monospace;
-    max-width: 400px;
-    text-align: center;
-    display: none;
-    opacity: 0;
-    transition: opacity 0.3s ease;
-    backdrop-filter: blur(5px);
-    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
-}
-#hint-btn, #help-btn {
-    position: absolute;
-    top: 16px;
-    z-index: 3001;
-    min-width: 60px;
-    font-size: 1rem;
-    padding: 8px 18px;
-    background: #6C5CE7;
-    color: #fff;
-    border-radius: 8px;
-    border: none;
-    box-shadow: 0 2px 8px #0003;
-    transition: background 0.2s;
-}
-#hint-btn {
-    right: 94px; /* Position hint button to the left of help button */
-}
-#help-btn {
-    right: 24px;
-}
-
-#hint-btn:hover, #help-btn:hover {
-    background: #A499FF;
-    color: #23232b;
-}
-#help-modal {
-    display: none;
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: 100vh;
-    background: rgba(0,0,0,0.7);
-    z-index: 4000;
-    align-items: center;
-    justify-content: center;
-}
-#help-modal.active {
-    display: flex;
-}
-#help-modal .modal-inner {
-    background: #23232b;
-    padding: 30px 40px;
-    border-radius: 16px;
-    max-width: 400px;
-    margin: 100px auto;
-    color: white;
-    position: relative;
-}
-
-.help-hint-container {
-    position: fixed;
-    bottom: 10px;
-    right: 10px;
-}
-
-.help-button, .hint-button {
-    margin-bottom: 5px;
-    padding: 5px 10px;
-    font-size: 0.9em;
-}
-
-.continue-arrow {
-    font-size: 2rem;
-    font-weight: bold;
-    color: #A499FF;
-    cursor: pointer;
-    user-select: none;
-    padding: 0 10px;
+@media (max-width: 600px) {
+  .dialogue-box { padding: 12px 8px; }
+  .modal-content { padding: 16px 8px; }
 } 
