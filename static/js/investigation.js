@@ -14,7 +14,7 @@ function setBackgroundImage() {
         'transport': 'transport',
         'school': 'school',
         'government': 'government',
-        'hospital': 'company',
+        'hospital': 'hospital',
         'company': 'company',
         'global': 'hq'
     };
@@ -159,38 +159,33 @@ function showSummary() {
     ]);
 }
 
-function showDialogueLine() {
-    const d = currentDialogueData[currentDialogue];
-    if (!d) return;
-    document.getElementById('npc-name').textContent = d.npc;
-    typeText(d.text, document.getElementById('dialogue-text'));
-    renderInvestigationNpcPortrait(d.npc);
-    const choicesBox = document.getElementById('dialogue-choices');
-    choicesBox.innerHTML = '';
-    if (d.choices && d.choices.length) {
-        d.choices.forEach((c, i) => {
+function showDialogue(npc, text, choices = []) {
+    // Defensive: ensure text is defined
+    const npcNameEl = document.getElementById('npc-name');
+    const dialogueTextEl = document.getElementById('dialogue-text');
+    const choicesContainer = document.getElementById('dialogue-choices');
+    const continueEl = document.getElementById('dialogue-continue');
+    if (npcNameEl) npcNameEl.textContent = npc || 'Unknown';
+    if (dialogueTextEl) dialogueTextEl.textContent = text || '...';
+    if (choicesContainer) choicesContainer.innerHTML = '';
+    if (Array.isArray(choices) && choices.length > 0) {
+        if (continueEl) continueEl.classList.add('hidden');
+        choices.forEach(choice => {
             const btn = document.createElement('button');
             btn.className = 'choice-btn';
-            btn.textContent = c.text;
+            btn.textContent = choice.text || 'Continue';
             btn.onclick = () => {
-                if (c.next === '__SHOW_INTERVIEW_MENU__') {
-                    showInterviewMenu();
-                    return;
-                }
-                if (typeof c.next !== 'undefined') {
-                    currentDialogue = c.next;
-                    showDialogueLine();
+                if (typeof choice.action === 'function') choice.action();
+                if (choice.nextDialogue) {
+                    showDialogue(choice.nextDialogue.npc, choice.nextDialogue.text, choice.nextDialogue.choices);
+                } else if (!choice.action) {
+                    if (dialogueTextEl) dialogueTextEl.textContent = 'End of dialogue.';
                 }
             };
-            choicesBox.appendChild(btn);
+            if (choicesContainer) choicesContainer.appendChild(btn);
         });
-        document.getElementById('dialogue-continue').classList.add('hidden');
     } else {
-        document.getElementById('dialogue-continue').classList.remove('hidden');
-        document.getElementById('dialogue-continue').onclick = () => {
-            lastInterviewedNpc = d.npc;
-            showInterviewMenu();
-        };
+        if (continueEl) continueEl.classList.remove('hidden');
     }
 }
 
