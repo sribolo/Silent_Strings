@@ -34,6 +34,33 @@ function setBackgroundImage() {
 }
 
 // --- Menu & Modal Logic ---
+// Map keywords in objectives to tool button IDs
+const objectiveToolMap = {
+  scan: 'scan-btn',
+  scanner: 'scan-btn',
+  analyze: 'analyze-btn',
+  analysis: 'analyze-btn',
+  recover: 'scan-btn', // or a specific recovery tool if you have one
+  credential: 'analyze-btn',
+  password: 'analyze-btn',
+  interview: 'interview-btn',
+  note: 'notes-btn',
+  log: 'analyze-btn',
+  // Add more mappings as needed
+};
+
+function getToolsForObjectives(objectives) {
+  const toolSet = new Set(['interview-btn', 'notes-btn']); // Always include interview and notes
+  objectives.forEach(obj => {
+    for (const [keyword, toolId] of Object.entries(objectiveToolMap)) {
+      if (obj.toLowerCase().includes(keyword)) {
+        toolSet.add(toolId);
+      }
+    }
+  });
+  return Array.from(toolSet);
+}
+
 function setupMenuAndModals() {
     const hamburger = document.getElementById('hamburger-menu');
     const dropdown = document.getElementById('dropdown-menu');
@@ -55,6 +82,17 @@ function setupMenuAndModals() {
     addToolEvent('notes-btn', () => {
         const notes = localStorage.getItem('investigationNotes') || '';
         showToolModal('Mission Notes', `<textarea id="notes-text" placeholder="Record your findings..." class="notes-textarea">${notes}</textarea><button id="save-notes-btn" class="action-btn notes-save-btn"><i class="fas fa-save"></i> Save Notes</button>`);
+    });
+    // Show/hide tools based on objectives
+    const bg = document.querySelector('.location-background');
+    const loc = bg ? bg.dataset.location : 'hq';
+    const levelKey = locationToLevel[loc] || 'level1';
+    const objectives = window.missionObjectives[levelKey] || [];
+    const allowed = getToolsForObjectives(objectives);
+    const allToolIds = ['interview-btn', 'scan-btn', 'analyze-btn', 'notes-btn'];
+    allToolIds.forEach(id => {
+        const btn = document.getElementById(id);
+        if (btn) btn.style.display = allowed.includes(id) ? '' : 'none';
     });
     // Modal close
     const closeModal = document.getElementById('close-modal');
@@ -576,3 +614,5 @@ function showPopup(message, duration = 2200) {
     popup.classList.add('hidden');
   }, duration);
 }
+
+document.addEventListener('DOMContentLoaded', setupMenuAndModals);
