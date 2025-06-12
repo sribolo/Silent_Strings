@@ -752,15 +752,8 @@ function setBackground(levelKey) {
   document.body.style.backgroundImage = `url('/static/backgrounds/${levelKey}.jpg')`;
   document.body.style.backgroundSize = 'cover';
 }
-function setPortrait(npcKey) {
-  const portrait = document.getElementById('dialoguePortrait');
-  if (!portrait) return;
-  portrait.src = `/static/portraits/${npcKey}.png`;
-  portrait.style.display = 'block';
-}
 function showDialogue(levelKey, npcKey, lineIdx = 0) {
   setBackground(levelKey);
-  setPortrait(npcKey);
   const npcLines = levelDialogues[levelKey][npcKey];
   let idx = lineIdx;
   function renderLine() {
@@ -807,8 +800,6 @@ function showDialogue(levelKey, npcKey, lineIdx = 0) {
 }
 function showBranchingDialogue(key) {
   setBackground('default');
-  const portrait = document.getElementById('dialoguePortrait');
-  if (portrait) portrait.style.display = 'none';
   const d = window.dialogues[key];
   if (!d) {
     console.error(`Dialogue key '${key}' not found in dialogues.`);
