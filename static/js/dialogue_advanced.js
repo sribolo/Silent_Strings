@@ -371,7 +371,7 @@ window.missionDialogues = {
       ]
     },
     'BitNinja - Fellow Hacker': {
-      text: "This chatroom isn’t safe. Your agency’s network map leaked recently.",
+      text: "This chatroom isn't safe. Your agency's network map leaked recently.",
       clue: "Clue: Agency network map has been leaked to threat actors.",
       choices: [
         {
@@ -446,7 +446,7 @@ window.missionDialogues = {
             clue: "Clue: Trap laid—GHOSTLINE's next move imminent.",
             choices: [
               { text: "Spring the trap.", action: () => window.markObjectiveComplete(1) },
-              { text: "Wait for GHOSTLINE’s next move." }
+              { text: "Wait for GHOSTLINE's next move." }
             ]
           }
         }
@@ -502,10 +502,10 @@ const levelDialogues = {
   "level3": {
     "Bank_Guard": [
       { "text": "No one got in last night except employees." },
-      { "text": "But I did hear the teller’s computer making strange noises.", "clue": "Compromised workstation." }
+      { "text": "But I did hear the teller's computer making strange noises.", "clue": "Compromised workstation." }
     ],
     "Cleaning_Staff": [
-      { "text": "I found a printout with ‘PH4NT0M’ written on it in the trash." }
+      { "text": "I found a printout with 'PH4NT0M' written on it in the trash." }
     ]
   },
   "level4": {
@@ -560,7 +560,7 @@ const levelDialogues = {
   },
   "level10": {
     "Archivist": [
-      { "text": "I’m pulling the logs for HQ. There’s a spike in activity at 03:14." }
+      { "text": "I'm pulling the logs for HQ. There's a spike in activity at 03:14." }
     ],
     "Reception_Bot": [
       { "text": "Welcome, Agent. HQ security protocols are at maximum alert." }
@@ -580,7 +580,7 @@ function defineBranchingDialogues() {
       hint: "The fate of digital society is in your hands."
     },
     "briefing": {
-      text: "Our adversary is PH4NT0M, a rogue collective with global reach. They’re orchestrating an operation called 'Silent Strings.' Your job is to investigate, contain, and trace them back to their source.",
+      text: "Our adversary is PH4NT0M, a rogue collective with global reach. They're orchestrating an operation called 'Silent Strings.' Your job is to investigate, contain, and trace them back to their source.",
       options: ["Begin Investigation", "Ask About PH4NT0M", "Ask About Silent Strings", "Back to Main Menu"],
       next: ["level1_intro", "about_ph4nt0m", "about_silentstrings", "intro"],
       hint: "Gather intel before you deploy."
@@ -636,13 +636,11 @@ function defineBranchingDialogues() {
       options: ["Continue"],
       next: ["level2_intro"]
     },
-    // ...add similar for each level...
     "level2_intro": {
       text: "Mission 2: News outlet website has been defaced. All headlines replaced by 'PH4NT0M WAS HERE'.",
       options: ["Audit Website Code", "Interview Web Team"],
       next: ["level2_code", "level2_team"]
     },
-    // ...repeat structure for all levels...
     "level10_intro": {
       text: "Final Mission: GHOSTLINE has infiltrated SECTOR-9 HQ. Confront them in cyberspace.",
       options: ["Enter Cyberspace", "Set Digital Trap"],
@@ -672,6 +670,11 @@ function defineBranchingDialogues() {
       text: "GHOSTLINE escapes. The world faces a digital dark age... for now.",
       options: ["Play Again"],
       next: ["intro"]
+    },
+    "exit": {
+      text: "Interview concluded. Returning to investigation menu.",
+      options: ["Back to Interviews"],
+      next: ["__SHOW_INTERVIEW_MENU__"]
     }
   };
 }

@@ -18,9 +18,19 @@ function setBackgroundImage() {
         'company': 'company',
         'global': 'hq'
     };
-    const actual = map[locKey] || 'hq';
-    const url = `/static/images/backgrounds/${actual}.png`;
-    bgDiv.style.backgroundImage = `url('${url}')`;
+    const bgName = map[locKey] || 'hq';
+    const imageUrl = `/static/backgrounds/${bgName}.jpg`;
+    // Preload image and fallback if missing
+    const img = new window.Image();
+    img.onload = function() {
+        bgDiv.style.backgroundImage = `url('${imageUrl}')`;
+        bgDiv.style.backgroundColor = '';
+    };
+    img.onerror = function() {
+        bgDiv.style.backgroundImage = 'none';
+        bgDiv.style.backgroundColor = '#222'; // fallback color
+    };
+    img.src = imageUrl;
 }
 
 // --- Menu & Modal Logic ---
@@ -163,6 +173,10 @@ function showDialogueLine() {
             btn.className = 'choice-btn';
             btn.textContent = c.text;
             btn.onclick = () => {
+                if (c.next === '__SHOW_INTERVIEW_MENU__') {
+                    showInterviewMenu();
+                    return;
+                }
                 if (typeof c.next !== 'undefined') {
                     currentDialogue = c.next;
                     showDialogueLine();
@@ -249,7 +263,7 @@ function typeText(txt, el) {
 }
 
 // --- NPC Portrait Rendering (using game.js logic) ---
-const AVATAR_SIZE = 64;
+const AVATAR_SIZE = 128;
 let investigationSpriteData = null;
 let investigationNpcAvatars = {};
 
@@ -416,5 +430,5 @@ document.addEventListener('DOMContentLoaded', () => {
     setBackgroundImage();
     setupMenuAndModals();
     setNpcPortrait();
-    resetDialogue();
+    showInvestigationIntro();
 });
