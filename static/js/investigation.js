@@ -214,6 +214,42 @@ function setupEvents() {
 
   const continueEl = document.getElementById('dialogue-continue');
   if (continueEl) continueEl.onclick = () => continueEl.classList.add('hidden');
+
+  // Setup Help and Hint button functionality
+  const helpBtn = document.getElementById('help-btn');
+  const helpModal = document.getElementById('help-modal');
+  const helpClose = document.getElementById('help-close');
+  const hintBtn = document.getElementById('hint-btn');
+  const hintBox = document.getElementById('hint-box');
+
+  if (helpBtn && helpModal) {
+    helpBtn.addEventListener('click', () => {
+      helpModal.classList.add('active');
+      helpModal.style.display = 'flex';
+    });
+  }
+
+  if (helpClose && helpModal) {
+    helpClose.addEventListener('click', () => {
+      helpModal.classList.remove('active');
+      helpModal.style.display = 'none';
+    });
+  }
+
+  if (helpModal) {
+    helpModal.addEventListener('click', (e) => {
+      if (e.target === helpModal) {
+        helpModal.classList.remove('active');
+        helpModal.style.display = 'none';
+      }
+    });
+  }
+
+  if (hintBtn && hintBox) {
+    hintBtn.addEventListener('click', () => {
+      showHint();
+    });
+  }
 }
 
 function addToolEvent(id, handler) {
@@ -410,7 +446,43 @@ function setActiveSpeaker(isPlayer) {
   }
 }
 
+// -------------------- HINT SYSTEM --------------------
+function showHint() {
+  const hintBox = document.getElementById('hint-box');
+  if (!hintBox) return;
+
+  const bg = document.querySelector('.location-background');
+  const missionLocation = bg ? bg.dataset.location : 'hq';
+  
+  const hints = {
+    'hq': 'Try using the hamburger menu to access investigation tools. Start with interviewing contacts or scanning for evidence.',
+    'news': 'Look for signs of website defacement and check for malicious JavaScript injections.',
+    'bank': 'Focus on finding the ransomware sample and identifying the phishing email that started the attack.',
+    'cafe': 'Examine the network logs and look for suspicious connections or unauthorized access.',
+    'transport': 'Check for signs of malware persistence and examine scheduled tasks.',
+    'school': 'Look for signs of data exfiltration and unauthorized database access.',
+    'government': 'Examine system files for backdoors and check for privilege escalation.',
+    'hospital': 'Focus on patient data security and check for unauthorized access to medical records.',
+    'company': 'Look for signs of insider threats and examine employee access logs.',
+    'global': 'Coordinate with other agents and analyze patterns across multiple locations.'
+  };
+
+  const hintText = hints[missionLocation] || hints['hq'];
+  hintBox.textContent = hintText;
+  hintBox.style.display = 'block';
+  hintBox.style.opacity = '1';
+
+  // Hide hint after 5 seconds
+  setTimeout(() => {
+    hintBox.style.opacity = '0';
+    setTimeout(() => {
+      hintBox.style.display = 'none';
+    }, 300);
+  }, 5000);
+}
+
 // Make functions globally accessible for onclick handlers
 window.runScan = runScan;
 window.runAnalysis = runAnalysis;
-window.saveNotes = saveNotes; 
+window.saveNotes = saveNotes;
+window.showHint = showHint; 

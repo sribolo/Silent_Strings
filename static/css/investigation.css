@@ -366,6 +366,33 @@
         font-size: 0.8rem;
         padding: 8px 15px;
     }
+    
+    #hint-btn {
+        right: 80px;
+        font-size: 0.8rem;
+        padding: 6px 12px;
+        min-width: 50px;
+    }
+    
+    #help-btn {
+        right: 15px;
+        font-size: 0.8rem;
+        padding: 6px 12px;
+        min-width: 50px;
+    }
+    
+    #hint-box {
+        max-width: 300px;
+        padding: 10px 15px;
+        font-size: 0.9rem;
+        top: -60px;
+    }
+    
+    #help-modal .modal-inner {
+        margin: 50px 20px;
+        padding: 20px 25px;
+        max-width: none;
+    }
 }
 
 .bubble-avatars {
@@ -409,9 +436,11 @@
     position: relative;
     margin-bottom: 16px;
     width: 100%;
-    display: flex;
     flex-direction: column;
     align-items: center;
+}
+#advanced-dialogue-ui.active {
+    display: flex;
 }
 #dialoguePortrait {
     display: none;
@@ -437,20 +466,27 @@
 /* Hint/Help UI */
 #hint-box {
     position: absolute;
-    top: -48px;
+    top: -68px;
     left: 50%;
     transform: translateX(-50%);
-    background: #23232b;
+    background: rgba(35, 35, 43, 0.95);
     color: #A499FF;
-    padding: 10px 18px;
+    padding: 12px 20px;
     border-radius: 8px;
+    border: 1px solid #6C5CE7;
     z-index: 3000;
     font-family: 'Share Tech Mono', monospace;
+    max-width: 400px;
+    text-align: center;
+    display: none;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    backdrop-filter: blur(5px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
 }
 #hint-btn, #help-btn {
     position: absolute;
     top: 16px;
-    right: 24px;
     z-index: 3001;
     min-width: 60px;
     font-size: 1rem;
@@ -463,6 +499,9 @@
     transition: background 0.2s;
 }
 #hint-btn {
+    right: 94px; /* Position hint button to the left of help button */
+}
+#help-btn {
     right: 24px;
 }
 
@@ -481,6 +520,9 @@
     z-index: 4000;
     align-items: center;
     justify-content: center;
+}
+#help-modal.active {
+    display: flex;
 }
 #help-modal .modal-inner {
     background: #23232b;
