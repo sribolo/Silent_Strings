@@ -871,114 +871,581 @@ window.missionDialogues = {
 
 
 defineBranchingDialogues();
-
 function defineBranchingDialogues() {
   window.dialogues = {
-    "intro": {
-      text: "Welcome to SECTOR-9, Agent. Anomalous activity has been detected across critical systems. Do you accept the mission?",
-      options: ["Accept Mission", "Request Briefing", "Log Out"],
-      next: ["briefing", "briefing", "exit"],
-      hint: "The fate of digital society is in your hands."
+
+    // === LEVEL 1: SECTOR-9 HQ BREACH ===
+    "investigation_intro": {
+      text: "Sector-9 HQ breach: Use interviews, scanning, and analysis to uncover the attack. Every choice matters.",
+      options: ["Begin with Interviews", "Run Evidence Scan", "Analyze Digital Clues", "Check Objectives"],
+      next: ["interview_menu", "scan_menu", "analyze_menu", "objectives_view"]
     },
-    "briefing": {
-      text: "Our adversary is PH4NT0M, a rogue collective with global reach. They're orchestrating an operation called 'Silent Strings.' Your job is to investigate, contain, and trace them back to their source.",
-      options: ["Begin Investigation", "Ask About PH4NT0M", "Ask About Silent Strings", "Back to Main Menu"],
-      next: ["level1_intro", "about_ph4nt0m", "about_silentstrings", "intro"],
-      hint: "Gather intel before you deploy."
+    // Interview Menu
+    "interview_menu": {
+      text: "Who do you want to talk to?",
+      options: [
+        "Marcus Chen – IT Analyst",
+        "Sarah Wilson – Security Guard",
+        "Janitor Carlos",
+        "Receptionist Mia",
+        "Back to Investigation"
+      ],
+      next: [
+        "interview_marcus", "interview_sarah", "interview_janitor", "interview_receptionist", "investigation_intro"
+      ]
     },
-    "about_ph4nt0m": {
-      text: "PH4NT0M specializes in zero-day attacks, phishing, and supply chain exploits. Their leader, GHOSTLINE, is a master at evasion and digital misdirection.",
-      options: ["Back to Briefing"],
-      next: ["briefing"]
+    "interview_marcus": {
+      text: "Marcus: 'You're the new lead? I haven't slept. There were weird logins at 2AM, then deleted logs. If you can scan for lost entries, we’ll finally know.'",
+      options: [
+        "Ask about the suspicious login",
+        "Use Evidence Scanner on logs",
+        "Back to Interview Menu"
+      ],
+      next: ["marcus_suspicious", "scan_logs", "interview_menu"]
     },
-    "about_silentstrings": {
-      text: "Silent Strings is a complex malware campaign designed to disrupt infrastructure and undermine trust in critical systems. Stopping it is our top priority.",
-      options: ["Back to Briefing"],
-      next: ["briefing"]
+    "marcus_suspicious": {
+      text: "Marcus: '2:03AM admin login, nobody scheduled. Logs wiped after. If you recover them, let me know.'",
+      options: [
+        "Use Evidence Scanner on logs",
+        "Make a note",
+        "Back to Marcus"
+      ],
+      next: ["scan_logs", "open_notes_marcus", "interview_marcus"]
     },
-    "level1_intro": {
-      text: "Mission 1: SECTOR-9 HQ has been breached. Initial logs point to a possible phishing attack and a suspicious USB device left at the entrance.",
-      options: ["Investigate Logs", "Interview Security", "Check Physical Evidence"],
-      next: ["level1_logs", "level1_security", "level1_usb"],
-      hint: "Follow the trail to contain the breach."
+    "scan_logs": {
+      text: "Scanner recovers deleted log: 2:03AM admin login, IP 185.56.12.99. Objective complete.",
+      options: ["Analyze clues", "Interview Security", "Back to Investigation"],
+      next: ["analyze_menu", "interview_sarah", "investigation_intro"],
+      action: () => window.markObjectiveComplete(3)
     },
-    "level1_logs": {
-      text: "You find a pattern of remote logins at 2AM from an unrecognized IP.",
-      options: ["Trace IP", "Check Email Alerts"],
-      next: ["level1_traceip", "level1_email"]
+    "open_notes_marcus": {
+      text: "Note: Marcus reports 2AM admin login, logs deleted. Need to recover entries.",
+      options: ["Back to Marcus"],
+      next: ["interview_marcus"]
     },
-    "level1_security": {
-      text: "Security reports a USB drive left at the reception and a delivery guy acting odd.",
-      options: ["Examine USB", "Interview Delivery Guy"],
-      next: ["level1_usb", "level1_delivery"]
+    "interview_sarah": {
+      text: "Sarah: 'Found a USB in the lift, generator rebooted at 2AM. If you want, analyze the USB.'",
+      options: [
+        "Ask about generator",
+        "Analyze USB",
+        "Back to Interview Menu"
+      ],
+      next: ["sarah_generator", "analyze_usb", "interview_menu"]
     },
-    "level1_usb": {
-      text: "The USB contains a file named 'notavirus.exe'.",
-      options: ["Run File", "Quarantine Device"],
-      next: ["level1_runfile", "level1_quarantine"]
+    "sarah_generator": {
+      text: "Sarah: 'Whole lobby flickered. Thought it was a test, but now I'm not sure.'",
+      options: ["Back to Sarah"],
+      next: ["interview_sarah"]
     },
-    "level1_traceip": {
-      text: "The IP traces back to a VPN exit node. The trail goes cold.",
-      options: ["Report to HQ", "Investigate Further"],
-      next: ["level1_report", "level1_logs"]
+    "analyze_usb": {
+      text: "Malware found: credential-stealer, time-stamped 2:01AM. Objective complete.",
+      options: [
+        "Warn Marcus",
+        "Add to Notes",
+        "Back to Investigation"
+      ],
+      next: ["warn_marcus", "open_notes_usb", "investigation_intro"],
+      action: () => window.markObjectiveComplete(2)
     },
-    "level1_email": {
-      text: "A phishing email about 'Free Crypto' was sent to all staff.",
-      options: ["Warn Staff", "Delete Email"],
-      next: ["level1_warnstaff", "level1_deleteemail"]
+    "warn_marcus": {
+      text: "Marcus: 'Resetting admin passwords. Thanks for the catch.' Objective complete.",
+      options: ["Back to Interview Menu"],
+      next: ["interview_menu"],
+      action: () => window.markObjectiveComplete(4)
     },
-    "level1_warnstaff": {
-      text: "You warn the staff and stop the spread. HQ commends your quick response.",
-      options: ["Continue"],
-      next: ["level2_intro"]
+    "open_notes_usb": {
+      text: "Note: Sarah's USB had credential-stealer malware. Linked to 2AM breach.",
+      options: ["Back to Investigation"],
+      next: ["investigation_intro"]
     },
-    "level1_quarantine": {
-      text: "You quarantine the USB. Forensics finds malware designed to steal credentials.",
-      options: ["Continue"],
-      next: ["level2_intro"]
+    "interview_janitor": {
+      text: "Carlos: 'Saw a hoodie by the server room after midnight. Could be nothing.'",
+      options: ["Back to Interview Menu"],
+      next: ["interview_menu"]
     },
-    "level2_intro": {
-      text: "Mission 2: News outlet website has been defaced. All headlines replaced by 'PH4NT0M WAS HERE'.",
-      options: ["Audit Website Code", "Interview Web Team"],
-      next: ["level2_code", "level2_team"]
+    "interview_receptionist": {
+      text: "Mia: 'Security hated that generator reboot. USBs everywhere lately.'",
+      options: ["Back to Interview Menu"],
+      next: ["interview_menu"]
     },
-    "level10_intro": {
-      text: "Final Mission: GHOSTLINE has infiltrated SECTOR-9 HQ. Confront them in cyberspace.",
-      options: ["Enter Cyberspace", "Set Digital Trap"],
-      next: ["level10_confront", "level10_trap"]
+    "scan_menu": {
+      text: "What do you want to scan?",
+      options: ["Scan server logs", "Scan USB", "Back to Investigation"],
+      next: ["scan_logs", "analyze_usb", "investigation_intro"]
     },
-    "level10_confront": {
-      text: "You face GHOSTLINE. They offer you a choice: preserve the old system, or join their vision for a new world.",
-      options: ["Defend the System", "Join GHOSTLINE"],
-      next: ["ending_good", "ending_rogue"]
+    "analyze_menu": {
+      text: "What do you want to analyze?",
+      options: ["Analyze log fragment", "Analyze USB", "Back to Investigation"],
+      next: ["analyze_log_fragment", "analyze_usb", "investigation_intro"]
     },
-    "level10_trap": {
-      text: "You set a digital snare. GHOSTLINE nearly escapes but you have one shot to finish it.",
-      options: ["Spring the Trap", "Wait"],
-      next: ["ending_good", "ending_fail"]
+    "analyze_log_fragment": {
+      text: "Analysis: Remote login from masked VPN node, attacker started at network hub. Objective complete.",
+      options: ["Back to Investigation"],
+      next: ["investigation_intro"],
+      action: () => window.markObjectiveComplete(0)
     },
-    "ending_good": {
-      text: "You defeated GHOSTLINE and secured global digital trust. The world owes you a debt.",
-      options: ["Play Again"],
-      next: ["intro"]
+    "objectives_view": {
+      text: "Objectives:\n- Identify the initial breach point\n- Analyze suspicious login attempts\n- Trace the attacker's IP address\n- Recover deleted system logs\n- Secure the compromised accounts",
+      options: ["Back to Investigation"],
+      next: ["investigation_intro"]
     },
-    "ending_rogue": {
-      text: "You sided with GHOSTLINE. Together, you reshape digital society—at a heavy cost.",
-      options: ["Play Again"],
-      next: ["intro"]
+
+    // === LEVEL 2: NEWS WEBSITE DEFACEMENT ===
+    "investigation2_intro": {
+      text: "Mission 2: News outlet's website has been defaced. All headlines replaced with 'PH4NT0M WAS HERE'.",
+      options: ["Interview Web Team", "Audit Website Code", "Scan for Malicious Scripts", "Objectives"],
+      next: ["interview2_menu", "audit2_code", "scan2_scripts", "objectives2_view"]
     },
-    "ending_fail": {
-      text: "GHOSTLINE escapes. The world faces a digital dark age... for now.",
-      options: ["Play Again"],
-      next: ["intro"]
+    "interview2_menu": {
+      text: "Who do you want to interview?",
+      options: [
+        "Emma Rodriguez – Web Editor",
+        "David Kim – IT Support",
+        "Intern Billy",
+        "Back to Investigation"
+      ],
+      next: ["interview2_emma", "interview2_david", "interview2_intern", "investigation2_intro"]
     },
-    "exit": {
-      text: "Interview concluded. Returning to investigation menu.",
-      options: ["Back to Interviews"],
-      next: ["__SHOW_INTERVIEW_MENU__"]
+    "interview2_emma": {
+      text: "Emma: '6AM I found every headline was hacked. I’m not a coder! Maybe check the ticker script?'",
+      options: [
+        "Ask about suspicious emails",
+        "Audit Ticker Script",
+        "Back to Interview Menu"
+      ],
+      next: ["emma2_email", "audit2_code", "interview2_menu"]
+    },
+    "emma2_email": {
+      text: "Emma: 'Everyone got a fake IT password reset. Billy clicked it. His browser’s a popup circus now.'",
+      options: ["Back to Emma"],
+      next: ["interview2_emma"]
+    },
+    "audit2_code": {
+      text: "You find an injected XSS payload in the news ticker. Objective complete.",
+      options: [
+        "Interview IT Support",
+        "Back to Investigation"
+      ],
+      next: ["interview2_david", "investigation2_intro"],
+      action: () => window.markObjectiveComplete(1)
+    },
+    "interview2_david": {
+      text: "David: 'Defacement came through a plugin vulnerability. Patch was postponed! Classic.'",
+      options: [
+        "Scan for Malicious Scripts",
+        "Back to Interview Menu"
+      ],
+      next: ["scan2_scripts", "interview2_menu"]
+    },
+    "scan2_scripts": {
+      text: "Malicious JavaScript found and removed. Headlines restored. Objective complete.",
+      options: [
+        "Interview Intern",
+        "Back to Investigation"
+      ],
+      next: ["interview2_intern", "investigation2_intro"],
+      action: () => window.markObjectiveComplete(0)
+    },
+    "interview2_intern": {
+      text: "Billy: 'I thought the password email was real. Next time, I’ll ask first... Maybe.'",
+      options: ["Back to Interview Menu"],
+      next: ["interview2_menu"]
+    },
+    "objectives2_view": {
+      text: "Objectives:\n- Remove malicious headline script\n- Analyze XSS payload\n- Trace phishing email source\n- Patch CMS vulnerability",
+      options: ["Back to Investigation"],
+      next: ["investigation2_intro"]
+    },
+
+    // === LEVEL 3: BANK RANSOMWARE ===
+    "investigation3_intro": {
+      text: "Mission 3: The bank's network has been locked down by ransomware.",
+      options: ["Interview Staff", "Recover Malware Sample", "Analyze Network Spread", "Objectives"],
+      next: ["interview3_menu", "recover3_sample", "analyze3_spread", "objectives3_view"]
+    },
+    "interview3_menu": {
+      text: "Who do you want to interview?",
+      options: [
+        "Jennifer Park – Teller",
+        "Rajesh Singh – IT",
+        "Bank Guard",
+        "Back to Investigation"
+      ],
+      next: ["interview3_jennifer", "interview3_rajesh", "interview3_guard", "investigation3_intro"]
+    },
+    "interview3_jennifer": {
+      text: "Jennifer: 'I got an urgent HR email, opened a PDF, then everything froze.'",
+      options: [
+        "Ask for email and attachment",
+        "Warn other tellers",
+        "Back to Interview Menu"
+      ],
+      next: ["get3_email", "warn3_tellers", "interview3_menu"]
+    },
+    "get3_email": {
+      text: "You collect the phishing email and malicious PDF. Objective complete.",
+      options: ["Back to Jennifer"],
+      next: ["interview3_jennifer"],
+      action: () => window.markObjectiveComplete(1)
+    },
+    "warn3_tellers": {
+      text: "Other tellers warned. Only Jennifer opened it. Potential patient zero identified. Objective complete.",
+      options: ["Back to Interview Menu"],
+      next: ["interview3_menu"],
+      action: () => window.markObjectiveComplete(0)
+    },
+    "interview3_rajesh": {
+      text: "Rajesh: 'Malware sample is on the shared drive. Network map shows how it spread.'",
+      options: [
+        "Recover Malware Sample",
+        "Analyze Network Spread",
+        "Back to Interview Menu"
+      ],
+      next: ["recover3_sample", "analyze3_spread", "interview3_menu"]
+    },
+    "recover3_sample": {
+      text: "You isolate and recover the ransomware sample. Objective complete.",
+      options: ["Back to Investigation"],
+      next: ["investigation3_intro"],
+      action: () => window.markObjectiveComplete(2)
+    },
+    "analyze3_spread": {
+      text: "You map the lateral movement: spread via SMB after initial compromise. Objective complete.",
+      options: ["Back to Investigation"],
+      next: ["investigation3_intro"],
+      action: () => window.markObjectiveComplete(3)
+    },
+    "interview3_guard": {
+      text: "Bank Guard: 'Jennifer looked shaken after reading that email. You think it’s related?'",
+      options: ["Back to Interview Menu"],
+      next: ["interview3_menu"]
+    },
+    "objectives3_view": {
+      text: "Objectives:\n- Identify patient zero\n- Analyze phishing email\n- Recover ransomware sample\n- Trace network spread\n- Restore banking services",
+      options: ["Back to Investigation"],
+      next: ["investigation3_intro"]
+    },
+
+    // === LEVEL 4: REPO COMPROMISED ===
+    "investigation4_intro": {
+      text: "Mission 4: Source code repo compromised. Malicious commit added a backdoor.",
+      options: ["Audit Recent Commits", "Interview Dev Team", "Revert Malicious Commit", "Objectives"],
+      next: ["audit4_commits", "interview4_menu", "revert4_commit", "objectives4_view"]
+    },
+    "audit4_commits": {
+      text: "You find a suspicious commit: 'Backdoor for testing.' Objective complete.",
+      options: ["Revert Commit", "Interview Dev Team"],
+      next: ["revert4_commit", "interview4_menu"],
+      action: () => window.markObjectiveComplete(0)
+    },
+    "interview4_menu": {
+      text: "Who do you want to interview?",
+      options: [
+        "Chloe Tan – DevOps Engineer",
+        "Tom Lin – Junior Developer",
+        "Senior Dev Priya",
+        "Back to Investigation"
+      ],
+      next: ["interview4_chloe", "interview4_tom", "interview4_priya", "investigation4_intro"]
+    },
+    "interview4_chloe": {
+      text: "Chloe: 'Malicious commit skipped review, Tom’s token was reused.'",
+      options: [
+        "Audit Pipeline Warnings",
+        "Back to Interview Menu"
+      ],
+      next: ["audit4_pipeline", "interview4_menu"]
+    },
+    "audit4_pipeline": {
+      text: "Pipeline logs show one dev's token reused across multiple systems. Objective complete.",
+      options: ["Back to Investigation"],
+      next: ["investigation4_intro"],
+      action: () => window.markObjectiveComplete(1)
+    },
+    "interview4_tom": {
+      text: "Tom: 'I reused my password, okay? Changed everything now.'",
+      options: [
+        "Back to Interview Menu"
+      ],
+      next: ["interview4_menu"],
+      action: () => window.markObjectiveComplete(2)
+    },
+    "interview4_priya": {
+      text: "Priya: 'Told you all to use 2FA. Now buy us lunch.'",
+      options: ["Back to Interview Menu"],
+      next: ["interview4_menu"]
+    },
+    "revert4_commit": {
+      text: "You revert the malicious commit. Objective complete.",
+      options: ["Back to Investigation"],
+      next: ["investigation4_intro"],
+      action: () => window.markObjectiveComplete(3)
+    },
+    "objectives4_view": {
+      text: "Objectives:\n- Audit recent repo commits\n- Investigate pipeline warnings\n- Identify compromised developer account\n- Revert malicious commit",
+      options: ["Back to Investigation"],
+      next: ["investigation4_intro"]
+    },
+
+    // === LEVEL 5: GOVERNMENT SYSTEM BACKDOOR ===
+    "investigation5_intro": {
+      text: "Mission 5: Government server infected. Persistent backdoor detected.",
+      options: ["Interview Sysadmin", "Analyze Backdoor File", "Recover Deleted DB Records", "Objectives"],
+      next: ["interview5_sysadmin", "analyze5_backdoor", "recover5_db", "objectives5_view"]
+    },
+    "interview5_sysadmin": {
+      text: "Maria: 'Found a scheduled task—totally_safe.exe. Not mine.'",
+      options: [
+        "Analyze Backdoor File",
+        "Back to Investigation"
+      ],
+      next: ["analyze5_backdoor", "investigation5_intro"]
+    },
+    "analyze5_backdoor": {
+      text: "Analysis: Backdoor connects to random IP hourly. Quarantined and dumped binary. Objective complete.",
+      options: ["Back to Investigation"],
+      next: ["investigation5_intro"],
+      action: () => window.markObjectiveComplete(0)
+    },
+    "recover5_db": {
+      text: "You roll back to last night's DB restore point. Missing records mostly recovered. Objective complete.",
+      options: ["Back to Investigation"],
+      next: ["investigation5_intro"],
+      action: () => window.markObjectiveComplete(1)
+    },
+    "objectives5_view": {
+      text: "Objectives:\n- Analyze persistent malware\n- Recover deleted database records\n- Analyze unauthorized scheduled tasks",
+      options: ["Back to Investigation"],
+      next: ["investigation5_intro"]
+    },
+
+    // === LEVEL 6: POWER GRID BREACH ===
+    "investigation6_intro": {
+      text: "Mission 6: Power grid attack. Rogue USB found in SCADA system.",
+      options: ["Interview Grid Operator", "Scan USB Device", "Review Remote Access Logs", "Objectives"],
+      next: ["interview6_operator", "scan6_usb", "review6_logs", "objectives6_view"]
+    },
+    "interview6_operator": {
+      text: "Rachel: 'USB was plugged in at 3AM. Firmware looks different today.'",
+      options: [
+        "Scan USB Device",
+        "Analyze Firmware Diffs",
+        "Back to Investigation"
+      ],
+      next: ["scan6_usb", "analyze6_firmware", "investigation6_intro"]
+    },
+    "scan6_usb": {
+      text: "You find a rogue executable. Objective complete.",
+      options: ["Back to Investigation"],
+      next: ["investigation6_intro"],
+      action: () => window.markObjectiveComplete(0)
+    },
+    "analyze6_firmware": {
+      text: "Firmware diff: unauthorized code inserted overnight. Objective complete.",
+      options: ["Back to Investigation"],
+      next: ["investigation6_intro"],
+      action: () => window.markObjectiveComplete(1)
+    },
+    "review6_logs": {
+      text: "Remote admin connection logged at 3AM. Not an authorized user. Objective complete.",
+      options: ["Back to Investigation"],
+      next: ["investigation6_intro"],
+      action: () => window.markObjectiveComplete(2)
+    },
+    "objectives6_view": {
+      text: "Objectives:\n- Find rogue USB device\n- Analyze firmware changes\n- Review remote access logs",
+      options: ["Back to Investigation"],
+      next: ["investigation6_intro"]
+    },
+
+    // === LEVEL 7: INSIDER THREAT ===
+    "investigation7_intro": {
+      text: "Mission 7: Possible insider threat. Suspicious access and locker clue found.",
+      options: ["Interview Suspect", "Interview HR", "Analyze Process Hash", "Objectives"],
+      next: ["interview7_suspect", "interview7_hr", "analyze7_hash", "objectives7_view"]
+    },
+    "interview7_suspect": {
+      text: "Anita: 'My credentials were used, but it wasn't me!'",
+      options: [
+        "Check Access Logs",
+        "Check Locker for Clue",
+        "Back to Investigation"
+      ],
+      next: ["check7_logs", "check7_locker", "investigation7_intro"]
+    },
+    "check7_logs": {
+      text: "Access logs show suspicious logins at 2:30AM. Objective complete.",
+      options: ["Back to Investigation"],
+      next: ["investigation7_intro"],
+      action: () => window.markObjectiveComplete(0)
+    },
+    "check7_locker": {
+      text: "Encrypted note found in Anita's locker. Objective complete.",
+      options: ["Back to Investigation"],
+      next: ["investigation7_intro"],
+      action: () => window.markObjectiveComplete(1)
+    },
+    "interview7_hr": {
+      text: "Henry: 'Two staff requested leave right after the breach. Kim mentioned a \"clean exit\".'",
+      options: [
+        "Back to Investigation"
+      ],
+      next: ["investigation7_intro"],
+      action: () => window.markObjectiveComplete(3)
+    },
+    "analyze7_hash": {
+      text: "Process hash matches known malware. Objective complete.",
+      options: ["Back to Investigation"],
+      next: ["investigation7_intro"],
+      action: () => window.markObjectiveComplete(2)
+    },
+    "objectives7_view": {
+      text: "Objectives:\n- Analyze credential access logs\n- Investigate locker clue\n- Analyze process hash\n- Interview HR about leave requests",
+      options: ["Back to Investigation"],
+      next: ["investigation7_intro"]
+    },
+
+    // === LEVEL 8: DARK WEB TRACKING ===
+    "investigation8_intro": {
+      text: "Mission 8: Dark web activity detected. Track PH4NT0M's forum post.",
+      options: ["Contact Informant", "Trace Aliases", "Decrypt Auction Data", "Objectives"],
+      next: ["contact8_informant", "trace8_aliases", "decrypt8_auction", "objectives8_view"]
+    },
+    "contact8_informant": {
+      text: "Cipher: 'Here’s PH4NT0M’s encrypted forum post.'",
+      options: [
+        "Decrypt Forum Post",
+        "Back to Investigation"
+      ],
+      next: ["decrypt8_post", "investigation8_intro"]
+    },
+    "decrypt8_post": {
+      text: "Forum post decrypted. Clue obtained. Objective complete.",
+      options: ["Back to Investigation"],
+      next: ["investigation8_intro"],
+      action: () => window.markObjectiveComplete(0)
+    },
+    "trace8_aliases": {
+      text: "Analyzing alias logs... Ghostline’s pattern matches found. Objective complete.",
+      options: ["Back to Investigation"],
+      next: ["investigation8_intro"],
+      action: () => window.markObjectiveComplete(1)
+    },
+    "decrypt8_auction": {
+      text: "Auction data decrypted. Zero-days for sale. Objective complete.",
+      options: ["Back to Investigation"],
+      next: ["investigation8_intro"],
+      action: () => window.markObjectiveComplete(2)
+    },
+    "objectives8_view": {
+      text: "Objectives:\n- Find PH4NT0M's forum post\n- Trace Ghostline's aliases\n- Decrypt auction data",
+      options: ["Back to Investigation"],
+      next: ["investigation8_intro"]
+    },
+
+    // === LEVEL 9: TRANSIT SYSTEM HACK ===
+    "investigation9_intro": {
+      text: "Mission 9: City transit system hacked. Trains halted and DDoS detected.",
+      options: ["Interview Supervisor", "Restore Control Center", "Analyze DDoS Log", "Objectives"],
+      next: ["interview9_supervisor", "restore9_control", "analyze9_ddos", "objectives9_view"]
+    },
+    "interview9_supervisor": {
+      text: "Lina: 'Everything crashed at 7:32AM. Find the rogue WiFi config?'",
+      options: [
+        "Patch Exploited Service",
+        "Remove Rogue WiFi Config",
+        "Back to Investigation"
+      ],
+      next: ["patch9_service", "remove9_wifi", "investigation9_intro"]
+    },
+    "restore9_control": {
+      text: "Control center systems restored. Trains running again. Objective complete.",
+      options: ["Back to Investigation"],
+      next: ["investigation9_intro"],
+      action: () => window.markObjectiveComplete(0)
+    },
+    "analyze9_ddos": {
+      text: "DDoS log analyzed. Attack origin narrowed down. Objective complete.",
+      options: ["Back to Investigation"],
+      next: ["investigation9_intro"],
+      action: () => window.markObjectiveComplete(1)
+    },
+    "patch9_service": {
+      text: "Ticket service buffer overflow patched. Objective complete.",
+      options: ["Back to Investigation"],
+      next: ["investigation9_intro"],
+      action: () => window.markObjectiveComplete(2)
+    },
+    "remove9_wifi": {
+      text: "Rogue WiFi config removed. Objective complete.",
+      options: ["Back to Investigation"],
+      next: ["investigation9_intro"],
+      action: () => window.markObjectiveComplete(3)
+    },
+    "objectives9_view": {
+      text: "Objectives:\n- Restore control center\n- Analyze DDoS log\n- Patch exploited service\n- Remove rogue WiFi config",
+      options: ["Back to Investigation"],
+      next: ["investigation9_intro"]
+    },
+
+    // === LEVEL 10: FINAL SHOWDOWN ===
+    "investigation10_intro": {
+      text: "Final Mission: Disarm the Silent Strings protocol and face GHOSTLINE.",
+      options: ["Disarm Protocol", "Trace Worm Propagation", "Decrypt Final Message", "Objectives"],
+      next: ["disarm10_protocol", "trace10_worm", "decrypt10_message", "objectives10_view"]
+    },
+    "disarm10_protocol": {
+      text: "You disarm the Silent Strings protocol. World systems stabilize. Objective complete.",
+      options: ["Back to Investigation"],
+      next: ["investigation10_intro"],
+      action: () => window.markObjectiveComplete(0)
+    },
+    "trace10_worm": {
+      text: "You trace worm propagation worldwide and neutralize hotspots. Objective complete.",
+      options: ["Back to Investigation"],
+      next: ["investigation10_intro"],
+      action: () => window.markObjectiveComplete(1)
+    },
+    "decrypt10_message": {
+      text: "You decrypt Ghostline’s final message: 'The strings are cut, but the music plays on.' Objective complete.",
+      options: ["Back to Investigation"],
+      next: ["investigation10_intro"],
+      action: () => window.markObjectiveComplete(2)
+    },
+    "objectives10_view": {
+      text: "Objectives:\n- Disarm Silent Strings protocol\n- Trace global worm propagation\n- Decrypt Ghostline's final message",
+      options: ["Back to Investigation"],
+      next: ["investigation10_intro"]
     }
   };
 }
+
+function showDialogueNode(key) {
+  const node = window.dialogues[key];
+  if (!node) return;
+
+  // Set main text
+  document.getElementById('dialogue-text').textContent = node.text;
+
+  // Clear old choices
+  const choicesDiv = document.getElementById('dialogue-choices');
+  choicesDiv.innerHTML = "";
+
+  // Render choice buttons
+  node.options.forEach((option, idx) => {
+    const btn = document.createElement('button');
+    btn.textContent = option;
+    btn.className = "choice-btn";
+    btn.onclick = () => {
+      // If the node has an action and THIS is the correct option, call it
+      if (typeof node.action === "function" && idx === 0) node.action();
+      // Show the next dialogue node
+      showDialogueNode(node.next[idx]);
+    };
+    choicesDiv.appendChild(btn);
+  });
+}
+
 
 // --- NPC Avatar Randomizer ---
 let npcAvatars = {};

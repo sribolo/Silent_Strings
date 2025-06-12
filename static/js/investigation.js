@@ -657,7 +657,8 @@ document.addEventListener('DOMContentLoaded', () => {
     setBackgroundImage();
     setupMenuAndModals();
     setNpcPortrait();
-    showInvestigationIntro();
+    defineBranchingDialogues();        
+    showDialogueNode('investigation_intro');
 });
 
 let lastInterviewedNpc = null;

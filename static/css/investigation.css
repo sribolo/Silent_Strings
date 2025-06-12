@@ -283,26 +283,40 @@
   pointer-events: auto;
 } 
 .objectives-panel {
-  position: fixed;
-  right: 0;
-  top: 90px;
-  width: 260px;
-  background: rgba(34, 31, 81, 0.98);
-  color: #fff;
-  padding: 20px 12px 20px 18px;
-  border-radius: 20px 0 0 20px;
-  border-left: 3px solid #a499ff;
-  box-shadow: -4px 2px 16px rgba(74,60,187,0.19);
-  z-index: 1002;
-  transform: translateX(180px);
-  transition: transform 0.3s cubic-bezier(.6,.3,.25,1.1);
-  opacity: 0.92;
+  position: absolute;
+  top: 32px;
+  left: 32px;
+  width: 310px;
+  transition: transform 0.35s cubic-bezier(.5,1.5,.5,1), opacity 0.25s;
+  transform: translateX(-250px); /* Mostly hidden, except for the edge */
+  opacity: 0.65;
+  z-index: 20;
 }
+
 .objectives-panel:hover,
 .objectives-panel:focus-within {
   transform: translateX(0);
-  box-shadow: -6px 2px 32px rgba(164, 153, 255, 0.26);
+  opacity: 1;
+  box-shadow: 0 2px 22px 4px #5a46a1a8;
 }
+
+.objectives-panel::before {
+  content: "Objectives";
+  position: absolute;
+  top: 18px;
+  right: -100px;
+  background: #241c51;
+  color: #c8adff;
+  padding: 6px 18px;
+  border-radius: 22px;
+  font-weight: bold;
+  writing-mode: vertical-lr;
+  letter-spacing: 0.1em;
+  cursor: pointer;
+  transition: background 0.2s;
+  box-shadow: 0 0 10px #261e3d69;
+}
+
 .objectives-panel h3 {
   margin-top: 0;
   font-size: 1.2rem;
