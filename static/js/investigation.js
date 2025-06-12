@@ -61,28 +61,57 @@ function getToolsForObjectives(objectives) {
   return Array.from(toolSet);
 }
 
-function setupMenuAndModals() {
+function getCompletedObjectives(levelKey) {
+    return JSON.parse(localStorage.getItem('completedObjectives_' + levelKey)) || [];
+  }
+  function setCompletedObjectives(levelKey, arr) {
+    localStorage.setItem('completedObjectives_' + levelKey, JSON.stringify(arr));
+  }  
+
+  function setupMenuAndModals() {
     const hamburger = document.getElementById('hamburger-menu');
     const dropdown = document.getElementById('dropdown-menu');
+
+    // Hamburger menu robust logic
     if (hamburger && dropdown) {
-        hamburger.addEventListener('click', e => {
+        // Hamburger toggles dropdown
+        hamburger.addEventListener('click', function(e) {
             e.stopPropagation();
             dropdown.classList.toggle('hidden');
         });
-        document.addEventListener('click', e => {
-            if (!e.target.closest('.hamburger-menu') && !e.target.closest('.dropdown-menu .menu-item')) {
+
+        // Prevent dropdown from closing when clicking inside
+        dropdown.addEventListener('click', function(e) {
+            e.stopPropagation();
+        });
+
+        // Close on outside click
+        document.addEventListener('click', function() {
+            dropdown.classList.add('hidden');
+        });
+
+        // Close on menu item click
+        const menuItems = dropdown.querySelectorAll('.menu-item');
+        menuItems.forEach(item => {
+            item.addEventListener('click', () => {
                 dropdown.classList.add('hidden');
-            }
+            });
         });
     }
+
     // Tool modals
     addToolEvent('interview-btn', startInterview);
-    addToolEvent('scan-btn', () => showToolModal('Evidence Scanner', `<button id="run-scan-btn" class="action-btn"><i class="fas fa-search"></i> Run System Scan</button><div id="scan-result" class="result-container"></div>`));
-    addToolEvent('analyze-btn', () => showToolModal('Digital Analysis', `<button id="run-analysis-btn" class="action-btn"><i class="fas fa-microscope"></i> Analyze Evidence</button><div id="analysis-result" class="result-container"></div>`));
+    addToolEvent('scan-btn', () => showToolModal('Evidence Scanner',
+        `<button id="run-scan-btn" class="action-btn"><i class="fas fa-search"></i> Run System Scan</button><div id="scan-result" class="result-container"></div>`));
+    addToolEvent('analyze-btn', () => showToolModal('Digital Analysis',
+        `<button id="run-analysis-btn" class="action-btn"><i class="fas fa-microscope"></i> Analyze Evidence</button><div id="analysis-result" class="result-container"></div>`));
     addToolEvent('notes-btn', () => {
         const notes = localStorage.getItem('investigationNotes') || '';
-        showToolModal('Mission Notes', `<textarea id="notes-text" placeholder="Record your findings..." class="notes-textarea">${notes}</textarea><button id="save-notes-btn" class="action-btn notes-save-btn"><i class="fas fa-save"></i> Save Notes</button>`);
+        showToolModal('Mission Notes',
+            `<textarea id="notes-text" placeholder="Record your findings..." class="notes-textarea">${notes}</textarea>
+            <button id="save-notes-btn" class="action-btn notes-save-btn"><i class="fas fa-save"></i> Save Notes</button>`);
     });
+
     // Show/hide tools based on objectives
     const bg = document.querySelector('.location-background');
     const loc = bg ? bg.dataset.location : 'hq';
@@ -94,21 +123,36 @@ function setupMenuAndModals() {
         const btn = document.getElementById(id);
         if (btn) btn.style.display = allowed.includes(id) ? '' : 'none';
     });
-    // Modal close
+
+    // Modal close for tool modal
     const closeModal = document.getElementById('close-modal');
     if (closeModal) closeModal.onclick = () => document.getElementById('tool-modal').classList.add('hidden');
-    // Help modal
+
+    // Help modal logic
     const helpBtn = document.getElementById('help-btn');
     const helpModal = document.getElementById('help-modal');
     const helpClose = document.getElementById('help-close');
-    if (helpBtn && helpModal) helpBtn.addEventListener('click', () => { helpModal.classList.add('active'); helpModal.style.display = 'flex'; });
-    if (helpClose && helpModal) helpClose.addEventListener('click', () => { helpModal.classList.remove('active'); helpModal.style.display = 'none'; });
-    if (helpModal) helpModal.addEventListener('click', (e) => { if (e.target === helpModal) { helpModal.classList.remove('active'); helpModal.style.display = 'none'; } });
+    if (helpBtn && helpModal) helpBtn.addEventListener('click', () => {
+        helpModal.classList.add('active');
+        helpModal.style.display = 'flex';
+    });
+    if (helpClose && helpModal) helpClose.addEventListener('click', () => {
+        helpModal.classList.remove('active');
+        helpModal.style.display = 'none';
+    });
+    if (helpModal) helpModal.addEventListener('click', (e) => {
+        if (e.target === helpModal) {
+            helpModal.classList.remove('active');
+            helpModal.style.display = 'none';
+        }
+    });
+
     // Hint modal
     const hintBtn = document.getElementById('hint-btn');
     const hintBox = document.getElementById('hint-box');
     if (hintBtn && hintBox) hintBtn.addEventListener('click', () => { showHint(); });
 }
+
 function addToolEvent(id, handler) {
     const btn = document.getElementById(id);
     const dropdown = document.getElementById('dropdown-menu');
@@ -142,6 +186,18 @@ function showToolModal(title, content) {
 
 // --- Objectives UI ---
 function markObjectiveComplete(idx) {
+    const bg = document.querySelector('.location-background');
+    const loc = bg ? bg.dataset.location : 'hq';
+    const levelKey = locationToLevel[loc] || 'level1';
+
+    // Get & update completed objectives for this level
+    let completed = getCompletedObjectives(levelKey);
+    if (!completed.includes(idx)) {
+      completed.push(idx);
+      setCompletedObjectives(levelKey, completed);
+    }
+
+    // Update the UI as before
     const list = document.getElementById('objectives-list');
     if (!list) return;
     const item = list.querySelector(`li[data-index='${idx}']`);
@@ -234,17 +290,23 @@ window.missionObjectives = {
 };
 
 function renderObjectives(levelKey) {
-  const objectives = window.missionObjectives[levelKey] || [];
-  const objectivesList = document.getElementById('objectives-list');
-  if (!objectivesList) return;
-  objectivesList.innerHTML = '';
-  objectives.forEach((obj, idx) => {
-    const li = document.createElement('li');
-    li.dataset.index = idx;
-    li.innerHTML = `<span class="objective-status">[ ]</span> ${obj}`;
-    objectivesList.appendChild(li);
-  });
-}
+    const objectives = window.missionObjectives[levelKey] || [];
+    const objectivesList = document.getElementById('objectives-list');
+    if (!objectivesList) return;
+    objectivesList.innerHTML = '';
+  
+    const completed = getCompletedObjectives(levelKey);
+  
+    objectives.forEach((obj, idx) => {
+      const li = document.createElement('li');
+      li.dataset.index = idx;
+      const isDone = completed.includes(idx);
+      li.className = isDone ? 'completed' : '';
+      li.innerHTML = `<span class="objective-status">${isDone ? '[✓]' : '[ ]'}</span> ${obj}`;
+      objectivesList.appendChild(li);
+    });
+  }
+  
 
 function showInterviewMenu() {
     const bg = document.querySelector('.location-background');

@@ -282,3 +282,62 @@
   opacity: 1;
   pointer-events: auto;
 } 
+.objectives-panel {
+  position: fixed;
+  right: 0;
+  top: 90px;
+  width: 260px;
+  background: rgba(34, 31, 81, 0.98);
+  color: #fff;
+  padding: 20px 12px 20px 18px;
+  border-radius: 20px 0 0 20px;
+  border-left: 3px solid #a499ff;
+  box-shadow: -4px 2px 16px rgba(74,60,187,0.19);
+  z-index: 1002;
+  transform: translateX(180px);
+  transition: transform 0.3s cubic-bezier(.6,.3,.25,1.1);
+  opacity: 0.92;
+}
+.objectives-panel:hover,
+.objectives-panel:focus-within {
+  transform: translateX(0);
+  box-shadow: -6px 2px 32px rgba(164, 153, 255, 0.26);
+}
+.objectives-panel h3 {
+  margin-top: 0;
+  font-size: 1.2rem;
+  color: #a499ff;
+  font-weight: bold;
+  text-shadow: 0 1px 8px #222;
+}
+.objectives-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+.objectives-list li {
+  margin: 8px 0;
+  padding-left: 2px;
+  font-size: 1rem;
+  transition: background 0.15s;
+}
+.objectives-list li.completed .objective-status {
+  color: #aaffb2;
+  font-weight: bold;
+  text-shadow: 0 1px 8px #12e2aa8c;
+}
+.objective-status {
+  display: inline-block;
+  width: 32px;
+  color: #e7e5ff;
+  font-weight: bold;
+}
+.dropdown-menu {
+  opacity: 1;
+  pointer-events: auto;
+  transition: opacity 0.22s cubic-bezier(.6,.3,.25,1.1);
+}
+.dropdown-menu.hidden {
+  opacity: 0;
+  pointer-events: none;
+}
