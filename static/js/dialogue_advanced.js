@@ -73,25 +73,41 @@ function showDialogue(levelKey, npcKey, lineIdx = 0) {
   renderLine();
 }
 
+// === Utility Function for Safe DOM Access ===
+function getEl(id) {
+  const el = document.getElementById(id);
+  if (!el) console.error(`Element with id "${id}" not found.`);
+  return el;
+}
+
 function showBranchingDialogue(key) {
   // For dialogues object (branching, not NPC)
   setBackground('default');
-  document.getElementById('dialoguePortrait').style.display = 'none';
+  const portrait = getEl('dialoguePortrait');
+  if (portrait) portrait.style.display = 'none';
   const d = dialogues[key];
-  document.getElementById('dialogueSpeaker').innerText = '';
-  document.getElementById('dialogueText').innerText = d.text;
-  const opts = document.getElementById('dialogueOptions');
-  opts.innerHTML = '';
-  d.options.forEach((opt, i) => {
-    const btn = document.createElement('button');
-    btn.className = 'choice-btn';
-    btn.innerText = opt;
-    btn.onclick = () => {
-      saveDialogueState({ branchKey: d.next[i] });
-      showBranchingDialogue(d.next[i]);
-    };
-    opts.appendChild(btn);
-  });
+  if (!d) {
+    console.error(`Dialogue key '${key}' not found in dialogues.`);
+    return;
+  }
+  const speaker = getEl('dialogueSpeaker');
+  const text = getEl('dialogueText');
+  const opts = getEl('dialogueOptions');
+  if (speaker) speaker.innerText = '';
+  if (text) text.innerText = d.text || '';
+  if (opts) opts.innerHTML = '';
+  if (Array.isArray(d.options)) {
+    d.options.forEach((opt, i) => {
+      const btn = document.createElement('button');
+      btn.className = 'choice-btn';
+      btn.innerText = opt;
+      btn.onclick = () => {
+        saveDialogueState({ branchKey: d.next[i] });
+        showBranchingDialogue(d.next[i]);
+      };
+      if (opts) opts.appendChild(btn);
+    });
+  }
 }
 
 window.addEventListener('DOMContentLoaded', () => {

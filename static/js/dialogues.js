@@ -1163,4 +1163,57 @@ function startMissionTimer() {
 
 loadDialogue(current);
 
+// === Utility Functions ===
+function getEl(id) {
+  const el = document.getElementById(id);
+  if (!el) console.error(`Element with id "${id}" not found.`);
+  return el;
+}
+
+function safeSetText(el, text) {
+  if (el) el.textContent = text;
+}
+
+function safeSetHTML(el, html) {
+  if (el) el.innerHTML = html;
+}
+
+function createChoiceButton(text, onClick) {
+  const btn = document.createElement("button");
+  btn.className = "dialogue-choice-btn";
+  btn.textContent = text;
+  btn.onclick = onClick;
+  return btn;
+}
+
+// === Refactored Dialogue Display ===
+function showDialogue(npcName, dialogueText, choices = []) {
+  const npcNameEl = getEl('npc-name');
+  const dialogueTextEl = getEl('dialogue-text');
+  const choicesContainer = getEl('dialogue-choices');
+  const continueEl = getEl('dialogue-continue');
+
+  safeSetText(npcNameEl, npcName || "Unknown");
+  safeSetText(dialogueTextEl, dialogueText || "...");
+  safeSetHTML(choicesContainer, "");
+
+  if (Array.isArray(choices) && choices.length > 0) {
+    if (continueEl) continueEl.style.display = 'none';
+    choices.forEach(choice => {
+      const btn = createChoiceButton(choice.text || "Continue", () => {
+        if (typeof choice.action === "function") choice.action();
+        if (choice.nextDialogue) {
+          showDialogue(choice.nextDialogue.npc, choice.nextDialogue.text, choice.nextDialogue.choices);
+        } else if (!choice.action) {
+          // fallback: just hide dialogue or show a message
+          safeSetText(dialogueTextEl, "End of dialogue.");
+        }
+      });
+      if (choicesContainer) choicesContainer.appendChild(btn);
+    });
+  } else {
+    if (continueEl) continueEl.style.display = '';
+  }
+}
+
 
