@@ -167,5 +167,5 @@
 <div id="mission-data" data-completed='{{ completed_json }}' data-total="{{ mission.objectives|length }}" data-location="{{ location }}" data-time="{{ mission.timeLimit if mission and mission.timeLimit else 1800 }}"></div>
 <script src="{{ url_for('static', filename='js/mission.js') }}" defer></script>
 <script src="{{ url_for('static', filename='js/tools.js') }}" defer></script>
-<script src="{{ url_for('static', filename='js/dialogues.js') }}" defer></script>
+<script src="{{ url_for('static', filename='js/dialogue_advanced.js') }}" defer></script>
 {% endblock %}

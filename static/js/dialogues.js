@@ -341,7 +341,7 @@ window.missionDialogues = {
       ]
     },
     'BitNinja - Fellow Hacker': {
-      text: "This chatroom isn’t safe. Your agency’s network map leaked recently.",
+      text: "This chatroom isn't safe. Your agency's network map leaked recently.",
       choices: [
         {
           text: "How do I secure the agency?",
@@ -408,7 +408,7 @@ window.missionDialogues = {
             text: "Trap set. GHOSTLINE is trying to break free!",
             choices: [
               { text: "Spring the trap.", action: () => window.markObjectiveComplete(1) },
-              { text: "Wait for GHOSTLINE’s next move." }
+              { text: "Wait for GHOSTLINE's next move." }
             ]
           }
         }
@@ -461,10 +461,10 @@ const levelDialogues = {
   "level3": {
       "Bank_Guard": [
         { "text": "No one got in last night except employees." },
-        { "text": "But I did hear the teller’s computer making strange noises.", "clue": "Compromised workstation." }
+        { "text": "But I did hear the teller's computer making strange noises.", "clue": "Compromised workstation." }
       ],
       "Cleaning_Staff": [
-        { "text": "I found a printout with ‘PH4NT0M’ written on it in the trash." }
+        { "text": "I found a printout with 'PH4NT0M' written on it in the trash." }
     ]
   },
   "level4": {
@@ -519,7 +519,7 @@ const levelDialogues = {
   },
   "level10": {
       "Archivist": [
-        { "text": "I’m pulling the logs for HQ. There’s a spike in activity at 03:14." }
+        { "text": "I'm pulling the logs for HQ. There's a spike in activity at 03:14." }
       ],
       "Reception_Bot": [
         { "text": "Welcome, Agent. HQ security protocols are at maximum alert." }
@@ -536,7 +536,7 @@ window.dialogues = {
     hint: "The fate of digital society is in your hands."
   },
   "briefing": {
-    text: "Our adversary is PH4NT0M, a rogue collective with global reach. They’re orchestrating an operation called 'Silent Strings.' Your job is to investigate, contain, and trace them back to their source.",
+    text: "Our adversary is PH4NT0M, a rogue collective with global reach. They're orchestrating an operation called 'Silent Strings.' Your job is to investigate, contain, and trace them back to their source.",
     options: ["Begin Investigation", "Ask About PH4NT0M", "Ask About Silent Strings", "Back to Main Menu"],
     next: ["level1_intro", "about_ph4nt0m", "about_silentstrings", "intro"],
     hint: "Gather intel before you deploy."
@@ -714,7 +714,7 @@ function initializeDialogue(levelKey) {
 
 function showDialogue() {
   const dialogueArea = document.getElementById('dialogue-text');
-  const optionsBox = document.getElementById('options');
+  const optionsBox = document.getElementById('dialogue-choices');
   const npcHeader = document.getElementById('dialogue-npc');
   const portraitImg = document.getElementById('dialogue-portrait');
 
@@ -770,7 +770,7 @@ function showDialogue() {
 }
 
 function addNavigationButtons(totalLines) {
-  const optionsBox = document.getElementById('options');
+  const optionsBox = document.getElementById('dialogue-choices');
   const npcs = Object.keys(levelDialogues[currentDialogueState.level]);
   const currentNpcIndex = npcs.indexOf(currentDialogueState.npc);
 
@@ -808,7 +808,7 @@ function addNavigationButtons(totalLines) {
 }
 
 function addButton(text, onClick) {
-  const optionsBox = document.getElementById('options');
+  const optionsBox = document.getElementById('dialogue-choices');
   const button = document.createElement('button');
   button.textContent = text;
   button.className = 'dialogue-btn';
@@ -818,7 +818,7 @@ function addButton(text, onClick) {
 
 let current = "intro";
 const textBox = document.getElementById("dialogue-text");
-const optionsBox = document.getElementById("options");
+const optionsBox = document.getElementById("dialogue-choices");
 const timerDisplay = document.getElementById("timer");
 
 function typeText(text, callback) {

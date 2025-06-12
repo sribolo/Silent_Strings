@@ -190,9 +190,9 @@ function showMissionInterview(level, npc, node = null) {
         alert("Dialogue not found!");
         return;
     }
-    const speakerEl = document.getElementById('dialogueSpeaker');
-    const textEl = document.getElementById('dialogueText');
-    const optionsEl = document.getElementById('dialogueOptions');
+    const speakerEl = document.getElementById('npc-name');
+    const textEl = document.getElementById('dialogue-text');
+    const optionsEl = document.getElementById('dialogue-choices');
     if (speakerEl) speakerEl.innerText = npc;
     if (textEl) textEl.innerText = node.text || "";
     if (optionsEl) optionsEl.innerHTML = "";
