@@ -131,6 +131,7 @@ function showDialogueLine() {
     if (!d) return;
     document.getElementById('npc-name').textContent = d.npc;
     typeText(d.text, document.getElementById('dialogue-text'));
+    renderInvestigationNpcPortrait(d.npc);
     const choicesBox = document.getElementById('dialogue-choices');
     choicesBox.innerHTML = '';
     if (d.choices && d.choices.length) {
@@ -171,10 +172,54 @@ function typeText(txt, el) {
     type();
 }
 
-// --- NPC Portrait (placeholder, can be extended) ---
+// --- NPC Portrait Rendering ---
+let investigationSpriteData = null;
+let investigationNpcAvatars = {};
+
+function renderInvestigationNpcPortrait(npcName) {
+    const container = document.getElementById('speaker-npc');
+    if (!container) return;
+    if (!investigationSpriteData) {
+        fetch('/get_sprites')
+            .then(res => res.json())
+            .then(data => {
+                investigationSpriteData = data;
+                renderInvestigationNpcPortrait(npcName);
+            });
+        return;
+    }
+    if (!investigationNpcAvatars[npcName]) {
+        investigationNpcAvatars[npcName] = randomizeNpcAvatarWithData(investigationSpriteData);
+    }
+    renderNpcAvatar(investigationNpcAvatars[npcName], container);
+}
+
+function randomizeNpcAvatarWithData(spriteData) {
+    const avatar = {};
+    if (spriteData.characters && spriteData.characters.length > 0) {
+        const randChar = spriteData.characters[Math.floor(Math.random() * spriteData.characters.length)];
+        avatar.characters = { name: randChar.name, img: randChar.img };
+    }
+    ["clothes", "hair", "face", "acc"].forEach(cat => {
+        if (spriteData[cat]) {
+            const subcats = Object.keys(spriteData[cat]);
+            if (subcats.length > 0) {
+                const randSubcat = subcats[Math.floor(Math.random() * subcats.length)];
+                const options = spriteData[cat][randSubcat];
+                if (options && options.length > 0) {
+                    const randOpt = options[Math.floor(Math.random() * options.length)];
+                    if (!avatar[cat]) avatar[cat] = {};
+                    avatar[cat][randSubcat] = { name: randOpt.name, img: randOpt.img };
+                }
+            }
+        }
+    });
+    return avatar;
+}
+
+// On page load, show a default NPC portrait
 function setNpcPortrait() {
-    // You can extend this to show different avatars per NPC
-    // For now, just leave as is (empty div for .avatar-layer images)
+    renderInvestigationNpcPortrait('SECTOR-9 Command');
 }
 
 // --- Tool Actions ---

@@ -143,783 +143,491 @@ window.missionDialogues = {
                 }
             ]
         }
+    },
+  'level4': {
+    'Chloe Tan - DevOps Engineer': {
+      text: "Someone pushed a suspicious commit last night that altered our authentication logic.",
+      choices: [
+        {
+          text: "Show me the commit.",
+          nextDialogue: {
+            npc: 'Chloe Tan - DevOps Engineer',
+            text: "Here: 'Added backdoor for testing'. It wasn't reviewed or approved.",
+            choices: [
+              { text: "Revert the commit immediately.", action: () => window.markObjectiveComplete(0) },
+              { text: "Who pushed this commit?" }
+            ]
+          }
+        },
+        {
+          text: "Any pipeline warnings?",
+          nextDialogue: {
+            npc: 'Chloe Tan - DevOps Engineer',
+            text: "Our CI pipeline failed security checks, but nobody flagged it.",
+            choices: [
+              { text: "Audit pipeline logs.", action: () => window.markObjectiveComplete(1) },
+              { text: "Check previous builds for tampering." }
+            ]
+          }
+        }
+      ]
+    },
+    'Tom Lin - Junior Developer': {
+      text: "I reused my password from an old project. Is that bad?",
+      choices: [
+        {
+          text: "Yes. Change it immediately and check for breaches.",
+          action: () => window.markObjectiveComplete(2)
+        },
+        {
+          text: "Did you share credentials with anyone?",
+          nextDialogue: {
+            npc: 'Tom Lin - Junior Developer',
+            text: "No, but I used the same password on my email.",
+            choices: [
+              { text: "Change all your passwords now." }
+            ]
+          }
+        }
+      ]
     }
+  },
+  'level5': {
+    'Maria Gomez - System Administrator': {
+      text: "A scheduled task called 'totally_safe.exe' appeared overnight. I didn't create it.",
+      choices: [
+        {
+          text: "Remove it and check persistence.",
+          action: () => window.markObjectiveComplete(0)
+        },
+        {
+          text: "Has anyone requested admin privileges recently?",
+          nextDialogue: {
+            npc: 'Maria Gomez - System Administrator',
+            text: "There was an email request for admin rights. It wasn't signed.",
+            choices: [
+              { text: "Save that email as evidence.", action: () => window.markObjectiveComplete(1) },
+              { text: "Warn the whole team immediately." }
+            ]
+          }
+        }
+      ]
+    },
+    'Larry Chua - Records Clerk': {
+      text: "I noticed some data missing from the database and a weird Flash update popup.",
+      choices: [
+        {
+          text: "Scan your system for malware.",
+          action: () => window.markObjectiveComplete(2)
+        },
+        {
+          text: "Who else accessed the DB last night?",
+          nextDialogue: {
+            npc: 'Larry Chua - Records Clerk',
+            text: "Only the sysadmin and me, as far as I know.",
+            choices: [
+              { text: "Check access logs." }
+            ]
+          }
+        }
+      ]
+    }
+  },
+  'level6': {
+    'Rachel Yeo - Grid Operator': {
+      text: "Our SCADA system logged remote access from an unknown IP last night.",
+      choices: [
+        {
+          text: "Trace the IP.",
+          action: () => window.markObjectiveComplete(0)
+        },
+        {
+          text: "Were any alarms triggered?",
+          nextDialogue: {
+            npc: 'Rachel Yeo - Grid Operator',
+            text: "Alarms were disabled remotely around midnight.",
+            choices: [
+              { text: "Re-enable all security alarms." },
+              { text: "Check who had access at that time." }
+            ]
+          }
+        }
+      ]
+    },
+    'Hugo Wang - Maintenance Worker': {
+      text: "I found a USB stick plugged into a monitoring station this morning.",
+      choices: [
+        {
+          text: "Quarantine the USB and analyze its contents.",
+          action: () => window.markObjectiveComplete(1)
+        },
+        {
+          text: "Who had access to that room overnight?",
+          nextDialogue: {
+            npc: 'Hugo Wang - Maintenance Worker',
+            text: "Just authorized personnel, but I saw a visitor badge left on the desk.",
+            choices: [
+              { text: "Review visitor logs." }
+            ]
+          }
+        }
+      ]
+    }
+  },
+  'level7': {
+    'Anita Lee - Suspect Insider': {
+      text: "Why am I being questioned? I followed all procedures.",
+      choices: [
+        {
+          text: "Your terminal had an unauthorized process running.",
+          action: () => window.markObjectiveComplete(0)
+        },
+        {
+          text: "Did you notice anything odd recently?",
+          nextDialogue: {
+            npc: 'Anita Lee - Suspect Insider',
+            text: "I found an encrypted note in my locker.",
+            choices: [
+              { text: "Give me the note for analysis.", action: () => window.markObjectiveComplete(1) }
+            ]
+          }
+        }
+      ]
+    },
+    'Henry Ng - HR Officer': {
+      text: "Agent Kim requested time off right after the breach.",
+      choices: [
+        {
+          text: "Investigate Kim's activity.",
+          action: () => window.markObjectiveComplete(2)
+        },
+        {
+          text: "Who else has been acting suspicious?",
+          nextDialogue: {
+            npc: 'Henry Ng - HR Officer',
+            text: "A few team members accessed restricted files late at night.",
+            choices: [
+              { text: "Review file access logs." }
+            ]
+          }
+        }
+      ]
+    }
+  },
+  'level8': {
+    'Cipher - Dark Web Informant': {
+      text: "PH4NT0M is auctioning zero-days. Ghostline never uses the same forum twice.",
+      choices: [
+        {
+          text: "How do I contact Ghostline?",
+          nextDialogue: {
+            npc: 'Cipher - Dark Web Informant',
+            text: "Look for hidden .onion links in the latest posts.",
+            choices: [
+              { text: "Search forums.", action: () => window.markObjectiveComplete(0) }
+            ]
+          }
+        },
+        {
+          text: "What is Silent Strings?",
+          nextDialogue: {
+            npc: 'Cipher - Dark Web Informant',
+            text: "It's not just malware—it's a protocol to disrupt infrastructure at scale.",
+            choices: [
+              { text: "Tell me more about Silent Strings." }
+            ]
+          }
+        }
+      ]
+    },
+    'BitNinja - Fellow Hacker': {
+      text: "This chatroom isn’t safe. Your agency’s network map leaked recently.",
+      choices: [
+        {
+          text: "How do I secure the agency?",
+          nextDialogue: {
+            npc: 'BitNinja - Fellow Hacker',
+            text: "Change all credentials, and use two-factor everywhere.",
+            choices: [
+              { text: "Start credential rotation.", action: () => window.markObjectiveComplete(1) }
+            ]
+          }
+        }
+      ]
+    }
+  },
+  'level9': {
+    'Lina Sun - Transit Supervisor': {
+      text: "All trains stopped at once. The control center was locked out by the attacker.",
+      choices: [
+        {
+          text: "Check the control system.",
+          action: () => window.markObjectiveComplete(0)
+        },
+        {
+          text: "Interview commuters for suspicious activity.",
+          nextDialogue: {
+            npc: 'Lina Sun - Transit Supervisor',
+            text: "Someone said they saw a person tampering with the WiFi router.",
+            choices: [
+              { text: "Inspect WiFi router." }
+            ]
+          }
+        }
+      ]
+    },
+    'Tom Wong - Commuter': {
+      text: "My e-ticket app crashed. Also, a stranger was near the station router.",
+      choices: [
+        {
+          text: "Scan for rogue devices.",
+          action: () => window.markObjectiveComplete(1)
+        }
+      ]
+    }
+  },
+  'level10': {
+    'SECTOR9 Director': {
+      text: "GHOSTLINE is inside our network. This is your final mission, Agent.",
+      choices: [
+        {
+          text: "Confront GHOSTLINE.",
+          nextDialogue: {
+            npc: 'GHOSTLINE',
+            text: "You're persistent, Agent. But can you see the pattern in the chaos?",
+            choices: [
+              { text: "Challenge GHOSTLINE.", action: () => window.markObjectiveComplete(0) },
+              { text: "Offer an alliance instead." }
+            ]
+          }
+        },
+        {
+          text: "Set a digital trap.",
+          nextDialogue: {
+            npc: 'SECTOR9 Director',
+            text: "Trap set. GHOSTLINE is trying to break free!",
+            choices: [
+              { text: "Spring the trap.", action: () => window.markObjectiveComplete(1) },
+              { text: "Wait for GHOSTLINE’s next move." }
+            ]
+          }
+        }
+      ]
+    },
+    'GHOSTLINE': {
+      text: "Silent Strings isn't just a program—it's the end of trust. What will you choose: preserve a broken system, or let it fall?",
+      choices: [
+        {
+          text: "Silent Strings ends now.",
+          action: () => window.markObjectiveComplete(2)
+        },
+        {
+          text: "Let it fall.",
+          nextDialogue: {
+            npc: 'GHOSTLINE',
+            text: "You have chosen chaos. Remember, Agent, every system can be rebuilt.",
+            choices: [
+              { text: "The end... or a new beginning?" }
+            ]
+          }
+        }
+      ]
+    }
+  }
 };
 
 // Legacy dialogue system (keeping for backwards compatibility)
 const levelDialogues = {
-  "level1": {
-    "IT_Analyst": [
-      { "text": "I noticed weird traffic in the logs at 2AM, but our monitoring alert didn't trigger." },
-      { "text": "Did you check the phishing simulation results from last week? Someone failed the test.", "clue": "Phishing incident likely." },
-      { "text": "Someone's login session from the night shift looks odd…" }
-    ],
-    "Security_Guard": [
-      { "text": "No one reported anything unusual, but the backup generator restarted suddenly." },
-      { "text": "I remember seeing a USB left at the reception desk.", "clue": "USB drive clue." }
-    ]
-  },
-  "level2": {
-    "Web_Editor": [
-      { "text": "Our website was defaced. All headlines now say 'PH4NT0M WAS HERE.'" },
-      { "text": "An email from IT said to reset passwords. Was that legit?", "clue": "Possible spear phishing attack." },
-      { "text": "The intern installed a new browser extension yesterday." }
-    ],
-    "IT_Support": [
-      { "text": "We patched a vulnerability last week, but someone postponed the server reboot." },
-      { "text": "Look for JavaScript injected in the news ticker." }
-    ]
-  },
-  "level3": {
-    "Teller": [
-      { "text": "I received a PDF from 'HR'—the sender's address was slightly off.", "clue": "Phishing email vector." },
-      { "text": "My workstation locked up after I opened it." }
-    ],
-    "Bank_IT_Admin": [
-      { "text": "We found a ransomware note in the shared drive." },
-      { "text": "Check email logs—multiple staff received similar attachments.", "clue": "Multiple patient zero possibilities." }
-    ],
-    "Manager": [
-      { "text": "Transactions kept failing; clients are furious." },
-      { "text": "Our backups are offline. Did someone tamper with them?" }
-    ]
-  },
-  "level4": {
-    "DevOps_Engineer": [
-      { "text": "A merge request yesterday changed the authentication code. I didn't approve it.", "clue": "Unapproved code injection in repo." },
-      { "text": "Our CI/CD pipeline was showing warnings, but nobody looked." }
-    ],
-    "Junior_Developer": [
-      { "text": "I reused my password from a previous project… should I change it?", "clue": "Credential reuse is a risk." }
-    ]
-  },
-  "level5": {
-    "System_Administrator": [
-      { "text": "I noticed a scheduled task that wasn't documented. Suspicious, right?" },
-      { "text": "Someone requested admin privileges via email, but the request was unsigned." }
-    ],
-    "Records_Clerk": [
-      { "text": "Data was missing from the database this morning." },
-      { "text": "A popup kept asking me to update Flash Player…" }
-    ]
-  },
-  "level6": {
-    "Grid_Operator": [
-      { "text": "The SCADA system showed remote access from an unknown IP." },
-      { "text": "Alarms were disabled, but nobody had access after midnight." }
-    ],
-    "Maintenance_Worker": [
-      { "text": "A USB stick was found plugged into a monitoring station." },
-      { "text": "Routine checks flagged firmware changes last night." }
-    ]
-  },
-  "level7": {
-    "Suspect_Insider": [
-      { "text": "Why am I being questioned? I followed all procedures." },
-      { "text": "I found a strange process running on my terminal." },
-      { "text": "Someone left an encrypted note in my locker." }
-    ],
-    "HR_Officer": [
-      { "text": "Agent Kim requested time off right after the breach." },
-      { "text": "Our team's credentials list was accessed by multiple users." }
-    ]
-  },
-  "level8": {
-    "DarkWeb_Informant": [
-      { "text": "PH4NT0M auctions zero-days to the highest bidder." },
-      { "text": "Ghostline never uses the same forum twice." },
-      { "text": "Check for hidden links in the .onion marketplace." }
-    ],
-    "Fellow_Hacker": [
-      { "text": "Don't trust anyone in this chatroom." },
-      { "text": "A leak contained your agency's network map…" }
-    ]
-  },
-  "level9": {
-    "Transit_Supervisor": [
-      { "text": "All trains stopped at once. Control center was locked out." },
-      { "text": "The attack message said 'Digital Liberation: PH4NT0M'." }
-    ],
-    "Commuter": [
-      { "text": "My e-ticket app crashed and now I can't board." },
-      { "text": "A stranger was fiddling with the WiFi router this morning." }
-    ]
-  },
-  "level10": {
-    "SECTOR9_Director": [
-      { "text": "Everything we've trained for comes down to this. The world's infrastructure is at risk." },
-      { "text": "Ghostline left a final message: 'The strings have been cut. Let the silence begin.'" }
-    ],
-    "GHOSTLINE": [
-      { "text": "You're persistent, Agent. But can you see the pattern in the chaos?" },
-      { "text": "To rebuild, first you must break." },
-      { "text": "Silent Strings isn't just a program—it's the end of trust." },
-      { "text": "What will you choose: preserve a broken system, or let it fall?" }
-    ]
-  }
-};
+    "level1": {
+      "Janitor": [
+        { "text": "I just sweep the floors here, Agent." },
+        { "text": "But last night I saw a guy leave a USB by the printer.", "clue": "Possible drop device." }
+      ],
+      "Receptionist": [
+        { "text": "Did you want to sign in, or are you with IT?" },
+        { "text": "Someone dropped their badge earlier. Security picked it up." }
+      ]
+    },
+    "level2": {
+      "News_Reporter": [
+        { "text": "We worked late updating the site last night." },
+        { "text": "I noticed the home page changed just before sunrise.", "clue": "Timeline clue." }
+      ],
+      "Night_Intern": [
+        { "text": "I got an email from IT about password changes. Was that really you guys?" },
+        { "text": "My browser kept popping up weird ads." }
+      ]
+    },
+    "level3": {
+      "Bank_Guard": [
+        { "text": "No one got in last night except employees." },
+        { "text": "But I did hear the teller’s computer making strange noises.", "clue": "Compromised workstation." }
+      ],
+      "Cleaning_Staff": [
+        { "text": "I found a printout with ‘PH4NT0M’ written on it in the trash." }
+      ]
+    },
+    "level4": {
+      "QA_Tester": [
+        { "text": "There was a lot of pressure to push code live last night." },
+        { "text": "I flagged a risky change, but no one listened." }
+      ],
+      "Night_Manager": [
+        { "text": "A build failed at 2AM. We just rebooted and hoped for the best." }
+      ]
+    },
+    "level5": {
+      "Front_Desk": [
+        { "text": "Three contractors checked in for 'system maintenance' yesterday." },
+        { "text": "One left in a hurry and forgot a flash drive." }
+      ],
+      "Night_Watch": [
+        { "text": "Power blinked twice last night—thought it was just a surge." }
+      ]
+    },
+    "level6": {
+      "Grid_Junior": [
+        { "text": "I ran a diagnostics test, and it kept failing at node 14." }
+      ],
+      "Security_Desk": [
+        { "text": "Cameras went offline right before the grid alarms triggered." }
+      ]
+    },
+    "level7": {
+      "Cafeteria_Staff": [
+        { "text": "The suspect always sits alone at lunch. Brings the same old sandwich." }
+      ],
+      "Janitor": [
+        { "text": "I saw someone leaving the server room with a folder full of printouts." }
+      ]
+    },
+    "level8": {
+      "Parking_Attendant": [
+        { "text": "There was a black van in the lot last night. Never seen it before." }
+      ],
+      "Late_Security": [
+        { "text": "Someone jammed our radios for five minutes around midnight." }
+      ]
+    },
+    "level9": {
+      "Ticket_Inspector": [
+        { "text": "Most commuters were normal, except one who kept taking photos of the console." }
+      ],
+      "Coffee_Stand": [
+        { "text": "I overheard two engineers talking about a virus in the ticketing system." }
+      ]
+    },
+    "level10": {
+      "Archivist": [
+        { "text": "I’m pulling the logs for HQ. There’s a spike in activity at 03:14." }
+      ],
+      "Reception_Bot": [
+        { "text": "Welcome, Agent. HQ security protocols are at maximum alert." }
+      ]
+    }
+  };
 
 // Branching intro, tutorial, and mission story
-const dialogues = {
-  intro: {
-    text: "Welcome to SECTOR-9, Agent. We've intercepted a breach in our training servers. Your mission begins now...",
+window.dialogues = {
+  "intro": {
+    text: "Welcome to SECTOR-9, Agent. Anomalous activity has been detected across critical systems. Do you accept the mission?",
     options: ["Accept Mission", "Request Briefing", "Log Out"],
-    next: ["mission1", "briefing", "exit"],
-    hint: "This is your entry point. Accept the mission to begin your investigation."
+    next: ["briefing", "briefing", "exit"],
+    hint: "The fate of digital society is in your hands."
   },
-  briefing: {
-    text: "PH4NT0M, a radical hacking group, has compromised our systems. Their leader, GHOSTLINE, has left traces of a larger plan called 'Silent Strings'. We need you to investigate.",
-    options: ["Begin Investigation", "Ask Questions", "Return"],
-    next: ["mission1", "questions", "intro"],
-    hint: "Get more information if you feel unprepared, or begin the mission."
+  "briefing": {
+    text: "Our adversary is PH4NT0M, a rogue collective with global reach. They’re orchestrating an operation called 'Silent Strings.' Your job is to investigate, contain, and trace them back to their source.",
+    options: ["Begin Investigation", "Ask About PH4NT0M", "Ask About Silent Strings", "Back to Main Menu"],
+    next: ["level1_intro", "about_ph4nt0m", "about_silentstrings", "intro"],
+    hint: "Gather intel before you deploy."
   },
-  questions: {
-    text: "What would you like to know?",
-    options: ["Who is GHOSTLINE?", "What is Silent Strings?", "What tools do I have?", "Return to Mission"],
-    next: ["ghostline_info", "silent_strings_info", "tools_info", "mission1"],
-    hint: "Ask about the threat, the plan, or your tools before starting."
+  "about_ph4nt0m": {
+    text: "PH4NT0M specializes in zero-day attacks, phishing, and supply chain exploits. Their leader, GHOSTLINE, is a master at evasion and digital misdirection.",
+    options: ["Back to Briefing"],
+    next: ["briefing"]
   },
-  ghostline_info: {
-    text: "GHOSTLINE is an enigmatic figure who leads PH4NT0M. They believe the digital world needs to be reset. Their methods are sophisticated and their motives... unclear.",
-    options: ["Learn More", "Return to Questions"],
-    next: ["ghostline_deep", "questions"],
-    hint: "Learning about GHOSTLINE may help you anticipate their moves."
+  "about_silentstrings": {
+    text: "Silent Strings is a complex malware campaign designed to disrupt infrastructure and undermine trust in critical systems. Stopping it is our top priority.",
+    options: ["Back to Briefing"],
+    next: ["briefing"]
   },
-  silent_strings_info: {
-    text: "Silent Strings is a protocol that PH4NT0M is developing. It's designed to disrupt global digital infrastructure. We need to stop it before it's activated.",
-    options: ["Learn More", "Return to Questions"],
-    next: ["strings_deep", "questions"],
-    hint: "Understanding Silent Strings is key to stopping PH4NT0M."
+  "level1_intro": {
+    text: "Mission 1: SECTOR-9 HQ has been breached. Initial logs point to a possible phishing attack and a suspicious USB device left at the entrance.",
+    options: ["Investigate Logs", "Interview Security", "Check Physical Evidence"],
+    next: ["level1_logs", "level1_security", "level1_usb"],
+    hint: "Follow the trail to contain the breach."
   },
-  tools_info: {
-    text: "You'll have access to our DFIR toolkit: Scanner, Autopsy Suite, Log Analyzer, and more. Each tool will help you investigate different aspects of the attacks.",
-    options: ["View Tools", "Return to Questions"],
-    next: ["tools_list", "questions"],
-    hint: "Familiarize yourself with your tools for a smoother investigation."
+  "level1_logs": {
+    text: "You find a pattern of remote logins at 2AM from an unrecognized IP.",
+    options: ["Trace IP", "Check Email Alerts"],
+    next: ["level1_traceip", "level1_email"]
   },
-  mission1: {
-    text: "Your first mission: Investigate the breach at SECTOR-9 HQ. You have 30 minutes to identify the attack vector and contain the threat.",
-    options: ["Begin Mission", "Review Tools", "Return to Briefing"],
-    next: ["level1_start", "tools_list", "briefing"],
-    hint: "Start the mission or review your toolkit if needed."
+  "level1_security": {
+    text: "Security reports a USB drive left at the reception and a delivery guy acting odd.",
+    options: ["Examine USB", "Interview Delivery Guy"],
+    next: ["level1_usb", "level1_delivery"]
   },
-  level1_start: {
-    text: "Mission Timer: 30:00\n\nAnalyze the logs, check for phishing attempts, and identify how PH4NT0M gained access to our systems.",
-    options: ["Start Investigation", "Review Mission Objectives"],
-    next: ["investigation_start", "objectives"],
-    hint: "Begin your investigation or review your objectives for guidance."
+  "level1_usb": {
+    text: "The USB contains a file named 'notavirus.exe'.",
+    options: ["Run File", "Quarantine Device"],
+    next: ["level1_runfile", "level1_quarantine"]
   },
-  mission_failed: {
-    text: "Mission Failed. The threat has spread. You must wait 15 minutes before attempting again.",
-    options: ["Return to Mission Board"],
-    next: ["mission_board"],
-    hint: "Try a different approach next time to prevent failure."
+  "level1_traceip": {
+    text: "The IP traces back to a VPN exit node. The trail goes cold.",
+    options: ["Report to HQ", "Investigate Further"],
+    next: ["level1_report", "level1_logs"]
   },
-  mission_success: {
-    text: "Excellent work, Agent. You've contained the threat and gathered valuable intelligence about PH4NT0M's methods.",
-    options: ["Continue to Next Mission", "Review Evidence", "Return to Mission Board"],
-    next: ["next_mission", "evidence_review", "mission_board"],
-    hint: "You can proceed, review your findings, or return to the board."
+  "level1_email": {
+    text: "A phishing email about 'Free Crypto' was sent to all staff.",
+    options: ["Warn Staff", "Delete Email"],
+    next: ["level1_warnstaff", "level1_deleteemail"]
   },
-  level1_intro: {
-    text: "HQ: 'Agent, SECTOR-9 HQ has been breached! What's your first move?'",
-    options: ["Check server logs", "Question the night guard", "Order pizza"],
-    next: ["level1_logs", "level1_guard", "level1_pizza"],
-    hint: "Start with the most technical or suspicious lead to find the breach quickly."
-  },
-  level1_logs: {
-    text: "You find a suspicious login at 2AM. The plot thickens!",
-    options: ["Trace the IP", "Check emails"],
-    next: ["level1_trace_ip", "level1_emails"],
-    hint: "Tracing the IP may reveal the attacker's location or method."
-  },
-  level1_guard: {
-    text: "The night guard offers you a donut and mentions a mysterious USB left at the desk.",
-    options: ["Examine USB", "Eat donut"],
-    next: ["level1_usb", "level1_donut"],
-    hint: "Physical evidence like a USB can be a major clue."
-  },
-  level1_pizza: {
-    text: "Pizza arrives. The delivery guy winks and says, 'Watch out for PH4NT0M.' Coincidence?",
-    options: ["Tip generously", "Ignore and eat"],
-    next: ["level1_tip", "level1_ignore_pizza"],
-    hint: "Sometimes distractions are just distractions."
-  },
-  level1_trace_ip: {
-    text: "The IP leads to a cat video site. Classic hacker misdirection!",
-    options: ["Watch cat videos", "Report to HQ"],
-    next: ["level1_cat_video", "level1_report"],
-    hint: "Don't get sidetracked by red herrings."
-  },
-  level1_emails: {
-    text: "You find a phishing email titled 'Win a Free Vacation!' Should you click?",
-    options: ["Click it", "Warn staff"],
-    next: ["level1_phished", "level1_warned"],
-    hint: "Phishing emails are a common attack vector."
-  },
-  level1_usb: {
-    text: "The USB contains a single file: 'notavirus.exe'. Tempting!",
-    options: ["Run it", "Quarantine USB"],
-    next: ["level1_run_usb", "level1_quarantine"],
-    hint: "Running unknown files is risky. Quarantine is safer."
-  },
-  level1_donut: {
-    text: "The donut is delicious. You feel energized!",
-    options: ["Back to work"],
-    next: ["level1_intro"],
-    hint: "Enjoy the break, but don't lose focus on the mission."
-  },
-  level1_tip: {
-    text: "The delivery guy hands you a napkin with 'Trust no one' written on it.",
-    options: ["Back to HQ"],
-    next: ["level1_intro"],
-    hint: "Sometimes, even small details can be clues."
-  },
-  level1_ignore_pizza: {
-    text: "You eat in silence. The cheese is suspiciously stringy...",
-    options: ["Back to HQ"],
-    next: ["level1_intro"],
-    hint: "Not every choice advances the investigation."
-  },
-  level1_cat_video: {
-    text: "You lose track of time. Mission failed!",
-    options: ["Restart Level"],
-    next: ["level1_intro"],
-    hint: "Stay focused on the mission objectives."
-  },
-  level1_report: {
-    text: "HQ: 'Good work, Agent. But stay sharp.'",
+  "level1_warnstaff": {
+    text: "You warn the staff and stop the spread. HQ commends your quick response.",
     options: ["Continue"],
-    next: ["level2_intro"],
-    hint: "You're making progress. Prepare for the next challenge."
+    next: ["level2_intro"]
   },
-  level1_phished: {
-    text: "You click the link. Your screen fills with dancing llamas. Oops!",
-    options: ["Restart Level"],
-    next: ["level1_intro"],
-    hint: "Clicking suspicious links can have unexpected consequences."
-  },
-  level1_warned: {
-    text: "Staff are warned. The breach is contained. For now...",
+  "level1_quarantine": {
+    text: "You quarantine the USB. Forensics finds malware designed to steal credentials.",
     options: ["Continue"],
-    next: ["level2_intro"],
-    hint: "Proactive communication can prevent further damage."
-  },
-  level1_run_usb: {
-    text: "'notavirus.exe' launches a game of Pong. You win! But the breach remains unsolved.",
-    options: ["Restart Level"],
-    next: ["level1_intro"],
-    hint: "Solving the breach is more important than games."
-  },
-  level1_quarantine: {
-    text: "USB quarantined. HQ is pleased. You get a virtual high-five!",
-    options: ["Continue"],
-    next: ["level2_intro"],
-    hint: "Quarantining suspicious devices is best practice."
-  },
-  level2_intro: {
-    text: "HQ: 'News Outlet website defaced! What's your move?'",
-    options: ["Check JavaScript", "Interview the intern", "Order coffee"],
-    next: ["level2_js", "level2_intern", "level2_coffee"],
-    hint: "Technical leads or suspicious staff are good starting points."
-  },
-  level2_js: {
-    text: "You find a script: 'PH4NT0M WAS HERE'. Subtle.",
-    options: ["Remove script", "Analyze further"],
-    next: ["level2_remove", "level2_analyze"],
-    hint: "Removing malicious code is urgent, but deeper analysis may reveal more."
-  },
-  level2_intern: {
-    text: "The intern looks nervous and offers you a USB labeled 'Definitely Not Malware'.",
-    options: ["Take USB", "Refuse politely"],
-    next: ["level2_take_usb", "level2_refuse_usb"],
-    hint: "Be cautious with unknown devices."
-  },
-  level2_coffee: {
-    text: "The coffee is strong. You feel invincible!",
-    options: ["Back to work"],
-    next: ["level2_intro"],
-    hint: "A morale boost is nice, but doesn't solve the case."
-  },
-  level2_remove: {
-    text: "Script removed. The homepage is now cat memes. The public is delighted!",
-    options: ["Continue"],
-    next: ["level3_intro"],
-    hint: "Quick action can restore services, but always check for deeper issues."
-  },
-  level2_analyze: {
-    text: "You discover a hidden message: 'Meet at midnight.'",
-    options: ["Investigate message", "Ignore"],
-    next: ["level2_investigate", "level2_intro"],
-    hint: "Hidden messages often point to the next clue."
-  },
-  level2_investigate: {
-    text: "You catch a shadowy figure in the server room. It's the janitor! Or is it?",
-    options: ["Chase", "Call HQ"],
-    next: ["level2_chase", "level2_call_hq"],
-    hint: "Sometimes backup is the safest option."
-  },
-  level2_chase: {
-    text: "You chase the figure but slip on a banana peel. Classic!",
-    options: ["Restart Level"],
-    next: ["level2_intro"],
-    hint: "Acting alone can be risky."
-  },
-  level2_call_hq: {
-    text: "HQ: 'Good instincts, Agent. We'll handle it.'",
-    options: ["Continue"],
-    next: ["level3_intro"],
-    hint: "Reporting to HQ can resolve dangerous situations."
-  },
-  level2_take_usb: {
-    text: "You plug in the USB. Your screen displays 'You have been hacked!' Just kidding. It's empty.",
-    options: ["Back to work"],
-    next: ["level2_intro"],
-    hint: "Always scan unknown USBs before use."
-  },
-  level2_refuse_usb: {
-    text: "The intern shrugs and eats a donut. Suspicious...",
-    options: ["Back to work"],
-    next: ["level2_intro"],
-    hint: "Trust your instincts with suspicious items."
-  },
-  level3_intro: {
-    text: "HQ: 'Bank hit by ransomware! What's your first step?'",
-    options: ["Check shared drive", "Interview teller", "Order donuts"],
-    next: ["level3_drive", "level3_teller", "level3_donuts"],
-    hint: "Start with the most likely source of the attack."
-  },
-  level3_drive: {
-    text: "You find a ransom note: 'Send 1 Bitcoin to PH4NT0M.'",
-    options: ["Pay ransom", "Analyze note"],
-    next: ["level3_pay", "level3_analyze"],
-    hint: "Paying ransom rarely solves the root problem."
-  },
-  level3_teller: {
-    text: "The teller says, 'I got a weird email from HR.'",
-    options: ["Check email", "Ignore"],
-    next: ["level3_email", "level3_intro"],
-    hint: "Suspicious emails are often the entry point for attacks."
-  },
-  level3_donuts: {
-    text: "The donuts are fresh. You gain +1 morale!",
-    options: ["Back to work"],
-    next: ["level3_intro"],
-    hint: "A morale boost is nice, but doesn't solve the case."
-  },
-  level3_pay: {
-    text: "You pay the ransom. The hackers send you a thank-you card. The files remain encrypted.",
-    options: ["Restart Level"],
-    next: ["level3_intro"],
-    hint: "Paying ransom doesn't guarantee file recovery."
-  },
-  level3_analyze: {
-    text: "You find a hidden clue: 'Patient Zero is not who you think.'",
-    options: ["Investigate staff", "Ignore clue"],
-    next: ["level3_investigate", "level3_intro"],
-    hint: "Follow up on clues to find the real source."
-  },
-  level3_email: {
-    text: "The email contains a suspicious attachment: 'invoice.pdf'.",
-    options: ["Open attachment", "Delete email"],
-    next: ["level3_open", "level3_delete"],
-    hint: "Opening unknown attachments is dangerous."
-  },
-  level3_open: {
-    text: "Your computer locks up. Ransomware strikes again!",
-    options: ["Restart Level"],
-    next: ["level3_intro"],
-    hint: "Be cautious with suspicious files."
-  },
-  level3_delete: {
-    text: "You delete the email. The threat is contained. HQ is happy!",
-    options: ["Continue"],
-    next: ["level4_intro"],
-    hint: "Deleting suspicious emails can prevent attacks."
-  },
-  level3_investigate: {
-    text: "You discover the manager reused their password. Rookie mistake!",
-    options: ["Reset password", "Report to HQ"],
-    next: ["level3_reset", "level3_report"],
-    hint: "Password hygiene is critical for security."
-  },
-  level3_reset: {
-    text: "Password reset. The hackers are locked out. Success!",
-    options: ["Continue"],
-    next: ["level4_intro"],
-    hint: "Resetting compromised credentials is essential."
-  },
-  level3_report: {
-    text: "HQ: 'Excellent work, Agent.'",
-    options: ["Continue"],
-    next: ["level4_intro"],
-    hint: "Reporting your findings helps the team."
-  },
-  level4_intro: {
-    text: "HQ: 'Software company repo compromised! What's your move?'",
-    options: ["Audit code", "Interview DevOps", "Order bubble tea"],
-    next: ["level4_code", "level4_devops", "level4_tea"],
-    hint: "Start with technical leads or suspicious changes."
-  },
-  level4_code: {
-    text: "You find a suspicious commit: 'Added backdoor for testing.'",
-    options: ["Revert commit", "Investigate author"],
-    next: ["level4_revert", "level4_author"],
-    hint: "Reverting suspicious code is a good first step."
-  },
-  level4_devops: {
-    text: "DevOps says, 'Our pipeline was acting up.'",
-    options: ["Check pipeline logs", "Ignore"],
-    next: ["level4_logs", "level4_intro"],
-    hint: "Logs can reveal unauthorized activity."
-  },
-  level4_tea: {
-    text: "The bubble tea is refreshing. You feel ready to code!",
-    options: ["Back to work"],
-    next: ["level4_intro"],
-    hint: "A morale boost is nice, but doesn't solve the case."
-  },
-  level4_revert: {
-    text: "Commit reverted. The backdoor is gone. HQ is relieved!",
-    options: ["Continue"],
-    next: ["level5_intro"],
-    hint: "Removing threats quickly is key."
-  },
-  level4_author: {
-    text: "The author claims innocence. Suspicious...",
-    options: ["Check their laptop", "Let it go"],
-    next: ["level4_laptop", "level4_intro"],
-    hint: "Investigate all possible sources of compromise."
-  },
-  level4_logs: {
-    text: "Pipeline logs show unauthorized access at 3AM.",
-    options: ["Trace access", "Ignore"],
-    next: ["level4_trace", "level4_intro"],
-    hint: "Tracing access can reveal the attacker."
-  },
-  level4_trace: {
-    text: "Access traced to a rival company. Industrial espionage!",
-    options: ["Report to HQ", "Investigate further"],
-    next: ["level4_report", "level4_intro"],
-    hint: "Reporting to HQ can escalate the response."
-  },
-  level4_report: {
-    text: "HQ: 'Great job, Agent.'",
-    options: ["Continue"],
-    next: ["level5_intro"],
-    hint: "Keep up the good work!"
-  },
-  level4_laptop: {
-    text: "You find a sticky note: 'Password: password123'. Rookie mistake!",
-    options: ["Reset password", "Report to HQ"],
-    next: ["level4_reset", "level4_report"],
-    hint: "Weak passwords are a common vulnerability."
-  },
-  level4_reset: {
-    text: "Password reset. The threat is contained. HQ is happy!",
-    options: ["Continue"],
-    next: ["level5_intro"],
-    hint: "Resetting credentials closes the security gap."
-  },
-  level5_intro: {
-    text: "HQ: 'Government server infected! What's your move?'",
-    options: ["Scan for malware", "Interview sysadmin", "Order energy drink"],
-    next: ["level5_scan", "level5_sysadmin", "level5_drink"],
-    hint: "Start with technical investigation or staff interviews."
-  },
-  level5_scan: {
-    text: "You find a persistent backdoor named 'totally_safe.exe'.",
-    options: ["Remove backdoor", "Analyze file"],
-    next: ["level5_remove", "level5_analyze"],
-    hint: "Remove threats quickly, but analysis can reveal attacker methods."
-  },
-  level5_sysadmin: {
-    text: "Sysadmin says, 'Someone requested admin via email.'",
-    options: ["Check email", "Ignore"],
-    next: ["level5_email", "level5_intro"],
-    hint: "Phishing for admin access is a common attack."
-  },
-  level5_drink: {
-    text: "The energy drink gives you +1 focus!",
-    options: ["Back to work"],
-    next: ["level5_intro"],
-    hint: "A morale boost is nice, but doesn't solve the case."
-  },
-  level5_remove: {
-    text: "Backdoor removed. The system is clean. HQ is happy!",
-    options: ["Continue"],
-    next: ["level6_intro"],
-    hint: "Removing malware is a top priority."
-  },
-  level5_analyze: {
-    text: "You find a hidden message: 'PH4NT0M was here.'",
-    options: ["Report to HQ", "Ignore"],
-    next: ["level5_report", "level5_intro"],
-    hint: "Reporting findings helps the investigation."
-  },
-  level5_report: {
-    text: "HQ: 'Excellent work, Agent.'",
-    options: ["Continue"],
-    next: ["level6_intro"],
-    hint: "Keep up the good work!"
-  },
-  level5_email: {
-    text: "The email is a phishing attempt. You warn the team just in time!",
-    options: ["Continue"],
-    next: ["level6_intro"],
-    hint: "Warning the team can prevent further compromise."
-  },
-  level6_intro: {
-    text: "HQ: 'Power grid under attack! What's your move?'",
-    options: ["Check SCADA logs", "Interview operator", "Order snacks"],
-    next: ["level6_scada", "level6_operator", "level6_snacks"],
-    hint: "Start with technical investigation or staff interviews."
-  },
-  level6_scada: {
-    text: "SCADA logs show remote access from an unknown IP.",
-    options: ["Trace IP", "Ignore"],
-    next: ["level6_trace", "level6_intro"],
-    hint: "Tracing IP can reveal the attacker's location."
-  },
-  level6_operator: {
-    text: "Operator says, 'A USB was found in the control room.'",
-    options: ["Examine USB", "Ignore"],
-    next: ["level6_usb", "level6_intro"],
-    hint: "Physical evidence like a USB can be a major clue."
-  },
-  level6_snacks: {
-    text: "The snacks are stale. You lose -1 morale!",
-    options: ["Back to work"],
-    next: ["level6_intro"],
-    hint: "A morale boost is nice, but doesn't solve the case."
-  },
-  level6_trace: {
-    text: "IP traced to a rival agency. Intrigue!",
-    options: ["Report to HQ", "Investigate further"],
-    next: ["level6_report", "level6_intro"],
-    hint: "Reporting to HQ can escalate the response."
-  },
-  level6_report: {
-    text: "HQ: 'Great job, Agent.'",
-    options: ["Continue"],
-    next: ["level7_intro"],
-    hint: "Keep up the good work!"
-  },
-  level6_usb: {
-    text: "The USB contains a file: 'gridlock.exe'. Suspicious!",
-    options: ["Run it", "Quarantine USB"],
-    next: ["level6_run_usb", "level6_quarantine"],
-    hint: "Running unknown files is risky. Quarantine is safer."
-  },
-  level6_run_usb: {
-    text: "'gridlock.exe' launches a game of Snake. You win! But the grid is still at risk.",
-    options: ["Restart Level"],
-    next: ["level6_intro"],
-    hint: "Solving the breach is more important than games."
-  },
-  level6_quarantine: {
-    text: "USB quarantined. HQ is pleased. You get a virtual high-five!",
-    options: ["Continue"],
-    next: ["level7_intro"],
-    hint: "Quarantining suspicious devices is best practice."
-  },
-  level7_intro: {
-    text: "HQ: 'Insider suspected! What's your move?'",
-    options: ["Interview suspect", "Check access logs", "Order cookies"],
-    next: ["level7_suspect", "level7_logs", "level7_cookies"],
-    hint: "Start with questioning the suspect or checking access logs."
-  },
-  level7_suspect: {
-    text: "Suspect says, 'I followed all procedures.'",
-    options: ["Check their terminal", "Let them go"],
-    next: ["level7_terminal", "level7_intro"],
-    hint: "Checking their terminal can reveal suspicious activity."
-  },
-  level7_logs: {
-    text: "Access logs show multiple failed logins.",
-    options: ["Trace logins", "Ignore"],
-    next: ["level7_trace", "level7_intro"],
-    hint: "Tracing logins can reveal the attacker's methods."
-  },
-  level7_cookies: {
-    text: "The cookies are chocolate chip. You feel lucky!",
-    options: ["Back to work"],
-    next: ["level7_intro"],
-    hint: "A morale boost is nice, but doesn't solve the case."
-  },
-  level7_terminal: {
-    text: "You find a process named 'notavirus.exe'. Again?!",
-    options: ["Terminate process", "Ignore"],
-    next: ["level7_terminate", "level7_intro"],
-    hint: "Terminating the process can contain the threat."
-  },
-  level7_terminate: {
-    text: "Process terminated. The threat is contained. HQ is happy!",
-    options: ["Continue"],
-    next: ["level8_intro"],
-    hint: "Removing the threat is a top priority."
-  },
-  level7_trace: {
-    text: "Logins traced to a rival agency. The plot thickens!",
-    options: ["Report to HQ", "Investigate further"],
-    next: ["level7_report", "level7_intro"],
-    hint: "Reporting to HQ can escalate the response."
-  },
-  level7_report: {
-    text: "HQ: 'Excellent work, Agent.'",
-    options: ["Continue"],
-    next: ["level8_intro"],
-    hint: "Keep up the good work!"
-  },
-  level8_intro: {
-    text: "HQ: 'Dark web chatter detected! What's your move?'",
-    options: ["Monitor forums", "Contact informant", "Order pizza"],
-    next: ["level8_forums", "level8_informant", "level8_pizza"],
-    hint: "Start with monitoring forums or contacting the informant."
-  },
-  level8_forums: {
-    text: "You find a post: 'PH4NT0M auctions zero-days.'",
-    options: ["Trace post", "Ignore"],
-    next: ["level8_trace", "level8_intro"],
-    hint: "Tracing the post can reveal the attacker's methods."
-  },
-  level8_informant: {
-    text: "Informant says, 'Ghostline never uses the same forum twice.'",
-    options: ["Ask for more info", "Thank informant"],
-    next: ["level8_more_info", "level8_intro"],
-    hint: "Asking for more information can provide valuable insights."
-  },
-  level8_pizza: {
-    text: "The pizza is cold. You lose -1 morale!",
-    options: ["Back to work"],
-    next: ["level8_intro"],
-    hint: "A morale boost is nice, but doesn't solve the case."
-  },
-  level8_trace: {
-    text: "Post traced to a hidden server. Intrigue!",
-    options: ["Report to HQ", "Investigate further"],
-    next: ["level8_report", "level8_intro"],
-    hint: "Reporting to HQ can escalate the response."
-  },
-  level8_report: {
-    text: "HQ: 'Great job, Agent.'",
-    options: ["Continue"],
-    next: ["level9_intro"],
-    hint: "Keep up the good work!"
-  },
-  level8_more_info: {
-    text: "Informant whispers, 'Check for hidden links in the .onion marketplace.'",
-    options: ["Investigate", "Ignore"],
-    next: ["level8_investigate", "level8_intro"],
-    hint: "Investigating hidden links can reveal the attacker's methods."
-  },
-  level8_investigate: {
-    text: "You find a secret message: 'The strings will be cut.'",
-    options: ["Report to HQ", "Ignore"],
-    next: ["level8_report", "level8_intro"],
-    hint: "Reporting to HQ can escalate the response."
-  },
-  level9_intro: {
-    text: "HQ: 'Transit system hacked! What's your move?'",
-    options: ["Check control center", "Interview supervisor", "Order coffee"],
-    next: ["level9_control", "level9_supervisor", "level9_coffee"],
-    hint: "Start with technical investigation or staff interviews."
-  },
-  level9_control: {
-    text: "Control center is locked out. The attack message says 'Digital Liberation: PH4NT0M.'",
-    options: ["Trace message", "Ignore"],
-    next: ["level9_trace", "level9_intro"],
-    hint: "Tracing the message can reveal the attacker's methods."
-  },
-  level9_supervisor: {
-    text: "Supervisor says, 'All trains stopped at once.'",
-    options: ["Check WiFi router", "Ignore"],
-    next: ["level9_wifi", "level9_intro"],
-    hint: "Checking the WiFi router can reveal the attacker's methods."
-  },
-  level9_coffee: {
-    text: "The coffee is burnt. You lose -1 morale!",
-    options: ["Back to work"],
-    next: ["level9_intro"],
-    hint: "A morale boost is nice, but doesn't solve the case."
-  },
-  level9_trace: {
-    text: "Message traced to a commuter's phone. Intrigue!",
-    options: ["Report to HQ", "Investigate further"],
-    next: ["level9_report", "level9_intro"],
-    hint: "Reporting to HQ can escalate the response."
-  },
-  level9_report: {
-    text: "HQ: 'Excellent work, Agent.'",
-    options: ["Continue"],
-    next: ["level10_intro"],
-    hint: "Keep up the good work!"
-  },
-  level9_wifi: {
-    text: "You find a rogue device on the train WiFi. Suspicious!",
-    options: ["Quarantine device", "Ignore"],
-    next: ["level9_quarantine", "level9_intro"],
-    hint: "Quarantining the device can prevent further attacks."
-  },
-  level9_quarantine: {
-    text: "Device quarantined. The trains are running again!",
-    options: ["Continue"],
-    next: ["level10_intro"],
-    hint: "Quarantining the device can prevent further attacks."
-  },
-  level10_intro: {
-    text: "HQ: 'This is it, Agent. Face GHOSTLINE!'",
-    options: ["Confront GHOSTLINE", "Set a trap", "Order celebratory cake"],
-    next: ["level10_confront", "level10_trap", "level10_cake"],
-    hint: "This is your final mission. Confront GHOSTLINE or set a trap."
-  },
-  level10_confront: {
-    text: "GHOSTLINE: 'You're persistent, Agent. But can you see the pattern in the chaos?'",
-    options: ["Challenge GHOSTLINE", "Offer alliance"],
-    next: ["level10_challenge", "level10_alliance"],
-    hint: "Challenge GHOSTLINE or offer an alliance."
-  },
-  level10_trap: {
-    text: "You set a digital trap. GHOSTLINE almost falls for it!",
-    options: ["Spring the trap", "Wait"],
-    next: ["level10_spring", "level10_wait"],
-    hint: "Spring the trap or wait for GHOSTLINE to make a move."
-  },
-  level10_cake: {
-    text: "The cake is a lie. Or is it? You gain +1 morale!",
-    options: ["Back to mission"],
-    next: ["level10_intro"],
-    hint: "The cake is a metaphor for the end of trust."
-  },
-  level10_challenge: {
-    text: "GHOSTLINE vanishes, leaving a cryptic message: 'The strings have been cut.'",
-    options: ["Report to HQ"],
-    next: ["level10_report"],
-    hint: "Report your findings to HQ."
-  },
-  level10_alliance: {
-    text: "GHOSTLINE laughs. 'Maybe next time, Agent.'",
-    options: ["Back to mission"],
-    next: ["level10_intro"],
-    hint: "Accept GHOSTLINE's offer and work together."
-  },
-  level10_spring: {
-    text: "Trap sprung! GHOSTLINE is caught. HQ celebrates your victory!",
-    options: ["The End"],
-    next: ["level1_intro"],
-    hint: "Congratulations! You've defeated GHOSTLINE."
-  },
-  level10_wait: {
-    text: "You wait. GHOSTLINE escapes. Mission failed!",
-    options: ["Restart Level"],
-    next: ["level10_intro"],
-    hint: "GHOSTLINE escaped. Try again next time."
-  },
-  level10_report: {
-    text: "HQ: 'You did it, Agent. The world is safe... for now.'",
-    options: ["Restart Game"],
-    next: ["level1_intro"],
-    hint: "Restart the game to try again."
+    next: ["level2_intro"]
+  },
+  // ...add similar for each level...
+  "level2_intro": {
+    text: "Mission 2: News outlet website has been defaced. All headlines replaced by 'PH4NT0M WAS HERE'.",
+    options: ["Audit Website Code", "Interview Web Team"],
+    next: ["level2_code", "level2_team"]
+  },
+  // ...repeat structure for all levels...
+  "level10_intro": {
+    text: "Final Mission: GHOSTLINE has infiltrated SECTOR-9 HQ. Confront them in cyberspace.",
+    options: ["Enter Cyberspace", "Set Digital Trap"],
+    next: ["level10_confront", "level10_trap"]
+  },
+  "level10_confront": {
+    text: "You face GHOSTLINE. They offer you a choice: preserve the old system, or join their vision for a new world.",
+    options: ["Defend the System", "Join GHOSTLINE"],
+    next: ["ending_good", "ending_rogue"]
+  },
+  "level10_trap": {
+    text: "You set a digital snare. GHOSTLINE nearly escapes but you have one shot to finish it.",
+    options: ["Spring the Trap", "Wait"],
+    next: ["ending_good", "ending_fail"]
+  },
+  "ending_good": {
+    text: "You defeated GHOSTLINE and secured global digital trust. The world owes you a debt.",
+    options: ["Play Again"],
+    next: ["intro"]
+  },
+  "ending_rogue": {
+    text: "You sided with GHOSTLINE. Together, you reshape digital society—at a heavy cost.",
+    options: ["Play Again"],
+    next: ["intro"]
+  },
+  "ending_fail": {
+    text: "GHOSTLINE escapes. The world faces a digital dark age... for now.",
+    options: ["Play Again"],
+    next: ["intro"]
   }
 };
 
