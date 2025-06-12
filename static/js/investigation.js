@@ -447,3 +447,5 @@ document.addEventListener('DOMContentLoaded', () => {
     setNpcPortrait();
     showInvestigationIntro();
 });
+
+let lastInterviewedNpc = null;
