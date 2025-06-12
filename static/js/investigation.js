@@ -132,26 +132,84 @@ const locationToLevel = {
   global: 'level10'
 };
 
+// --- Combined Interview Menu ---
 function showInterviewMenu() {
     const bg = document.querySelector('.location-background');
     const loc = bg ? bg.dataset.location : 'hq';
+    const locationToLevel = {
+      hq: 'level1',
+      news: 'level2',
+      bank: 'level3',
+      company: 'level4',
+      school: 'level5',
+      government: 'level6',
+      hospital: 'level7',
+      transport: 'level8',
+      cafe: 'level9',
+      global: 'level10'
+    };
     const levelKey = locationToLevel[loc] || 'level1';
-    const dialogues = window.missionDialogues[levelKey];
-    if (!dialogues || typeof dialogues !== 'object') {
-        console.error("No dialogues found for location:", loc, dialogues);
+    const mission = window.missionDialogues[levelKey] || {};
+    const legacy = (typeof levelDialogues !== 'undefined' && levelDialogues[levelKey]) ? levelDialogues[levelKey] : {};
+    const missionNpcs = Object.keys(mission);
+    const legacyNpcs = Object.keys(legacy);
+    const allNpcs = Array.from(new Set([...missionNpcs, ...legacyNpcs]));
+    if (allNpcs.length === 0) {
         showDialogue('System', 'No NPCs available for interview at this location.', []);
         return;
     }
-    const npcNames = Object.keys(dialogues);
-    const choices = npcNames.map(n => ({
-        text: `Talk to ${n}` + (n === lastInterviewedNpc ? ' (again)' : ''),
-        nextDialogue: { npc: n, text: dialogues[n].text, choices: dialogues[n].choices }
+    const choices = allNpcs.map(npc => ({
+        text: `Talk to ${npc}`,
+        action: () => {
+            if (missionNpcs.includes(npc)) {
+                showMissionInterview(levelKey, npc);
+            } else {
+                showDialogue(levelKey, npc, 0);
+            }
+        }
     }));
     choices.push({
         text: 'Show Summary',
         action: showSummary
     });
     showDialogue('Contact Selection', 'Who would you like to interview next?', choices);
+}
+
+// --- Mission Interview Dialogue Traversal ---
+function showMissionInterview(level, npc, node = null) {
+    if (!window.missionDialogues || !window.missionDialogues[level] || !window.missionDialogues[level][npc]) {
+        showDialogue('System', 'Dialogue not found for this NPC.', [
+            { text: 'Back to Interview Menu', action: showInterviewMenu }
+        ]);
+        return;
+    }
+    if (!node) node = window.missionDialogues[level][npc];
+    const speakerEl = document.getElementById('dialogueSpeaker');
+    const textEl = document.getElementById('dialogueText');
+    const optionsEl = document.getElementById('dialogueOptions');
+    if (speakerEl) speakerEl.innerText = npc;
+    if (textEl) textEl.innerText = node.text || '';
+    if (optionsEl) optionsEl.innerHTML = '';
+    if (Array.isArray(node.choices) && node.choices.length > 0) {
+        node.choices.forEach(choice => {
+            const btn = document.createElement('button');
+            btn.className = 'choice-btn';
+            btn.innerText = choice.text;
+            btn.onclick = () => {
+                if (typeof choice.action === 'function') choice.action();
+                if (choice.nextDialogue) {
+                    showMissionInterview(level, npc, choice.nextDialogue);
+                } else {
+                    // End of dialogue or back to menu
+                    if (optionsEl) optionsEl.innerHTML = '<em>End of interview.</em>';
+                }
+            };
+            optionsEl.appendChild(btn);
+        });
+    } else {
+        // No choices: end of dialogue
+        if (optionsEl) optionsEl.innerHTML = '<em>End of interview.</em>';
+    }
 }
 
 function showSummary() {

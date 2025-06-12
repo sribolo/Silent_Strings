@@ -160,17 +160,26 @@
 }
 .choice-btn {
   display: block;
-  background: #e2c49a;
-  border: 2px solid #c2a477;
-  border-radius: 8px;
-  padding: 8px 16px;
-  margin: 6px 0;
-  font-size: 1em;
+  background: #232369;
+  border: 2px solid #6C5CE7;
+  border-radius: 10px;
+  padding: 10px 20px;
+  margin: 8px 0;
+  font-size: 1.08em;
+  color: #fff;
+  font-family: 'Share Tech Mono', monospace;
   cursor: pointer;
   text-align: left;
-  transition: background 0.2s;
+  box-shadow: 0 2px 10px #6C5CE733;
+  transition: background 0.2s, box-shadow 0.2s, color 0.2s, border 0.2s;
 }
-.choice-btn:hover { background: #f5e1c0; }
+.choice-btn:hover, .choice-btn:focus {
+  background: #6C5CE7;
+  color: #fff;
+  border-color: #A499FF;
+  box-shadow: 0 0 16px #6C5CE799, 0 2px 10px #23236955;
+  outline: none;
+}
 .dialogue-continue {
   margin-top: 16px;
   background: #6C5CE7;
