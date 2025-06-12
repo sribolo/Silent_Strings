@@ -29,7 +29,7 @@ window.missionDialogues = {
                         clue: "Deleted log file",
                         choices: [
                           {
-                            text: "I’ll try recovering the deleted logs with the File Recovery Tool.",
+                            text: "I'll try recovering the deleted logs with the File Recovery Tool.",
                             action: () => window.markObjectiveComplete(3),
                             nextDialogue: {
                               npc: "Marcus Chen - IT Analyst",
@@ -54,7 +54,7 @@ window.missionDialogues = {
             npc: "Marcus Chen - IT Analyst",
             text: "Based on the logs, the initial access came from the network hub. The intruder moved fast to the admin workstation.",
             choices: [
-              { text: "I’ll inspect the network hub.", action: () => window.markObjectiveComplete(0), nextDialogue: { npc: "Marcus Chen - IT Analyst", text: "Stay safe, Agent.", choices: [{ text: "Back to Interview Menu", action: () => showInterviewMenu() }] } }
+              { text: "I'll inspect the network hub.", action: () => window.markObjectiveComplete(0), nextDialogue: { npc: "Marcus Chen - IT Analyst", text: "Stay safe, Agent.", choices: [{ text: "Back to Interview Menu", action: () => showInterviewMenu() }] } }
             ]
           }
         },
@@ -64,7 +64,7 @@ window.missionDialogues = {
             npc: "Marcus Chen - IT Analyst",
             text: "Reset the admin credentials and check for any new user accounts or permissions added since the breach.",
             choices: [
-              { text: "I’ll reset credentials and review user accounts.", action: () => window.markObjectiveComplete(4), nextDialogue: { npc: "Marcus Chen - IT Analyst", text: "Let me know if you spot anything else odd.", choices: [{ text: "Back to Interview Menu", action: () => showInterviewMenu() }] } }
+              { text: "I'll reset credentials and review user accounts.", action: () => window.markObjectiveComplete(4), nextDialogue: { npc: "Marcus Chen - IT Analyst", text: "Let me know if you spot anything else odd.", choices: [{ text: "Back to Interview Menu", action: () => showInterviewMenu() }] } }
             ]
           }
         }
@@ -79,7 +79,7 @@ window.missionDialogues = {
             npc: "Sarah Wilson - Security Guard",
             text: "Only staff on the list and the cleaning crew. But the backup generator rebooted at 2AM, matching the breach time.",
             choices: [
-              { text: "I’ll check the generator logs as well.", action: () => window.markObjectiveComplete(0), nextDialogue: { npc: "Sarah Wilson - Security Guard", text: "I'll help you access the generator room.", choices: [{ text: "Back to Interview Menu", action: () => showInterviewMenu() }] } }
+              { text: "I'll check the generator logs as well.", action: () => window.markObjectiveComplete(0), nextDialogue: { npc: "Sarah Wilson - Security Guard", text: "I'll help you access the generator room.", choices: [{ text: "Back to Interview Menu", action: () => showInterviewMenu() }] } }
             ]
           }
         },
@@ -90,6 +90,51 @@ window.missionDialogues = {
             text: "IT already quarantined it. The analysis showed it contained a credential-stealing malware.",
             choices: [
               { text: "That matches the admin compromise.", action: () => window.markObjectiveComplete(2), nextDialogue: { npc: "Sarah Wilson - Security Guard", text: "Glad I reported it!", choices: [{ text: "Back to Interview Menu", action: () => showInterviewMenu() }] } }
+            ]
+          }
+        }
+      ]
+    },
+    'Janitor': {
+      text: "I'm just the janitor, but I did see someone wandering near the server room after midnight.",
+      choices: [
+        {
+          text: "Next",
+          nextDialogue: {
+            text: "They dropped something, but when I checked, it was gone.",
+            clue: "Possible evidence was picked up by someone else.",
+            choices: [
+              {
+                text: "Next",
+                nextDialogue: {
+                  text: "Hope that helps, Agent. Let me know if you need anything cleaned up!",
+                  choices: [
+                    { text: "Back to Interview Menu", action: () => showInterviewMenu() }
+                  ]
+                }
+              }
+            ]
+          }
+        }
+      ]
+    },
+    'Receptionist': {
+      text: "Are you here for IT? The security guard's been asking about a USB drive.",
+      choices: [
+        {
+          text: "Next",
+          nextDialogue: {
+            text: "A delivery guy came by, but left in a hurry. Didn't even sign out.",
+            choices: [
+              {
+                text: "Next",
+                nextDialogue: {
+                  text: "If you need me, I'll be at the front desk!",
+                  choices: [
+                    { text: "Back to Interview Menu", action: () => showInterviewMenu() }
+                  ]
+                }
+              }
             ]
           }
         }
@@ -113,7 +158,7 @@ window.missionDialogues = {
                 text: "Who added the malicious script?",
                 nextDialogue: {
                   npc: "Emma Rodriguez - Web Editor",
-                  text: "Logs show an access from the intern's machine at 4AM, but he swears he didn’t do it.",
+                  text: "Logs show an access from the intern's machine at 4AM, but he swears he didn't do it.",
                   choices: [
                     { text: "I'll check his extension logs.", action: () => window.markObjectiveComplete(2), nextDialogue: { npc: "Emma Rodriguez - Web Editor", text: "Thanks, Agent.", choices: [{ text: "Back to Interview Menu", action: () => showInterviewMenu() }] } }
                   ]
@@ -161,6 +206,50 @@ window.missionDialogues = {
           }
         }
       ]
+    },
+    'News Reporter': {
+      text: "I stayed late last night and saw the home page change suddenly around 3AM.",
+      choices: [
+        {
+          text: "Next",
+          nextDialogue: {
+            text: "I thought it was just a glitch, but then all the headlines changed.",
+            choices: [
+              {
+                text: "Next",
+                nextDialogue: {
+                  text: "Let me know if you need a statement for the press.",
+                  choices: [
+                    { text: "Back to Interview Menu", action: () => showInterviewMenu() }
+                  ]
+                }
+              }
+            ]
+          }
+        }
+      ]
+    },
+    'Night Intern': {
+      text: "I got a weird email from IT about resetting my password, but I didn't click the link.",
+      choices: [
+        {
+          text: "Next",
+          nextDialogue: {
+            text: "The other intern did, though... and now their browser is acting weird.",
+            choices: [
+              {
+                text: "Next",
+                nextDialogue: {
+                  text: "Maybe I'll ask IT before clicking next time!",
+                  choices: [
+                    { text: "Back to Interview Menu", action: () => showInterviewMenu() }
+                  ]
+                }
+              }
+            ]
+          }
+        }
+      ]
     }
   },
   'level3': {
@@ -182,7 +271,7 @@ window.missionDialogues = {
                   npc: "Jennifer Park - Bank Teller",
                   text: "I feel awful. What do I do now?",
                   choices: [
-                    { text: "Quarantine your PC and don’t open anything else.", action: () => showInterviewMenu() }
+                    { text: "Quarantine your PC and don't open anything else.", action: () => showInterviewMenu() }
                   ]
                 }
               }
@@ -190,27 +279,27 @@ window.missionDialogues = {
           }
         },
         {
-          text: "Where’s the ransomware note?",
+          text: "Where's the ransomware note?",
           nextDialogue: {
             npc: "Jennifer Park - Bank Teller",
             text: "It's on the shared drive and my desktop. IT has a sample.",
             clue: "Ransomware sample",
             choices: [
-              { text: "I’ll analyze it with IT.", action: () => window.markObjectiveComplete(2), nextDialogue: { npc: "Jennifer Park - Bank Teller", text: "Let me know if you can recover anything.", choices: [{ text: "Back to Interview Menu", action: () => showInterviewMenu() }] } }
+              { text: "I'll analyze it with IT.", action: () => window.markObjectiveComplete(2), nextDialogue: { npc: "Jennifer Park - Bank Teller", text: "Let me know if you can recover anything.", choices: [{ text: "Back to Interview Menu", action: () => showInterviewMenu() }] } }
             ]
           }
         }
       ]
     },
     'Rajesh Singh - Bank IT': {
-      text: "We found the malware sample and traced its spread through the network. The attack started from Jennifer’s workstation.",
+      text: "We found the malware sample and traced its spread through the network. The attack started from Jennifer's workstation.",
       choices: [
         {
-          text: "Let’s look at the network logs.",
+          text: "Let's look at the network logs.",
           action: () => window.markObjectiveComplete(3),
           nextDialogue: {
             npc: "Rajesh Singh - Bank IT",
-            text: "Here’s the log. You can see when the ransomware beaconed out.",
+            text: "Here's the log. You can see when the ransomware beaconed out.",
             clue: "Network log",
             choices: [
               { text: "Can we restore banking services?", action: () => window.markObjectiveComplete(4), nextDialogue: { npc: "Rajesh Singh - Bank IT", text: "We have a clean backup from 1 hour before infection. Starting restore now.", choices: [{ text: "Back to Interview Menu", action: () => showInterviewMenu() }] } }
@@ -218,352 +307,470 @@ window.missionDialogues = {
           }
         }
       ]
+    },
+    'Bank Guard': {
+      text: "No break-ins last night, but I saw a lot of staff working late.",
+      choices: [
+        {
+          text: "Next",
+          nextDialogue: {
+            text: "One of the tellers looked really stressed out after checking their email.",
+            choices: [
+              {
+                text: "Next",
+                nextDialogue: {
+                  text: "Good luck, Agent. I'll keep an eye out.",
+                  choices: [
+                    { text: "Back to Interview Menu", action: () => showInterviewMenu() }
+                  ]
+                }
+              }
+            ]
+          }
+        }
+      ]
+    },
+    'Cleaning Staff': {
+      text: "Found some shredded documents near the IT office trash.",
+      choices: [
+        {
+          text: "Next",
+          nextDialogue: {
+            text: "They had 'CONFIDENTIAL' stamped on them.",
+            choices: [
+              {
+                text: "Next",
+                nextDialogue: {
+                  text: "Want me to collect anything suspicious I see?",
+                  choices: [
+                    { text: "Back to Interview Menu", action: () => showInterviewMenu() }
+                  ]
+                }
+              }
+            ]
+          }
+        }
+      ]
     }
   },
 
-
-    // LEVEL 4: Shadow Repo (Software Company)
-    'level4': {
-      'Chloe Tan - DevOps Engineer': {
-        text: "Last night's commit triggered security warnings, but the build was pushed anyway. The code repo is our prime suspect.",
-        choices: [
-          {
-            text: "Let’s audit the recent commits for code injection.",
-            action: () => window.markObjectiveComplete(0),
-            nextDialogue: {
-              npc: "Chloe Tan - DevOps Engineer",
-              text: "Found it! Here’s a malicious commit in the repo. It injected unauthorized code into authentication.",
-              clue: "Compromised repo commit",
-              choices: [
-                {
-                  text: "Revert the malicious commit.",
-                  action: () => window.markObjectiveComplete(3),
-                  nextDialogue: {
-                    npc: "Chloe Tan - DevOps Engineer",
-                    text: "Reverted. The next step is to review the pipeline warnings.",
-                    choices: [
-                      { text: "Audit CI/CD pipeline.", action: () => showInterviewMenu() }
-                    ]
-                  }
+  'level4': {
+    'Chloe Tan - DevOps Engineer': {
+      text: "Last night's commit triggered security warnings, but the build was pushed anyway. The code repo is our prime suspect.",
+      choices: [
+        {
+          text: "Let's audit the recent commits for code injection.",
+          action: () => window.markObjectiveComplete(0),
+          nextDialogue: {
+            npc: "Chloe Tan - DevOps Engineer",
+            text: "Found it! Here's a malicious commit in the repo. It injected unauthorized code into authentication.",
+            clue: "Compromised repo commit",
+            choices: [
+              {
+                text: "Revert the malicious commit.",
+                action: () => window.markObjectiveComplete(3),
+                nextDialogue: {
+                  npc: "Chloe Tan - DevOps Engineer",
+                  text: "Reverted. The next step is to review the pipeline warnings.",
+                  choices: [
+                    { text: "Audit CI/CD pipeline.", action: () => showInterviewMenu() }
+                  ]
                 }
-              ]
-            }
-          },
-          {
-            text: "What did the pipeline warning logs show?",
-            nextDialogue: {
-              npc: "Chloe Tan - DevOps Engineer",
-              text: "Here—the CI/CD logs flagged a credential reuse incident. I think one of our devs’ accounts was compromised.",
-              clue: "Pipeline warning logs",
-              choices: [
-                { text: "Identify compromised developer account.", action: () => window.markObjectiveComplete(2), nextDialogue: { npc: "Chloe Tan - DevOps Engineer", text: "Looks like Tom Lin’s account was used for the malicious commit.", choices: [{ text: "Interview Tom Lin.", action: () => showInterviewMenu() }] } }
-              ]
-            }
+              }
+            ]
           }
-        ]
-      },
-      'Tom Lin - Junior Developer': {
-        text: "I’m so sorry! I reused my password for both email and the repo. Maybe that's how my account got hacked.",
-        choices: [
-          {
-            text: "Credential reuse is risky. Please reset all your passwords now.",
-            clue: "Credential reuse",
-            action: () => window.markObjectiveComplete(2),
-            nextDialogue: {
-              npc: "Tom Lin - Junior Developer",
-              text: "Will do. Is there anything else I should check?",
-              choices: [
-                { text: "Enable two-factor authentication on all your accounts.", action: () => showInterviewMenu() }
-              ]
-            }
+        },
+        {
+          text: "What did the pipeline warning logs show?",
+          nextDialogue: {
+            npc: "Chloe Tan - DevOps Engineer",
+            text: "Here—the CI/CD logs flagged a credential reuse incident. I think one of our devs' accounts was compromised.",
+            clue: "Pipeline warning logs",
+            choices: [
+              { text: "Identify compromised developer account.", action: () => window.markObjectiveComplete(2), nextDialogue: { npc: "Chloe Tan - DevOps Engineer", text: "Looks like Tom Lin's account was used for the malicious commit.", choices: [{ text: "Interview Tom Lin.", action: () => showInterviewMenu() }] } }
+            ]
           }
-        ]
-      }
+        }
+      ]
     },
-  
-    // LEVEL 5: Trojan Trap (Government Server)
-    'level5': {
-      'Maria Gomez - System Administrator': {
-        text: "Agent, we found a scheduled task called 'totally_safe.exe'—it's definitely not safe.",
-        choices: [
-          {
-            text: "Let’s analyze the persistent malware.",
-            action: () => window.markObjectiveComplete(0),
-            nextDialogue: {
-              npc: "Maria Gomez - System Administrator",
-              text: "It’s a backdoor binary—here’s the file.",
-              clue: "Backdoor binary",
-              choices: [
-                {
-                  text: "Remove the backdoor and check for persistence.",
-                  nextDialogue: {
-                    npc: "Maria Gomez - System Administrator",
-                    text: "Done. But there's more: the task scheduler log shows how the malware stayed hidden.",
-                    clue: "Task scheduler log",
-                    choices: [
-                      { text: "Analyze unauthorized scheduled tasks.", action: () => window.markObjectiveComplete(1), nextDialogue: { npc: "Maria Gomez - System Administrator", text: "Logs sent to your terminal.", choices: [{ text: "Back to Interview Menu", action: () => showInterviewMenu() }] } }
-                    ]
-                  }
+    'Tom Lin - Junior Developer': {
+      text: "I'm so sorry! I reused my password for both email and the repo. Maybe that's how my account got hacked.",
+      choices: [
+        {
+          text: "Credential reuse is risky. Please reset all your passwords now.",
+          clue: "Credential reuse",
+          action: () => window.markObjectiveComplete(2),
+          nextDialogue: {
+            npc: "Tom Lin - Junior Developer",
+            text: "Will do. Is there anything else I should check?",
+            choices: [
+              { text: "Enable two-factor authentication on all your accounts.", action: () => showInterviewMenu() }
+            ]
+          }
+        }
+      ]
+    },
+    'QA Tester': {
+      text: "I flagged a suspicious change in the repo, but it was pushed anyway.",
+      choices: [
+        {
+          text: "Next",
+          nextDialogue: {
+            text: "Build server failed three times before they finally reverted.",
+            choices: [
+              {
+                text: "Next",
+                nextDialogue: {
+                  text: "Maybe someone overrode the approval process?",
+                  choices: [
+                    { text: "Back to Interview Menu", action: () => showInterviewMenu() }
+                  ]
                 }
-              ]
-            }
-          },
-          {
-            text: "Can you help recover deleted database records?",
-            action: () => window.markObjectiveComplete(2),
-            nextDialogue: {
-              npc: "Maria Gomez - System Administrator",
-              text: "Here’s a database restore point from before the attack.",
-              clue: "Database restore point",
-              choices: [
-                { text: "Restore the database and trace admin privilege escalation.", action: () => showInterviewMenu() }
-              ]
-            }
+              }
+            ]
           }
-        ]
-      }
+        }
+      ]
     },
-  
-    // LEVEL 6: Dark Tunn3l (Power Grid)
-    'level6': {
-      'Rachel Yeo - Grid Operator': {
-        text: "The monitoring station flagged a rogue USB device last night. It might have carried malware into our SCADA system.",
-        choices: [
-          {
-            text: "Let’s find the rogue USB device.",
-            action: () => window.markObjectiveComplete(0),
-            nextDialogue: {
-              npc: "Rachel Yeo - Grid Operator",
-              text: "We found a USB drive plugged into the control room terminal.",
-              clue: "USB drive",
-              choices: [
-                { text: "Analyze the device with the USB Analyzer.", action: () => showInterviewMenu() }
-              ]
-            }
-          },
-          {
-            text: "Any recent firmware changes?",
-            nextDialogue: {
-              npc: "Rachel Yeo - Grid Operator",
-              text: "Yes—here’s a diff between last night’s and today’s firmware. Unauthorized code was loaded.",
-              clue: "Firmware diff",
-              choices: [
-                { text: "Analyze firmware changes.", action: () => window.markObjectiveComplete(1), nextDialogue: { npc: "Rachel Yeo - Grid Operator", text: "Let me know if you find the malware source.", choices: [{ text: "Back to Interview Menu", action: () => showInterviewMenu() }] } }
-              ]
-            }
-          },
-          {
-            text: "Can you show me remote access logs?",
-            action: () => window.markObjectiveComplete(2),
-            nextDialogue: {
-              npc: "Rachel Yeo - Grid Operator",
-              text: "This log shows the exact time an unauthorized connection came through.",
-              clue: "Remote access log",
-              choices: [
-                { text: "Thanks. I’ll correlate this with the USB findings.", action: () => showInterviewMenu() }
-              ]
-            }
+    'Night Manager': {
+      text: "Someone asked for the deploy keys at 2AM, but I refused.",
+      choices: [
+        {
+          text: "Next",
+          nextDialogue: {
+            text: "Glad I did! Something's fishy about last night's deployment.",
+            choices: [
+              { text: "Back to Interview Menu", action: () => showInterviewMenu() }
+            ]
           }
-        ]
-      }
-    },
-  
-    // LEVEL 7: Ghost Protocol (Insider Threat)
-    'level7': {
-      'Anita Lee - Suspect Insider': {
-        text: "You think I’m the rogue agent? I’ve done nothing wrong!",
-        choices: [
-          {
-            text: "The credential access logs point to your terminal.",
-            action: () => window.markObjectiveComplete(1),
-            nextDialogue: {
-              npc: "Anita Lee - Suspect Insider",
-              text: "Impossible! I always lock my screen. Maybe someone else used my credentials.",
-              clue: "Access log",
-              choices: [
-                {
-                  text: "Did you see anything odd in your locker?",
-                  nextDialogue: {
-                    npc: "Anita Lee - Suspect Insider",
-                    text: "Actually... yes. I found this encrypted note. Take it, please.",
-                    clue: "Encrypted locker note",
-                    action: () => window.markObjectiveComplete(2),
-                    choices: [
-                      { text: "We’ll have to crack this encryption to know more.", action: () => showInterviewMenu() }
-                    ]
-                  }
-                }
-              ]
-            }
-          },
-          {
-            text: "Were any unusual processes running on your computer?",
-            nextDialogue: {
-              npc: "Anita Lee - Suspect Insider",
-              text: "I noticed a strange hash in my process list, but I couldn’t close it.",
-              clue: "Process hash",
-              action: () => window.markObjectiveComplete(0),
-              choices: [
-                { text: "Send the hash to the security team.", action: () => showInterviewMenu() }
-              ]
-            }
-          }
-        ]
-      },
-      'Henry Ng - HR Officer': {
-        text: "Kim and Lee both requested leave after the incident. Strange timing, right?",
-        choices: [
-          {
-            text: "Did you overhear any conversation about the breach?",
-            nextDialogue: {
-              npc: "Henry Ng - HR Officer",
-              text: "I overheard Kim mention a 'clean exit' to someone on the phone.",
-              clue: "Overheard conversation",
-              choices: [
-                { text: "Thanks, that could be important.", action: () => showInterviewMenu() }
-              ]
-            }
-          }
-        ]
-      }
-    },
-  
-    // LEVEL 8: Deep Dive (Dark Web)
-    'level8': {
-      'Cipher - Dark Web Informant': {
-        text: "The forum’s buzzing. PH4NT0M is auctioning a new zero-day, and Ghostline’s aliases keep changing.",
-        choices: [
-          {
-            text: "Can you point me to PH4NT0M’s posts?",
-            action: () => window.markObjectiveComplete(0),
-            nextDialogue: {
-              npc: "Cipher - Dark Web Informant",
-              text: "Here's an encrypted forum post—it matches their style.",
-              clue: "Encrypted forum post",
-              choices: [
-                { text: "I’ll try to decrypt it.", action: () => showInterviewMenu() }
-              ]
-            }
-          },
-          {
-            text: "How do I identify Ghostline’s aliases?",
-            action: () => window.markObjectiveComplete(1),
-            nextDialogue: {
-              npc: "Cipher - Dark Web Informant",
-              text: "Check this alias log—many posts use the same phrasing and mistakes.",
-              clue: "Alias log",
-              choices: [
-                { text: "Good catch. I’ll investigate further.", action: () => showInterviewMenu() }
-              ]
-            }
-          },
-          {
-            text: "Can you trace the zero-day auction data?",
-            action: () => window.markObjectiveComplete(3),
-            nextDialogue: {
-              npc: "Cipher - Dark Web Informant",
-              text: "Here’s the auction data. It’s encrypted but you might break it with the Message Decryptor.",
-              clue: "Auction data",
-              choices: [
-                { text: "Thanks. I’ll start decoding.", action: () => showInterviewMenu() }
-              ]
-            }
-          }
-        ]
-      }
-    },
-  
-    // LEVEL 9: Red Flag (Public Transport)
-    'level9': {
-      'Lina Sun - Transit Supervisor': {
-        text: "We lost control of the train network this morning. Someone sent a DDoS that knocked out the control center.",
-        choices: [
-          {
-            text: "Let’s restore the control center first.",
-            action: () => window.markObjectiveComplete(0),
-            nextDialogue: {
-              npc: "Lina Sun - Transit Supervisor",
-              text: "We’re patching now. Here's the DDoS log.",
-              clue: "DDoS log",
-              choices: [
-                { text: "Analyze the attack message.", action: () => showInterviewMenu() }
-              ]
-            }
-          },
-          {
-            text: "Was any service exploited?",
-            nextDialogue: {
-              npc: "Lina Sun - Transit Supervisor",
-              text: "Yes, we found a buffer overflow in the ticket service.",
-              clue: "Service exploit",
-              action: () => window.markObjectiveComplete(3),
-              choices: [
-                { text: "Patch the service and secure passenger data.", action: () => showInterviewMenu() }
-              ]
-            }
-          },
-          {
-            text: "Did the attacker tamper with WiFi configuration?",
-            nextDialogue: {
-              npc: "Lina Sun - Transit Supervisor",
-              text: "Yes, our team found a rogue config file.",
-              clue: "WiFi config",
-              action: () => window.markObjectiveComplete(2),
-              choices: [
-                { text: "Remove rogue devices and monitor WiFi logs.", action: () => showInterviewMenu() }
-              ]
-            }
-          }
-        ]
-      }
-    },
-  
-    // LEVEL 10: Final String (Global Systems)
-    'level10': {
-      'SECTOR9 Director': {
-        text: "Agent, Silent Strings has activated globally. The worm is spreading through critical systems.",
-        choices: [
-          {
-            text: "How do I disarm the Silent Strings protocol?",
-            action: () => window.markObjectiveComplete(0),
-            nextDialogue: {
-              npc: "SECTOR9 Director",
-              text: "We captured the worm payload—deactivating it is your priority.",
-              clue: "Worm payload",
-              choices: [
-                { text: "I’ll run the Worm Deactivator now.", action: () => showInterviewMenu() }
-              ]
-            }
-          },
-          {
-            text: "Where is the worm spreading?",
-            nextDialogue: {
-              npc: "SECTOR9 Director",
-              text: "Here’s a map showing global propagation.",
-              clue: "Attack map",
-              action: () => window.markObjectiveComplete(2),
-              choices: [
-                { text: "Trace propagation to find Ghostline's last move.", action: () => showInterviewMenu() }
-              ]
-            }
-          },
-          {
-            text: "Any final messages from Ghostline?",
-            nextDialogue: {
-              npc: "SECTOR9 Director",
-              text: "Ghostline left an encrypted message on the Director's Office computer.",
-              clue: "Ghostline's message",
-              action: () => window.markObjectiveComplete(1),
-              choices: [
-                { text: "I'll decrypt it now.", action: () => showInterviewMenu() }
-              ]
-            }
-          }
-        ]
-      }
+        }
+      ]
     }
-  };
-  
+  },
+
+  'level5': {
+    'Front Desk': {
+      text: "We had three visitors yesterday for 'system maintenance'.",
+      choices: [
+        {
+          text: "Next",
+          nextDialogue: {
+            text: "One of them left a flash drive at reception, but security took it.",
+            choices: [
+              {
+                text: "Next",
+                nextDialogue: {
+                  text: "If you need the logbook, just ask!",
+                  choices: [
+                    { text: "Back to Interview Menu", action: () => showInterviewMenu() }
+                  ]
+                }
+              }
+            ]
+          }
+        }
+      ]
+    },
+    'Night Watch': {
+      text: "Power flickered twice around 1AM. I thought it was just old wiring.",
+      choices: [
+        {
+          text: "Next",
+          nextDialogue: {
+            text: "After that, the alarms went off for a few seconds, then nothing.",
+            choices: [
+              {
+                text: "Next",
+                nextDialogue: {
+                  text: "Let me know if you want to check the camera logs.",
+                  choices: [
+                    { text: "Back to Interview Menu", action: () => showInterviewMenu() }
+                  ]
+                }
+              }
+            ]
+          }
+        }
+      ]
+    }
+  },
+
+  'level6': {
+    'Grid Junior': {
+      text: "Ran diagnostics last night—node 14 kept failing.",
+      choices: [
+        {
+          text: "Next",
+          nextDialogue: {
+            text: "Maintenance guy said he'd seen weird firmware errors, too.",
+            choices: [
+              {
+                text: "Next",
+                nextDialogue: {
+                  text: "If you want the log files, I can email them!",
+                  choices: [
+                    { text: "Back to Interview Menu", action: () => showInterviewMenu() }
+                  ]
+                }
+              }
+            ]
+          }
+        }
+      ]
+    },
+    'Security Desk': {
+      text: "All cameras in the control room glitched right before the alarms.",
+      choices: [
+        {
+          text: "Next",
+          nextDialogue: {
+            text: "The only person in there was a new contractor. Want his ID?",
+            choices: [
+              {
+                text: "Next",
+                nextDialogue: {
+                  text: "Let me know if I should check his background.",
+                  choices: [
+                    { text: "Back to Interview Menu", action: () => showInterviewMenu() }
+                  ]
+                }
+              }
+            ]
+          }
+        }
+      ]
+    }
+  },
+
+  'level7': {
+    'Cafeteria Staff': {
+      text: "The suspect always ate alone and used a burner phone at lunch.",
+      choices: [
+        {
+          text: "Next",
+          nextDialogue: {
+            text: "He left in a hurry after getting a call from HR.",
+            choices: [
+              {
+                text: "Next",
+                nextDialogue: {
+                  text: "Want me to check the cafeteria cameras?",
+                  choices: [
+                    { text: "Back to Interview Menu", action: () => showInterviewMenu() }
+                  ]
+                }
+              }
+            ]
+          }
+        }
+      ]
+    },
+    'Janitor': {
+      text: "I saw the same person leave a stack of printouts in the recycling.",
+      choices: [
+        {
+          text: "Next",
+          nextDialogue: {
+            text: "They were labeled 'TOP SECRET' in big red letters.",
+            choices: [
+              {
+                text: "Next",
+                nextDialogue: {
+                  text: "Weird, right? I'll keep an eye out.",
+                  choices: [
+                    { text: "Back to Interview Menu", action: () => showInterviewMenu() }
+                  ]
+                }
+              }
+            ]
+          }
+        }
+      ]
+    }
+  },
+
+  'level8': {
+    'Parking Attendant': {
+      text: "A black van was parked near the staff exit last night.",
+      choices: [
+        {
+          text: "Next",
+          nextDialogue: {
+            text: "No one saw who got in or out.",
+            choices: [
+              {
+                text: "Next",
+                nextDialogue: {
+                  text: "Security might have license plate footage.",
+                  choices: [
+                    { text: "Back to Interview Menu", action: () => showInterviewMenu() }
+                  ]
+                }
+              }
+            ]
+          }
+        }
+      ]
+    },
+    'Late Security': {
+      text: "Radio interference lasted exactly five minutes at midnight.",
+      choices: [
+        {
+          text: "Next",
+          nextDialogue: {
+            text: "It started and stopped like someone flipped a switch.",
+            choices: [
+              {
+                text: "Next",
+                nextDialogue: {
+                  text: "I'll mark it in the log for you.",
+                  choices: [
+                    { text: "Back to Interview Menu", action: () => showInterviewMenu() }
+                  ]
+                }
+              }
+            ]
+          }
+        }
+      ]
+    }
+  },
+
+  'level9': {
+    'Ticket Inspector': {
+      text: "A commuter kept taking pictures of the conductor's console.",
+      choices: [
+        {
+          text: "Next",
+          nextDialogue: {
+            text: "When I asked, they said it was for a class project.",
+            choices: [
+              {
+                text: "Next",
+                nextDialogue: {
+                  text: "Let me know if I should report them to security.",
+                  choices: [
+                    { text: "Back to Interview Menu", action: () => showInterviewMenu() }
+                  ]
+                }
+              }
+            ]
+          }
+        }
+      ]
+    },
+    'Coffee Stand': {
+      text: "Engineers were gossiping about a virus in the ticketing system.",
+      choices: [
+        {
+          text: "Next",
+          nextDialogue: {
+            text: "They said it caused the gates to stay open all morning.",
+            choices: [
+              {
+                text: "Next",
+                nextDialogue: {
+                  text: "If you want their names, I wrote them down.",
+                  choices: [
+                    { text: "Back to Interview Menu", action: () => showInterviewMenu() }
+                  ]
+                }
+              }
+            ]
+          }
+        }
+      ]
+    }
+  },
+
+  'level10': {
+    'SECTOR9 Director': {
+      text: "Agent, Silent Strings has activated globally. The worm is spreading through critical systems.",
+      choices: [
+        {
+          text: "How do I disarm the Silent Strings protocol?",
+          action: () => window.markObjectiveComplete(0),
+          nextDialogue: {
+            npc: "SECTOR9 Director",
+            text: "We captured the worm payload—deactivating it is your priority.",
+            clue: "Worm payload",
+            choices: [
+              { text: "I'll run the Worm Deactivator now.", action: () => showInterviewMenu() }
+            ]
+          }
+        },
+        {
+          text: "Where is the worm spreading?",
+          nextDialogue: {
+            npc: "SECTOR9 Director",
+            text: "Here's a map showing global propagation.",
+            clue: "Attack map",
+            action: () => window.markObjectiveComplete(2),
+            choices: [
+              { text: "Trace propagation to find Ghostline's last move.", action: () => showInterviewMenu() }
+            ]
+          }
+        },
+        {
+          text: "Any final messages from Ghostline?",
+          nextDialogue: {
+            npc: "SECTOR9 Director",
+            text: "Ghostline left an encrypted message on the Director's Office computer.",
+            clue: "Ghostline's message",
+            action: () => window.markObjectiveComplete(1),
+            choices: [
+              { text: "I'll decrypt it now.", action: () => showInterviewMenu() }
+            ]
+          }
+        }
+      ]
+    },
+    'Archivist': {
+      text: "I'm archiving the security logs for HQ.",
+      choices: [
+        {
+          text: "Next",
+          nextDialogue: {
+            text: "There's a big spike in access at exactly 03:14 this morning.",
+            choices: [
+              {
+                text: "Next",
+                nextDialogue: {
+                  text: "Do you want me to print a report for you?",
+                  choices: [
+                    { text: "Back to Interview Menu", action: () => showInterviewMenu() }
+                  ]
+                }
+              }
+            ]
+          }
+        }
+      ]
+    },
+    'Reception Bot': {
+      text: "Welcome, Agent. HQ security protocols are at maximum alert.",
+      choices: [
+        {
+          text: "Next",
+          nextDialogue: {
+            text: "Please verify your identity at every checkpoint.",
+            choices: [
+              {
+                text: "Next",
+                nextDialogue: {
+                  text: "Good luck. The fate of SECTOR-9 depends on you.",
+                  choices: [
+                    { text: "Back to Interview Menu", action: () => showInterviewMenu() }
+                  ]
+                }
+              }
+            ]
+          }
+        }
+      ]
+    }
+  }
+};
 
 // Legacy dialogue system (keeping for backwards compatibility)
 const levelDialogues = {
@@ -687,7 +894,6 @@ const levelDialogues = {
     ]
   }
 };
-
 
 // Branching intro, tutorial, and mission story
 defineBranchingDialogues();
