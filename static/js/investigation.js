@@ -19,7 +19,7 @@ function setBackgroundImage() {
         'global': 'hq'
     };
     const bgName = map[locKey] || 'hq';
-    const imageUrl = `/static/backgrounds/${bgName}.jpg`;
+    const imageUrl = `/static/images/backgrounds/${bgName}.png`;
     // Preload image and fallback if missing
     const img = new window.Image();
     img.onload = function() {
