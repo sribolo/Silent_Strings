@@ -107,10 +107,11 @@ function markObjectiveComplete(idx) {
     const list = document.getElementById('objectives-list');
     if (!list) return;
     const item = list.querySelector(`li[data-index='${idx}']`);
-    if (item) {
+    if (item && !item.classList.contains('completed')) {
         item.classList.add('completed');
         const status = item.querySelector('.objective-status');
         if (status) status.textContent = '[✓]';
+        showPopup("Objective completed: " + item.textContent.replace('[✓]', '').trim());
     }
 }
 
@@ -132,10 +133,86 @@ const locationToLevel = {
   global: 'level10'
 };
 
+// Add this at the top or after missionDialogues is defined:
+window.missionObjectives = {
+  level1: [
+    "Identify the initial breach point",
+    "Analyze suspicious login attempts",
+    "Trace the attacker's IP address",
+    "Recover deleted system logs",
+    "Secure the compromised accounts"
+  ],
+  level2: [
+    "Audit website code for defacement",
+    "Analyze XSS payload",
+    "Trace phishing email source",
+    "Patch CMS vulnerability"
+  ],
+  level3: [
+    "Identify patient zero",
+    "Analyze phishing email",
+    "Recover ransomware sample",
+    "Trace network spread",
+    "Restore banking services"
+  ],
+  level4: [
+    "Audit recent repo commits",
+    "Investigate pipeline warnings",
+    "Identify compromised developer account",
+    "Revert malicious commit"
+  ],
+  level5: [
+    "Analyze persistent malware",
+    "Recover deleted database records",
+    "Analyze unauthorized scheduled tasks"
+  ],
+  level6: [
+    "Find rogue USB device",
+    "Analyze firmware changes",
+    "Review remote access logs"
+  ],
+  level7: [
+    "Analyze credential access logs",
+    "Investigate locker clue",
+    "Analyze process hash",
+    "Interview HR about leave requests"
+  ],
+  level8: [
+    "Find PH4NT0M's forum post",
+    "Trace Ghostline's aliases",
+    "Decrypt auction data"
+  ],
+  level9: [
+    "Restore control center",
+    "Analyze DDoS log",
+    "Patch exploited service",
+    "Remove rogue WiFi config"
+  ],
+  level10: [
+    "Disarm Silent Strings protocol",
+    "Trace global worm propagation",
+    "Decrypt Ghostline's final message"
+  ]
+};
+
+function renderObjectives(levelKey) {
+  const objectives = window.missionObjectives[levelKey] || [];
+  const objectivesList = document.getElementById('objectives-list');
+  if (!objectivesList) return;
+  objectivesList.innerHTML = '';
+  objectives.forEach((obj, idx) => {
+    const li = document.createElement('li');
+    li.dataset.index = idx;
+    li.innerHTML = `<span class="objective-status">[ ]</span> ${obj}`;
+    objectivesList.appendChild(li);
+  });
+}
+
 function showInterviewMenu() {
     const bg = document.querySelector('.location-background');
     const loc = bg ? bg.dataset.location : 'hq';
     const levelKey = locationToLevel[loc] || 'level1';
+    renderObjectives(levelKey);
     const dialogues = window.missionDialogues[levelKey];
     if (!dialogues || typeof dialogues !== 'object') {
         console.error("No dialogues found for location:", loc, dialogues);
@@ -214,6 +291,7 @@ function showMissionInterview(level, npc, node = null) {
     } else {
         if (optionsEl) optionsEl.innerHTML = "<em>End of interview.</em>";
     }
+    if (node.clue) showPopup(`Clue obtained: ${node.clue}`);
 }
 
 function showDialogue(npc, text, choices = []) {
@@ -486,3 +564,15 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 let lastInterviewedNpc = null;
+
+function showPopup(message, duration = 2200) {
+  const popup = document.getElementById('popup-notification');
+  if (!popup) return;
+  popup.textContent = message;
+  popup.classList.add('show');
+  popup.classList.remove('hidden');
+  setTimeout(() => {
+    popup.classList.remove('show');
+    popup.classList.add('hidden');
+  }, duration);
+}

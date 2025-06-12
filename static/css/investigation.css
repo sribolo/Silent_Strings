@@ -260,4 +260,25 @@
 @media (max-width: 600px) {
   .dialogue-box { padding: 12px 8px; }
   .modal-content { padding: 16px 8px; }
+}
+
+.popup-notification {
+  position: fixed;
+  top: 40px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #232369;
+  color: #fff;
+  padding: 18px 32px;
+  border-radius: 12px;
+  font-size: 1.2em;
+  box-shadow: 0 4px 24px #0008;
+  z-index: 9999;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s;
+}
+.popup-notification.show {
+  opacity: 1;
+  pointer-events: auto;
 } 
