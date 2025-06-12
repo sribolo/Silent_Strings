@@ -118,10 +118,25 @@ function markObjectiveComplete(idx) {
 // Use window.missionDialogues from dialogue_advanced.js/dialogues.js for all dialogue logic.
 // Remove exampleDialogues and related variables.
 
+// Map location keys to missionDialogues level keys
+const locationToLevel = {
+  hq: 'level1',
+  news: 'level2',
+  bank: 'level3',
+  company: 'level4',
+  school: 'level5',
+  government: 'level6',
+  hospital: 'level7',
+  transport: 'level8',
+  cafe: 'level9',
+  global: 'level10'
+};
+
 function showInterviewMenu() {
     const bg = document.querySelector('.location-background');
     const loc = bg ? bg.dataset.location : 'hq';
-    const dialogues = window.missionDialogues[loc] || window.missionDialogues['hq'];
+    const levelKey = locationToLevel[loc] || 'level1';
+    const dialogues = window.missionDialogues[levelKey];
     if (!dialogues || typeof dialogues !== 'object') {
         console.error("No dialogues found for location:", loc, dialogues);
         showDialogue('System', 'No NPCs available for interview at this location.', []);
