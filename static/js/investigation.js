@@ -115,8 +115,7 @@ function getCompletedObjectives(levelKey) {
     // Show/hide tools based on objectives
     const bg = document.querySelector('.location-background');
     const loc = bg ? bg.dataset.location : 'hq';
-    const levelKey = locationToLevel[loc] || 'level1';
-    const objectives = window.missionObjectives[levelKey] || [];
+    const objectives = window.objectives || [];
     const allowed = getToolsForObjectives(objectives);
     const allToolIds = ['interview-btn', 'scan-btn', 'analyze-btn', 'notes-btn'];
     allToolIds.forEach(id => {
@@ -188,20 +187,19 @@ function showToolModal(title, content) {
 function markObjectiveComplete(idx) {
     const bg = document.querySelector('.location-background');
     const loc = bg ? bg.dataset.location : 'hq';
-    const levelKey = locationToLevel[loc] || 'level1';
 
     // Get & update completed objectives for this level
-    let completed = getCompletedObjectives(levelKey);
+    let completed = getCompletedObjectives('current');
     if (!completed.includes(idx)) {
         completed.push(idx);
-        setCompletedObjectives(levelKey, completed);
+        setCompletedObjectives('current', completed);
     }
 
     // Always re-render objectives so UI is in sync!
-    renderObjectives(levelKey);
+    renderObjectives();
 
     // Show a popup for feedback (optional)
-    const objectives = window.missionObjectives[levelKey] || [];
+    const objectives = window.objectives || [];
     if (objectives[idx]) showPopup("Objective completed: " + objectives[idx]);
 
     if (completed.length === objectives.length) {
@@ -209,6 +207,21 @@ function markObjectiveComplete(idx) {
     }
 }
 
+function renderObjectives() {
+    const objectives = window.objectives || [];
+    const objectivesList = document.getElementById('objectives-list');
+    if (!objectivesList) return;
+    objectivesList.innerHTML = '';
+    const completed = getCompletedObjectives('current');
+    objectives.forEach((obj, idx) => {
+        const li = document.createElement('li');
+        li.dataset.index = idx;
+        const isDone = completed.includes(idx);
+        li.className = isDone ? 'completed' : '';
+        li.innerHTML = `<span class="objective-status">${isDone ? '[✓]' : '[ ]'}</span> ${obj}`;
+        objectivesList.appendChild(li);
+    });
+}
 
 // --- Dialogue/Storyboard System ---
 // Use only the /static/dialogues/levelX.js files as the source of truth.
@@ -247,7 +260,7 @@ function getCurrentLevelKey() {
 
 // Show the interview menu (list of NPCs)
 function showInterviewMenu() {
-    renderObjectives(getCurrentLevelKey());
+    renderObjectives();
     const nodes = getCurrentDialogueNodes();
     // NPCs are all keys except 'start', 'objectives', and any meta/failStates
     const npcNames = Object.keys(nodes).filter(k => !['start','objectives'].includes(k) && typeof nodes[k] === 'object' && nodes[k].options);

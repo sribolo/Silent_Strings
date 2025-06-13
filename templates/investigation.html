@@ -43,7 +43,11 @@
     <!-- Tools & Inventory Sidebar (hidden by default, toggled by hamburger-menu) -->
     <div id="tool-sidebar" class="tool-sidebar hidden">
         <h3>🛠️ Tools</h3>
-        <ul id="tool-list"></ul>
+        <ul id="tool-list">
+            {% for tool in tools %}
+            <li class="tool-item">{{ tool }}</li>
+            {% endfor %}
+        </ul>
         <h4>Equipped:</h4>
         <div id="equipped-tool">None</div>
     </div>
@@ -97,9 +101,32 @@
     </div>
 
     <div id="popup-notification" class="popup-notification hidden"></div>
-</div>
-{% endblock %}
 
-{% block extra_scripts %}
+    <div class="investigation-header">
+        <h1>{{ meta.title }}</h1>
+        <div class="investigation-meta">
+            <span class="meta-label">Time Limit:</span>
+            <span class="meta-value">
+                {% if meta.timeLimit %}
+                    {% set minutes = meta.timeLimit // 60 %}
+                    {% set seconds = meta.timeLimit % 60 %}
+                    {{ '%02d:%02d' % (minutes, seconds) }}
+                {% else %}
+                    --:--
+                {% endif %}
+            </span>
+        </div>
+    </div>
+</div>
+<div id="template-data" 
+    data-objectives='{{ objectives|tojson|safe }}'
+    data-tools='{{ tools|tojson|safe }}'></div>
+<script type="text/javascript">
+    const data = document.getElementById('template-data');
+    window.objectives = JSON.parse(data.dataset.objectives);
+    window.tools = JSON.parse(data.dataset.tools);
+</script>
 <script src="{{ url_for('static', filename='js/investigation.js') }}" defer></script>
-{% endblock %} 
+{% endblock content %}
+
+{% block extra_scripts %}{% endblock extra_scripts %} 

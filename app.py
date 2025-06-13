@@ -25,6 +25,7 @@ try:
     from sqlalchemy import PickleType
 except ImportError:
     PickleType = None
+import json
 
 
 # === Load Environment Variables ===
@@ -276,10 +277,7 @@ def dialogue(location):
 def investigation(location):
     if "user" not in session and "agent_name" not in session:
         return redirect(url_for("login"))
-    
     name = session["user"]["username"] if "user" in session else session.get("agent_name", "Agent")
-    
-    # Map locations to their display names and contexts
     location_info = {
         'bank': {'name': 'Quantum Bank', 'context': 'financial_system'},
         'school': {'name': 'Riverside Academy', 'context': 'education_network'},  
@@ -292,12 +290,7 @@ def investigation(location):
         'news': {'name': 'Daily Herald', 'context': 'media_network'},
         'global': {'name': 'Global Network', 'context': 'worldwide_system'}
     }
-    
     current_location = location_info.get(location, {'name': location.title(), 'context': 'unknown'})
-    
-    # Get avatar parts for player
-    avatar_parts = session.get('avatar_parts', {})
-    
     dialogue_map = {
         'hq': 'level1',
         'news': 'level2',
@@ -311,14 +304,21 @@ def investigation(location):
         'global': 'level10'
     }
     dialogue_key = dialogue_map.get(location, 'level1')
-    
+    # Load meta info from level_data.json
+    with open('levels/level_data.json') as f:
+        level_data = json.load(f)
+    meta = level_data['levels'].get(dialogue_key, {})
+    objectives = meta.get('objectives', [])
+    tools = meta.get('tools_available', [])
     return render_template('investigation.html', 
                          name=name, 
                          location=location,
                          location_name=current_location['name'],
                          location_context=current_location['context'],
-                         avatar_parts=avatar_parts,
-                         dialogue_key=dialogue_key
+                         dialogue_key=dialogue_key,
+                         objectives=objectives,
+                         tools=tools,
+                         meta=meta
     )
 
 @app.route('/get_sprites')
