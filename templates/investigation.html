@@ -1,4 +1,4 @@
-{% extends "base.html" %}More actions
+{% extends "base.html" %}
 {% block title %}Investigation{% endblock %}
 
 {% block extra_css %}
@@ -100,8 +100,9 @@
 
     <div id="popup-notification" class="popup-notification hidden"></div>
 </div>
-{% endblock %}
+{% endblock content %}
 
 {% block extra_scripts %}
 <script src="{{ url_for('static', filename='js/dialogue_advanced.js') }}" defer></script>
 <script src="{{ url_for('static', filename='js/investigation.js') }}" defer></script>
+{% endblock extra_scripts %}
