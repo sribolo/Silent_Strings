@@ -1423,39 +1423,52 @@ function defineBranchingDialogues() {
   };
 }
 
+function showMissionDialogue(levelKey, npcKey) {
+  window.currentNPC = npcKey;
+  const npcDialogue = window.missionDialogues[levelKey][npcKey];
+  showDialogueRefactored(npcKey, npcDialogue.text, npcDialogue.choices);
+}
+
 function showDialogueNode(key, type = "branching") {
-  let node = null;
-  if (type === "mission") {
-    node = window.missionDialogues[currentLevel][key];
-  } else if (type === "branching") {
-    node = window.dialogues[key];
-  }
-  if (!node) {
-    showPopup("Dialogue node not found.");
-    return;
-  }
-  // Display the dialogue text and options as you already do:
-  const textEl = document.getElementById('dialogue-text');
-  const optionsBox = document.getElementById('dialogue-choices');
-  if (textEl) textEl.textContent = node.text || '';
-  if (optionsBox) optionsBox.innerHTML = '';
-  if (node.options && optionsBox) {
-    node.options.forEach((optionText, idx) => {
-      const btn = document.createElement('button');
-      btn.textContent = optionText;
-      btn.className = 'choice-btn';
-      btn.onclick = () => {
-        // If this option leads to a level switch:
-        if (node.next && node.next[idx] && node.next[idx].startsWith('level')) {
-          setLevel(node.next[idx]);
-          showDialogueNode('investigation_intro', 'branching');
-        } else {
-          showDialogueNode(node.next[idx], 'branching');
-        }
-      };
-      optionsBox.appendChild(btn);
-    });
-  }
+    let node = null;
+    if (type === "mission") {
+        node = window.missionDialogues[currentLevel][key];
+    } else if (type === "branching") {
+        node = window.dialogues[key];
+    }
+    if (!node) {
+        showPopup("Dialogue node not found.");
+        return;
+    }
+    // Display the dialogue text and options as you already do:
+    const textEl = document.getElementById('dialogue-text');
+    const optionsBox = document.getElementById('dialogue-choices');
+    if (textEl) textEl.textContent = node.text || '';
+    if (optionsBox) optionsBox.innerHTML = '';
+    if (node.options && optionsBox) {
+        node.options.forEach((optionText, idx) => {
+            const btn = document.createElement('button');
+            btn.textContent = optionText;
+            btn.className = 'choice-btn';
+            btn.onclick = () => {
+                // If this option leads to a level switch:
+                if (node.next && node.next[idx] && node.next[idx].startsWith('level')) {
+                    setLevel(node.next[idx]);
+                    showDialogueNode('investigation_intro', 'branching');
+                } else {
+                    // --- AUTO NPC HANDLING ---
+                    // If the option matches an NPC in missionDialogues[currentLevel], show their dialogue
+                    const npcNames = Object.keys(window.missionDialogues[currentLevel] || {});
+                    if (npcNames.includes(optionText)) {
+                        showMissionDialogue(currentLevel, optionText);
+                    } else {
+                        showDialogueNode(node.next[idx], 'branching');
+                    }
+                }
+            };
+            optionsBox.appendChild(btn);
+        });
+    }
 }
 
 

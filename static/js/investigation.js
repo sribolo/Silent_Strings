@@ -686,3 +686,19 @@ document.addEventListener('DOMContentLoaded', function() {
     };
   }
 });
+
+document.addEventListener('DOMContentLoaded', function() {
+  var hamburger = document.getElementById('hamburger-menu');
+  var dropdown = document.getElementById('dropdown-menu');
+  if (hamburger && dropdown) {
+    hamburger.onclick = function() {
+      dropdown.classList.toggle('hidden');
+    };
+    // Optional: close menu when clicking outside
+    document.addEventListener('click', function(e) {
+      if (!dropdown.contains(e.target) && e.target !== hamburger) {
+        dropdown.classList.add('hidden');
+      }
+    });
+  }
+});
