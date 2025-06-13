@@ -3,12 +3,13 @@
 
 {% block extra_css %}
 <link rel="stylesheet" href="{{ url_for('static', filename='css/investigation.css') }}">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Press+Start+2P&display=swap" nonce="{{ csp_nonce }}">
 {% endblock %}
 
 {% block content %}
 <div class="investigation-interface">
     <!-- Location Background -->
-    <div class="location-background" data-location="{{ location }}"></div>
+    <div class="location-background" id="location-bg" data-location="{{ location }}"></div>
 
     <!-- UI Overlay (top right) -->
     <div id="ui-overlay">
@@ -118,15 +119,37 @@
         </div>
     </div>
 </div>
+
+<!-- Store template data in a hidden element -->
 <div id="template-data" 
-    data-objectives='{{ objectives|tojson|safe }}'
-    data-tools='{{ tools|tojson|safe }}'></div>
-<script type="text/javascript">
-    const data = document.getElementById('template-data');
-    window.objectives = JSON.parse(data.dataset.objectives);
-    window.tools = JSON.parse(data.dataset.tools);
+    data-objectives="{{ objectives|tojson|safe }}"
+    data-tools="{{ tools|tojson|safe }}"
+    data-location="{{ location }}">
+</div>
+
+<!-- External Scripts -->
+<script nonce="{{ csp_nonce }}" src="{{ url_for('static', filename='dialogues/level1.js') }}"></script>
+<script nonce="{{ csp_nonce }}" src="{{ url_for('static', filename='dialogues/level2.js') }}"></script>
+<script nonce="{{ csp_nonce }}" src="{{ url_for('static', filename='dialogues/level3.js') }}"></script>
+<script nonce="{{ csp_nonce }}" src="{{ url_for('static', filename='dialogues/level4.js') }}"></script>
+<script nonce="{{ csp_nonce }}" src="{{ url_for('static', filename='dialogues/level5.js') }}"></script>
+<script nonce="{{ csp_nonce }}" src="{{ url_for('static', filename='dialogues/level6.js') }}"></script>
+<script nonce="{{ csp_nonce }}" src="{{ url_for('static', filename='dialogues/level7.js') }}"></script>
+<script nonce="{{ csp_nonce }}" src="{{ url_for('static', filename='dialogues/level8.js') }}"></script>
+<script nonce="{{ csp_nonce }}" src="{{ url_for('static', filename='dialogues/level9.js') }}"></script>
+<script nonce="{{ csp_nonce }}" src="{{ url_for('static', filename='dialogues/level10.js') }}"></script>
+
+<!-- Initialize game data -->
+<script nonce="{{ csp_nonce }}">
+    // Get data from template
+    const templateData = document.getElementById('template-data');
+    window.objectives = JSON.parse(templateData.dataset.objectives);
+    window.tools = JSON.parse(templateData.dataset.tools);
+    window.currentLocation = templateData.dataset.location;
 </script>
-<script src="{{ url_for('static', filename='js/investigation.js') }}" defer></script>
+
+<!-- Main game script -->
+<script nonce="{{ csp_nonce }}" src="{{ url_for('static', filename='js/investigation.js') }}" defer></script>
 {% endblock content %}
 
 {% block extra_scripts %}{% endblock extra_scripts %} 

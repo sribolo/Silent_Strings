@@ -1,6 +1,21 @@
 // Investigation Page Script
 // Handles background, menu, modals, dialogue, objectives, and notes
 
+// --- Text Animation Helper ---
+function typeText(text, element, speed = 30) {
+    if (!element) return;
+    element.textContent = '';
+    let i = 0;
+    function type() {
+        if (i < text.length) {
+            element.textContent += text.charAt(i);
+            i++;
+            setTimeout(type, speed);
+        }
+    }
+    type();
+}
+
 // --- Location Background ---
 function setBackgroundImage() {
     const bgDiv = document.querySelector('.location-background');
