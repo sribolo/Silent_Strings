@@ -1,3 +1,8 @@
+// ---- Constants ----
+const AVATAR_SIZE = 128;
+const POPUP_DURATION = 2200;
+
+// ---- 1. Background Image Logic ----
 function setBackgroundImage() {
     const bgDiv = document.querySelector('.location-background');
     if (!bgDiv) return;
@@ -57,11 +62,13 @@ function renderToolSidebar() {
     const equipped = document.getElementById("equipped-tool");
     if (equipped) equipped.innerText = selectedTool !== null ? tools[selectedTool].name : "None";
 }
+
 function selectTool(idx) {
     if (!tools[idx].unlocked) return;
     selectedTool = idx;
     renderToolSidebar();
 }
+
 function unlockTool(toolName) {
     const tool = tools.find(t => t.name === toolName);
     if (tool) tool.unlocked = true;
@@ -114,6 +121,7 @@ function setupMenuAndModals() {
     const hintBtn = document.getElementById('hint-btn');
     if (hintBtn) hintBtn.onclick = showHint;
 }
+
 function addToolEvent(id, handler) {
     const btn = document.getElementById(id);
     const dropdown = document.getElementById('dropdown-menu');
@@ -124,6 +132,7 @@ function addToolEvent(id, handler) {
         };
     }
 }
+
 function showToolModal(title, content) {
     const modal = document.getElementById('tool-modal');
     const modalTitle = document.getElementById('modal-title');
@@ -149,9 +158,11 @@ function showToolModal(title, content) {
 function getCompletedObjectives(levelKey) {
     return JSON.parse(localStorage.getItem('completedObjectives_' + levelKey)) || [];
 }
+
 function setCompletedObjectives(levelKey, arr) {
     localStorage.setItem('completedObjectives_' + levelKey, JSON.stringify(arr));
 }
+
 function markObjectiveComplete(idx) {
     const bg = document.querySelector('.location-background');
     const loc = bg ? bg.dataset.location : 'hq';
@@ -166,6 +177,7 @@ function markObjectiveComplete(idx) {
     if (objectives[idx]) showPopup("Objective completed: " + objectives[idx]);
     if (completed.length === objectives.length) setTimeout(showCelebrationModal, 800);
 }
+
 function renderObjectives(levelKey) {
     const objectives = window.missionObjectives[levelKey] || [];
     const objectivesList = document.getElementById('objectives-list');
@@ -184,6 +196,10 @@ function renderObjectives(levelKey) {
 
 // ---- 5. Dialogue/Interview System ----
 let lastInterviewedNpc = null;
+
+/**
+ * Show the menu for selecting an NPC to interview.
+ */
 function showInterviewMenu() {
     const bg = document.querySelector('.location-background');
     const loc = bg ? bg.dataset.location : 'hq';
@@ -205,6 +221,7 @@ function showInterviewMenu() {
     choices.push({ text: 'Show Summary', action: showSummary });
     showDialogue('Contact Selection', 'Who would you like to interview next?', choices);
 }
+
 function showSummary() {
     const bg = document.querySelector('.location-background');
     const loc = bg ? bg.dataset.location : 'hq';
@@ -225,6 +242,7 @@ function showSummary() {
     }
     showDialogue('Summary', summary, [{ text: 'Back to Interview Menu', action: showInterviewMenu }]);
 }
+
 function showMissionInterview(level, npc, node = null) {
     if (!node) node = window.missionDialogues[level][npc];
     if (!node) return;
@@ -254,6 +272,7 @@ function showMissionInterview(level, npc, node = null) {
     }
     if (node.clue) showPopup(`Clue obtained: ${node.clue}`);
 }
+
 function showDialogue(npc, text, choices = []) {
     const npcNameEl = document.getElementById('npc-name');
     const dialogueTextEl = document.getElementById('dialogue-text');
@@ -284,7 +303,7 @@ function showDialogue(npc, text, choices = []) {
 }
 
 // ---- 6. Other UI ----
-function showPopup(message, duration = 2200) {
+function showPopup(message, duration = POPUP_DURATION) {
     const popup = document.getElementById('popup-notification');
     if (!popup) return;
     popup.textContent = message;
@@ -295,6 +314,7 @@ function showPopup(message, duration = 2200) {
         popup.classList.add('hidden');
     }, duration);
 }
+
 function showHint() {
     const hintBox = document.getElementById('hint-box');
     const hintContent = document.getElementById('hint-content');
@@ -305,6 +325,7 @@ function showHint() {
         setTimeout(() => { hintBox.classList.add('hidden'); hintBox.style.display = 'none'; }, 4000);
     }
 }
+
 function showCelebrationModal() {
     const oldModal = document.getElementById('celebration-modal');
     if (oldModal) oldModal.remove();
@@ -323,6 +344,7 @@ function showCelebrationModal() {
         window.location.href = '/game';
     };
 }
+
 (function addCelebrationModalCSS() {
     if (document.getElementById('celebration-modal-style')) return;
     const style = document.createElement('style');
@@ -345,12 +367,12 @@ document.addEventListener('DOMContentLoaded', () => {
     setBackgroundImage();
     setupMenuAndModals();
     setNpcPortrait();
-    defineBranchingDialogues && defineBranchingDialogues();
-    showDialogueNode && showDialogueNode('investigation_intro');
+    if (typeof defineBranchingDialogues === 'function') defineBranchingDialogues();
+    if (typeof showDialogueNode === 'function') showDialogueNode('investigation_intro');
     renderToolSidebar();
 });
-// --- NPC Portrait Rendering (using game.js logic) ---
-const AVATAR_SIZE = 128;
+
+// ---- 8. NPC Portrait Rendering (using game.js logic) ----
 let investigationSpriteData = null;
 let investigationNpcAvatars = {};
 
@@ -363,7 +385,8 @@ function renderInvestigationNpcPortrait(npcName) {
             .then(data => {
                 investigationSpriteData = data;
                 renderInvestigationNpcPortrait(npcName);
-            });
+            })
+            .catch(err => console.error('Failed to fetch sprite data:', err));
         return;
     }
     if (!investigationNpcAvatars[npcName]) {
@@ -402,6 +425,7 @@ function renderAvatarLayers(container, avatar) {
 function getRandomElement(arr) {
     return arr[Math.floor(Math.random() * arr.length)];
 }
+
 function randomNpcAvatar(spriteData) {
     const avatar = {};
     if (spriteData.characters && spriteData.characters.length > 0) {
