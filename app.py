@@ -298,12 +298,28 @@ def investigation(location):
     # Get avatar parts for player
     avatar_parts = session.get('avatar_parts', {})
     
+    dialogue_map = {
+        'hq': 'level1',
+        'news': 'level2',
+        'bank': 'level3',
+        'company': 'level4',
+        'government': 'level5',
+        'school': 'level6',
+        'cafe': 'level7',
+        'hospital': 'level8',
+        'transport': 'level9',
+        'global': 'level10'
+    }
+    dialogue_key = dialogue_map.get(location, 'level1')
+    
     return render_template('investigation.html', 
                          name=name, 
                          location=location,
                          location_name=current_location['name'],
                          location_context=current_location['context'],
-                         avatar_parts=avatar_parts)
+                         avatar_parts=avatar_parts,
+                         dialogue_key=dialogue_key
+    )
 
 @app.route('/get_sprites')
 def get_sprites():

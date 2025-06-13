@@ -1,108 +1,90 @@
 {% extends "base.html" %}
-{% block title %}Investigation{% endblock %}
-
-{% block extra_css %}
-<link rel="stylesheet" href="{{ url_for('static', filename='css/investigation.css') }}">
-{% endblock %}
+{% block title %}Investigation - {{ location_name }}{% endblock %}
 
 {% block content %}
-<div class="investigation-interface">
-    <!-- Location Background -->
-    <div class="location-background" data-location="{{ location }}"></div>
+<div class="investigation-container">
+    <!-- Header -->
+    <header class="investigation-header">
+        <h1>{{ location_name }}</h1>
+        <p class="subtitle">Agent {{ name }} - Investigation Phase</p>
+    </header>
 
-    <!-- UI Overlay (top right) -->
-    <div id="ui-overlay">
-        <button id="help-btn" title="Help"><i class="fas fa-question-circle"></i></button>
-        <button id="hint-btn" title="Hint"><i class="fas fa-lightbulb"></i></button>
-        <div id="dropdown-menu" class="dropdown-menu hidden">
-            <div class="menu-item" id="interview-btn"><i class="fas fa-user-friends"></i> Interview</div>
-            <div class="menu-item" id="scan-btn"><i class="fas fa-search"></i> Evidence Scanner</div>
-            <div class="menu-item" id="analyze-btn"><i class="fas fa-microscope"></i> Digital Analysis</div>
-            <div class="menu-item" id="notes-btn"><i class="fas fa-sticky-note"></i> Notes</div>
+    <!-- Main Investigation Area -->
+    <main class="investigation-main">
+        <!-- Background and NPC Portrait -->
+        <div class="location-background" data-location="{{ location }}">
+            <div class="npc-portrait-frame">
+                <div id="speaker-npc" class="npc-portrait"></div>
+            </div>
         </div>
-        <button id="hamburger-menu" class="hamburger-menu" title="Tools"><i class="fas fa-bars"></i></button>
-    </div>
 
-    <!-- Storyboard/Dialogue Section -->
-    <div class="dialogue-overlay">
-        <div class="dialogue-container">
-            <div class="dialogue-portrait-section">
-                <div class="npc-portrait-frame">
-                    <div id="speaker-npc" class="npc-portrait"></div>
-                </div>
-                <div class="npc-name-plate" id="npc-name">SECTOR-9 Command</div>
+        <!-- Dialogue Box -->
+        <section class="dialogue-section">
+            <div class="dialogue-header-row">
+                <span id="npc-name" class="npc-name">Loading...</span>
             </div>
             <div class="dialogue-box">
-                <div class="dialogue-text-area" id="dialogue-text">Investigation ongoing. Use the menu for additional tools.</div>
-                <div class="dialogue-choices" id="dialogue-choices"></div>
-                <button class="dialogue-continue hidden" id="dialogue-continue">Continue</button>
+                <p id="dialogue-text" class="dialogue-text">Initializing investigation...</p>
+                <div id="dialogue-choices" class="dialogue-choices"></div>
+                <div id="dialogue-continue" class="dialogue-continue hidden">
+                    <span>Click to continue...</span>
+                </div>
             </div>
-        </div>
-    </div>
+        </section>
 
-    <!-- Tools & Inventory Sidebar (hidden by default, toggled by hamburger-menu) -->
-    <div id="tool-sidebar" class="tool-sidebar hidden">
-        <h3>🛠️ Tools</h3>
+        <!-- Objectives Sidebar -->
+        <aside class="objectives-sidebar">
+            <h3>Objectives</h3>
+            <ul id="objectives-list"></ul>
+        </aside>
+    </main>
+
+    <!-- Tool Sidebar -->
+    <nav class="tool-sidebar">
+        <h3>Tools</h3>
         <ul id="tool-list"></ul>
-        <h4>Equipped:</h4>
-        <div id="equipped-tool">None</div>
-    </div>
+        <div class="equipped-tool-label">Equipped: <span id="equipped-tool">None</span></div>
+    </nav>
 
-    <!-- Objectives Panel -->
-    <div class="objectives-panel">
-        <h3>Objectives</h3>
-        <ul class="objectives-list" id="objectives-list">
-            {% for obj in objectives %}
-            <li data-index="{{ loop.index0 }}">
-                <span class="objective-status">[ ]</span> {{ obj }}
-            </li>
-            {% endfor %}
-        </ul>
-    </div>
-
-    <!-- Modal for Tools -->
+    <!-- Popups and Modals -->
+    <div id="popup-notification" class="popup-notification hidden"></div>
     <div id="tool-modal" class="modal hidden">
         <div class="modal-content">
-            <span id="close-modal" class="modal-close">&times;</span>
+            <button id="close-modal" class="close-btn">&times;</button>
             <h2 id="modal-title"></h2>
             <div id="modal-body"></div>
         </div>
     </div>
-
-    <!-- Help Modal -->
     <div id="help-modal" class="modal">
         <div class="modal-content">
-            <span id="help-close" class="modal-close">&times;</span>
-            <h2>Investigation Help</h2>
-            <p>Use the menu to interview NPCs, scan for evidence, analyze digital clues, and take notes. Complete all objectives to finish the investigation.</p>
+            <button id="help-close" class="close-btn">&times;</button>
+            <h2>Help</h2>
+            <div id="help-content">
+                <p>Need a hint? Try interviewing all available NPCs and using your tools!</p>
+            </div>
         </div>
     </div>
-
-    <!-- Hint Box -->
-    <div id="hint-box" class="modal hidden">
-        <div class="modal-content">
-            <h2>Hint</h2>
-            <div id="hint-content"></div>
-        </div>
+    <div id="hint-box" class="hint-box hidden">
+        <div id="hint-content"></div>
     </div>
+</div>
 
-    <!-- Achievements Modal Trigger Button -->
-    <button id="show-achievements-btn" style="position:fixed;top:20px;right:20px;z-index:10001;">
-      🏆 Achievements
-    </button>
-
-    <!-- Achievements Modal -->
-    <div id="achievements-modal" style="display:none; position:fixed; top:10%; left:50%; transform:translateX(-50%); background:#232336; color:#A499FF; padding:32px 28px 24px 28px; border-radius:16px; z-index:10000; min-width:320px; box-shadow:0 8px 32px #0008;">
-      <h2 style="margin-top:0; color:#FFD700; text-align:center;">Achievements</h2>
-      <div id="achievements-list"></div>
-      <button onclick="document.getElementById('achievements-modal').style.display='none'" style="margin-top:18px; width:100%; background:#6C5CE7; color:white; border:none; border-radius:8px; padding:10px 0; font-size:1em; cursor:pointer;">Close</button>
-    </div>
-
-    <div id="popup-notification" class="popup-notification hidden"></div>
+<!-- Navigation -->
+<div class="investigation-navigation">
+    <a href="/mission/{{ location }}" class="nav-btn back-btn">
+        <i class="fas fa-arrow-left"></i> Back to Mission
+    </a>
+    <a href="/game" class="nav-btn map-btn">
+        <i class="fas fa-map"></i> Return to Map
+    </a>
 </div>
 {% endblock %}
 
-{% block extra_scripts %}
-<script src="{{ url_for('static', filename='js/dialogue_advanced.js') }}" defer></script>
+{% block extra_js %}
 <script src="{{ url_for('static', filename='js/investigation.js') }}" defer></script>
-{% endblock %} 
+<script src="{{ url_for('static', filename='dialogues/' ~ dialogue_key ~ '.js') }}" defer></script>
+{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/investigation.css') }}">
+{% endblock %}
