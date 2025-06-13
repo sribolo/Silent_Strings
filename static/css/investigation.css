@@ -317,6 +317,7 @@
   box-shadow: 0 0 10px #261e3d69;
 }
 
+
 .objectives-panel h3 {
   margin-top: 0;
   font-size: 1.2rem;
@@ -370,3 +371,17 @@
 #achievements-modal h2 {
   letter-spacing: 1px;
 }
+
+/* Celebration Modal Styles */
+.celebration-modal {
+  position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+  background: rgba(0,0,0,0.85); z-index: 9999; display: flex; align-items: center; justify-content: center;
+}
+.celebration-content {
+  background: #232336; color: #FFD700; padding: 40px 60px; border-radius: 18px; text-align: center;
+  box-shadow: 0 8px 32px #0008;
+}
+.celebration-content h2 { margin-top: 0; }
+.celebration-content button {
+  margin-top: 24px; padding: 12px 32px; font-size: 1.2em; border-radius: 8px; border: none; background: #6C5CE7; color: white; cursor: pointer;
+} 

@@ -203,6 +203,10 @@ function markObjectiveComplete(idx) {
     // Show a popup for feedback (optional)
     const objectives = window.missionObjectives[levelKey] || [];
     if (objectives[idx]) showPopup("Objective completed: " + objectives[idx]);
+
+    if (completed.length === objectives.length) {
+        setTimeout(showCelebrationModal, 800);
+    }
 }
 
 
@@ -326,7 +330,7 @@ function showInterviewMenu() {
     }));
     choices.push({
         text: 'Show Summary',
-        action: showSummary
+        action: showInvestigationIntro
     });
     showDialogue('Contact Selection', 'Who would you like to interview next?', choices);
 }
@@ -702,3 +706,46 @@ document.addEventListener('DOMContentLoaded', function() {
     });
   }
 });
+
+function showCelebrationModal() {
+  // Remove any existing modal
+  const oldModal = document.getElementById('celebration-modal');
+  if (oldModal) oldModal.remove();
+  // Create modal
+  const modal = document.createElement('div');
+  modal.id = 'celebration-modal';
+  modal.className = 'celebration-modal';
+  modal.innerHTML = `
+    <div class="celebration-content">
+      <h2>🎉 Mission Complete! 🎉</h2>
+      <p>All objectives accomplished. Great job, Agent!</p>
+      <button id="exit-mission-btn">Exit</button>
+    </div>
+  `;
+  document.body.appendChild(modal);
+  document.getElementById('exit-mission-btn').onclick = function() {
+    window.location.href = '/game'; // Change this to your desired exit location
+  };
+}
+
+// Add CSS for the modal
+(function addCelebrationModalCSS() {
+  if (document.getElementById('celebration-modal-style')) return;
+  const style = document.createElement('style');
+  style.id = 'celebration-modal-style';
+  style.textContent = `
+    .celebration-modal {
+      position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+      background: rgba(0,0,0,0.85); z-index: 9999; display: flex; align-items: center; justify-content: center;
+    }
+    .celebration-content {
+      background: #232336; color: #FFD700; padding: 40px 60px; border-radius: 18px; text-align: center;
+      box-shadow: 0 8px 32px #0008;
+    }
+    .celebration-content h2 { margin-top: 0; }
+    .celebration-content button {
+      margin-top: 24px; padding: 12px 32px; font-size: 1.2em; border-radius: 8px; border: none; background: #6C5CE7; color: white; cursor: pointer;
+    }
+  `;
+  document.head.appendChild(style);
+})();
