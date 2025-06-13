@@ -676,3 +676,13 @@ function showPopup(message, duration = 2200) {
 }
 
 document.addEventListener('DOMContentLoaded', setupMenuAndModals);
+
+document.addEventListener('DOMContentLoaded', function() {
+  var btn = document.getElementById('show-achievements-btn');
+  if (btn) {
+    btn.onclick = function() {
+      renderAchievements('achievements-list');
+      document.getElementById('achievements-modal').style.display = 'block';
+    };
+  }
+});

@@ -4,13 +4,13 @@ window.missionDialogues = {
   // LEVEL 1 – HQ Breach
   level1: {
     "Marcus Chen – IT Analyst": {
-      text: "You’re the new response lead? Glad someone fresh is on this. I’ve been glued to this chair since 1AM. I keep seeing log entries that just don’t add up. Maybe you’ll spot something I missed.",
+      text: "You're the new response lead? Glad someone fresh is on this. I've been glued to this chair since 1AM. I keep seeing log entries that just don't add up. Maybe you'll spot something I missed.",
       choices: [
         {
-          text: "Show me what’s freaking you out, Marcus.",
+          text: "Show me what's freaking you out, Marcus.",
           nextDialogue: {
             npc: "Marcus Chen – IT Analyst",
-            text: "Look at this admin login—2:03AM. Problem is, I know for a fact nobody’s scheduled at that time. And right after, chunks of the log just… disappear. Whoever did this, they covered their tracks.",
+            text: "Look at this admin login—2:03AM. Problem is, I know for a fact nobody's scheduled at that time. And right after, chunks of the log just… disappear. Whoever did this, they covered their tracks.",
             clue: "Suspicious login timestamp",
             choices: [
               {
@@ -18,7 +18,7 @@ window.missionDialogues = {
                 action: () => window.markObjectiveComplete(3),
                 nextDialogue: {
                   npc: "Marcus Chen – IT Analyst",
-                  text: "Please do. If anyone can bring them back, it’s you. I’ll owe you lunch.",
+                  text: "Please do. If anyone can bring them back, it's you. I'll owe you lunch.",
                   choices: [
                     { text: "Back to Interview Menu", action: () => showInterviewMenu() }
                   ]
@@ -28,7 +28,7 @@ window.missionDialogues = {
                 text: "Did they change the admin password?",
                 nextDialogue: {
                   npc: "Marcus Chen – IT Analyst",
-                  text: "Yeah, password was reset from a different device right before. Someone’s got admin access, and it isn’t us.",
+                  text: "Yeah, password was reset from a different device right before. Someone's got admin access, and it isn't us.",
                   clue: "Compromised admin account",
                   action: () => window.markObjectiveComplete(4),
                   choices: [
@@ -40,7 +40,7 @@ window.missionDialogues = {
                 text: "Where did they get in?",
                 nextDialogue: {
                   npc: "Marcus Chen – IT Analyst",
-                  text: "Best guess? Breach started at the network hub—first odd access came from there, then admin got compromised. It’s like they knew exactly where to poke holes.",
+                  text: "Best guess? Breach started at the network hub—first odd access came from there, then admin got compromised. It's like they knew exactly where to poke holes.",
                   clue: "Initial breach at network hub",
                   action: () => window.markObjectiveComplete(0),
                   choices: [
@@ -55,9 +55,9 @@ window.missionDialogues = {
           text: "When did this all start?",
           nextDialogue: {
             npc: "Marcus Chen – IT Analyst",
-            text: "I got a weird alert at 2:01AM—backup generator kicked in. Whole place flickered. I checked, and bam, weird logins everywhere. I don’t believe in coincidences.",
+            text: "I got a weird alert at 2:01AM—backup generator kicked in. Whole place flickered. I checked, and bam, weird logins everywhere. I don't believe in coincidences.",
             choices: [
-              { text: "Could be a physical breach. I’ll check with Security.", action: () => showInterviewMenu() }
+              { text: "Could be a physical breach. I'll check with Security.", action: () => showInterviewMenu() }
             ]
           }
         },
@@ -65,7 +65,7 @@ window.missionDialogues = {
           text: "Anyone bring you coffee yet?",
           nextDialogue: {
             npc: "Marcus Chen – IT Analyst",
-            text: "Ha! Not since midnight. You solve this, I’ll owe you a venti. Or two.",
+            text: "Ha! Not since midnight. You solve this, I'll owe you a venti. Or two.",
             choices: [
               { text: "Back to Interview Menu", action: () => showInterviewMenu() }
             ]
@@ -74,7 +74,7 @@ window.missionDialogues = {
       ]
     },
     "Sarah Wilson – Security Guard": {
-      text: "You’re the new tech detective? Welcome. Last night was boring, except the generator hiccup and some janitor leaving their mop unlocked. Oh—and I found a weird USB in the lift.",
+      text: "You're the new tech detective? Welcome. Last night was boring, except the generator hiccup and some janitor leaving their mop unlocked. Oh—and I found a weird USB in the lift.",
       choices: [
         {
           text: "See anyone unusual hanging around?",
@@ -92,7 +92,7 @@ window.missionDialogues = {
           text: "Mind if I check the generator logs?",
           nextDialogue: {
             npc: "Sarah Wilson – Security Guard",
-            text: "Knock yourself out. If you figure out why that thing restarts every other week, let me know. My flashlight budget can’t take much more.",
+            text: "Knock yourself out. If you figure out why that thing restarts every other week, let me know. My flashlight budget can't take much more.",
             choices: [
               { text: "Back to Interview Menu", action: () => showInterviewMenu() }
             ]
@@ -102,9 +102,12 @@ window.missionDialogues = {
           text: "Can I get that USB to the lab?",
           nextDialogue: {
             npc: "Sarah Wilson – Security Guard",
-            text: "IT’s got it now. They said it had some password-stealing thing on it. I wash my hands—literally and figuratively.",
+            text: "IT's got it now. They said it had some password-stealing thing on it. I wash my hands—literally and figuratively.",
             clue: "Credential theft malware on USB",
-            action: () => window.markObjectiveComplete(2),
+            action: () => {
+              window.markObjectiveComplete(2);
+              if (typeof unlockAchievement === 'function') unlockAchievement('usb_safety');
+            },
             choices: [
               { text: "Back to Interview Menu", action: () => showInterviewMenu() }
             ]
@@ -114,67 +117,67 @@ window.missionDialogues = {
     }
   },
   "Janitor Carlos": {
-  text: "Don’t mind me, Agent. Just cleaning up another spilled coffee. Lotta action last night, huh?",
-  choices: [
-    {
-      text: "You see anyone after midnight?",
-      nextDialogue: {
-        npc: "Janitor Carlos",
-        text: "I saw someone in a hoodie near the server room, but my shift ended at 12:30. Maybe they just forgot their badge.",
-        clue: "Late-night hoodie sighting",
-        choices: [
-          { text: "Back to Interview Menu", action: () => showInterviewMenu() }
-        ]
+    text: "Don't mind me, Agent. Just cleaning up another spilled coffee. Lotta action last night, huh?",
+    choices: [
+      {
+        text: "You see anyone after midnight?",
+        nextDialogue: {
+          npc: "Janitor Carlos",
+          text: "I saw someone in a hoodie near the server room, but my shift ended at 12:30. Maybe they just forgot their badge.",
+          clue: "Late-night hoodie sighting",
+          choices: [
+            { text: "Back to Interview Menu", action: () => showInterviewMenu() }
+          ]
+        }
+      },
+      {
+        text: "You ever fix the weird flickering lights?",
+        nextDialogue: {
+          npc: "Janitor Carlos",
+          text: "Nah, that's above my pay grade. But the backup generator does make the whole place hum. Spooky at night.",
+          choices: [
+            { text: "Back to Interview Menu", action: () => showInterviewMenu() }
+          ]
+        }
       }
-    },
-    {
-      text: "You ever fix the weird flickering lights?",
-      nextDialogue: {
-        npc: "Janitor Carlos",
-        text: "Nah, that's above my pay grade. But the backup generator does make the whole place hum. Spooky at night.",
-        choices: [
-          { text: "Back to Interview Menu", action: () => showInterviewMenu() }
-        ]
+    ]
+  },
+  "Receptionist Mia": {
+    text: "Oh, hello! It's chaos this morning. I just hope the coffee machine survives.",
+    choices: [
+      {
+        text: "Anyone unusual sign in last night?",
+        nextDialogue: {
+          npc: "Receptionist Mia",
+          text: "Not that I noticed, but security was extra grumpy when the generator hiccuped.",
+          choices: [
+            { text: "Back to Interview Menu", action: () => showInterviewMenu() }
+          ]
+        }
+      },
+      {
+        text: "Do you get many lost USBs?",
+        nextDialogue: {
+          npc: "Receptionist Mia",
+          text: "Every week! Usually it's just presentations or—one time—a love letter.",
+          choices: [
+            { text: "Back to Interview Menu", action: () => showInterviewMenu() }
+          ]
+        }
       }
-    }
-  ]
-},
-"Receptionist Mia": {
-  text: "Oh, hello! It’s chaos this morning. I just hope the coffee machine survives.",
-  choices: [
-    {
-      text: "Anyone unusual sign in last night?",
-      nextDialogue: {
-        npc: "Receptionist Mia",
-        text: "Not that I noticed, but security was extra grumpy when the generator hiccuped.",
-        choices: [
-          { text: "Back to Interview Menu", action: () => showInterviewMenu() }
-        ]
-      }
-    },
-    {
-      text: "Do you get many lost USBs?",
-      nextDialogue: {
-        npc: "Receptionist Mia",
-        text: "Every week! Usually it’s just presentations or—one time—a love letter.",
-        choices: [
-          { text: "Back to Interview Menu", action: () => showInterviewMenu() }
-        ]
-      }
-    }
-  ]
-},
+    ]
+  },
 
   // LEVEL 2 – Website Defacement
   level2: {
     "Emma Rodriguez – Web Editor": {
-      text: "I’ve been here since 6AM. Every headline changed to ‘PH4NT0M WAS HERE’. Our devs swear it’s not them. I just… I want my old job back.",
+      text: "I've been here since 6AM. Every headline changed to 'PH4NT0M WAS HERE'. Our devs swear it's not them. I just… I want my old job back.",
       choices: [
         {
           text: "Show me what was changed in the code.",
           nextDialogue: {
             npc: "Emma Rodriguez – Web Editor",
-            text: "Here’s the ticker script—someone injected a nasty payload. Look, I’m no coder, but that’s not our usual stuff.",
+            text: "Here's the ticker script—someone injected a nasty payload. Look, I'm no coder, but that's not our usual stuff.",
             clue: "XSS payload in ticker",
             action: () => window.markObjectiveComplete(1),
             choices: [
@@ -186,7 +189,7 @@ window.missionDialogues = {
           text: "Did your team get any weird emails lately?",
           nextDialogue: {
             npc: "Emma Rodriguez – Web Editor",
-            text: "Yes! IT sent a password reset email, or so we thought. The intern clicked it. His browser’s now full of popups.",
+            text: "Yes! IT sent a password reset email, or so we thought. The intern clicked it. His browser's now full of popups.",
             clue: "Phishing email incident",
             action: () => window.markObjectiveComplete(2),
             choices: [
@@ -198,7 +201,7 @@ window.missionDialogues = {
           text: "Anyone on your team clicking random links again?",
           nextDialogue: {
             npc: "Emma Rodriguez – Web Editor",
-            text: "You’d think after the last training, right? But yeah… some people never learn.",
+            text: "You'd think after the last training, right? But yeah… some people never learn.",
             choices: [
               { text: "Back to Interview Menu", action: () => showInterviewMenu() }
             ]
@@ -207,7 +210,7 @@ window.missionDialogues = {
       ]
     },
     "David Kim – IT Support": {
-      text: "If it’s not a plugin vulnerability, it’s a lost password. Management postponed a critical patch last night, so guess what—someone waltzed in and defaced the site.",
+      text: "If it's not a plugin vulnerability, it's a lost password. Management postponed a critical patch last night, so guess what—someone waltzed in and defaced the site.",
       choices: [
         {
           text: "Can you patch the exploited plugin now?",
@@ -225,7 +228,7 @@ window.missionDialogues = {
           text: "Got admin panel logs?",
           nextDialogue: {
             npc: "David Kim – IT Support",
-            text: "Yeah, you’ll see the breach started from an IP in Russia. Or maybe just a VPN exit node—who knows.",
+            text: "Yeah, you'll see the breach started from an IP in Russia. Or maybe just a VPN exit node—who knows.",
             clue: "Admin panel access logs",
             choices: [
               { text: "Back to Interview Menu", action: () => showInterviewMenu() }
@@ -233,10 +236,10 @@ window.missionDialogues = {
           }
         },
         {
-          text: "How bad’s the extension infection?",
+          text: "How bad's the extension infection?",
           nextDialogue: {
             npc: "David Kim – IT Support",
-            text: "Pretty bad—interns and extensions don’t mix.",
+            text: "Pretty bad—interns and extensions don't mix.",
             choices: [
               { text: "Back to Interview Menu", action: () => showInterviewMenu() }
             ]
@@ -246,43 +249,43 @@ window.missionDialogues = {
     }
   },
   "Intern Billy": {
-  text: "Hi! Sorry, still kind of new here. I thought that password reset email was real…",
-  choices: [
-    {
-      text: "What happened when you clicked it?",
-      nextDialogue: {
-        npc: "Intern Billy",
-        text: "My browser went nuts and IT yelled at me. I’ll be more careful… probably.",
-        clue: "Intern fell for phishing",
-        choices: [
-          { text: "Back to Interview Menu", action: () => showInterviewMenu() }
-        ]
+    text: "Hi! Sorry, still kind of new here. I thought that password reset email was real…",
+    choices: [
+      {
+        text: "What happened when you clicked it?",
+        nextDialogue: {
+          npc: "Intern Billy",
+          text: "My browser went nuts and IT yelled at me. I'll be more careful… probably.",
+          clue: "Intern fell for phishing",
+          choices: [
+            { text: "Back to Interview Menu", action: () => showInterviewMenu() }
+          ]
+        }
+      },
+      {
+        text: "Did you notice any strange files?",
+        nextDialogue: {
+          npc: "Intern Billy",
+          text: "A weird extension installed itself, then cat videos started autoplaying. Not the worst hack, I guess?",
+          choices: [
+            { text: "Back to Interview Menu", action: () => showInterviewMenu() }
+          ]
+        }
       }
-    },
-    {
-      text: "Did you notice any strange files?",
-      nextDialogue: {
-        npc: "Intern Billy",
-        text: "A weird extension installed itself, then cat videos started autoplaying. Not the worst hack, I guess?",
-        choices: [
-          { text: "Back to Interview Menu", action: () => showInterviewMenu() }
-        ]
-      }
-    }
-  ]
-},
+    ]
+  },
 
 
   // LEVEL 3 – Ransomware at the Bank
   level3: {
     "Jennifer Park – Bank Teller": {
-      text: "I’m so sorry! I got this email from ‘HR’ about urgent policy changes. Looked real. I opened the PDF and everything froze. The ransom note popped up.",
+      text: "I'm so sorry! I got this email from 'HR' about urgent policy changes. Looked real. I opened the PDF and everything froze. The ransom note popped up.",
       choices: [
         {
           text: "Can I see the email and attachment?",
           nextDialogue: {
             npc: "Jennifer Park – Bank Teller",
-            text: "Here—I forwarded it to IT. The sender’s address looks… off. Like, one letter missing.",
+            text: "Here—I forwarded it to IT. The sender's address looks… off. Like, one letter missing.",
             clue: "Phishing email sample",
             action: () => window.markObjectiveComplete(1),
             choices: [
@@ -303,7 +306,7 @@ window.missionDialogues = {
           }
         },
         {
-          text: "Do you remember the sender’s address?",
+          text: "Do you remember the sender's address?",
           nextDialogue: {
             npc: "Jennifer Park – Bank Teller",
             text: "It was hr-securty@bank.com—see? Security spelled wrong. Ugh.",
@@ -315,7 +318,7 @@ window.missionDialogues = {
       ]
     },
     "Rajesh Singh – Bank IT": {
-      text: "Every time someone opens a shady attachment, it’s a new adventure. The ransomware hit us at 2:11AM, spread fast, and left a sample on the shared drive.",
+      text: "Every time someone opens a shady attachment, it's a new adventure. The ransomware hit us at 2:11AM, spread fast, and left a sample on the shared drive.",
       choices: [
         {
           text: "Got the malware sample?",
@@ -345,7 +348,7 @@ window.missionDialogues = {
           text: "How did it spread through the network?",
           nextDialogue: {
             npc: "Rajesh Singh – Bank IT",
-            text: "Lateral movement after initial compromise—classic ransomware playbook. I’m mapping the spread now.",
+            text: "Lateral movement after initial compromise—classic ransomware playbook. I'm mapping the spread now.",
             clue: "Network spread",
             action: () => window.markObjectiveComplete(3),
             choices: [
@@ -357,42 +360,42 @@ window.missionDialogues = {
     }
   },
   "Bank Guard": {
-  text: "Mornin', Agent. Lotta staff came in early. The ATM kept beeping but I just thought it was bored.",
-  choices: [
-    {
-      text: "You see anyone look nervous?",
-      nextDialogue: {
-        npc: "Bank Guard",
-        text: "Jennifer was pale as a ghost after reading an email. Could just be Monday, though.",
-        clue: "Nervous teller clue",
-        choices: [
-          { text: "Back to Interview Menu", action: () => showInterviewMenu() }
-        ]
+    text: "Mornin', Agent. Lotta staff came in early. The ATM kept beeping but I just thought it was bored.",
+    choices: [
+      {
+        text: "You see anyone look nervous?",
+        nextDialogue: {
+          npc: "Bank Guard",
+          text: "Jennifer was pale as a ghost after reading an email. Could just be Monday, though.",
+          clue: "Nervous teller clue",
+          choices: [
+            { text: "Back to Interview Menu", action: () => showInterviewMenu() }
+          ]
+        }
+      },
+      {
+        text: "You ever get phishing emails?",
+        nextDialogue: {
+          npc: "Bank Guard",
+          text: "All the time! I almost clicked one about 'FREE Donuts.' If you see any, forward to me.",
+          choices: [
+            { text: "Back to Interview Menu", action: () => showInterviewMenu() }
+          ]
+        }
       }
-    },
-    {
-      text: "You ever get phishing emails?",
-      nextDialogue: {
-        npc: "Bank Guard",
-        text: "All the time! I almost clicked one about 'FREE Donuts.' If you see any, forward to me.",
-        choices: [
-          { text: "Back to Interview Menu", action: () => showInterviewMenu() }
-        ]
-      }
-    }
-  ]
-},
+    ]
+  },
 
   // LEVEL 4 – Repo Compromised
   level4: {
     "Chloe Tan – DevOps Engineer": {
-      text: "We found a commit last night that skipped our review. Code injected straight into the login process. I’m mad, and management just wants it gone.",
+      text: "We found a commit last night that skipped our review. Code injected straight into the login process. I'm mad, and management just wants it gone.",
       choices: [
         {
           text: "Let me audit recent commits.",
           nextDialogue: {
             npc: "Chloe Tan – DevOps Engineer",
-            text: "See this one? ‘Backdoor for testing’—my ass. Reverted it, but double-check me.",
+            text: "See this one? 'Backdoor for testing'—my ass. Reverted it, but double-check me.",
             clue: "Malicious commit reverted",
             action: () => window.markObjectiveComplete(3),
             choices: [
@@ -404,7 +407,7 @@ window.missionDialogues = {
           text: "Any pipeline warnings?",
           nextDialogue: {
             npc: "Chloe Tan – DevOps Engineer",
-            text: "Yes—CI said one dev’s token was reused. Security basics, people.",
+            text: "Yes—CI said one dev's token was reused. Security basics, people.",
             clue: "Pipeline warning logs",
             action: () => window.markObjectiveComplete(1),
             choices: [
@@ -416,7 +419,7 @@ window.missionDialogues = {
           text: "Who pushed the bad commit?",
           nextDialogue: {
             npc: "Chloe Tan – DevOps Engineer",
-            text: "Tom Lin’s account was used. He swears it wasn’t him.",
+            text: "Tom Lin's account was used. He swears it wasn't him.",
             clue: "Compromised developer account",
             action: () => window.markObjectiveComplete(2),
             choices: [
@@ -433,7 +436,7 @@ window.missionDialogues = {
           text: "Reset all your credentials, now.",
           nextDialogue: {
             npc: "Tom Lin – Junior Developer",
-            text: "Already done. I’m changing everything, I swear.",
+            text: "Already done. I'm changing everything, I swear.",
             clue: "Credential reset",
             action: () => window.markObjectiveComplete(2),
             choices: [
@@ -455,35 +458,35 @@ window.missionDialogues = {
     }
   },
   "Senior Dev Priya": {
-  text: "I keep telling management to require two-factor. Nobody listens till something breaks.",
-  choices: [
-    {
-      text: "You ever review Tom's code?",
-      nextDialogue: {
-        npc: "Senior Dev Priya",
-        text: "He’s sharp, just a little forgetful with security. Reminds me of myself at his age.",
-        choices: [
-          { text: "Back to Interview Menu", action: () => showInterviewMenu() }
-        ]
+    text: "I keep telling management to require two-factor. Nobody listens till something breaks.",
+    choices: [
+      {
+        text: "You ever review Tom's code?",
+        nextDialogue: {
+          npc: "Senior Dev Priya",
+          text: "He's sharp, just a little forgetful with security. Reminds me of myself at his age.",
+          choices: [
+            { text: "Back to Interview Menu", action: () => showInterviewMenu() }
+          ]
+        }
+      },
+      {
+        text: "How's the team feeling?",
+        nextDialogue: {
+          npc: "Senior Dev Priya",
+          text: "Stressed but hungry. If you buy us lunch, we'll secure the repo twice as fast.",
+          choices: [
+            { text: "Back to Interview Menu", action: () => showInterviewMenu() }
+          ]
+        }
       }
-    },
-    {
-      text: "How’s the team feeling?",
-      nextDialogue: {
-        npc: "Senior Dev Priya",
-        text: "Stressed but hungry. If you buy us lunch, we'll secure the repo twice as fast.",
-        choices: [
-          { text: "Back to Interview Menu", action: () => showInterviewMenu() }
-        ]
-      }
-    }
-  ]
-},
+    ]
+  },
 
   // LEVEL 5 – Government System Backdoor
   level5: {
     "Maria Gomez – Sysadmin": {
-      text: "I spotted a task called ‘totally_safe.exe’—that’s never a good sign. It was set to run every hour, hidden deep in Task Scheduler.",
+      text: "I spotted a task called 'totally_safe.exe'—that's never a good sign. It was set to run every hour, hidden deep in Task Scheduler.",
       choices: [
         {
           text: "Let me analyze the backdoor.",
@@ -511,7 +514,7 @@ window.missionDialogues = {
           text: "Can you recover deleted database records?",
           nextDialogue: {
             npc: "Maria Gomez – Sysadmin",
-            text: "I rolled back to last night’s restore point. A few records missing, but I think we’re okay.",
+            text: "I rolled back to last night's restore point. A few records missing, but I think we're okay.",
             clue: "Database restore point",
             action: () => window.markObjectiveComplete(1),
             choices: [
@@ -523,31 +526,31 @@ window.missionDialogues = {
     }
   },
   "Front Desk": {
-  text: "Morning. A couple of guys from 'maintenance' came by late last night. Looked legit, but you never know.",
-  choices: [
-    {
-      text: "Were they on the schedule?",
-      nextDialogue: {
-        npc: "Front Desk",
-        text: "Supposedly, but the system was acting up so I couldn’t check.",
-        choices: [
-          { text: "Back to Interview Menu", action: () => showInterviewMenu() }
-        ]
+    text: "Morning. A couple of guys from 'maintenance' came by late last night. Looked legit, but you never know.",
+    choices: [
+      {
+        text: "Were they on the schedule?",
+        nextDialogue: {
+          npc: "Front Desk",
+          text: "Supposedly, but the system was acting up so I couldn't check.",
+          choices: [
+            { text: "Back to Interview Menu", action: () => showInterviewMenu() }
+          ]
+        }
       }
-    }
-  ]
-},
+    ]
+  },
 
   // LEVEL 6 – Power Grid Breach
   level6: {
     "Rachel Yeo – Grid Operator": {
-      text: "The control room scanner found a rogue USB plugged into the SCADA system. We barely caught it. Firmware’s different this morning—like something got flashed overnight.",
+      text: "The control room scanner found a rogue USB plugged into the SCADA system. We barely caught it. Firmware's different this morning—like something got flashed overnight.",
       choices: [
         {
           text: "Can I get the USB for analysis?",
           nextDialogue: {
             npc: "Rachel Yeo – Grid Operator",
-            text: "Right here. It’s got a weird executable—no label. I’m not plugging it in!",
+            text: "Right here. It's got a weird executable—no label. I'm not plugging it in!",
             clue: "Rogue USB device",
             action: () => window.markObjectiveComplete(0),
             choices: [
@@ -559,7 +562,7 @@ window.missionDialogues = {
           text: "Let me see firmware diffs.",
           nextDialogue: {
             npc: "Rachel Yeo – Grid Operator",
-            text: "Here’s a before/after. There’s code in there I don’t recognize.",
+            text: "Here's a before/after. There's code in there I don't recognize.",
             clue: "Firmware diff",
             action: () => window.markObjectiveComplete(1),
             choices: [
@@ -571,7 +574,7 @@ window.missionDialogues = {
           text: "Any suspicious remote connections in the logs?",
           nextDialogue: {
             npc: "Rachel Yeo – Grid Operator",
-            text: "Yeah—here’s a log of a remote admin connection at 3AM. Definitely not ours.",
+            text: "Yeah—here's a log of a remote admin connection at 3AM. Definitely not ours.",
             clue: "Remote access log",
             action: () => window.markObjectiveComplete(2),
             choices: [
@@ -582,29 +585,29 @@ window.missionDialogues = {
       ]
     }
   },
-"Security Desk": {
-  text: "Nothing to report except a weird spike on the logs at 3AM. And, someone brought donuts.",
-  choices: [
-    {
-      text: "Any left?",
-      nextDialogue: {
-        npc: "Security Desk",
-        text: "Sorry, hackers eat first.",
-        choices: [
-          { text: "Back to Interview Menu", action: () => showInterviewMenu() }
-        ]
+  "Security Desk": {
+    text: "Nothing to report except a weird spike on the logs at 3AM. And, someone brought donuts.",
+    choices: [
+      {
+        text: "Any left?",
+        nextDialogue: {
+          npc: "Security Desk",
+          text: "Sorry, hackers eat first.",
+          choices: [
+            { text: "Back to Interview Menu", action: () => showInterviewMenu() }
+          ]
+        }
       }
-    }
-  ]
-},
+    ]
+  },
 
   // LEVEL 7 – Insider Threat
   level7: {
     "Anita Lee – Suspect Insider": {
-      text: "You’re blaming me? I follow protocol. If someone used my credentials, it wasn’t me!",
+      text: "You're blaming me? I follow protocol. If someone used my credentials, it wasn't me!",
       choices: [
         {
-          text: "Let’s check the access logs together.",
+          text: "Let's check the access logs together.",
           nextDialogue: {
             npc: "Anita Lee – Suspect Insider",
             text: "Fine, look. Last login from my terminal was at 2:30AM. But I was at home.",
@@ -631,7 +634,7 @@ window.missionDialogues = {
           text: "Notice strange processes on your terminal?",
           nextDialogue: {
             npc: "Anita Lee – Suspect Insider",
-            text: "I saw a weird hash running, couldn’t kill it. Sent it to IT.",
+            text: "I saw a weird hash running, couldn't kill it. Sent it to IT.",
             clue: "Process hash",
             action: () => window.markObjectiveComplete(2),
             choices: [
@@ -648,7 +651,7 @@ window.missionDialogues = {
           text: "Did you overhear anything else?",
           nextDialogue: {
             npc: "Henry Ng – HR Officer",
-            text: "Kim mentioned a ‘clean exit’ on the phone. I’d dig deeper.",
+            text: "Kim mentioned a 'clean exit' on the phone. I'd dig deeper.",
             clue: "Suspicious leave request",
             action: () => window.markObjectiveComplete(3),
             choices: [
@@ -659,26 +662,26 @@ window.missionDialogues = {
       ]
     }
   },
-"Cafeteria Staff": {
-  text: "You here about the breach? All I know is, someone ordered ten espressos and paid in cash.",
-  choices: [
-    {
-      text: "Did you see who?",
-      nextDialogue: {
-        npc: "Cafeteria Staff",
-        text: "Couldn’t tell—hood up, sunglasses indoors. Bold move.",
-        choices: [
-          { text: "Back to Interview Menu", action: () => showInterviewMenu() }
-        ]
+  "Cafeteria Staff": {
+    text: "You here about the breach? All I know is, someone ordered ten espressos and paid in cash.",
+    choices: [
+      {
+        text: "Did you see who?",
+        nextDialogue: {
+          npc: "Cafeteria Staff",
+          text: "Couldn't tell—hood up, sunglasses indoors. Bold move.",
+          choices: [
+            { text: "Back to Interview Menu", action: () => showInterviewMenu() }
+          ]
+        }
       }
-    }
-  ]
-},
+    ]
+  },
 
   // LEVEL 8 – Dark Web Tracking
   level8: {
     "Cipher – Dark Web Informant": {
-      text: "PH4NT0M’s moving zero-day auctions to new forums every week. I can point you to their latest encrypted post… for a favor.",
+      text: "PH4NT0M's moving zero-day auctions to new forums every week. I can point you to their latest encrypted post… for a favor.",
       choices: [
         {
           text: "Show me the forum post.",
@@ -705,10 +708,10 @@ window.missionDialogues = {
           }
         },
         {
-          text: "What’s the auction data?",
+          text: "What's the auction data?",
           nextDialogue: {
             npc: "Cipher – Dark Web Informant",
-            text: "Here’s the auction data. It’s tough to crack. Good luck.",
+            text: "Here's the auction data. It's tough to crack. Good luck.",
             clue: "Auction data",
             action: () => window.markObjectiveComplete(2),
             choices: [
@@ -720,21 +723,21 @@ window.missionDialogues = {
     }
   },
   "Parking Attendant": {
-  text: "Strangest thing last night—black van, no license plates, idling by the staff exit.",
-  choices: [
-    {
-      text: "Did you call security?",
-      nextDialogue: {
-        npc: "Parking Attendant",
-        text: "No, but I made a note of it. Want the time?",
-        clue: "Suspicious van clue",
-        choices: [
-          { text: "Back to Interview Menu", action: () => showInterviewMenu() }
-        ]
+    text: "Strangest thing last night—black van, no license plates, idling by the staff exit.",
+    choices: [
+      {
+        text: "Did you call security?",
+        nextDialogue: {
+          npc: "Parking Attendant",
+          text: "No, but I made a note of it. Want the time?",
+          clue: "Suspicious van clue",
+          choices: [
+            { text: "Back to Interview Menu", action: () => showInterviewMenu() }
+          ]
+        }
       }
-    }
-  ]
-},
+    ]
+  },
 
   // LEVEL 9 – Transport Hack
   level9: {
@@ -742,7 +745,7 @@ window.missionDialogues = {
       text: "The trains stopped dead at 7:32AM. DDoS hit the control center. My staff are panicking, commuters are furious.",
       choices: [
         {
-          text: "Let’s get the control center back online.",
+          text: "Let's get the control center back online.",
           nextDialogue: {
             npc: "Lina Sun – Transit Supervisor",
             text: "Restoring now—pray for us.",
@@ -757,7 +760,7 @@ window.missionDialogues = {
           text: "Got the DDoS logs?",
           nextDialogue: {
             npc: "Lina Sun – Transit Supervisor",
-            text: "Here’s everything. Good luck parsing it.",
+            text: "Here's everything. Good luck parsing it.",
             clue: "DDoS log",
             action: () => window.markObjectiveComplete(1),
             choices: [
@@ -769,7 +772,7 @@ window.missionDialogues = {
           text: "Any service vulnerabilities found?",
           nextDialogue: {
             npc: "Lina Sun – Transit Supervisor",
-            text: "Ticket service had a buffer overflow. We’ve patched it, but… damage was done.",
+            text: "Ticket service had a buffer overflow. We've patched it, but… damage was done.",
             clue: "Service exploit patched",
             action: () => window.markObjectiveComplete(2),
             choices: [
@@ -781,7 +784,7 @@ window.missionDialogues = {
           text: "Any rogue WiFi configs?",
           nextDialogue: {
             npc: "Lina Sun – Transit Supervisor",
-            text: "Yeah, found a suspicious config file this morning. IT’s removed it.",
+            text: "Yeah, found a suspicious config file this morning. IT's removed it.",
             clue: "Rogue WiFi config",
             action: () => window.markObjectiveComplete(3),
             choices: [
@@ -792,22 +795,22 @@ window.missionDialogues = {
       ]
     }
   },
-"Coffee Stand": {
-  text: "My machine crashed three times—never seen so many grumpy commuters. I blame the WiFi hackers.",
-  choices: [
-    {
-      text: "Did you see anyone messing with the router?",
-      nextDialogue: {
-        npc: "Coffee Stand",
-        text: "A guy with a laptop and hoodie. Classic. Ordered a double espresso.",
-        clue: "WiFi tampering clue",
-        choices: [
-          { text: "Back to Interview Menu", action: () => showInterviewMenu() }
-        ]
+  "Coffee Stand": {
+    text: "My machine crashed three times—never seen so many grumpy commuters. I blame the WiFi hackers.",
+    choices: [
+      {
+        text: "Did you see anyone messing with the router?",
+        nextDialogue: {
+          npc: "Coffee Stand",
+          text: "A guy with a laptop and hoodie. Classic. Ordered a double espresso.",
+          clue: "WiFi tampering clue",
+          choices: [
+            { text: "Back to Interview Menu", action: () => showInterviewMenu() }
+          ]
+        }
       }
-    }
-  ]
-},
+    ]
+  },
   // LEVEL 10 – Final Showdown
   level10: {
     "SECTOR9 Director": {
@@ -829,7 +832,7 @@ window.missionDialogues = {
           text: "Where is it propagating fastest?",
           nextDialogue: {
             npc: "SECTOR9 Director",
-            text: "Asia, then Europe. It’s moving fast. Here’s the live map.",
+            text: "Asia, then Europe. It's moving fast. Here's the live map.",
             clue: "Attack map",
             action: () => window.markObjectiveComplete(1),
             choices: [
@@ -841,7 +844,7 @@ window.missionDialogues = {
           text: "Has Ghostline left a message?",
           nextDialogue: {
             npc: "SECTOR9 Director",
-            text: "Encrypted and waiting on your desktop. It’s up to you to break it.",
+            text: "Encrypted and waiting on your desktop. It's up to you to break it.",
             clue: "Ghostline's message",
             action: () => window.markObjectiveComplete(2),
             choices: [
@@ -853,20 +856,20 @@ window.missionDialogues = {
     }
   },
   "Reception Bot": {
-  text: "Welcome, Agent. System security at maximum alert. Remember: the cake is a lie.",
-  choices: [
-    {
-      text: "Can you open the doors for me?",
-      nextDialogue: {
-        npc: "Reception Bot",
-        text: "Processing... Access granted. Please save the world. No pressure.",
-        choices: [
-          { text: "Back to Interview Menu", action: () => showInterviewMenu() }
-        ]
+    text: "Welcome, Agent. System security at maximum alert. Remember: the cake is a lie.",
+    choices: [
+      {
+        text: "Can you open the doors for me?",
+        nextDialogue: {
+          npc: "Reception Bot",
+          text: "Processing... Access granted. Please save the world. No pressure.",
+          choices: [
+            { text: "Back to Interview Menu", action: () => showInterviewMenu() }
+          ]
+        }
       }
-    }
-  ]
-},
+    ]
+  },
 };
 
 
@@ -895,7 +898,7 @@ function defineBranchingDialogues() {
       ]
     },
     "interview_marcus": {
-      text: "Marcus: 'You're the new lead? I haven't slept. There were weird logins at 2AM, then deleted logs. If you can scan for lost entries, we’ll finally know.'",
+      text: "Marcus: 'You're the new lead? I haven't slept. There were weird logins at 2AM, then deleted logs. If you can scan for lost entries, we'll finally know.'",
       options: [
         "Ask about the suspicious login",
         "Use Evidence Scanner on logs",
@@ -1007,7 +1010,7 @@ function defineBranchingDialogues() {
       next: ["interview2_emma", "interview2_david", "interview2_intern", "investigation2_intro"]
     },
     "interview2_emma": {
-      text: "Emma: '6AM I found every headline was hacked. I’m not a coder! Maybe check the ticker script?'",
+      text: "Emma: '6AM I found every headline was hacked. I'm not a coder! Maybe check the ticker script?'",
       options: [
         "Ask about suspicious emails",
         "Audit Ticker Script",
@@ -1016,7 +1019,7 @@ function defineBranchingDialogues() {
       next: ["emma2_email", "audit2_code", "interview2_menu"]
     },
     "emma2_email": {
-      text: "Emma: 'Everyone got a fake IT password reset. Billy clicked it. His browser’s a popup circus now.'",
+      text: "Emma: 'Everyone got a fake IT password reset. Billy clicked it. His browser's a popup circus now.'",
       options: ["Back to Emma"],
       next: ["interview2_emma"]
     },
@@ -1047,7 +1050,7 @@ function defineBranchingDialogues() {
       action: () => window.markObjectiveComplete(0)
     },
     "interview2_intern": {
-      text: "Billy: 'I thought the password email was real. Next time, I’ll ask first... Maybe.'",
+      text: "Billy: 'I thought the password email was real. Next time, I'll ask first... Maybe.'",
       options: ["Back to Interview Menu"],
       next: ["interview2_menu"]
     },
@@ -1116,7 +1119,7 @@ function defineBranchingDialogues() {
       action: () => window.markObjectiveComplete(3)
     },
     "interview3_guard": {
-      text: "Bank Guard: 'Jennifer looked shaken after reading that email. You think it’s related?'",
+      text: "Bank Guard: 'Jennifer looked shaken after reading that email. You think it's related?'",
       options: ["Back to Interview Menu"],
       next: ["interview3_menu"]
     },
@@ -1149,7 +1152,7 @@ function defineBranchingDialogues() {
       next: ["interview4_chloe", "interview4_tom", "interview4_priya", "investigation4_intro"]
     },
     "interview4_chloe": {
-      text: "Chloe: 'Malicious commit skipped review, Tom’s token was reused.'",
+      text: "Chloe: 'Malicious commit skipped review, Tom's token was reused.'",
       options: [
         "Audit Pipeline Warnings",
         "Back to Interview Menu"
@@ -1312,7 +1315,7 @@ function defineBranchingDialogues() {
       next: ["contact8_informant", "trace8_aliases", "decrypt8_auction", "objectives8_view"]
     },
     "contact8_informant": {
-      text: "Cipher: 'Here’s PH4NT0M’s encrypted forum post.'",
+      text: "Cipher: 'Here's PH4NT0M's encrypted forum post.'",
       options: [
         "Decrypt Forum Post",
         "Back to Investigation"
@@ -1326,7 +1329,7 @@ function defineBranchingDialogues() {
       action: () => window.markObjectiveComplete(0)
     },
     "trace8_aliases": {
-      text: "Analyzing alias logs... Ghostline’s pattern matches found. Objective complete.",
+      text: "Analyzing alias logs... Ghostline's pattern matches found. Objective complete.",
       options: ["Back to Investigation"],
       next: ["investigation8_intro"],
       action: () => window.markObjectiveComplete(1)
@@ -1407,7 +1410,7 @@ function defineBranchingDialogues() {
       action: () => window.markObjectiveComplete(1)
     },
     "decrypt10_message": {
-      text: "You decrypt Ghostline’s final message: 'The strings are cut, but the music plays on.' Objective complete.",
+      text: "You decrypt Ghostline's final message: 'The strings are cut, but the music plays on.' Objective complete.",
       options: ["Back to Investigation"],
       next: ["investigation10_intro"],
       action: () => window.markObjectiveComplete(2)
@@ -1420,30 +1423,39 @@ function defineBranchingDialogues() {
   };
 }
 
-function showDialogueNode(key) {
-  const node = window.dialogues[key];
-  if (!node) return;
-
-  // Set main text
-  document.getElementById('dialogue-text').textContent = node.text;
-
-  // Clear old choices
-  const choicesDiv = document.getElementById('dialogue-choices');
-  choicesDiv.innerHTML = "";
-
-  // Render choice buttons
-  node.options.forEach((option, idx) => {
-    const btn = document.createElement('button');
-    btn.textContent = option;
-    btn.className = "choice-btn";
-    btn.onclick = () => {
-      // If the node has an action and THIS is the correct option, call it
-      if (typeof node.action === "function" && idx === 0) node.action();
-      // Show the next dialogue node
-      showDialogueNode(node.next[idx]);
-    };
-    choicesDiv.appendChild(btn);
-  });
+function showDialogueNode(key, type = "branching") {
+  let node = null;
+  if (type === "mission") {
+    node = window.missionDialogues[currentLevel][key];
+  } else if (type === "branching") {
+    node = window.dialogues[key];
+  }
+  if (!node) {
+    showPopup("Dialogue node not found.");
+    return;
+  }
+  // Display the dialogue text and options as you already do:
+  const textEl = document.getElementById('dialogue-text');
+  const optionsBox = document.getElementById('dialogue-choices');
+  if (textEl) textEl.textContent = node.text || '';
+  if (optionsBox) optionsBox.innerHTML = '';
+  if (node.options && optionsBox) {
+    node.options.forEach((optionText, idx) => {
+      const btn = document.createElement('button');
+      btn.textContent = optionText;
+      btn.className = 'choice-btn';
+      btn.onclick = () => {
+        // If this option leads to a level switch:
+        if (node.next && node.next[idx] && node.next[idx].startsWith('level')) {
+          setLevel(node.next[idx]);
+          showDialogueNode('investigation_intro', 'branching');
+        } else {
+          showDialogueNode(node.next[idx], 'branching');
+        }
+      };
+      optionsBox.appendChild(btn);
+    });
+  }
 }
 
 
@@ -1522,7 +1534,7 @@ function setBackground(levelKey) {
 }
 function showDialogue(levelKey, npcKey, lineIdx = 0) {
   setBackground(levelKey);
-  const npcLines = levelDialogues[levelKey][npcKey];
+  const npcLines = window.missionDialogues[levelKey][npcKey];
   let idx = lineIdx;
   function renderLine() {
     const line = npcLines[idx];
@@ -1604,7 +1616,7 @@ window.addEventListener('DOMContentLoaded', () => {
     if (typeof window.dialogues !== 'undefined' && window.dialogues.intro) {
       showBranchingDialogue('intro');
     } else {
-      showDialogue('level1', Object.keys(levelDialogues['level1'])[0]);
+      showDialogue('level1', Object.keys(window.missionDialogues['level1'])[0]);
     }
   }
 });
@@ -1629,6 +1641,7 @@ function createChoiceButton(text, onClick) {
 }
 // === Refactored Dialogue Display ===
 function showDialogueRefactored(npcName, dialogueText, choices = []) {
+  window.currentNPC = npcName; // Track current NPC for hint system
   const npcNameEl = getEl('npc-name');
   const dialogueTextEl = getEl('dialogue-text');
   const choicesContainer = getEl('dialogue-choices');
@@ -1652,4 +1665,80 @@ function showDialogueRefactored(npcName, dialogueText, choices = []) {
   } else {
     if (continueEl) continueEl.style.display = '';
   }
-} 
+}
+
+// --- Multi-Level Switching Support ---
+
+// Track the current mission/level
+let currentLevel = "level1";
+function setLevel(levelKey) {
+    currentLevel = levelKey;
+    localStorage.setItem('currentLevel', currentLevel);
+    renderObjectives();
+}
+if (localStorage.getItem('currentLevel')) {
+    currentLevel = localStorage.getItem('currentLevel');
+}
+
+// Linear progression for demo; adjust as needed for branching
+const LEVEL_ORDER = [
+    "level1", "level2", "level3", "level4", "level5",
+    "level6", "level7", "level8", "level9", "level10"
+];
+function goToNextLevel() {
+    const nextIndex = LEVEL_ORDER.indexOf(currentLevel) + 1;
+    // Unlock for the just-completed level
+    if (LEVEL_ACHIEVEMENTS[currentLevel] && typeof unlockAchievement === 'function') {
+        unlockAchievement(LEVEL_ACHIEVEMENTS[currentLevel]);
+    }
+    if (nextIndex < LEVEL_ORDER.length) {
+        setLevel(LEVEL_ORDER[nextIndex]);
+        showDialogueNode('investigation_intro', 'branching');
+    } else {
+        showPopup("All missions complete!");
+    }
+}
+
+// Render objectives for the current level
+function renderObjectives() {
+    const objectives = window.missionObjectives ? (window.missionObjectives[currentLevel] || []) : [];
+    const objectivesList = document.getElementById('objectives-list');
+    if (!objectivesList) return;
+    objectivesList.innerHTML = '';
+    objectives.forEach((obj, idx) => {
+        const li = document.createElement('li');
+        li.textContent = obj;
+        objectivesList.appendChild(li);
+    });
+}
+
+// Dynamic NPC/interview menu for current level
+function showInterviewMenu() {
+    const dialogues = window.missionDialogues[currentLevel];
+    if (!dialogues) {
+        showPopup("No interviews for this level!");
+        return;
+    }
+    const npcNames = Object.keys(dialogues);
+    const choices = npcNames.map(n => ({
+        text: `Talk to ${n}`,
+        action: () => {
+            window.currentNPC = n; // Track current NPC for hint system
+            showDialogueRefactored(n, dialogues[n].text, dialogues[n].choices);
+        }
+    }));
+    // Optionally add a back button or summary
+    choices.push({ text: 'Back to Investigation', action: () => showDialogueNode('investigation_intro', 'branching') });
+    // Render interview menu
+    showDialogueRefactored('Interview Menu', 'Who do you want to talk to?', choices);
+}
+
+// --- Level Completion Achievements ---
+const LEVEL_ACHIEVEMENTS = {
+  level1: 'usb_safety',
+  level2: 'cat_video',
+  level3: 'donut_detective',
+  level4: 'pizza_lover',
+  level5: 'ghostline_foe',
+  // Add more as desired
+}; 

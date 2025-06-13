@@ -5,15 +5,23 @@ function getEl(id) {
   return el;
 }
 
-function showHint(currentKey, dialogues) {
+function showHint() {
   let hintBox = getEl('hint-box');
   if (!hintBox) return;
-  if (!dialogues || !currentKey) {
-    hintBox.innerText = 'No hint available for this step.';
-    hintBox.style.display = 'block';
-    return;
+
+  let node = null;
+
+  // 1. Branching dialogue system
+  if (window.currentKey && window.dialogues && window.dialogues[window.currentKey]) {
+    node = window.dialogues[window.currentKey];
   }
-  let node = dialogues[currentKey];
+  // 2. Mission dialogue system (multi-level)
+  else if (window.currentLevel && window.currentNPC && window.missionDialogues
+           && window.missionDialogues[window.currentLevel]
+           && window.missionDialogues[window.currentLevel][window.currentNPC]) {
+    node = window.missionDialogues[window.currentLevel][window.currentNPC];
+  }
+
   if (node && node.hint) {
     hintBox.innerText = node.hint;
     hintBox.style.display = 'block';
@@ -45,8 +53,8 @@ function showHelpModal() {
     'level9': 'Mission 9: Investigate the transit system hack by checking the control center...',
     'level10': 'Final Mission: This is the showdown with Ghostline. Review all clues...'
   };
-  // Try to get the current mission key from window.currentKey or fallback
-  let missionKey = (window.currentKey || '').split('_')[0];
+  // Try to get the current mission key from window.currentLevel or fallback to window.currentKey
+  let missionKey = (window.currentLevel || (window.currentKey || '').split('_')[0]);
   helpText.textContent = helpTexts[missionKey] || 'Use your investigation tools and follow the clues to solve the mission.';
   modal.style.display = 'block';
 }
@@ -63,8 +71,5 @@ window.addEventListener('DOMContentLoaded', function() {
   let closeBtn = getEl('help-close');
   if (closeBtn) closeBtn.onclick = hideHelpModal;
   let hintBtn = getEl('hint-btn');
-  if (hintBtn) hintBtn.onclick = function() {
-    // You must provide currentKey and dialogues in your dialogue system
-    showHint(window.currentKey, window.dialogues);
-  };
+  if (hintBtn) hintBtn.onclick = showHint;
 }); 

@@ -355,3 +355,18 @@
   opacity: 0;
   pointer-events: none;
 }
+
+.achievement {
+  background: #232f27;
+  color: #A499FF;
+  border-radius: 8px;
+  padding: 10px 16px;
+  margin-bottom: 10px;
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 1em;
+  box-shadow: 0 2px 8px #0002;
+  border-left: 4px solid #FFD700;
+}
+#achievements-modal h2 {
+  letter-spacing: 1px;
+}

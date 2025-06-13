@@ -28,7 +28,7 @@
                 <div class="dialogue-choices" id="dialogue-choices">
                     <!-- Choice buttons will be added here -->
                 </div>
-                <div class="dialogue-continue" id="dialogue-continue" style="display: none;">
+                <div class="dialogue-continue" id="dialogue-continue" ">
                     <span>Click to continue...</span>
                 </div>
             </div>
@@ -51,229 +51,18 @@
 
 {% block extra_js %}
 <script>
-// Dialogue System Variables
-let currentDialogue = null;
-let currentNPC = null;
-let continueClickHandler = null;
-const missionLocation = "{{ location }}";
-const locationName = "{{ location_name }}";
-
-// Initialize dialogue system
 document.addEventListener('DOMContentLoaded', function() {
-    initializeDialogue();
+    // Set the current level based on the location (if needed)
+    if (typeof setLevel === 'function') {
+        setLevel("{{ location }}");
+    }
+    // Start the dialogue system at the appropriate entry point
+    if (typeof showDialogueNode === 'function') {
+        showDialogueNode('investigation_intro', 'branching');
+    }
 });
-
-function initializeDialogue() {
-    // Load dialogues for this location
-    const levelKey = missionLocation;
-    const dialogues = window.missionDialogues ? window.missionDialogues[levelKey] : null;
-    
-    if (dialogues) {
-        const npcNames = Object.keys(dialogues);
-        
-        if (npcNames.length === 1) {
-            // Only one NPC available, start dialogue directly
-            const npcName = npcNames[0];
-            const npcDialogue = dialogues[npcName];
-            showDialogue(npcName, npcDialogue.text, npcDialogue.choices);
-        } else if (npcNames.length > 1) {
-            // Multiple NPCs available, let player choose
-            const choices = npcNames.map(npcName => ({
-                text: `Talk to ${npcName}`,
-                nextDialogue: {
-                    npc: npcName,
-                    text: dialogues[npcName].text,
-                    choices: dialogues[npcName].choices
-                }
-            }));
-            
-            showDialogue('SECTOR-9 HQ', `Agent, you have multiple contacts available at ${locationName}. Who would you like to interview first?`, choices);
-        } else {
-            // No specific NPCs, show default dialogue
-            showDefaultDialogue();
-        }
-    } else {
-        // No dialogues for this location
-        showDefaultDialogue();
-    }
-}
-
-function showDefaultDialogue() {
-    const defaultDialogues = {
-        'bank': {
-            npc: 'Bank Security',
-            text: 'Agent, we\'ve detected suspicious activity in our systems. The breach appears to target our transaction processing servers.',
-            choices: [
-                { text: "Tell me more about the suspicious activity.", nextDialogue: { npc: 'Bank Security', text: 'Multiple unauthorized access attempts were detected around 3 AM. Someone was trying to access our vault security protocols.', choices: [{ text: "I need to investigate further.", action: () => completeDialogue() }] }},
-                { text: "Any security footage available?", nextDialogue: { npc: 'Bank Security', text: 'Unfortunately, the cameras were disabled during the incident. Very professional work.', choices: [{ text: "That confirms this is a sophisticated attack.", action: () => completeDialogue() }] }},
-                { text: "I'll investigate the systems directly.", action: () => completeDialogue() }
-            ]
-        },
-        'school': {
-            npc: 'IT Administrator',
-            text: 'Agent, thank goodness you\'re here. Our student information system has been compromised. We need to protect our students\' data.',
-            choices: [
-                { text: "When did you first notice the breach?", nextDialogue: { npc: 'IT Administrator', text: 'This morning when teachers couldn\'t access the gradebook. Then we found files had been encrypted.', choices: [{ text: "Ransomware attack. I'll need to analyze the encryption.", action: () => completeDialogue() }] }},
-                { text: "Any ransom demands?", nextDialogue: { npc: 'IT Administrator', text: 'Not yet, but we found a suspicious executable that hasn\'t been triggered.', choices: [{ text: "Don't execute anything. I'll handle this.", action: () => completeDialogue() }] }},
-                { text: "I'll start with the network infrastructure.", action: () => completeDialogue() }
-            ]
-        },
-        'cafe': {
-            npc: 'Cafe Manager',
-            text: 'Agent, our POS system is acting strange. Customers are complaining about mysterious charges appearing on their cards.',
-            choices: [
-                { text: "How long has this been happening?", nextDialogue: { npc: 'Cafe Manager', text: 'Started three days ago. Small amounts, but consistent across multiple cards.', choices: [{ text: "Classic card skimming operation. I'll check your terminals.", action: () => completeDialogue() }] }},
-                { text: "Any new equipment installed recently?", nextDialogue: { npc: 'Cafe Manager', text: 'We upgraded our payment terminals last week. The technician seemed legitimate...', choices: [{ text: "I'll need to examine those terminals immediately.", action: () => completeDialogue() }] }},
-                { text: "I'll investigate the payment processing system.", action: () => completeDialogue() }
-            ]
-        },
-        'transport': {
-            npc: 'System Controller',
-            text: 'Agent, our traffic management system is experiencing anomalies. Train schedules are being randomly altered.',
-            choices: [
-                { text: "Any safety concerns?", nextDialogue: { npc: 'System Controller', text: 'We\'ve switched to manual control as a precaution. Can\'t risk automated systems right now.', choices: [{ text: "Smart move. I'll trace the source of the interference.", action: () => completeDialogue() }] }},
-                { text: "When did the anomalies start?", nextDialogue: { npc: 'System Controller', text: 'Two hours ago. First minor delays, then complete schedule chaos.', choices: [{ text: "This could be a test run for something bigger.", action: () => completeDialogue() }] }},
-                { text: "I'll analyze the control systems.", action: () => completeDialogue() }
-            ]
-        },
-        'company': {
-            npc: 'CISO',
-            text: 'Agent, we\'re dealing with a sophisticated APT. They\'ve been in our network for weeks, exfiltrating intellectual property.',
-            choices: [
-                { text: "How did you discover the breach?", nextDialogue: { npc: 'CISO', text: 'Unusual network traffic patterns. Encrypted data leaving our servers at odd hours.', choices: [{ text: "I'll need to trace those connections.", action: () => completeDialogue() }] }},
-                { text: "What type of IP was targeted?", nextDialogue: { npc: 'CISO', text: 'Our latest quantum encryption research. If this gets out, we\'re finished.', choices: [{ text: "I'll prioritize securing that data.", action: () => completeDialogue() }] }},
-                { text: "I'll start with network forensics.", action: () => completeDialogue() }
-            ]
-        },
-        'hospital': {
-            npc: 'Chief Medical Officer',
-            text: 'Agent, our patient records system has been locked down by ransomware. Lives are at stake.',
-            choices: [
-                { text: "Are critical systems still operational?", nextDialogue: { npc: 'Chief Medical Officer', text: 'Life support and emergency systems are isolated and secure. But we can\'t access patient histories.', choices: [{ text: "I'll work on decrypting the patient database.", action: () => completeDialogue() }] }},
-                { text: "Any ransom demands?", nextDialogue: { npc: 'Chief Medical Officer', text: 'They want 50 Bitcoin within 48 hours. We can\'t pay, but we can\'t lose patient data either.', choices: [{ text: "I'll find another way to recover the data.", action: () => completeDialogue() }] }},
-                { text: "I'll analyze the ransomware immediately.", action: () => completeDialogue() }
-            ]
-        }
-    };
-
-    const defaultDialogue = defaultDialogues[missionLocation];
-    if (defaultDialogue) {
-        showDialogue(defaultDialogue.npc, defaultDialogue.text, defaultDialogue.choices);
-    } else {
-        showDialogue('SECTOR-9 Command', `Agent, intelligence is limited for ${locationName}. Gather what information you can from the available systems.`, [
-            { text: "Understood. Beginning investigation.", action: () => completeDialogue() },
-            { text: "Any additional intel I should know about?", nextDialogue: { npc: 'SECTOR-9 Command', text: 'The threat level is high. Proceed with caution and report any findings immediately.', choices: [{ text: "Copy that. Moving to investigate.", action: () => completeDialogue() }] }}
-        ]);
-    }
-}
-
-function showDialogue(npcName, dialogueText, choices = []) {
-    const overlay = document.getElementById('dialogue-overlay');
-    const npcNameEl = document.getElementById('npc-name');
-    const dialogueTextEl = document.getElementById('dialogue-text');
-    const choicesContainer = document.getElementById('dialogue-choices');
-    const continueEl = document.getElementById('dialogue-continue');
-    
-    // Set NPC name and dialogue
-    npcNameEl.textContent = npcName;
-    
-    // Type out dialogue text
-    typeDialogueText(dialogueText, dialogueTextEl);
-    
-    // Generate NPC portrait
-    generateNPCPortrait(npcName);
-    
-    // Clear previous choices
-    choicesContainer.innerHTML = '';
-    
-    if (choices.length > 0) {
-        continueEl.style.display = 'none';
-        choices.forEach((choice, index) => {
-            const choiceBtn = document.createElement('button');
-            choiceBtn.className = 'dialogue-choice-btn';
-            choiceBtn.textContent = choice.text;
-            choiceBtn.addEventListener('click', () => {
-                if (choice.action) choice.action();
-                if (choice.nextDialogue) {
-                    showDialogue(choice.nextDialogue.npc, choice.nextDialogue.text, choice.nextDialogue.choices);
-                } else if (!choice.action) {
-                    completeDialogue();
-                }
-            });
-            choicesContainer.appendChild(choiceBtn);
-        });
-    } else {
-        continueEl.style.display = 'block';
-        // Remove any existing event listener
-        if (continueClickHandler) {
-            continueEl.removeEventListener('click', continueClickHandler);
-        }
-        // Create new handler and add it
-        continueClickHandler = function(event) {
-            console.log('Continue clicked!');
-            event.preventDefault();
-            event.stopPropagation();
-            completeDialogue();
-        };
-        continueEl.addEventListener('click', continueClickHandler);
-    }
-    
-    overlay.style.display = 'flex';
-}
-
-function completeDialogue() {
-    // Redirect back to mission page
-    window.location.href = `/mission/${missionLocation}`;
-}
-
-function typeDialogueText(text, element) {
-    element.textContent = '';
-    let index = 0;
-    const speed = 30; // milliseconds per character
-    
-    function typeChar() {
-        if (index < text.length) {
-            element.textContent += text.charAt(index);
-            index++;
-            setTimeout(typeChar, speed);
-        }
-    }
-    
-    typeChar();
-}
-
-function generateNPCPortrait(npcName) {
-    const portraitEl = document.getElementById('npc-portrait');
-    
-    // Create random avatar layers for the NPC
-    const avatarLayers = ['character', 'hair', 'clothes', 'face', 'accessories'];
-    portraitEl.innerHTML = '';
-    
-    avatarLayers.forEach(layer => {
-        const img = document.createElement('img');
-        img.className = 'avatar-layer';
-        img.src = `/static/images/avatar_parts/${layer}/${getNPCVariant(npcName, layer)}.png`;
-        img.onerror = function() { this.style.display = 'none'; }; // Hide if image doesn't exist
-        portraitEl.appendChild(img);
-    });
-}
-
-function getNPCVariant(npcName, layer) {
-    // Generate consistent avatar parts based on NPC name
-    const hash = npcName.split('').reduce((a, b) => { a = ((a << 5) - a) + b.charCodeAt(0); return a & a }, 0);
-    const variants = {
-        'character': ['character1', 'character2', 'character3'],
-        'hair': ['hair1', 'hair2', 'hair3', 'hair4'],
-        'clothes': ['clothes1', 'clothes2', 'clothes3', 'clothes4'],
-        'face': ['face1', 'face2', 'face3'],
-        'accessories': ['glasses', 'hat', 'scarf', 'none']
-    };
-    
-    const layerVariants = variants[layer] || ['default'];
-    return layerVariants[Math.abs(hash) % layerVariants.length];
-}
 </script>
-<script src="{{ url_for('static', filename='js/dialogues.js') }}"></script>
+<script src="{{ url_for('static', filename='js/dialogue_advanced.js') }}"></script>
 {% endblock %}
 
 {% block extra_css %}
