@@ -211,142 +211,64 @@ function markObjectiveComplete(idx) {
 
 
 // --- Dialogue/Storyboard System ---
-// Use window.missionDialogues from dialogue_advanced.js/dialogues.js for all dialogue logic.
-// Remove exampleDialogues and related variables.
+// Use only the /static/dialogues/levelX.js files as the source of truth.
+// Dynamically load the correct dialogue object and use its .nodes property.
 
-// Map location keys to missionDialogues level keys
+// Map location keys to dialogue keys
 const locationToLevel = {
   hq: 'level1',
   news: 'level2',
   bank: 'level3',
   company: 'level4',
-  school: 'level5',
-  government: 'level6',
-  hospital: 'level7',
-  transport: 'level8',
-  cafe: 'level9',
+  government: 'level5',
+  school: 'level6',
+  cafe: 'level7',
+  hospital: 'level8',
+  transport: 'level9',
   global: 'level10'
 };
 
-// Add this at the top or after missionDialogues is defined:
-window.missionObjectives = {
-  level1: [
-    "Identify the initial breach point",
-    "Analyze suspicious login attempts",
-    "Trace the attacker's IP address",
-    "Recover deleted system logs",
-    "Secure the compromised accounts"
-  ],
-  level2: [
-    "Audit website code for defacement",
-    "Analyze XSS payload",
-    "Trace phishing email source",
-    "Patch CMS vulnerability"
-  ],
-  level3: [
-    "Identify patient zero",
-    "Analyze phishing email",
-    "Recover ransomware sample",
-    "Trace network spread",
-    "Restore banking services"
-  ],
-  level4: [
-    "Audit recent repo commits",
-    "Investigate pipeline warnings",
-    "Identify compromised developer account",
-    "Revert malicious commit"
-  ],
-  level5: [
-    "Analyze persistent malware",
-    "Recover deleted database records",
-    "Analyze unauthorized scheduled tasks"
-  ],
-  level6: [
-    "Find rogue USB device",
-    "Analyze firmware changes",
-    "Review remote access logs"
-  ],
-  level7: [
-    "Analyze credential access logs",
-    "Investigate locker clue",
-    "Analyze process hash",
-    "Interview HR about leave requests"
-  ],
-  level8: [
-    "Find PH4NT0M's forum post",
-    "Trace Ghostline's aliases",
-    "Decrypt auction data"
-  ],
-  level9: [
-    "Restore control center",
-    "Analyze DDoS log",
-    "Patch exploited service",
-    "Remove rogue WiFi config"
-  ],
-  level10: [
-    "Disarm Silent Strings protocol",
-    "Trace global worm propagation",
-    "Decrypt Ghostline's final message"
-  ]
-};
-
-function renderObjectives(levelKey) {
-    const objectives = window.missionObjectives[levelKey] || [];
-    const objectivesList = document.getElementById('objectives-list');
-    if (!objectivesList) return;
-    objectivesList.innerHTML = '';
-  
-    const completed = getCompletedObjectives(levelKey);
-  
-    objectives.forEach((obj, idx) => {
-      const li = document.createElement('li');
-      li.dataset.index = idx;
-      const isDone = completed.includes(idx);
-      li.className = isDone ? 'completed' : '';
-      li.innerHTML = `<span class="objective-status">${isDone ? '[✓]' : '[ ]'}</span> ${obj}`;
-      objectivesList.appendChild(li);
-    });
-  }
-  
-
-function showInterviewMenu() {
+// Helper to get the current dialogue nodes object
+function getCurrentDialogueNodes() {
     const bg = document.querySelector('.location-background');
     const loc = bg ? bg.dataset.location : 'hq';
     const levelKey = locationToLevel[loc] || 'level1';
-    renderObjectives(levelKey);
-    const dialogues = window.missionDialogues[levelKey];
-    if (!dialogues || typeof dialogues !== 'object') {
-        console.error("No dialogues found for location:", loc, dialogues);
-        showDialogue('System', 'No NPCs available for interview at this location.', []);
-        return;
-    }
-    const npcNames = Object.keys(dialogues);
+    // The dialogue file should define e.g. window.level1Dialogues
+    const dialogueObj = window[levelKey + 'Dialogues'];
+    return dialogueObj && dialogueObj.nodes ? dialogueObj.nodes : {};
+}
+
+// Helper to get the current level key
+function getCurrentLevelKey() {
+    const bg = document.querySelector('.location-background');
+    const loc = bg ? bg.dataset.location : 'hq';
+    return locationToLevel[loc] || 'level1';
+}
+
+// Show the interview menu (list of NPCs)
+function showInterviewMenu() {
+    renderObjectives(getCurrentLevelKey());
+    const nodes = getCurrentDialogueNodes();
+    // NPCs are all keys except 'start', 'objectives', and any meta/failStates
+    const npcNames = Object.keys(nodes).filter(k => !['start','objectives'].includes(k) && typeof nodes[k] === 'object' && nodes[k].options);
     const choices = npcNames.map(n => ({
         text: `Talk to ${n}` + (n === lastInterviewedNpc ? ' (again)' : ''),
         action: () => {
             lastInterviewedNpc = n;
-            showMissionInterview(levelKey, n);
+            showMissionInterview(n, 'intro');
         }
     }));
-    choices.push({
-        text: 'Show Summary',
-        action: showInvestigationIntro
-    });
+    choices.push({ text: 'Show Summary', action: showSummary });
     showDialogue('Contact Selection', 'Who would you like to interview next?', choices);
 }
 
+// Show a summary of interviewed NPCs and objectives
 function showSummary() {
-    const bg = document.querySelector('.location-background');
-    const loc = bg ? bg.dataset.location : 'hq';
-    const levelKey = locationToLevel[loc] || 'level1';
-    const dialogues = window.missionDialogues[levelKey];
-    const npcNames = Object.keys(dialogues);
+    const nodes = getCurrentDialogueNodes();
+    const npcNames = Object.keys(nodes).filter(k => !['start','objectives'].includes(k) && typeof nodes[k] === 'object' && nodes[k].options);
     let summary = '<strong>Interviewed NPCs:</strong><ul>';
-    npcNames.forEach(n => {
-        summary += `<li>${n}</li>`;
-    });
+    npcNames.forEach(n => { summary += `<li>${n}</li>`; });
     summary += '</ul>';
-    // Show objectives status if available
     const objectivesList = document.getElementById('objectives-list');
     if (objectivesList) {
         summary += '<strong>Objectives:</strong><ul>';
@@ -356,197 +278,85 @@ function showSummary() {
         });
         summary += '</ul>';
     }
-    showDialogue('Summary', summary, [
-        { text: 'Back to Interview Menu', action: showInterviewMenu }
-    ]);
+    showDialogue('Summary', summary, [{ text: 'Back to Interview Menu', action: showInterviewMenu }]);
 }
 
-// Helper to display mission dialogue for an NPC
-function showMissionInterview(level, npc, node = null) {
-    if (!node) node = window.missionDialogues[level][npc];
+// Show a dialogue node for a given NPC and nodeKey
+function showMissionInterview(npc, nodeKey = 'intro') {
+    const nodes = getCurrentDialogueNodes();
+    // If nodeKey is not found, fallback to the NPC's main node
+    let node = nodes[nodeKey] || nodes[npc] || nodes['start'];
     if (!node) {
-        alert("Dialogue not found!");
+        alert('Dialogue not found!');
         return;
     }
-    const speakerEl = document.getElementById('npc-name');
+    // Set currentLevel and currentNPC for hints.js compatibility
+    window.currentLevel = getCurrentLevelKey();
+    window.currentNPC = nodeKey;
+    // Sync NPC name in both the dialogue bubble and the portrait label
+    const npcNameEl = document.getElementById('npc-name');
+    const bubbleNpcNameEl = document.getElementById('bubble-npc-name');
+    const npcNameLabelEl = document.getElementById('npc-name-label');
+    if (npcNameEl) npcNameEl.innerText = npc;
+    if (bubbleNpcNameEl) bubbleNpcNameEl.innerText = npc;
+    if (npcNameLabelEl) npcNameLabelEl.innerText = npc;
+    renderInvestigationNpcPortrait(npc);
+    // Typing effect for dialogue text
     const textEl = document.getElementById('dialogue-text');
+    if (textEl) typeText(node.text || '', textEl);
+    // Render choices
     const optionsEl = document.getElementById('dialogue-choices');
-    if (speakerEl) speakerEl.innerText = npc;
-    if (textEl) textEl.innerText = node.text || "";
-    if (optionsEl) optionsEl.innerHTML = "";
-    if (Array.isArray(node.choices) && node.choices.length > 0) {
-        node.choices.forEach(choice => {
+    if (optionsEl) optionsEl.innerHTML = '';
+    if (Array.isArray(node.options) && node.options.length > 0) {
+        node.options.forEach(option => {
             const btn = document.createElement('button');
             btn.className = 'choice-btn';
-            btn.innerText = choice.text;
+            btn.innerText = option.text;
             btn.onclick = () => {
-                if (typeof choice.action === "function") choice.action();
-                if (choice.nextDialogue) {
-                    showMissionInterview(level, npc, choice.nextDialogue);
-                } else if (!choice.action) {
-                    if (textEl) textEl.innerText = "End of dialogue.";
+                if (option.next) {
+                    showMissionInterview(npc, option.next);
+                } else if (option.action) {
+                    option.action();
+                } else {
+                    showInterviewMenu();
                 }
             };
             optionsEl.appendChild(btn);
         });
     } else {
-        if (optionsEl) optionsEl.innerHTML = "<em>End of interview.</em>";
+        if (optionsEl) optionsEl.innerHTML = '<em>End of interview.</em>';
     }
     if (node.clue) showPopup(`Clue obtained: ${node.clue}`);
 }
 
+// Show a generic dialogue (e.g., system messages, menus)
 function showDialogue(npc, text, choices = []) {
-    // Defensive: ensure text is defined
+    // Sync NPC name in both the dialogue bubble and the portrait label
     const npcNameEl = document.getElementById('npc-name');
-    const dialogueTextEl = document.getElementById('dialogue-text');
-    const choicesContainer = document.getElementById('dialogue-choices');
-    const continueEl = document.getElementById('dialogue-continue');
-    if (npcNameEl) npcNameEl.textContent = npc || 'Unknown';
-    if (dialogueTextEl) dialogueTextEl.textContent = text || '...';
-    if (choicesContainer) choicesContainer.innerHTML = '';
+    const bubbleNpcNameEl = document.getElementById('bubble-npc-name');
+    const npcNameLabelEl = document.getElementById('npc-name-label');
+    if (npcNameEl) npcNameEl.innerText = npc;
+    if (bubbleNpcNameEl) bubbleNpcNameEl.innerText = npc;
+    if (npcNameLabelEl) npcNameLabelEl.innerText = npc;
+    // Typing effect for dialogue text
+    const textEl = document.getElementById('dialogue-text');
+    if (textEl) typeText(text || '', textEl);
+    // Render choices
+    const optionsEl = document.getElementById('dialogue-choices');
+    if (optionsEl) optionsEl.innerHTML = '';
     if (Array.isArray(choices) && choices.length > 0) {
-        if (continueEl) continueEl.classList.add('hidden');
         choices.forEach(choice => {
             const btn = document.createElement('button');
             btn.className = 'choice-btn';
-            btn.textContent = choice.text || 'Continue';
+            btn.innerText = choice.text;
             btn.onclick = () => {
-                if (typeof choice.action === 'function') choice.action();
-                if (choice.nextDialogue) {
-                    showDialogue(choice.nextDialogue.npc, choice.nextDialogue.text, choice.nextDialogue.choices);
-                } else if (!choice.action) {
-                    if (dialogueTextEl) dialogueTextEl.textContent = 'End of dialogue.';
-                }
+                if (choice.action) choice.action();
             };
-            if (choicesContainer) choicesContainer.appendChild(btn);
+            optionsEl.appendChild(btn);
         });
     } else {
-        if (continueEl) continueEl.classList.remove('hidden');
+        if (optionsEl) optionsEl.innerHTML = '<em>Continue...</em>';
     }
-}
-
-// Tool data (ideally, load from your game state)
-const tools = [
-    { name: "Network Scanner", description: "Scan for active connections and breach points.", icon: "🛰️", unlocked: true },
-    { name: "Log Analyzer", description: "Parse and highlight suspicious logins.", icon: "📜", unlocked: true },
-    { name: "Password Cracker", description: "Crack/reset compromised accounts.", icon: "🔑", unlocked: false },
-    { name: "File Recovery Tool", description: "Recover deleted system logs.", icon: "💾", unlocked: false },
-    // Add all your tools
-  ];
-  
-  let selectedTool = null;
-  
-  function renderToolSidebar() {
-    const ul = document.getElementById("tool-list");
-    ul.innerHTML = "";
-    tools.forEach((tool, idx) => {
-      const li = document.createElement("li");
-      li.className = "tool-item" + (tool.unlocked ? "" : " locked") + (selectedTool === idx ? " selected" : "");
-      li.innerHTML = `
-        <span class="tool-icon">${tool.icon}</span>
-        <span class="tool-name">${tool.name}</span>
-        <span class="tool-desc">${tool.description}</span>
-      `;
-      if (tool.unlocked) {
-        li.onclick = () => selectTool(idx);
-      }
-      ul.appendChild(li);
-    });
-    // Show which tool is equipped
-    document.getElementById("equipped-tool").innerText = selectedTool !== null ? tools[selectedTool].name : "None";
-  }
-  function selectTool(idx) {
-    if (!tools[idx].unlocked) return;
-    selectedTool = idx;
-    renderToolSidebar();
-    // (Optional) Update your UI/game logic based on equipped tool
-  }
-  // Unlock tools as the game progresses
-  function unlockTool(toolName) {
-    const tool = tools.find(t => t.name === toolName);
-    if (tool) tool.unlocked = true;
-    renderToolSidebar();
-  }
-  
-  // Sidebar toggle via hamburger
-  document.getElementById("hamburger-menu").onclick = function() {
-    document.getElementById("tool-sidebar").classList.toggle("hidden");
-  };
-  // If you want to close sidebar on click-outside, add a click handler here.
-  
-  window.onload = renderToolSidebar;
-  
-// --- Dynamic Investigation Intro ---
-const investigationIntros = {
-    'hq': {
-        npc: 'Director',
-        text: 'Welcome to SECTOR-9 HQ. We have a breach. Interview staff, scan for evidence, and complete your objectives.'
-    },
-    'bank': {
-        npc: 'Bank Manager',
-        text: 'Agent, our bank systems have been compromised. Talk to staff and find the breach.'
-    },
-    'news': {
-        npc: 'Editor-in-Chief',
-        text: 'The news site was defaced overnight. Interview the team and trace the attack.'
-    },
-    'school': {
-        npc: 'Principal',
-        text: 'The school network is down. Find out who or what caused the disruption.'
-    },
-    'company': {
-        npc: 'CTO',
-        text: 'A suspicious commit was pushed to production. Investigate the dev team.'
-    },
-    'government': {
-        npc: 'Chief of Staff',
-        text: 'Sensitive government files were accessed. Interview officials and IT.'
-    },
-    'hospital': {
-        npc: 'Chief Medical Officer',
-        text: 'Patient records are locked by ransomware. Talk to staff and restore access.'
-    },
-    'transport': {
-        npc: 'Transit Supervisor',
-        text: 'The city transit system was hacked. Interview staff and commuters.'
-    },
-    'global': {
-        npc: 'Director',
-        text: 'This is it, Agent. The final breach. Interview all key personnel and stop GHOSTLINE.'
-    }
-};
-
-function showInvestigationIntro() {
-    const bg = document.querySelector('.location-background');
-    const loc = bg ? bg.dataset.location : 'hq';
-    const intro = investigationIntros[loc] || { npc: 'Director', text: 'Welcome, Agent. Begin your investigation by interviewing staff and analyzing evidence.' };
-    showDialogue(
-        intro.npc,
-        intro.text,
-        [
-            { text: 'Begin with Interviews', action: showInterviewMenu },
-            { text: 'Run Evidence Scan', action: () => showToolModal('Evidence Scanner', `<button id="run-scan-btn" class="action-btn"><i class="fas fa-search"></i> Run System Scan</button><div id="scan-result" class="result-container"></div>`) },
-            { text: 'Analyze Digital Clues', action: () => showToolModal('Digital Analysis', `<button id="run-analysis-btn" class="action-btn"><i class="fas fa-microscope"></i> Analyze Evidence</button><div id="analysis-result" class="result-container"></div>`) },
-            { text: 'Check Objectives', action: showSummary }
-        ]
-    );
-}
-
-function startInterview() {
-    showInvestigationIntro();
-}
-
-function typeText(txt, el) {
-    if (!el) return;
-    el.textContent = '';
-    let i = 0;
-    function type() {
-        if (i < txt.length) {
-            el.textContent += txt[i++];
-            setTimeout(type, 12);
-        }
-    }
-    type();
 }
 
 // --- NPC Portrait Rendering (using game.js logic) ---
@@ -718,8 +528,15 @@ document.addEventListener('DOMContentLoaded', () => {
     setBackgroundImage();
     setupMenuAndModals();
     setNpcPortrait();
-    defineBranchingDialogues();        
-    showDialogueNode('investigation_intro');
+    // Show the start node from the loaded dialogue file
+    const nodes = getCurrentDialogueNodes();
+    if (nodes['start']) {
+        showDialogue('System', nodes['start'].text, [
+            { text: 'Begin Investigation', action: showInterviewMenu }
+        ]);
+    } else {
+        showInterviewMenu();
+    }
 });
 
 let lastInterviewedNpc = null;
