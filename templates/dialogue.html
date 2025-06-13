@@ -10,7 +10,7 @@
     </div>
 
     <!-- Visual Novel Style Dialogue System -->
-    <div id="dialogue-overlay" class="dialogue-overlay" style="display: flex;">
+    <div id="dialogue-overlay" class="dialogue-overlay">
         <div class="dialogue-container">
             <div class="dialogue-portrait-section">
                 <div class="npc-portrait-frame">
@@ -62,7 +62,6 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 });
 </script>
-<script src="{{ url_for('static', filename='js/dialogue_advanced.js') }}"></script>
 {% endblock %}
 
 {% block extra_css %}

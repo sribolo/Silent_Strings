@@ -87,15 +87,13 @@
     </div>
 
     <!-- Achievements Modal Trigger Button -->
-    <button id="show-achievements-btn" style="position:fixed;top:20px;right:20px;z-index:10001;">
-      🏆 Achievements
-    </button>
+    <button id="show-achievements-btn">Achievements</button>
 
     <!-- Achievements Modal -->
-    <div id="achievements-modal" style="display:none; position:fixed; top:10%; left:50%; transform:translateX(-50%); background:#232336; color:#A499FF; padding:32px 28px 24px 28px; border-radius:16px; z-index:10000; min-width:320px; box-shadow:0 8px 32px #0008;">
-      <h2 style="margin-top:0; color:#FFD700; text-align:center;">Achievements</h2>
-      <div id="achievements-list"></div>
-      <button onclick="document.getElementById('achievements-modal').style.display='none'" style="margin-top:18px; width:100%; background:#6C5CE7; color:white; border:none; border-radius:8px; padding:10px 0; font-size:1em; cursor:pointer;">Close</button>
+    <div id="achievements-modal">
+        <h2>Achievements</h2>
+        <div id="achievements-list"></div>
+        <button id="close-achievements-btn">Close</button>
     </div>
 
     <div id="popup-notification" class="popup-notification hidden"></div>
@@ -103,6 +101,5 @@
 {% endblock %}
 
 {% block extra_scripts %}
-<script src="{{ url_for('static', filename='js/dialogue_advanced.js') }}" defer></script>
 <script src="{{ url_for('static', filename='js/investigation.js') }}" defer></script>
 {% endblock %} 

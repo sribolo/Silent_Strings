@@ -100,7 +100,7 @@ function getCompletedObjectives(levelKey) {
     }
 
     // Tool modals
-    addToolEvent('interview-btn', startInterview);
+    addToolEvent('interview-btn', showInterviewMenu);
     addToolEvent('scan-btn', () => showToolModal('Evidence Scanner',
         `<button id="run-scan-btn" class="action-btn"><i class="fas fa-search"></i> Run System Scan</button><div id="scan-result" class="result-container"></div>`));
     addToolEvent('analyze-btn', () => showToolModal('Digital Analysis',
