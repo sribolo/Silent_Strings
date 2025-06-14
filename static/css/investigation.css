@@ -344,7 +344,7 @@
   margin-bottom: 18px;
   padding: 8px 14px;
   font-weight: bold;
-  color: #4fffcf;
+  color: #e0e0e0;
   font-size: 1em;
   list-style: none;
   display: flex;
@@ -352,12 +352,16 @@
 }
 
 #objectives-list li.completed {
-  color: #7affb2;
+  color: #4fffcf;
   opacity: 0.7;
 }
 
 #objectives-list .objective-status {
   margin-right: 12px;
   font-size: 1.2em;
+  color: #bbb;
+}
+
+#objectives-list li.completed .objective-status {
   color: #7affb2;
 } 
