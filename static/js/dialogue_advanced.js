@@ -363,17 +363,17 @@ window.missionDialogues = {
       "fail_commit_ignored": {
         text: 'You missed the malicious commit. Production is compromised and client data is leaked.<br><b>MISSION FAILED.</b>',
         options: [{ text: 'Restart Mission', next: 'start' }]
-      },
+    },
       // Soft Fail: Didn\'t secure Tom\'s account
-      "fail_dev_account_unlocked": {
+    "fail_dev_account_unlocked": {
         text: 'You didn\'t secure the compromised developer account. Attackers leave a hidden access token.',
         options: [{ text: 'Continue, But Be Careful', next: 'start' }]
-      },
-      "fail_timeout": {
+    },
+    "fail_timeout": {
         text: 'The malware spread too far. The company\'s codebase is compromised.',
         options: [{ text: 'Retry', next: 'start' }]
-      }
-    },
+    }
+  },
   "level5": {
   "start": {
         text: "An unauthorized scheduled task was found on a government system. There's evidence of persistence.",
