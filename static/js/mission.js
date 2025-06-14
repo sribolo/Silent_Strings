@@ -8,7 +8,7 @@ window.addEventListener('DOMContentLoaded', () => {
   window.completedObjectives = JSON.parse(dataDiv.dataset.completed || '[]');
   window.totalObjectives = parseInt(dataDiv.dataset.total || '0');
   window.missionLocation = dataDiv.dataset.location;
-  let timeLeft = parseInt(dataDiv.dataset.time || '1800'); // seconds
+  let timeLeft = parseInt(dataDiv.dataset.time || '300'); // seconds
 
   // ------------------- TIMER -------------------
   const timerValue = document.getElementById('timer-value');

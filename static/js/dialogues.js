@@ -1,3 +1,5 @@
+// Legacy dialogue system removed; only modern branching system is supported.
+
 // Mission-specific dialogues with proper NPC names for visual novel system
 window.missionDialogues = {
     'level1': {
@@ -436,97 +438,6 @@ window.missionDialogues = {
     }
 };
 
-// Legacy dialogue system (keeping for backwards compatibility)
-const levelDialogues = {
-  "level1": {
-      "Janitor": [
-        { "text": "I just sweep the floors here, Agent." },
-        { "text": "But last night I saw a guy leave a USB by the printer.", "clue": "Possible drop device." }
-      ],
-      "Receptionist": [
-        { "text": "Did you want to sign in, or are you with IT?" },
-        { "text": "Someone dropped their badge earlier. Security picked it up." }
-    ]
-  },
-  "level2": {
-      "News_Reporter": [
-        { "text": "We worked late updating the site last night." },
-        { "text": "I noticed the home page changed just before sunrise.", "clue": "Timeline clue." }
-      ],
-      "Night_Intern": [
-        { "text": "I got an email from IT about password changes. Was that really you guys?" },
-        { "text": "My browser kept popping up weird ads." }
-    ]
-  },
-  "level3": {
-      "Bank_Guard": [
-        { "text": "No one got in last night except employees." },
-        { "text": "But I did hear the teller's computer making strange noises.", "clue": "Compromised workstation." }
-      ],
-      "Cleaning_Staff": [
-        { "text": "I found a printout with 'PH4NT0M' written on it in the trash." }
-    ]
-  },
-  "level4": {
-      "QA_Tester": [
-        { "text": "There was a lot of pressure to push code live last night." },
-        { "text": "I flagged a risky change, but no one listened." }
-      ],
-      "Night_Manager": [
-        { "text": "A build failed at 2AM. We just rebooted and hoped for the best." }
-    ]
-  },
-  "level5": {
-      "Front_Desk": [
-        { "text": "Three contractors checked in for 'system maintenance' yesterday." },
-        { "text": "One left in a hurry and forgot a flash drive." }
-      ],
-      "Night_Watch": [
-        { "text": "Power blinked twice last night—thought it was just a surge." }
-    ]
-  },
-  "level6": {
-      "Grid_Junior": [
-        { "text": "I ran a diagnostics test, and it kept failing at node 14." }
-    ],
-      "Security_Desk": [
-        { "text": "Cameras went offline right before the grid alarms triggered." }
-    ]
-  },
-  "level7": {
-      "Cafeteria_Staff": [
-        { "text": "The suspect always sits alone at lunch. Brings the same old sandwich." }
-      ],
-      "Janitor": [
-        { "text": "I saw someone leaving the server room with a folder full of printouts." }
-    ]
-  },
-  "level8": {
-      "Parking_Attendant": [
-        { "text": "There was a black van in the lot last night. Never seen it before." }
-      ],
-      "Late_Security": [
-        { "text": "Someone jammed our radios for five minutes around midnight." }
-    ]
-  },
-  "level9": {
-      "Ticket_Inspector": [
-        { "text": "Most commuters were normal, except one who kept taking photos of the console." }
-    ],
-      "Coffee_Stand": [
-        { "text": "I overheard two engineers talking about a virus in the ticketing system." }
-    ]
-  },
-  "level10": {
-      "Archivist": [
-        { "text": "I'm pulling the logs for HQ. There's a spike in activity at 03:14." }
-      ],
-      "Reception_Bot": [
-        { "text": "Welcome, Agent. HQ security protocols are at maximum alert." }
-    ]
-  }
-};
-
 // Branching intro, tutorial, and mission story
 window.dialogues = {
   "intro": {
@@ -855,12 +766,11 @@ function loadDialogue(key) {
 }
 
 function startMissionTimer() {
-  let timeLeft = 1800; // 30 minutes in seconds
+  let timeLeft = 300; // 5 minutes in seconds
   const timer = setInterval(() => {
     const minutes = Math.floor(timeLeft / 60);
     const seconds = timeLeft % 60;
     timerDisplay.textContent = `${minutes}:${seconds.toString().padStart(2, '0')}`;
-    
     if (timeLeft <= 0) {
       clearInterval(timer);
       loadDialogue("mission_failed");

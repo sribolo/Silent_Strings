@@ -586,3 +586,11 @@ function showCelebrationModal() {
   `;
   document.head.appendChild(style);
 })();
+
+function unlockAchievement(name, description) {
+  const toast = document.createElement('div');
+  toast.className = 'achievement-toast';
+  toast.innerHTML = `<strong>Achievement Unlocked!</strong><br>${name}<br><span class="achievement-desc">${description}</span>`;
+  document.body.appendChild(toast);
+  setTimeout(() => toast.remove(), 3000);
+}

@@ -251,6 +251,20 @@
   cursor: pointer;
 }
 
+.achievement-toast {
+  position: fixed;
+  top: 32px;
+  right: 32px;
+  background: linear-gradient(90deg,#232336 60%,#FFD700 100%);
+  color: #232336;
+  padding: 18px 32px;
+  border-radius: 12px;
+  box-shadow: 0 4px 24px #0006;
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 1.15em;
+  z-index: 9999;
+  opacity: 0.98;
+}
 /* Responsive Design */
 @media (max-width: 900px) {
   .dialogue-container { flex-direction: column; gap: 12px; }

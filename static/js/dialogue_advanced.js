@@ -1,5 +1,3 @@
-// --- DIALOGUE DATA & SYSTEMS (COMBINED) ---
-// Mission-specific dialogues with proper NPC names for visual novel system
 window.missionDialogues = {
     // LEVEL 1 – HQ Breach
   "level1": {
@@ -750,114 +748,6 @@ function setBackground(levelKey) {
   document.body.style.backgroundImage = `url('/static/backgrounds/${levelKey}.jpg')`;
   document.body.style.backgroundSize = 'cover';
 }
-function showDialogue(levelKey, npcKey, lineIdx = 0) {
-  setBackground(levelKey);
-  const npcLines = levelDialogues[levelKey][npcKey];
-  let idx = lineIdx;
-  function renderLine() {
-    const line = npcLines[idx];
-    document.getElementById('dialogueSpeaker').innerText = npcKey.replace(/_/g, ' ');
-    document.getElementById('dialogueText').innerText = line.text;
-    const opts = document.getElementById('dialogueOptions');
-    opts.innerHTML = '';
-    if (line.choices) {
-      line.choices.forEach((choice, i) => {
-        const btn = document.createElement('button');
-        btn.className = 'choice-btn';
-        btn.innerText = choice.text;
-        btn.onclick = () => {
-          saveDialogueState({ levelKey, npcKey, idx: choice.next });
-          idx = choice.next;
-          renderLine();
-        };
-        opts.appendChild(btn);
-      });
-    } else {
-      if (idx > 0) {
-        const prevBtn = document.createElement('button');
-        prevBtn.className = 'choice-btn';
-        prevBtn.innerText = 'Previous';
-        prevBtn.onclick = () => { idx--; renderLine(); };
-        opts.appendChild(prevBtn);
-      }
-      if (idx < npcLines.length - 1) {
-        const nextBtn = document.createElement('button');
-        nextBtn.className = 'choice-btn';
-        nextBtn.innerText = 'Next';
-        nextBtn.onclick = () => {
-          saveDialogueState({ levelKey, npcKey, idx: idx + 1 });
-          idx++;
-          renderLine();
-        };
-        opts.appendChild(nextBtn);
-      }
-    }
-    saveDialogueState({ levelKey, npcKey, idx });
-  }
-  renderLine();
-}
-function showBranchingDialogue(key) {
-  setBackground('default');
-  const d = window.dialogues[key];
-  if (!d) {
-    console.error(`Dialogue key '${key}' not found in dialogues.`);
-    return;
-  }
-  const speaker = document.getElementById('dialogueSpeaker');
-  const text = document.getElementById('dialogueText');
-  const opts = document.getElementById('dialogueOptions');
-  if (speaker) speaker.innerText = '';
-  if (text) text.innerText = d.text || '';
-  if (opts) opts.innerHTML = '';
-  if (Array.isArray(d.options)) {
-    d.options.forEach((opt, i) => {
-      const btn = document.createElement('button');
-      btn.className = 'choice-btn';
-      btn.innerText = opt;
-      btn.onclick = () => {
-        saveDialogueState({ branchKey: d.next[i] });
-        showBranchingDialogue(d.next[i]);
-      };
-      if (opts) opts.appendChild(btn);
-    });
-  }
-}
-window.addEventListener('DOMContentLoaded', () => {
-  const state = loadDialogueState();
-  if (state) {
-    if (state.branchKey) {
-      showBranchingDialogue(state.branchKey);
-    } else {
-      showDialogue(state.levelKey, state.npcKey, state.idx);
-    }
-  } else {
-    if (typeof window.dialogues !== 'undefined' && window.dialogues.intro) {
-      showBranchingDialogue('intro');
-    } else {
-      showDialogue('level1', Object.keys(levelDialogues['level1'])[0]);
-    }
-  }
-});
-// === Utility Functions ===
-function getEl(id) {
-  const el = document.getElementById(id);
-  if (!el) console.error(`Element with id "${id}" not found.`);
-  return el;
-}
-function safeSetText(el, text) {
-  if (el) el.textContent = text;
-}
-function safeSetHTML(el, html) {
-  if (el) el.innerHTML = html;
-}
-function createChoiceButton(text, onClick) {
-  const btn = document.createElement("button");
-  btn.className = "dialogue-choice-btn";
-  btn.textContent = text;
-  btn.onclick = onClick;
-  return btn;
-}
-// === Refactored Dialogue Display ===
 function showDialogueRefactored(npcName, dialogueText, choices = []) {
   const npcNameEl = getEl('npc-name');
   const dialogueTextEl = getEl('dialogue-text');
@@ -882,4 +772,39 @@ function showDialogueRefactored(npcName, dialogueText, choices = []) {
   } else {
     if (continueEl) continueEl.style.display = '';
   }
+}
+window.addEventListener('DOMContentLoaded', () => {
+  const state = loadDialogueState();
+  if (state) {
+    if (state.branchKey) {
+      showDialogueRefactored(state.npcName, state.dialogueText, state.choices);
+    } else {
+      showDialogueRefactored(state.npcName, state.dialogueText, state.choices);
+    }
+  } else {
+    if (typeof window.missionDialogues !== 'undefined' && window.missionDialogues.intro) {
+      showDialogueRefactored('intro', window.missionDialogues.intro.text, window.missionDialogues.intro.options);
+    } else {
+      showDialogueRefactored('level1', Object.keys(window.missionDialogues['level1'])[0], window.missionDialogues['level1']['start'].options);
+    }
+  }
+});
+// === Utility Functions ===
+function getEl(id) {
+  const el = document.getElementById(id);
+  if (!el) console.error(`Element with id "${id}" not found.`);
+  return el;
+}
+function safeSetText(el, text) {
+  if (el) el.textContent = text;
+}
+function safeSetHTML(el, html) {
+  if (el) el.innerHTML = html;
+}
+function createChoiceButton(text, onClick) {
+  const btn = document.createElement("button");
+  btn.className = "dialogue-choice-btn";
+  btn.textContent = text;
+  btn.onclick = onClick;
+  return btn;
 } 
