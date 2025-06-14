@@ -493,7 +493,6 @@ document.addEventListener('DOMContentLoaded', () => {
     setBackgroundImage();
     setupMenuAndModals();
     setNpcPortrait();
-    // Removed legacy dialogue initialization to avoid conflict with modern system
 });
 
 let lastInterviewedNpc = null;
