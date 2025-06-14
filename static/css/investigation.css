@@ -325,7 +325,7 @@
   padding: 24px 36px;
   color: #fff;
   font-family: 'Share Tech Mono', monospace;
-  font-size: 2em;
+  font-size: 1.1em;
   box-shadow: 0 4px 24px #7a6cff44;
   min-width: 420px;
   max-width: 600px;
@@ -342,10 +342,10 @@
   background: rgba(0,0,0,0.18);
   border-radius: 12px;
   margin-bottom: 18px;
-  padding: 12px 18px;
+  padding: 8px 14px;
   font-weight: bold;
   color: #4fffcf;
-  font-size: 1.1em;
+  font-size: 1em;
   list-style: none;
   display: flex;
   align-items: center;
