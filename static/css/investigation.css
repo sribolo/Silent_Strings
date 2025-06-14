@@ -293,19 +293,71 @@
   top: 40px;
   left: 40px;
   z-index: 1000;
+  display: flex;
+  align-items: flex-start;
+}
+
+#objectives-tab {
+  writing-mode: vertical-rl;
+  transform: rotate(180deg);
+  background: #3a2fa0;
+  color: #fff;
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 1.5em;
+  border-radius: 18px;
+  padding: 16px 8px;
+  margin-right: 12px;
+  cursor: pointer;
+  box-shadow: 0 2px 12px #7a6cff44;
+  transition: background 0.2s;
+}
+
+#objectives-tab:hover {
+  background: #5a4fff;
 }
 
 #objectives-list {
   display: none;
-  background: rgba(30,30,60,0.95);
+  flex-direction: column;
+  background: rgba(40, 30, 120, 0.85);
+  border: 3px solid #7a6cff;
+  border-radius: 24px;
+  padding: 24px 36px;
   color: #fff;
-  padding: 18px 24px;
-  border-radius: 12px;
-  min-width: 320px;
   font-family: 'Share Tech Mono', monospace;
-  box-shadow: 0 4px 16px rgba(0,0,0,0.3);
+  font-size: 2em;
+  box-shadow: 0 4px 24px #7a6cff44;
+  min-width: 420px;
+  max-width: 600px;
+  margin-left: 0;
 }
 
-#objectives-hover-container:hover #objectives-list {
-  display: block;
+#objectives-hover-container:hover #objectives-list,
+#objectives-tab:focus + #objectives-list {
+  display: flex;
+}
+
+/* Optional: Style each objective item */
+#objectives-list li {
+  background: rgba(0,0,0,0.18);
+  border-radius: 12px;
+  margin-bottom: 18px;
+  padding: 12px 18px;
+  font-weight: bold;
+  color: #4fffcf;
+  font-size: 1.1em;
+  list-style: none;
+  display: flex;
+  align-items: center;
+}
+
+#objectives-list li.completed {
+  color: #7affb2;
+  opacity: 0.7;
+}
+
+#objectives-list .objective-status {
+  margin-right: 12px;
+  font-size: 1.2em;
+  color: #7affb2;
 } 
