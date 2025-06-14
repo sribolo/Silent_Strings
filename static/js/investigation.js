@@ -273,27 +273,28 @@ function getCurrentLevelKey() {
     return locationToLevel[loc] || 'level1';
 }
 
-// Show the interview menu (list of NPCs)
+// --- Modern Branching Interview System ---
 function showInterviewMenu() {
-    renderObjectives();
-    const nodes = getCurrentDialogueNodes();
-    // NPCs are all keys except 'start', 'objectives', and any meta/failStates
-    const npcNames = Object.keys(nodes).filter(k => !['start','objectives'].includes(k) && typeof nodes[k] === 'object' && nodes[k].options);
+    const dialogues = window.missionDialogues[currentLevel];
+    if (!dialogues) {
+        showPopup("No interviews for this level!");
+        return;
+    }
+    const npcNames = Object.keys(dialogues).filter(n => n !== 'failStates' && n !== 'objectives' && n !== 'start');
     const choices = npcNames.map(n => ({
-        text: `Talk to ${n}` + (n === lastInterviewedNpc ? ' (again)' : ''),
+        text: `Talk to ${n}`,
         action: () => {
-            lastInterviewedNpc = n;
-            showMissionInterview(n, 'intro');
+            window.currentNPC = n;
+            showDialogueRefactored(n, dialogues[n].text, dialogues[n].options);
         }
     }));
     choices.push({ text: 'Show Summary', action: showSummary });
-    showDialogue('Contact Selection', 'Who would you like to interview next?', choices);
+    showDialogueRefactored('Interview Menu', 'Who would you like to interview next?', choices);
 }
 
-// Show a summary of interviewed NPCs and objectives
 function showSummary() {
-    const nodes = getCurrentDialogueNodes();
-    const npcNames = Object.keys(nodes).filter(k => !['start','objectives'].includes(k) && typeof nodes[k] === 'object' && nodes[k].options);
+    const dialogues = window.missionDialogues[currentLevel];
+    const npcNames = Object.keys(dialogues).filter(n => n !== 'failStates' && n !== 'objectives' && n !== 'start');
     let summary = '<strong>Interviewed NPCs:</strong><ul>';
     npcNames.forEach(n => { summary += `<li>${n}</li>`; });
     summary += '</ul>';
@@ -306,84 +307,18 @@ function showSummary() {
         });
         summary += '</ul>';
     }
-    showDialogue('Summary', summary, [{ text: 'Back to Interview Menu', action: showInterviewMenu }]);
-}
-
-// Show a dialogue node for a given NPC and nodeKey
-function showMissionInterview(npc, nodeKey = 'intro') {
-    const nodes = getCurrentDialogueNodes();
-    // If nodeKey is not found, fallback to the NPC's main node
-    let node = nodes[nodeKey] || nodes[npc] || nodes['start'];
-    if (!node) {
-        alert('Dialogue not found!');
-        return;
-    }
-    // Set currentLevel and currentNPC for hints.js compatibility
-    window.currentLevel = getCurrentLevelKey();
-    window.currentNPC = nodeKey;
-    // Sync NPC name in both the dialogue bubble and the portrait label
-    const npcNameEl = document.getElementById('npc-name');
-    const bubbleNpcNameEl = document.getElementById('bubble-npc-name');
-    const npcNameLabelEl = document.getElementById('npc-name-label');
-    if (npcNameEl) npcNameEl.innerText = npc;
-    if (bubbleNpcNameEl) bubbleNpcNameEl.innerText = npc;
-    if (npcNameLabelEl) npcNameLabelEl.innerText = npc;
-    renderInvestigationNpcPortrait(npc);
-    // Typing effect for dialogue text
+    // Use innerHTML to render formatted summary
     const textEl = document.getElementById('dialogue-text');
-    if (textEl) typeText(node.text || '', textEl);
-    // Render choices
+    if (textEl) textEl.innerHTML = summary;
+    // Render the back button as before
     const optionsEl = document.getElementById('dialogue-choices');
-    if (optionsEl) optionsEl.innerHTML = '';
-    if (Array.isArray(node.options) && node.options.length > 0) {
-        node.options.forEach(option => {
-            const btn = document.createElement('button');
-            btn.className = 'choice-btn';
-            btn.innerText = option.text;
-            btn.onclick = () => {
-                if (option.next) {
-                    showMissionInterview(npc, option.next);
-                } else if (option.action) {
-                    option.action();
-                } else {
-                    showInterviewMenu();
-                }
-            };
-            optionsEl.appendChild(btn);
-        });
-    } else {
-        if (optionsEl) optionsEl.innerHTML = '<em>End of interview.</em>';
-    }
-    if (node.clue) showPopup(`Clue obtained: ${node.clue}`);
-}
-
-// Show a generic dialogue (e.g., system messages, menus)
-function showDialogue(npc, text, choices = []) {
-    // Sync NPC name in both the dialogue bubble and the portrait label
-    const npcNameEl = document.getElementById('npc-name');
-    const bubbleNpcNameEl = document.getElementById('bubble-npc-name');
-    const npcNameLabelEl = document.getElementById('npc-name-label');
-    if (npcNameEl) npcNameEl.innerText = npc;
-    if (bubbleNpcNameEl) bubbleNpcNameEl.innerText = npc;
-    if (npcNameLabelEl) npcNameLabelEl.innerText = npc;
-    // Typing effect for dialogue text
-    const textEl = document.getElementById('dialogue-text');
-    if (textEl) typeText(text || '', textEl);
-    // Render choices
-    const optionsEl = document.getElementById('dialogue-choices');
-    if (optionsEl) optionsEl.innerHTML = '';
-    if (Array.isArray(choices) && choices.length > 0) {
-        choices.forEach(choice => {
-            const btn = document.createElement('button');
-            btn.className = 'choice-btn';
-            btn.innerText = choice.text;
-            btn.onclick = () => {
-                if (choice.action) choice.action();
-            };
-            optionsEl.appendChild(btn);
-        });
-    } else {
-        if (optionsEl) optionsEl.innerHTML = '<em>Continue...</em>';
+    if (optionsEl) {
+        optionsEl.innerHTML = '';
+        const btn = document.createElement('button');
+        btn.className = 'choice-btn';
+        btn.innerText = 'Back to Interview Menu';
+        btn.onclick = showInterviewMenu;
+        optionsEl.appendChild(btn);
     }
 }
 
