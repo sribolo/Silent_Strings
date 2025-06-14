@@ -85,23 +85,8 @@
             <div id="hint-content"></div>
         </div>
     </div>
-
-    <!-- Achievements Modal Trigger Button -->
-    <button id="show-achievements-btn" class="achievements-btn">
-      🏆 Achievements
-    </button>
-
-    <!-- Achievements Modal -->
-    <div id="achievements-modal" class="achievements-modal">
-      <h2 class="achievements-title">Achievements</h2>
-      <div id="achievements-list"></div>
-      <button onclick="document.getElementById('achievements-modal').style.display='none'" class="achievements-close-btn">Close</button>
-    </div>
-
-    <div id="popup-notification" class="popup-notification hidden"></div>
-</div>
-{% endblock content %}
+{% endblock%}
 {% block extra_scripts %}
 <script src="{{ url_for('static', filename='js/dialogue_advanced.js') }}" defer></script>
 <script src="{{ url_for('static', filename='js/investigation.js') }}" defer></script>
-{% endblock extra_scripts %}
+{% endblock%}
