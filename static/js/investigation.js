@@ -210,7 +210,10 @@ function markObjectiveComplete(idx) {
     const objectives = window.objectives || [];
     if (objectives[idx]) showPopup("Objective completed: " + objectives[idx]);
     if (completed.length === objectives.length) {
-        setTimeout(showCelebrationModal, 800);
+        showToast('Mission Complete! All objectives accomplished!');
+        setTimeout(function() {
+            window.location.href = '/game'; // or your desired location
+        }, 2000);
     }
 }
 
