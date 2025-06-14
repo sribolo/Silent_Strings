@@ -782,10 +782,13 @@ window.addEventListener('DOMContentLoaded', () => {
       showDialogueRefactored(state.npcName, state.dialogueText, state.choices);
     }
   } else {
-    if (typeof window.missionDialogues !== 'undefined' && window.missionDialogues.intro) {
-      showDialogueRefactored('intro', window.missionDialogues.intro.text, window.missionDialogues.intro.options);
+    // Use the current level key or default to 'level1'
+    const levelKey = typeof getCurrentLevelKey === 'function' ? getCurrentLevelKey() : 'level1';
+    const startNode = window.missionDialogues[levelKey] && window.missionDialogues[levelKey]['start'];
+    if (startNode) {
+      showDialogueRefactored('System', startNode.text, startNode.options);
     } else {
-      showDialogueRefactored('level1', Object.keys(window.missionDialogues['level1'])[0], window.missionDialogues['level1']['start'].options);
+      showDialogueRefactored('System', 'No dialogue available.', []);
     }
   }
 });
