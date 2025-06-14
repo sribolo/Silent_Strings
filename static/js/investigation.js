@@ -238,10 +238,6 @@ function renderObjectives() {
     });
 }
 
-// --- Dialogue/Storyboard System ---
-// Use only the /static/dialogues/levelX.js files as the source of truth.
-// Dynamically load the correct dialogue object and use its .nodes property.
-
 // Map location keys to dialogue keys
 const locationToLevel = {
   hq: 'level1',
@@ -493,6 +489,11 @@ document.addEventListener('DOMContentLoaded', () => {
     setBackgroundImage();
     setupMenuAndModals();
     setNpcPortrait();
+    // Auto-start mission dialogue for the current level
+    const levelKey = getCurrentLevelKey();
+    if (window.missionDialogues && window.missionDialogues[levelKey] && window.missionDialogues[levelKey].start) {
+        showMissionDialogue(levelKey, 'start');
+    }
 });
 
 let lastInterviewedNpc = null;
@@ -569,4 +570,29 @@ function unlockAchievement(name, description) {
   toast.innerHTML = `<strong>Achievement Unlocked!</strong><br>${name}<br><span class="achievement-desc">${description}</span>`;
   document.body.appendChild(toast);
   setTimeout(() => toast.remove(), 3000);
+}
+
+// --- Mission Dialogue System for All Levels ---
+function showMissionDialogue(level, nodeName) {
+  const node = window.missionDialogues[level]?.[nodeName];
+  const textBox = document.getElementById('dialogue-text');
+  const choicesBox = document.getElementById('dialogue-choices');
+  if (!node) {
+    textBox.textContent = "Dialogue not found!";
+    choicesBox.innerHTML = '';
+    return;
+  }
+  textBox.textContent = node.text;
+  choicesBox.innerHTML = '';
+  if (Array.isArray(node.objectivesCompleted)) {
+    node.objectivesCompleted.forEach(idx => markObjectiveComplete(idx));
+  }
+  if (node.options) {
+    node.options.forEach(opt => {
+      const btn = document.createElement('button');
+      btn.textContent = opt.text;
+      btn.onclick = () => showMissionDialogue(level, opt.next);
+      choicesBox.appendChild(btn);
+    });
+  }
 }
