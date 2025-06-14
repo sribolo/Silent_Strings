@@ -83,7 +83,7 @@ function getCompletedObjectives(levelKey) {
     localStorage.setItem('completedObjectives_' + levelKey, JSON.stringify(arr));
   }  
 
-  function setupMenuAndModals() {
+function setupMenuAndModals() {
     const hamburger = document.getElementById('hamburger-menu');
     const dropdown = document.getElementById('dropdown-menu');
 

@@ -1,1478 +1,756 @@
 // --- DIALOGUE DATA & SYSTEMS (COMBINED) ---
 // Mission-specific dialogues with proper NPC names for visual novel system
 window.missionDialogues = {
-  // LEVEL 1 – HQ Breach
-  level1: {
-    "Marcus Chen – IT Analyst": {
-      text: "You're the new response lead? Glad someone fresh is on this. I've been glued to this chair since 1AM. I keep seeing log entries that just don't add up. Maybe you'll spot something I missed.",
-      choices: [
-        {
-          text: "Show me what's freaking you out, Marcus.",
-          nextDialogue: {
-            npc: "Marcus Chen – IT Analyst",
-            text: "Look at this admin login—2:03AM. Problem is, I know for a fact nobody's scheduled at that time. And right after, chunks of the log just… disappear. Whoever did this, they covered their tracks.",
-            clue: "Suspicious login timestamp",
-            choices: [
-              {
-                text: "Let me try to recover those deleted logs.",
-                action: () => window.markObjectiveComplete(3),
-                nextDialogue: {
-                  npc: "Marcus Chen – IT Analyst",
-                  text: "Please do. If anyone can bring them back, it's you. I'll owe you lunch.",
-                  choices: [
-                    { text: "Back to Interview Menu", action: () => showInterviewMenu() }
-                  ]
-                }
-              },
-              {
-                text: "Did they change the admin password?",
-                nextDialogue: {
-                  npc: "Marcus Chen – IT Analyst",
-                  text: "Yeah, password was reset from a different device right before. Someone's got admin access, and it isn't us.",
-                  clue: "Compromised admin account",
-                  action: () => window.markObjectiveComplete(4),
-                  choices: [
-                    { text: "Back to Interview Menu", action: () => showInterviewMenu() }
-                  ]
-                }
-              },
-              {
-                text: "Where did they get in?",
-                nextDialogue: {
-                  npc: "Marcus Chen – IT Analyst",
-                  text: "Best guess? Breach started at the network hub—first odd access came from there, then admin got compromised. It's like they knew exactly where to poke holes.",
-                  clue: "Initial breach at network hub",
-                  action: () => window.markObjectiveComplete(0),
-                  choices: [
-                    { text: "Back to Interview Menu", action: () => showInterviewMenu() }
-                  ]
-                }
-              }
-            ]
-          }
-        },
-        {
-          text: "When did this all start?",
-          nextDialogue: {
-            npc: "Marcus Chen – IT Analyst",
-            text: "I got a weird alert at 2:01AM—backup generator kicked in. Whole place flickered. I checked, and bam, weird logins everywhere. I don't believe in coincidences.",
-            choices: [
-              { text: "Could be a physical breach. I'll check with Security.", action: () => showInterviewMenu() }
-            ]
-          }
-        },
-        {
-          text: "Anyone bring you coffee yet?",
-          nextDialogue: {
-            npc: "Marcus Chen – IT Analyst",
-            text: "Ha! Not since midnight. You solve this, I'll owe you a venti. Or two.",
-            choices: [
-              { text: "Back to Interview Menu", action: () => showInterviewMenu() }
-            ]
-          }
-        }
-      ]
-    },
-    "Sarah Wilson – Security Guard": {
-      text: "You're the new tech detective? Welcome. Last night was boring, except the generator hiccup and some janitor leaving their mop unlocked. Oh—and I found a weird USB in the lift.",
-      choices: [
-        {
-          text: "See anyone unusual hanging around?",
-          nextDialogue: {
-            npc: "Sarah Wilson – Security Guard",
-            text: "Nothing weird, just the usual staff and that one intern who always forgets his badge. But the generator rebooted at 2AM, right as the logins started going wild. Just saying.",
-            clue: "Generator rebooted during breach",
-            action: () => window.markObjectiveComplete(0),
-            choices: [
-              { text: "Back to Interview Menu", action: () => showInterviewMenu() }
-            ]
-          }
-        },
-        {
-          text: "Mind if I check the generator logs?",
-          nextDialogue: {
-            npc: "Sarah Wilson – Security Guard",
-            text: "Knock yourself out. If you figure out why that thing restarts every other week, let me know. My flashlight budget can't take much more.",
-            choices: [
-              { text: "Back to Interview Menu", action: () => showInterviewMenu() }
-            ]
-          }
-        },
-        {
-          text: "Can I get that USB to the lab?",
-          nextDialogue: {
-            npc: "Sarah Wilson – Security Guard",
-            text: "IT's got it now. They said it had some password-stealing thing on it. I wash my hands—literally and figuratively.",
-            clue: "Credential theft malware on USB",
-            action: () => {
-              window.markObjectiveComplete(2);
-              if (typeof unlockAchievement === 'function') unlockAchievement('usb_safety');
-            },
-            choices: [
-              { text: "Back to Interview Menu", action: () => showInterviewMenu() }
-            ]
-          }
-        }
-      ]
-    }
-  },
-  "Janitor Carlos": {
-    text: "Don't mind me, Agent. Just cleaning up another spilled coffee. Lotta action last night, huh?",
-    choices: [
-      {
-        text: "You see anyone after midnight?",
-        nextDialogue: {
-          npc: "Janitor Carlos",
-          text: "I saw someone in a hoodie near the server room, but my shift ended at 12:30. Maybe they just forgot their badge.",
-          clue: "Late-night hoodie sighting",
-          choices: [
-            { text: "Back to Interview Menu", action: () => showInterviewMenu() }
+    // LEVEL 1 – HQ Breach
+  "level1": {
+    "start": {
+          text: "HQ is chaos. Sirens wail. IT's Marcus waves you over. Where to begin?",
+          options: [
+            { text: "Speak to Marcus (IT Analyst)", next: "marcus_intro" },
+            { text: "Talk to Sarah (Security Guard)", next: "sarah_intro" },
+            { text: "Look for Janitor Carlos", next: "janitor_intro" },
+            { text: "Visit Receptionist Mia", next: "reception_intro" },
+            { text: "Check objectives", next: "objectives" }
           ]
+        },
+        // MARCUS BRANCH
+        "marcus_intro": {
+          text: "Marcus (slumped, exhausted): 'Someone's wiped logs, reset passwords, and there's a phantom admin login at 2:03AM. If you spot what I missed, buy you coffee.'",
+          options: [
+            { text: "Let me review the logs.", next: "view_logs" },
+            { text: "Any recent USBs plugged in?", next: "usb_logs" },
+            { text: "Who was in the building at 2AM?", next: "building_logs" },
+            { text: "Return to main menu", next: "start" }
+          ]
+        },
+        "view_logs": {
+          text: "The logs are full of gaps. 'Log Analyzer' might spot something.",
+          options: [
+            { text: "Use Log Analyzer", toolRequired: "Log Analyzer", next: "analyze_logs" },
+            { text: "Try File Recovery Tool on logs", toolRequired: "File Recovery Tool", next: "restore_logs" },
+            { text: "Return to Marcus", next: "marcus_intro" }
+          ]
+        },
+        "analyze_logs": {
+          text: "Log Analyzer highlights an admin login from 192.168.7.44 at 2:03AM. 'That account wasn't scheduled,' Marcus mutters.",
+          objectivesCompleted: [1],
+          options: [
+            { text: "Trace IP with Network Scanner", toolRequired: "Network Scanner", next: "trace_ip" },
+            { text: "Return to Marcus", next: "marcus_intro" }
+          ]
+        },
+        "restore_logs": {
+          text: "File Recovery Tool recovers deleted entries—admin password reset at 2:04AM, different device.",
+          objectivesCompleted: [3],
+          options: [
+            { text: "Secure account with Password Cracker", toolRequired: "Password Cracker", next: "secure_account" },
+            { text: "Return to Marcus", next: "marcus_intro" }
+          ]
+        },
+        "trace_ip": {
+          text: "Network Scanner shows breach started at the Network Hub—where the odd traffic began.",
+          objectivesCompleted: [0, 2],
+          options: [
+            { text: "Return to Marcus", next: "marcus_intro" },
+            { text: "Return to main menu", next: "start" }
+          ]
+        },
+        "secure_account": {
+          text: "You lock out the attacker. Marcus: 'That's a relief. Maybe now I can sleep.'",
+          objectivesCompleted: [4],
+          options: [{ text: "Return to Marcus", next: "marcus_intro" }]
+        },
+        // SARAH BRANCH
+        "sarah_intro": {
+          text: "Sarah: 'Night was mostly quiet, but the generator rebooted at 2AM, and a USB showed up in the lift.'",
+          options: [
+            { text: "Ask about generator logs", next: "generator_logs" },
+            { text: "Take USB to IT Lab for scan", toolRequired: "Network Scanner", next: "scan_usb" },
+            { text: "Anyone else on camera at 2AM?", next: "camera_footage" },
+            { text: "Return to main menu", next: "start" }
+          ]
+        },
+        "generator_logs": {
+          text: "Sarah: 'System flickered, then stabilized. Generator log flagged anomaly at 2:01AM.'",
+          options: [{ text: "Return to Sarah", next: "sarah_intro" }]
+        },
+        "scan_usb": {
+          text: "You find credential-stealing malware on the USB. Sarah looks pale.",
+          options: [{ text: "Return to Sarah", next: "sarah_intro" }]
+        },
+        "camera_footage": {
+          text: "Sarah: 'Footage is fuzzy, but someone in a hoodie loitered by the Network Hub after midnight.'",
+          options: [{ text: "Return to Sarah", next: "sarah_intro" }]
+        },
+        // JANITOR BRANCH
+        "janitor_intro": {
+          text: "Carlos: 'You know it's a bad night when the IT guy is more jittery than the coffee machine. I saw a hoodie by the server room at 12:30.'",
+          options: [
+            { text: "Did you see a badge?", next: "janitor_badge" },
+            { text: "Notice anything missing?", next: "janitor_missing" },
+            { text: "Return to main menu", next: "start" }
+          ]
+        },
+        "janitor_badge": {
+          text: "Carlos: 'No badge. They ducked out quick. If you check the trash, might still be clues.'",
+          options: [{ text: "Return to Janitor", next: "janitor_intro" }]
+        },
+        "janitor_missing": {
+          text: "Carlos: 'My headphones disappeared. If you find them, music's on me.'",
+          options: [{ text: "Return to Janitor", next: "janitor_intro" }]
+        },
+        // RECEPTION BRANCH
+        "reception_intro": {
+          text: "Mia: 'This place is madness. Only unusual thing: security was extra jumpy after the generator hiccuped.'",
+          options: [
+            { text: "Any odd sign-ins overnight?", next: "odd_signins" },
+            { text: "Return to main menu", next: "start" }
+          ]
+        },
+        "odd_signins": {
+          text: "Mia: 'Nothing obvious, but the intern keeps losing his badge. Check the logs for details.'",
+          options: [{ text: "Return to Mia", next: "reception_intro" }]
+        },
+        // OBJECTIVES VIEW
+        "objectives": {
+          text: "Objectives:\n- Identify breach point (Network Scanner)\n- Analyze suspicious login attempts (Log Analyzer)\n- Trace the attacker's IP (Network Scanner)\n- Recover deleted logs (File Recovery Tool)\n- Secure compromised accounts (Password Cracker)",
+          options: [{ text: "Back to investigation", next: "start" }]
+        },
+      failStates: {
+        // Hard Fail: Ignored suspicious logs, missed attacker
+        "fail_logs_ignored": {
+          text: "You failed to analyze suspicious logs in time. The attacker covers their tracks, and HQ enters lockdown.<br><b>MISSION FAILED.</b>",
+          options: [{ text: "Restart Mission", next: "start" }]
+        },
+        // Soft Fail: Did not reset password, attacker gets backdoor
+        "fail_password_not_reset": {
+          text: "You didn't secure the compromised account. The attacker regains access later and plants a backdoor.<br><i>This will come back to haunt you in future missions.</i>",
+          options: [{ text: "Continue Anyway", next: "start" }]
+        },
+        // Timeout fail (already present, but cleaned)
+        "fail_timeout": {
+          text: "You hesitated too long. The attacker covered their tracks. HQ is locked down for full forensics.",
+          options: [{ text: "Retry", next: "start" }]
+        }
+      }
+    },
+    // LEVEL 2 – News Outlet Breach
+  "level2":{
+    "start": {
+        text: "News Outlet website is a mess. Every headline replaced by 'PH4NT0M WAS HERE'. Your phone buzzes nonstop.",
+        options: [
+          { text: "Interview Emma (Web Editor)", next: "emma_intro" },
+          { text: "Talk to David (IT Support)", next: "david_intro" },
+          { text: "Find Intern Billy", next: "billy_intro" },
+          { text: "Review code", toolRequired: "JS Analyzer", next: "review_code" },
+          { text: "Objectives", next: "objectives" }
+        ]
+      },
+      "emma_intro": {
+        text: "Emma (flustered): 'Ticker script looks off. We got password reset emails—Billy fell for it. I want my old job back.'",
+        options: [
+          { text: "Review ticker with JS Analyzer", toolRequired: "JS Analyzer", next: "analyze_ticker" },
+          { text: "Ask about weird emails", next: "emma_emails" },
+          { text: "Back to main menu", next: "start" }
+        ]
+      },
+      "analyze_ticker": {
+        text: "JS Analyzer flags an XSS payload. Headlines restored. Emma: 'Please never let this happen again.'",
+        objectivesCompleted: [1, 0],
+        options: [{ text: "Back to Emma", next: "emma_intro" }]
+      },
+      "emma_emails": {
+        text: "Emma: 'IT said reset password, but the email looked weird. Billy's laptop is now possessed.'",
+        options: [{ text: "Back to Emma", next: "emma_intro" }]
+      },
+      "david_intro": {
+        text: "David: 'Management delayed plugin patches. Guess who gets the blame? Defacement started from an admin panel log-in—maybe a VPN.'",
+        options: [
+          { text: "Patch plugin (Service Patch Tool)", toolRequired: "Service Patch Tool", next: "patch_plugin" },
+          { text: "Get admin logs", toolRequired: "Email Scanner", next: "admin_logs" },
+          { text: "Back to main menu", next: "start" }
+        ]
+      },
+      "patch_plugin": {
+        text: "Plugin patched. Website secured. David: 'Now maybe I can get some sleep.'",
+        objectivesCompleted: [3],
+        options: [{ text: "Back to David", next: "david_intro" }]
+      },
+      "admin_logs": {
+        text: "Email Scanner finds a phishing campaign. Source: suspicious Russian IP. David sighs.",
+        objectivesCompleted: [2],
+        options: [{ text: "Back to David", next: "david_intro" }]
+      },
+      "billy_intro": {
+        text: "Billy: 'Sorry, boss! Clicked the wrong link, got a new browser toolbar…with cat videos.'",
+        options: [
+          { text: "Scan Billy's machine", toolRequired: "Email Scanner", next: "scan_billy" },
+          { text: "Back to main menu", next: "start" }
+        ]
+      },
+      "scan_billy": {
+        text: "Phishing email and malware found. Billy looks sheepish. 'Won't happen again… probably.'",
+        options: [{ text: "Back to Billy", next: "billy_intro" }]
+      },
+      "review_code": {
+        text: "Injected JavaScript found and removed. Website is now clean.",
+        objectivesCompleted: [1],
+        options: [{ text: "Back to main menu", next: "start" }]
+      },
+      "objectives": {
+        text: "Objectives:\n- Remove malicious headline script (JS Analyzer)\n- Analyze XSS payload (JS Analyzer)\n- Trace phishing email source (Email Scanner)\n- Patch CMS/plugin (Service Patch Tool)",
+        options: [{ text: "Back", next: "start" }]
+      }
+    },
+    failStates: {
+      // Hard Fail: Skipped phishing email trace
+      "fail_phishing_ignored": {
+        text: "You failed to trace the phishing email. Attackers deploy ransomware and destroy critical files.<br><b>MISSION FAILED.</b>",
+        options: [{ text: "Restart Mission", next: "start" }]
+      },
+      // Soft Fail: Plugin not patched promptly
+      "fail_patch_delayed": {
+        text: "You delayed patching the vulnerable plugin. A cryptominer infects the website, hurting revenue.<br><i>The site will perform poorly going forward.</i>",
+        options: [{ text: "Continue Anyway", next: "start" }]
+      },
+      "fail_timeout": {
+        text: "Attackers posted more offensive content. PR disaster! Try again.",
+        options: [{ text: "Retry", next: "start" }]
+      }
+    },
+  "level3": {
+    "start": {
+        text: "Bank HQ is on lockdown. Ransomware demands blink on every screen. Time to move.",
+        options: [
+          { text: "Talk to Jennifer (Teller)", next: "jennifer_intro" },
+          { text: "Check with Rajesh (IT)", next: "rajesh_intro" },
+          { text: "Interview Bank Guard", next: "guard_intro" },
+          { text: "Objectives", next: "objectives" }
+        ]
+      },
+      "jennifer_intro": {
+        text: "Jennifer (shaken): 'Got an urgent email from HR, opened the PDF, then everything froze. Sorry.'",
+        options: [
+          { text: "Get email and PDF sample (Email Analyzer)", toolRequired: "Email Analyzer", next: "get_email" },
+          { text: "Warn other tellers", next: "warn_tellers" },
+          { text: "Back to main menu", next: "start" }
+        ]
+      },
+      "get_email": {
+        text: "You isolate the phishing email and ransom note. It's a targeted campaign.",
+        objectivesCompleted: [1, 2],
+        options: [{ text: "Back to Jennifer", next: "jennifer_intro" }]
+      },
+      "warn_tellers": {
+        text: "Jennifer warns the others. Only she opened it. Patient zero identified.",
+        objectivesCompleted: [0],
+        options: [{ text: "Back to Jennifer", next: "jennifer_intro" }]
+      },
+      "rajesh_intro": {
+        text: "Rajesh (IT): 'Sample's on the shared drive. Network shows classic SMB worm spread.'",
+        options: [
+          { text: "Recover malware sample (File Recovery Tool)", toolRequired: "File Recovery Tool", next: "recover_sample" },
+          { text: "Analyze network logs (Log Analyzer)", toolRequired: "Log Analyzer", next: "analyze_network" },
+          { text: "Restore from backup", toolRequired: "File Recovery Tool", next: "restore_backup" },
+          { text: "Back to main menu", next: "start" }
+        ]
+      },
+      "recover_sample": {
+        text: "File Recovery Tool grabs the ransomware binary. Objective complete.",
+        objectivesCompleted: [2],
+        options: [{ text: "Back to Rajesh", next: "rajesh_intro" }]
+      },
+      "analyze_network": {
+        text: "Log Analyzer reveals lateral movement after initial email compromise. Map of spread built.",
+        objectivesCompleted: [3],
+        options: [{ text: "Back to Rajesh", next: "rajesh_intro" }]
+      },
+      "restore_backup": {
+        text: "You restore from a clean backup. Services slowly return.",
+        objectivesCompleted: [4],
+        options: [{ text: "Back to Rajesh", next: "rajesh_intro" }]
+      },
+      "guard_intro": {
+        text: "Bank Guard: 'Jennifer looked spooked after that email. ATM kept beeping too.'",
+        options: [{ text: "Back to main menu", next: "start" }]
+      },
+      "objectives": {
+        text: "Objectives:\n- Identify patient zero (Email Analyzer)\n- Analyze phishing email (Email Analyzer)\n- Recover ransomware sample (File Recovery Tool)\n- Trace network spread (Log Analyzer)\n- Restore banking services (File Recovery Tool)",
+        options: [{ text: "Back", next: "start" }]
+      }
+    },
+    failStates: {
+      // Hard Fail: Didn't warn tellers in time, ransomware spreads
+      "fail_teller_not_warned": {
+        text: "You failed to warn other tellers. Ransomware spreads to all machines, locking customer funds.<br><b>MISSION FAILED.</b>",
+        options: [{ text: "Restart Mission", next: "start" }]
+      },
+      // Soft Fail: Skipped network spread analysis
+      "fail_network_not_analyzed": {
+        text: "You skipped analyzing network spread. The attacker leaves a backdoor for future attacks.<br><i>Future incidents may be harder to solve.</i>",
+        options: [{ text: "Continue Anyway", next: "start" }]
+      },
+      "fail_timeout": {
+        text: "The ransomware spread too far. The bank is forced offline.",
+        options: [{ text: "Retry", next: "start" }]
+      }
+  },
+  "level4": {
+    "start": {
+        text: "The software company's code repo is in trouble. A hidden backdoor commit is spreading panic.",
+        options: [
+          { text: "Talk to Chloe (DevOps Engineer)", next: "chloe_intro" },
+          { text: "Interview Tom (Junior Dev)", next: "tom_intro" },
+          { text: "Chat with Priya (Senior Dev)", next: "priya_intro" },
+          { text: "Audit commits with Code Diff Tool", toolRequired: "Code Diff Tool", next: "audit_commits" },
+          { text: "Objectives", next: "objectives" }
+        ]
+      },
+      "chloe_intro": {
+        text: 'Chloe: \'Someone skipped review with a "test backdoor". Pipeline flagged a reused token. I\'m furious.\'',
+        options: [
+          { text: 'Check pipeline logs (Pipeline Monitor)', toolRequired: 'Pipeline Monitor', next: 'check_pipeline' },
+          { text: 'Who pushed the commit?', next: 'commit_author' },
+          { text: 'Back to menu', next: 'start' }
+        ]
+      },
+      "check_pipeline": {
+        text: "Pipeline Monitor: One token used for multiple suspicious pushes.",
+        objectivesCompleted: [1],
+        options: [{ text: "Back to Chloe", next: "chloe_intro" }]
+      },
+      "commit_author": {
+        text: 'Chloe: \'Tom\'s account. He swears he\'s innocent.\'',
+        objectivesCompleted: [2],
+        options: [{ text: 'Back to Chloe', next: 'chloe_intro' }]
+      },
+      "tom_intro": {
+        text: 'Tom: \'I reused my repo password. I\'m really sorry. I reset it now.\'',
+        options: [
+          { text: 'Check if Tom\'s credentials are now secure', toolRequired: 'Credential Monitor', next: 'check_tom' },
+          { text: 'Ever shared your token?', next: 'tom_token' },
+          { text: 'Back to menu', next: 'start' }
+        ]
+      },
+      "check_tom": {
+        text: 'Credential Monitor: Tom\'s credentials are reset and unique.',
+        options: [{ text: 'Back to Tom', next: 'tom_intro' }]
+      },
+      "tom_token": {
+        text: 'Tom: \'Never! But I might have clicked a weird email…\'',
+        options: [{ text: 'Back to Tom', next: 'tom_intro' }]
+      },
+      "priya_intro": {
+        text: 'Priya: \'We need two-factor for everyone. Only a crisis gets management to listen.\'',
+        options: [{ text: 'Back to menu', next: 'start' }]
+      },
+      "audit_commits": {
+        text: 'Code Diff Tool reveals a malicious commit named \'Backdoor for testing.\' You revert it. Repo is secure.',
+        objectivesCompleted: [0, 3],
+        options: [{ text: 'Back to menu', next: 'start' }]
+      },
+      "objectives": {
+        text: 'Objectives:\n- Audit recent commits (Code Diff Tool)\n- Investigate pipeline warnings (Pipeline Monitor)\n- Identify compromised dev account\n- Revert malicious commit (Code Diff Tool)',
+        options: [{ text: 'Back', next: 'start' }]
+      }
+    },
+    failStates: {
+      // Hard Fail: Didn\'t audit commits, malware spreads
+      "fail_commit_not_audited": {
+        text: 'You failed to audit recent commits. The malware spreads to all developers\' machines.<br><b>MISSION FAILED.</b>',
+        options: [{ text: 'Restart Mission', next: 'start' }]
+      },
+      "fail_commit_ignored": {
+        text: 'You missed the malicious commit. Production is compromised and client data is leaked.<br><b>MISSION FAILED.</b>',
+        options: [{ text: 'Restart Mission', next: 'start' }]
+      },
+      // Soft Fail: Didn\'t secure Tom\'s account
+      "fail_dev_account_unlocked": {
+        text: 'You didn\'t secure the compromised developer account. Attackers leave a hidden access token.',
+        options: [{ text: 'Continue, But Be Careful', next: 'start' }]
+      },
+      "fail_timeout": {
+        text: 'The malware spread too far. The company\'s codebase is compromised.',
+        options: [{ text: 'Retry', next: 'start' }]
+      }
+    },
+  "level5": {
+  "start": {
+        text: "An unauthorized scheduled task was found on a government system. There's evidence of persistence.",
+        options: [
+          { text: "Interview Maria (Sysadmin)", next: "maria_intro" },
+          { text: "Speak with Front Desk", next: "front_intro" },
+          { text: "Analyze backdoor file (Malware Sandbox)", toolRequired: "Malware Sandbox", next: "analyze_backdoor" },
+          { text: "Recover database records (File Recovery Tool)", toolRequired: "File Recovery Tool", next: "recover_db" },
+          { text: "Objectives", next: "objectives" }
+        ]
+      },
+      "maria_intro": {
+        text: 'Maria: \'Scheduled task "totally_safe.exe" was set to run every hour. I quarantined the binary.\'',
+        options: [
+          { text: 'Analyze with Malware Sandbox', toolRequired: 'Malware Sandbox', next: 'analyze_backdoor' },
+          { text: 'Anyone else have admin rights?', next: 'maria_admin' },
+          { text: 'Back to menu', next: 'start' }
+        ]
+      },
+      "analyze_backdoor": {
+        text: "Malware Sandbox: The binary opens a reverse shell hourly to an external IP. Persistence detected.",
+        objectivesCompleted: [0],
+        options: [{ text: "Back to Maria", next: "maria_intro" }]
+      },
+      "maria_admin": {
+        text: "Maria: 'Only me and the app lead. Their logs are clean.'",
+        options: [{ text: "Back to Maria", next: "maria_intro" }]
+      },
+      "front_intro": {
+        text: 'Front Desk: "Maintenance" was here late, but system was down so I couldn\'t check if they were scheduled.',
+        options: [{ text: 'Back to menu', next: 'start' }]
+      },
+      "recover_db": {
+        text: "File Recovery Tool restores most records from last night's backup. Database mostly intact.",
+        objectivesCompleted: [1],
+        options: [{ text: "Back to menu", next: "start" }]
+      },
+      "objectives": {
+        text: "Objectives:\n- Analyze persistent malware (Malware Sandbox)\n- Recover deleted database records (File Recovery Tool)\n- Investigate unauthorized scheduled tasks",
+        options: [{ text: "Back", next: "start" }]
+      }
+    },
+    failStates: {
+      "fail_backdoor_not_analyzed": {
+        text: "You missed the backdoor file. The attacker gains persistent access to the system.<br><b>MISSION FAILED.</b>",
+        options: [{ text: "Restart Mission", next: "start" }]
+      },
+      "fail_malware_not_analyzed": {
+        text: "You failed to analyze the persistent malware. Attackers maintain remote access to the government network.<br><b>MISSION FAILED.</b>",
+        options: [{ text: "Restart Mission", next: "start" }]
+      },
+      // Soft Fail: Didn't restore database
+      "fail_database_not_restored": {
+        text: "You failed to recover deleted database records. Some data is lost and audit will be harder.",
+        options: [{ text: "Continue Anyway", next: "start" }]
+      },
+      "fail_timeout": {
+        text: "The malware spread too far. The government system is compromised.",
+        options: [{ text: "Retry", next: "start" }]
+      }
+    },
+  "level6": {
+"start": {
+        text: "A rogue USB was found in the SCADA control system. Firmware seems altered.",
+        options: [
+          { text: "Talk to Rachel (Grid Operator)", next: "rachel_intro" },
+          { text: "Speak with Security Desk", next: "security_intro" },
+          { text: "Analyze USB (USB Analyzer)", toolRequired: "USB Analyzer", next: "analyze_usb" },
+          { text: "Scan firmware (Firmware Scanner)", toolRequired: "Firmware Scanner", next: "scan_firmware" },
+          { text: "Objectives", next: "objectives" }
+        ]
+      },
+      "rachel_intro": {
+        text: "Rachel: 'The USB was plugged in at 3AM. Firmware looks different now.'",
+        options: [
+          { text: "Analyze USB (USB Analyzer)", toolRequired: "USB Analyzer", next: "analyze_usb" },
+          { text: "Analyze firmware (Firmware Scanner)", toolRequired: "Firmware Scanner", next: "scan_firmware" },
+          { text: "Any remote logins overnight?", next: "rachel_remote" },
+          { text: "Back to menu", next: "start" }
+        ]
+      },
+      "analyze_usb": {
+        text: "USB Analyzer: Finds a suspicious executable on the USB. Possible entry vector.",
+        objectivesCompleted: [0],
+        options: [{ text: "Back to Rachel", next: "rachel_intro" }]
+      },
+      "scan_firmware": {
+        text: "Firmware Scanner: Code injected in latest build. Alarm system code modified.",
+        objectivesCompleted: [1],
+        options: [{ text: "Back to Rachel", next: "rachel_intro" }]
+      },
+      "rachel_remote": {
+        text: "Rachel: 'Remote admin connection logged at 3AM. That's not us.'",
+        objectivesCompleted: [2],
+        options: [{ text: "Back to Rachel", next: "rachel_intro" }]
+      },
+      "security_intro": {
+        text: "Security Desk: 'Logs spiked at 3AM, right after someone brought in donuts.'",
+        options: [{ text: "Back to menu", next: "start" }]
+      },
+      "objectives": {
+        text: "Objectives:\n- Find rogue USB (USB Analyzer)\n- Analyze firmware changes (Firmware Scanner)\n- Review remote access logs",
+        options: [{ text: "Back", next: "start" }]
+      }
+    },
+    failStates: {
+      "fail_usb_not_analyzed": {
+        text: "You failed to analyze the rogue USB. Attackers deploy firmware-level malware and disrupt grid operations.<br><b>MISSION FAILED.</b>",
+        options: [{ text: "Restart Mission", next: "start" }]
+      },
+      "fail_firmware_not_scanned": {
+        text: "You missed the firmware implant. It remains dormant—risk for future compromise.",
+        options: [{ text: "Continue, But System Is Unstable", next: "start" }]
+      },
+      "fail_timeout": {
+        text: "The malware spread too far. The grid is compromised.",
+        options: [{ text: "Retry", next: "start" }]
+      }
+    },
+  "level7": {
+    "start": {
+        text: "Sector-9 suspects an insider. Suspicious logins and an encrypted locker note.",
+        options: [
+          { text: "Interview Anita (Suspect)", next: "anita_intro" },
+          { text: "Speak with Henry (HR)", next: "henry_intro" },
+          { text: "Check cafeteria", next: "cafeteria_intro" },
+          { text: "Analyze encrypted note (Encryption Cracker)", toolRequired: "Encryption Cracker", next: "analyze_note" },
+          { text: "Review credential logs (Credential Monitor)", toolRequired: "Credential Monitor", next: "review_creds" },
+          { text: "Objectives", next: "objectives" }
+        ]
+      },
+      "anita_intro": {
+        text: "Anita: 'My credentials were used, but it wasn't me! Someone must have cloned my access.'",
+        options: [
+          { text: "Check access logs (Credential Monitor)", toolRequired: "Credential Monitor", next: "review_creds" },
+          { text: "Anything odd in your locker?", next: "anita_locker" },
+          { text: "Back to menu", next: "start" }
+        ]
+      },
+      "review_creds": {
+        text: "Credential Monitor: Logins from Anita's account at 2:30AM—she has an alibi.",
+        objectivesCompleted: [0],
+        options: [{ text: "Back to Anita", next: "anita_intro" }]
+      },
+      "anita_locker": {
+        text: "Anita: 'Found an encrypted note in my locker. Weird, right?'",
+        options: [
+          { text: "Analyze with Encryption Cracker", toolRequired: "Encryption Cracker", next: "analyze_note" },
+          { text: "Back to Anita", next: "anita_intro" }
+        ]
+      },
+      "analyze_note": {
+        text: "Encryption Cracker: Note is a password for external exfiltration service.",
+        objectivesCompleted: [1],
+        options: [{ text: "Back to Anita", next: "anita_intro" }]
+      },
+      "henry_intro": {
+        text: 'Henry: \'Kim and Lee both requested emergency leave. Kim said something about a "clean exit".\'',
+        objectivesCompleted: [3],
+        options: [{ text: 'Back to menu', next: 'start' }]
+      },
+      "cafeteria_intro": {
+        text: "Cafeteria Staff: 'Someone ordered ten espressos. Paid cash. Hoodie and sunglasses indoors.'",
+        options: [{ text: "Back to menu", next: "start" }]
+      },
+      "objectives": {
+        text: "Objectives:\n- Analyze credential logs (Credential Monitor)\n- Investigate locker clue (Encryption Cracker)\n- Interview HR about leave\n- Review odd cafeteria activity",
+        options: [{ text: "Back", next: "start" }]
+      }
+    },
+    failStates: {
+      "fail_creds_not_checked": {
+        text: "You failed to review credential access logs. The insider escapes and exfiltrates sensitive files.<br><b>MISSION FAILED.</b>",
+        options: [{ text: "Restart Mission", next: "start" }]
+      },
+      "fail_locker_clue_ignored": {
+        text: "You missed a key locker clue. Unlocking staff accounts is delayed.",
+        options: [{ text: "Continue Anyway", next: "start" }]
+      },
+      "fail_timeout": {
+        text: "The malware spread too far. The company\'s codebase is compromised.",
+        options: [{ text: 'Retry', next: 'start' }]
+      }
+    },
+  "level8": {
+"start": {
+        text: "Zero-day auctions by PH4NT0M are live on the dark web. Ghostline's aliases are changing fast.",
+        options: [
+          { text: "Contact Cipher (Informant)", next: "cipher_intro" },
+          { text: "Trace forum aliases (OSINT Suite)", toolRequired: "OSINT Suite", next: "trace_aliases" },
+          { text: "Decrypt auction data (Message Decryptor)", toolRequired: "Message Decryptor", next: "decrypt_auction" },
+          { text: "Objectives", next: "objectives" }
+        ]
+      },
+      "cipher_intro": {
+        text: "Cipher: 'PH4NT0M's new post is encrypted. I'll trade it for a favor.'",
+        options: [
+          { text: "Decrypt forum post (Message Decryptor)", toolRequired: "Message Decryptor", next: "decrypt_post" },
+          { text: "Back to menu", next: "start" }
+        ]
+      },
+      "decrypt_post": {
+        text: "Message Decryptor: Post decrypted—contains zero-day listing and meeting instructions.",
+        objectivesCompleted: [0],
+        options: [{ text: "Back to Cipher", next: "cipher_intro" }]
+      },
+      "trace_aliases": {
+        text: "OSINT Suite: Linguistic pattern matches found. Ghostline's real alias logged.",
+        objectivesCompleted: [1],
+        options: [{ text: "Back to menu", next: "start" }]
+      },
+      "decrypt_auction": {
+        text: "Message Decryptor: Auction data reveals top bidders and payment wallets.",
+        objectivesCompleted: [2],
+        options: [{ text: "Back to menu", next: "start" }]
+      },
+      "objectives": {
+        text: "Objectives:\n- Find PH4NT0M's forum post (Message Decryptor)\n- Trace Ghostline's aliases (OSINT Suite)\n- Decrypt auction data (Message Decryptor)",
+        options: [{ text: "Back", next: "start" }]
+      }
+    },
+    failStates: {
+      "fail_forum_post_ignored": {
+        text: "You missed PH4NT0M's forum post. The next cyberattack cripples the city.<br><b>MISSION FAILED.</b>",
+        options: [{ text: "Restart Mission", next: "start" }]
+      },
+      "fail_timeout": {
+        text: "The malware spread too far. The city is compromised.",
+        options: [{ text: "Retry", next: "start" }]
+      },
+      "fail_aliases_not_traced": {
+        text: "You failed to trace Ghostline's aliases. They remain at large.",
+        options: [{ text: "Continue, But The Trail Is Cold", next: "start" }]
+      }
+    },
+  "level9": {
+"start": {
+        text: "City transit is halted by a DDoS attack. Commuters are stuck. Systems are down.",
+        options: [
+          { text: "Interview Lina (Transit Supervisor)", next: "lina_intro" },
+          { text: "Visit Coffee Stand", next: "coffee_intro" },
+          { text: "Restore control center (DDoS Mitigator)", toolRequired: "DDoS Mitigator", next: "restore_control" },
+          { text: "Patch service (Service Patch Tool)", toolRequired: "Service Patch Tool", next: "patch_service" },
+          { text: "Remove rogue WiFi config (Service Patch Tool)", toolRequired: "Service Patch Tool", next: "remove_wifi" },
+          { text: "Objectives", next: "objectives" }
+        ]
+      },
+      "lina_intro": {
+        text: "Lina: 'Everything crashed at 7:32AM. Ticket service is the likely entry point.'",
+        options: [
+          { text: "Analyze DDoS log (DDoS Mitigator)", toolRequired: "DDoS Mitigator", next: "analyze_ddos" },
+          { text: "Any rogue WiFi configs?", next: "lina_wifi" },
+          { text: "Back to menu", next: "start" }
+        ]
+      },
+      "analyze_ddos": {
+        text: "DDoS Mitigator: Source narrowed down. Botnet still hammering.",
+        objectivesCompleted: [1],
+        options: [{ text: "Back to Lina", next: "lina_intro" }]
+      },
+      "lina_wifi": {
+        text: "Lina: 'Found a suspicious config file. IT removed it, but could be more.'",
+        objectivesCompleted: [3],
+        options: [{ text: "Back to Lina", next: "lina_intro" }]
+      },
+      "coffee_intro": {
+        text: "Coffee Stand: 'Machine crashed three times. I blame WiFi hackers. Guy in a hoodie was lurking.'",
+        options: [{ text: "Back to menu", next: "start" }]
+      },
+      "restore_control": {
+        text: "DDoS Mitigator brings control center back online. Trains are moving.",
+        objectivesCompleted: [0],
+        options: [{ text: "Back to menu", next: "start" }]
+      },
+      "patch_service": {
+        text: "Service Patch Tool: Ticket service buffer overflow patched.",
+        objectivesCompleted: [2],
+        options: [{ text: "Back to menu", next: "start" }]
+      },
+      "remove_wifi": {
+        text: "Service Patch Tool: Rogue WiFi config removed.",
+        objectivesCompleted: [3],
+        options: [{ text: "Back to menu", next: "start" }]
+      },
+      "objectives": {
+        text: "Objectives:\n- Restore control center (DDoS Mitigator)\n- Analyze DDoS log (DDoS Mitigator)\n- Patch exploited service (Service Patch Tool)\n- Remove rogue WiFi config (Service Patch Tool)",
+        options: [{ text: "Back", next: "start" }]
+      }
+    },
+      failStates: {
+        "fail_timeout": {
+          text: "The malware spread too far. The city is compromised.",
+          options: [{ text: "Retry", next: "start" }]
+        },
+        // Hard Fail: Didn't analyze DDoS logs, attack repeats
+        "fail_ddos_not_analyzed": {
+          text: "You failed to analyze DDoS logs. The attack repeats and the city loses control of transit.<br><b>MISSION FAILED.</b>",
+          options: [{ text: "Restart Mission", next: "start" }]
+        },
+        // Soft Fail: Didn't remove rogue WiFi
+        "fail_wifi_not_removed": {
+          text: "You didn't remove rogue WiFi configs. Systems are exposed to new threats.",
+          options: [{ text: "Continue, But With Vulnerabilities", next: "start" }]
         }
       },
-      {
-        text: "You ever fix the weird flickering lights?",
-        nextDialogue: {
-          npc: "Janitor Carlos",
-          text: "Nah, that's above my pay grade. But the backup generator does make the whole place hum. Spooky at night.",
-          choices: [
-            { text: "Back to Interview Menu", action: () => showInterviewMenu() }
-          ]
-        }
-      }
-    ]
-  },
-  "Receptionist Mia": {
-    text: "Oh, hello! It's chaos this morning. I just hope the coffee machine survives.",
-    choices: [
-      {
-        text: "Anyone unusual sign in last night?",
-        nextDialogue: {
-          npc: "Receptionist Mia",
-          text: "Not that I noticed, but security was extra grumpy when the generator hiccuped.",
-          choices: [
-            { text: "Back to Interview Menu", action: () => showInterviewMenu() }
-          ]
-        }
+  "level10": {
+      "start": {
+        text: "The final showdown. Worm 'Silent Strings' is loose. Ghostline is watching. Time to save the world.",
+        options: [
+          { text: "Report to Director", next: "director_intro" },
+          { text: "Consult Reception Bot", next: "reception_bot" },
+          { text: "Disarm worm (Worm Deactivator)", toolRequired: "Worm Deactivator", next: "disarm_worm" },
+          { text: "Trace worm propagation (Code Tracer)", toolRequired: "Code Tracer", next: "trace_worm" },
+          { text: "Decrypt Ghostline's message (Message Decryptor)", toolRequired: "Message Decryptor", next: "decrypt_message" },
+          { text: "Objectives", next: "objectives" }
+        ]
       },
-      {
-        text: "Do you get many lost USBs?",
-        nextDialogue: {
-          npc: "Receptionist Mia",
-          text: "Every week! Usually it's just presentations or—one time—a love letter.",
-          choices: [
-            { text: "Back to Interview Menu", action: () => showInterviewMenu() }
-          ]
-        }
-      }
-    ]
-  },
-
-  // LEVEL 2 – Website Defacement
-  level2: {
-    "Emma Rodriguez – Web Editor": {
-      text: "I've been here since 6AM. Every headline changed to 'PH4NT0M WAS HERE'. Our devs swear it's not them. I just… I want my old job back.",
-      choices: [
-        {
-          text: "Show me what was changed in the code.",
-          nextDialogue: {
-            npc: "Emma Rodriguez – Web Editor",
-            text: "Here's the ticker script—someone injected a nasty payload. Look, I'm no coder, but that's not our usual stuff.",
-            clue: "XSS payload in ticker",
-            action: () => window.markObjectiveComplete(1),
-            choices: [
-              { text: "Back to Interview Menu", action: () => showInterviewMenu() }
-            ]
-          }
-        },
-        {
-          text: "Did your team get any weird emails lately?",
-          nextDialogue: {
-            npc: "Emma Rodriguez – Web Editor",
-            text: "Yes! IT sent a password reset email, or so we thought. The intern clicked it. His browser's now full of popups.",
-            clue: "Phishing email incident",
-            action: () => window.markObjectiveComplete(2),
-            choices: [
-              { text: "Back to Interview Menu", action: () => showInterviewMenu() }
-            ]
-          }
-        },
-        {
-          text: "Anyone on your team clicking random links again?",
-          nextDialogue: {
-            npc: "Emma Rodriguez – Web Editor",
-            text: "You'd think after the last training, right? But yeah… some people never learn.",
-            choices: [
-              { text: "Back to Interview Menu", action: () => showInterviewMenu() }
-            ]
-          }
-        }
-      ]
-    },
-    "David Kim – IT Support": {
-      text: "If it's not a plugin vulnerability, it's a lost password. Management postponed a critical patch last night, so guess what—someone waltzed in and defaced the site.",
-      choices: [
-        {
-          text: "Can you patch the exploited plugin now?",
-          nextDialogue: {
-            npc: "David Kim – IT Support",
-            text: "Already on it. Tell management if they want uptime, they need security first. Patch deployed, fingers crossed.",
-            clue: "Plugin patched",
-            action: () => window.markObjectiveComplete(3),
-            choices: [
-              { text: "Back to Interview Menu", action: () => showInterviewMenu() }
-            ]
-          }
-        },
-        {
-          text: "Got admin panel logs?",
-          nextDialogue: {
-            npc: "David Kim – IT Support",
-            text: "Yeah, you'll see the breach started from an IP in Russia. Or maybe just a VPN exit node—who knows.",
-            clue: "Admin panel access logs",
-            choices: [
-              { text: "Back to Interview Menu", action: () => showInterviewMenu() }
-            ]
-          }
-        },
-        {
-          text: "How bad's the extension infection?",
-          nextDialogue: {
-            npc: "David Kim – IT Support",
-            text: "Pretty bad—interns and extensions don't mix.",
-            choices: [
-              { text: "Back to Interview Menu", action: () => showInterviewMenu() }
-            ]
-          }
-        }
-      ]
-    }
-  },
-  "Intern Billy": {
-    text: "Hi! Sorry, still kind of new here. I thought that password reset email was real…",
-    choices: [
-      {
-        text: "What happened when you clicked it?",
-        nextDialogue: {
-          npc: "Intern Billy",
-          text: "My browser went nuts and IT yelled at me. I'll be more careful… probably.",
-          clue: "Intern fell for phishing",
-          choices: [
-            { text: "Back to Interview Menu", action: () => showInterviewMenu() }
-          ]
-        }
+      "director_intro": {
+        text: "Director: 'Agent, the protocol is active. The worm is propagating through Asia and Europe. You must act now!'",
+        options: [{ text: "Back to menu", next: "start" }]
       },
-      {
-        text: "Did you notice any strange files?",
-        nextDialogue: {
-          npc: "Intern Billy",
-          text: "A weird extension installed itself, then cat videos started autoplaying. Not the worst hack, I guess?",
-          choices: [
-            { text: "Back to Interview Menu", action: () => showInterviewMenu() }
-          ]
-        }
-      }
-    ]
-  },
-
-
-  // LEVEL 3 – Ransomware at the Bank
-  level3: {
-    "Jennifer Park – Bank Teller": {
-      text: "I'm so sorry! I got this email from 'HR' about urgent policy changes. Looked real. I opened the PDF and everything froze. The ransom note popped up.",
-      choices: [
-        {
-          text: "Can I see the email and attachment?",
-          nextDialogue: {
-            npc: "Jennifer Park – Bank Teller",
-            text: "Here—I forwarded it to IT. The sender's address looks… off. Like, one letter missing.",
-            clue: "Phishing email sample",
-            action: () => window.markObjectiveComplete(1),
-            choices: [
-              { text: "Back to Interview Menu", action: () => showInterviewMenu() }
-            ]
-          }
-        },
-        {
-          text: "Did anyone else get that email?",
-          nextDialogue: {
-            npc: "Jennifer Park – Bank Teller",
-            text: "Three other tellers said the same thing. I told them not to open it. Not sure they listened.",
-            clue: "Multiple patient zeros",
-            action: () => window.markObjectiveComplete(0),
-            choices: [
-              { text: "Back to Interview Menu", action: () => showInterviewMenu() }
-            ]
-          }
-        },
-        {
-          text: "Do you remember the sender's address?",
-          nextDialogue: {
-            npc: "Jennifer Park – Bank Teller",
-            text: "It was hr-securty@bank.com—see? Security spelled wrong. Ugh.",
-            choices: [
-              { text: "Back to Interview Menu", action: () => showInterviewMenu() }
-            ]
-          }
-        }
-      ]
-    },
-    "Rajesh Singh – Bank IT": {
-      text: "Every time someone opens a shady attachment, it's a new adventure. The ransomware hit us at 2:11AM, spread fast, and left a sample on the shared drive.",
-      choices: [
-        {
-          text: "Got the malware sample?",
-          nextDialogue: {
-            npc: "Rajesh Singh – Bank IT",
-            text: "Here. Be careful opening it—even the icon gives me chills.",
-            clue: "Ransomware sample",
-            action: () => window.markObjectiveComplete(2),
-            choices: [
-              { text: "Back to Interview Menu", action: () => showInterviewMenu() }
-            ]
-          }
-        },
-        {
-          text: "Can we restore from backup?",
-          nextDialogue: {
-            npc: "Rajesh Singh – Bank IT",
-            text: "Luckily, backup from 1AM is clean. Restoring now. Buy me a coffee if it works, okay?",
-            clue: "Bank restored from backup",
-            action: () => window.markObjectiveComplete(4),
-            choices: [
-              { text: "Back to Interview Menu", action: () => showInterviewMenu() }
-            ]
-          }
-        },
-        {
-          text: "How did it spread through the network?",
-          nextDialogue: {
-            npc: "Rajesh Singh – Bank IT",
-            text: "Lateral movement after initial compromise—classic ransomware playbook. I'm mapping the spread now.",
-            clue: "Network spread",
-            action: () => window.markObjectiveComplete(3),
-            choices: [
-              { text: "Back to Interview Menu", action: () => showInterviewMenu() }
-            ]
-          }
-        }
-      ]
-    }
-  },
-  "Bank Guard": {
-    text: "Mornin', Agent. Lotta staff came in early. The ATM kept beeping but I just thought it was bored.",
-    choices: [
-      {
-        text: "You see anyone look nervous?",
-        nextDialogue: {
-          npc: "Bank Guard",
-          text: "Jennifer was pale as a ghost after reading an email. Could just be Monday, though.",
-          clue: "Nervous teller clue",
-          choices: [
-            { text: "Back to Interview Menu", action: () => showInterviewMenu() }
-          ]
-        }
+      "reception_bot": {
+        text: "Reception Bot: 'Welcome, Agent. Remember: the cake is a lie. Security is at maximum.'",
+        options: [{ text: "Back to menu", next: "start" }]
       },
-      {
-        text: "You ever get phishing emails?",
-        nextDialogue: {
-          npc: "Bank Guard",
-          text: "All the time! I almost clicked one about 'FREE Donuts.' If you see any, forward to me.",
-          choices: [
-            { text: "Back to Interview Menu", action: () => showInterviewMenu() }
-          ]
-        }
-      }
-    ]
-  },
-
-  // LEVEL 4 – Repo Compromised
-  level4: {
-    "Chloe Tan – DevOps Engineer": {
-      text: "We found a commit last night that skipped our review. Code injected straight into the login process. I'm mad, and management just wants it gone.",
-      choices: [
-        {
-          text: "Let me audit recent commits.",
-          nextDialogue: {
-            npc: "Chloe Tan – DevOps Engineer",
-            text: "See this one? 'Backdoor for testing'—my ass. Reverted it, but double-check me.",
-            clue: "Malicious commit reverted",
-            action: () => window.markObjectiveComplete(3),
-            choices: [
-              { text: "Back to Interview Menu", action: () => showInterviewMenu() }
-            ]
-          }
-        },
-        {
-          text: "Any pipeline warnings?",
-          nextDialogue: {
-            npc: "Chloe Tan – DevOps Engineer",
-            text: "Yes—CI said one dev's token was reused. Security basics, people.",
-            clue: "Pipeline warning logs",
-            action: () => window.markObjectiveComplete(1),
-            choices: [
-              { text: "Back to Interview Menu", action: () => showInterviewMenu() }
-            ]
-          }
-        },
-        {
-          text: "Who pushed the bad commit?",
-          nextDialogue: {
-            npc: "Chloe Tan – DevOps Engineer",
-            text: "Tom Lin's account was used. He swears it wasn't him.",
-            clue: "Compromised developer account",
-            action: () => window.markObjectiveComplete(2),
-            choices: [
-              { text: "Back to Interview Menu", action: () => showInterviewMenu() }
-            ]
-          }
-        }
-      ]
-    },
-    "Tom Lin – Junior Developer": {
-      text: "I reused my repo password, okay? Dumb, I know. I think someone got my token.",
-      choices: [
-        {
-          text: "Reset all your credentials, now.",
-          nextDialogue: {
-            npc: "Tom Lin – Junior Developer",
-            text: "Already done. I'm changing everything, I swear.",
-            clue: "Credential reset",
-            action: () => window.markObjectiveComplete(2),
-            choices: [
-              { text: "Back to Interview Menu", action: () => showInterviewMenu() }
-            ]
-          }
-        },
-        {
-          text: "Ever share your token with anyone?",
-          nextDialogue: {
-            npc: "Tom Lin – Junior Developer",
-            text: "No way. But maybe I clicked something I shouldn't have.",
-            choices: [
-              { text: "Back to Interview Menu", action: () => showInterviewMenu() }
-            ]
-          }
-        }
-      ]
-    }
-  },
-  "Senior Dev Priya": {
-    text: "I keep telling management to require two-factor. Nobody listens till something breaks.",
-    choices: [
-      {
-        text: "You ever review Tom's code?",
-        nextDialogue: {
-          npc: "Senior Dev Priya",
-          text: "He's sharp, just a little forgetful with security. Reminds me of myself at his age.",
-          choices: [
-            { text: "Back to Interview Menu", action: () => showInterviewMenu() }
-          ]
-        }
+      "disarm_worm": {
+        text: "Worm Deactivator: You neutralize the Silent Strings worm. World systems stabilize.",
+        objectivesCompleted: [0],
+        options: [{ text: "Back to menu", next: "start" }]
       },
-      {
-        text: "How's the team feeling?",
-        nextDialogue: {
-          npc: "Senior Dev Priya",
-          text: "Stressed but hungry. If you buy us lunch, we'll secure the repo twice as fast.",
-          choices: [
-            { text: "Back to Interview Menu", action: () => showInterviewMenu() }
-          ]
-        }
+      "trace_worm": {
+        text: "Code Tracer: You track worm propagation, neutralize global hotspots.",
+        objectivesCompleted: [1],
+        options: [{ text: "Back to menu", next: "start" }]
+      },
+      "decrypt_message": {
+        text: "Message Decryptor: Ghostline's final message reads: 'The strings are cut, but the music plays on.'",
+        objectivesCompleted: [2],
+        options: [{ text: "Back to menu", next: "start" }]
+      },
+      "objectives": {
+        text: "Objectives:\n- Disarm Silent Strings protocol (Worm Deactivator)\n- Trace global worm propagation (Code Tracer)\n- Decrypt Ghostline's final message (Message Decryptor)",
+        options: [{ text: "Back", next: "start" }]
       }
-    ]
-  },
-
-  // LEVEL 5 – Government System Backdoor
-  level5: {
-    "Maria Gomez – Sysadmin": {
-      text: "I spotted a task called 'totally_safe.exe'—that's never a good sign. It was set to run every hour, hidden deep in Task Scheduler.",
-      choices: [
-        {
-          text: "Let me analyze the backdoor.",
-          nextDialogue: {
-            npc: "Maria Gomez – Sysadmin",
-            text: "It connects to a random IP every hour. I quarantined it and dumped the binary.",
-            clue: "Backdoor binary",
-            action: () => window.markObjectiveComplete(0),
-            choices: [
-              { text: "Back to Interview Menu", action: () => showInterviewMenu() }
-            ]
-          }
-        },
-        {
-          text: "Anyone else with admin privileges?",
-          nextDialogue: {
-            npc: "Maria Gomez – Sysadmin",
-            text: "Only me and the app team lead, but their accounts are clean.",
-            choices: [
-              { text: "Back to Interview Menu", action: () => showInterviewMenu() }
-            ]
-          }
-        },
-        {
-          text: "Can you recover deleted database records?",
-          nextDialogue: {
-            npc: "Maria Gomez – Sysadmin",
-            text: "I rolled back to last night's restore point. A few records missing, but I think we're okay.",
-            clue: "Database restore point",
-            action: () => window.markObjectiveComplete(1),
-            choices: [
-              { text: "Back to Interview Menu", action: () => showInterviewMenu() }
-            ]
-          }
-        }
-      ]
-    }
-  },
-  "Front Desk": {
-    text: "Morning. A couple of guys from 'maintenance' came by late last night. Looked legit, but you never know.",
-    choices: [
-      {
-        text: "Were they on the schedule?",
-        nextDialogue: {
-          npc: "Front Desk",
-          text: "Supposedly, but the system was acting up so I couldn't check.",
-          choices: [
-            { text: "Back to Interview Menu", action: () => showInterviewMenu() }
-          ]
-        }
-      }
-    ]
-  },
-
-  // LEVEL 6 – Power Grid Breach
-  level6: {
-    "Rachel Yeo – Grid Operator": {
-      text: "The control room scanner found a rogue USB plugged into the SCADA system. We barely caught it. Firmware's different this morning—like something got flashed overnight.",
-      choices: [
-        {
-          text: "Can I get the USB for analysis?",
-          nextDialogue: {
-            npc: "Rachel Yeo – Grid Operator",
-            text: "Right here. It's got a weird executable—no label. I'm not plugging it in!",
-            clue: "Rogue USB device",
-            action: () => window.markObjectiveComplete(0),
-            choices: [
-              { text: "Back to Interview Menu", action: () => showInterviewMenu() }
-            ]
-          }
-        },
-        {
-          text: "Let me see firmware diffs.",
-          nextDialogue: {
-            npc: "Rachel Yeo – Grid Operator",
-            text: "Here's a before/after. There's code in there I don't recognize.",
-            clue: "Firmware diff",
-            action: () => window.markObjectiveComplete(1),
-            choices: [
-              { text: "Back to Interview Menu", action: () => showInterviewMenu() }
-            ]
-          }
-        },
-        {
-          text: "Any suspicious remote connections in the logs?",
-          nextDialogue: {
-            npc: "Rachel Yeo – Grid Operator",
-            text: "Yeah—here's a log of a remote admin connection at 3AM. Definitely not ours.",
-            clue: "Remote access log",
-            action: () => window.markObjectiveComplete(2),
-            choices: [
-              { text: "Back to Interview Menu", action: () => showInterviewMenu() }
-            ]
-          }
-        }
-      ]
-    }
-  },
-  "Security Desk": {
-    text: "Nothing to report except a weird spike on the logs at 3AM. And, someone brought donuts.",
-    choices: [
-      {
-        text: "Any left?",
-        nextDialogue: {
-          npc: "Security Desk",
-          text: "Sorry, hackers eat first.",
-          choices: [
-            { text: "Back to Interview Menu", action: () => showInterviewMenu() }
-          ]
-        }
-      }
-    ]
-  },
-
-  // LEVEL 7 – Insider Threat
-  level7: {
-    "Anita Lee – Suspect Insider": {
-      text: "You're blaming me? I follow protocol. If someone used my credentials, it wasn't me!",
-      choices: [
-        {
-          text: "Let's check the access logs together.",
-          nextDialogue: {
-            npc: "Anita Lee – Suspect Insider",
-            text: "Fine, look. Last login from my terminal was at 2:30AM. But I was at home.",
-            clue: "Credential access logs",
-            action: () => window.markObjectiveComplete(0),
-            choices: [
-              { text: "Back to Interview Menu", action: () => showInterviewMenu() }
-            ]
-          }
-        },
-        {
-          text: "Anything weird in your locker lately?",
-          nextDialogue: {
-            npc: "Anita Lee – Suspect Insider",
-            text: "Actually… there was an encrypted note left in there this morning. Weird, right?",
-            clue: "Encrypted locker note",
-            action: () => window.markObjectiveComplete(1),
-            choices: [
-              { text: "Back to Interview Menu", action: () => showInterviewMenu() }
-            ]
-          }
-        },
-        {
-          text: "Notice strange processes on your terminal?",
-          nextDialogue: {
-            npc: "Anita Lee – Suspect Insider",
-            text: "I saw a weird hash running, couldn't kill it. Sent it to IT.",
-            clue: "Process hash",
-            action: () => window.markObjectiveComplete(2),
-            choices: [
-              { text: "Back to Interview Menu", action: () => showInterviewMenu() }
-            ]
-          }
-        }
-      ]
     },
-    "Henry Ng – HR Officer": {
-      text: "Kim and Lee both asked for sudden leave after the breach. Suspicious much?",
-      choices: [
-        {
-          text: "Did you overhear anything else?",
-          nextDialogue: {
-            npc: "Henry Ng – HR Officer",
-            text: "Kim mentioned a 'clean exit' on the phone. I'd dig deeper.",
-            clue: "Suspicious leave request",
-            action: () => window.markObjectiveComplete(3),
-            choices: [
-              { text: "Back to Interview Menu", action: () => showInterviewMenu() }
-            ]
-          }
-        }
-      ]
-    }
-  },
-  "Cafeteria Staff": {
-    text: "You here about the breach? All I know is, someone ordered ten espressos and paid in cash.",
-    choices: [
-      {
-        text: "Did you see who?",
-        nextDialogue: {
-          npc: "Cafeteria Staff",
-          text: "Couldn't tell—hood up, sunglasses indoors. Bold move.",
-          choices: [
-            { text: "Back to Interview Menu", action: () => showInterviewMenu() }
-          ]
-        }
+    failStates: {
+      // Hard Fail: Didn't disarm protocol, global disaster
+      "fail_protocol_not_disarmed": {
+        text: "You failed to disarm the Silent Strings protocol. Global chaos ensues.<br><b>MISSION FAILED.</b>",
+        options: [{ text: "Restart Final Mission", next: "start" }]
+      },
+      // Soft Fail: Didn't decrypt Ghostline's message
+      "fail_message_not_decrypted": {
+        text: "You didn't decrypt Ghostline's last message. The true identity is lost.",
+        options: [{ text: "Continue, But With Unanswered Questions", next: "start" }]
+      },
+      "fail_timeout": {
+        text: "The worm spread too far. The world is compromised.",
+        options: [{ text: "Retry", next: "start" }]
       }
-    ]
-  },
-
-  // LEVEL 8 – Dark Web Tracking
-  level8: {
-    "Cipher – Dark Web Informant": {
-      text: "PH4NT0M's moving zero-day auctions to new forums every week. I can point you to their latest encrypted post… for a favor.",
-      choices: [
-        {
-          text: "Show me the forum post.",
-          nextDialogue: {
-            npc: "Cipher – Dark Web Informant",
-            text: "Here. Encrypted, but fits their linguistic pattern.",
-            clue: "Encrypted forum post",
-            action: () => window.markObjectiveComplete(0),
-            choices: [
-              { text: "Back to Interview Menu", action: () => showInterviewMenu() }
-            ]
-          }
-        },
-        {
-          text: "How do you track their aliases?",
-          nextDialogue: {
-            npc: "Cipher – Dark Web Informant",
-            text: "Analyze writing style—sloppy grammar, same spelling mistakes. The alias log helps.",
-            clue: "Alias log",
-            action: () => window.markObjectiveComplete(1),
-            choices: [
-              { text: "Back to Interview Menu", action: () => showInterviewMenu() }
-            ]
-          }
-        },
-        {
-          text: "What's the auction data?",
-          nextDialogue: {
-            npc: "Cipher – Dark Web Informant",
-            text: "Here's the auction data. It's tough to crack. Good luck.",
-            clue: "Auction data",
-            action: () => window.markObjectiveComplete(2),
-            choices: [
-              { text: "Back to Interview Menu", action: () => showInterviewMenu() }
-            ]
-          }
-        }
-      ]
-    }
-  },
-  "Parking Attendant": {
-    text: "Strangest thing last night—black van, no license plates, idling by the staff exit.",
-    choices: [
-      {
-        text: "Did you call security?",
-        nextDialogue: {
-          npc: "Parking Attendant",
-          text: "No, but I made a note of it. Want the time?",
-          clue: "Suspicious van clue",
-          choices: [
-            { text: "Back to Interview Menu", action: () => showInterviewMenu() }
-          ]
-        }
-      }
-    ]
-  },
-
-  // LEVEL 9 – Transport Hack
-  level9: {
-    "Lina Sun – Transit Supervisor": {
-      text: "The trains stopped dead at 7:32AM. DDoS hit the control center. My staff are panicking, commuters are furious.",
-      choices: [
-        {
-          text: "Let's get the control center back online.",
-          nextDialogue: {
-            npc: "Lina Sun – Transit Supervisor",
-            text: "Restoring now—pray for us.",
-            clue: "Control center restored",
-            action: () => window.markObjectiveComplete(0),
-            choices: [
-              { text: "Back to Interview Menu", action: () => showInterviewMenu() }
-            ]
-          }
-        },
-        {
-          text: "Got the DDoS logs?",
-          nextDialogue: {
-            npc: "Lina Sun – Transit Supervisor",
-            text: "Here's everything. Good luck parsing it.",
-            clue: "DDoS log",
-            action: () => window.markObjectiveComplete(1),
-            choices: [
-              { text: "Back to Interview Menu", action: () => showInterviewMenu() }
-            ]
-          }
-        },
-        {
-          text: "Any service vulnerabilities found?",
-          nextDialogue: {
-            npc: "Lina Sun – Transit Supervisor",
-            text: "Ticket service had a buffer overflow. We've patched it, but… damage was done.",
-            clue: "Service exploit patched",
-            action: () => window.markObjectiveComplete(2),
-            choices: [
-              { text: "Back to Interview Menu", action: () => showInterviewMenu() }
-            ]
-          }
-        },
-        {
-          text: "Any rogue WiFi configs?",
-          nextDialogue: {
-            npc: "Lina Sun – Transit Supervisor",
-            text: "Yeah, found a suspicious config file this morning. IT's removed it.",
-            clue: "Rogue WiFi config",
-            action: () => window.markObjectiveComplete(3),
-            choices: [
-              { text: "Back to Interview Menu", action: () => showInterviewMenu() }
-            ]
-          }
-        }
-      ]
-    }
-  },
-  "Coffee Stand": {
-    text: "My machine crashed three times—never seen so many grumpy commuters. I blame the WiFi hackers.",
-    choices: [
-      {
-        text: "Did you see anyone messing with the router?",
-        nextDialogue: {
-          npc: "Coffee Stand",
-          text: "A guy with a laptop and hoodie. Classic. Ordered a double espresso.",
-          clue: "WiFi tampering clue",
-          choices: [
-            { text: "Back to Interview Menu", action: () => showInterviewMenu() }
-          ]
-        }
-      }
-    ]
-  },
-  // LEVEL 10 – Final Showdown
-  level10: {
-    "SECTOR9 Director": {
-      text: "Agent, Silent Strings has been unleashed. Our worm payload map is updating in real-time. We need you more than ever.",
-      choices: [
-        {
-          text: "Give me the worm payload.",
-          nextDialogue: {
-            npc: "SECTOR9 Director",
-            text: "Downloaded to your terminal. Disarm it—if anyone can, you can.",
-            clue: "Worm payload",
-            action: () => window.markObjectiveComplete(0),
-            choices: [
-              { text: "Back to Interview Menu", action: () => showInterviewMenu() }
-            ]
-          }
-        },
-        {
-          text: "Where is it propagating fastest?",
-          nextDialogue: {
-            npc: "SECTOR9 Director",
-            text: "Asia, then Europe. It's moving fast. Here's the live map.",
-            clue: "Attack map",
-            action: () => window.markObjectiveComplete(1),
-            choices: [
-              { text: "Back to Interview Menu", action: () => showInterviewMenu() }
-            ]
-          }
-        },
-        {
-          text: "Has Ghostline left a message?",
-          nextDialogue: {
-            npc: "SECTOR9 Director",
-            text: "Encrypted and waiting on your desktop. It's up to you to break it.",
-            clue: "Ghostline's message",
-            action: () => window.markObjectiveComplete(2),
-            choices: [
-              { text: "Back to Interview Menu", action: () => showInterviewMenu() }
-            ]
-          }
-        }
-      ]
-    }
-  },
-  "Reception Bot": {
-    text: "Welcome, Agent. System security at maximum alert. Remember: the cake is a lie.",
-    choices: [
-      {
-        text: "Can you open the doors for me?",
-        nextDialogue: {
-          npc: "Reception Bot",
-          text: "Processing... Access granted. Please save the world. No pressure.",
-          choices: [
-            { text: "Back to Interview Menu", action: () => showInterviewMenu() }
-          ]
-        }
-      }
-    ]
-  },
+  }
 };
 
+// --- Dialogue State Management ---
+const DIALOGUE_STATE_KEY = 'dialogue_progress';
+let currentLevel = localStorage.getItem('currentLevel') || 'level1';
+let currentNPC = null;
 
-defineBranchingDialogues();
-function defineBranchingDialogues() {
-  window.dialogues = {
-
-    // === LEVEL 1: SECTOR-9 HQ BREACH ===
-    "investigation_intro": {
-      text: "Sector-9 HQ breach: Use interviews, scanning, and analysis to uncover the attack. Every choice matters.",
-      options: ["Begin with Interviews", "Run Evidence Scan", "Analyze Digital Clues", "Check Objectives"],
-      next: ["interview_menu", "scan_menu", "analyze_menu", "objectives_view"]
-    },
-    // Interview Menu
-    "interview_menu": {
-      text: "Who do you want to talk to?",
-      options: [
-        "Marcus Chen – IT Analyst",
-        "Sarah Wilson – Security Guard",
-        "Janitor Carlos",
-        "Receptionist Mia",
-        "Back to Investigation"
-      ],
-      next: [
-        "interview_marcus", "interview_sarah", "interview_janitor", "interview_receptionist", "investigation_intro"
-      ]
-    },
-    "interview_marcus": {
-      text: "Marcus: 'You're the new lead? I haven't slept. There were weird logins at 2AM, then deleted logs. If you can scan for lost entries, we'll finally know.'",
-      options: [
-        "Ask about the suspicious login",
-        "Use Evidence Scanner on logs",
-        "Back to Interview Menu"
-      ],
-      next: ["marcus_suspicious", "scan_logs", "interview_menu"]
-    },
-    "marcus_suspicious": {
-      text: "Marcus: '2:03AM admin login, nobody scheduled. Logs wiped after. If you recover them, let me know.'",
-      options: [
-        "Use Evidence Scanner on logs",
-        "Make a note",
-        "Back to Marcus"
-      ],
-      next: ["scan_logs", "open_notes_marcus", "interview_marcus"]
-    },
-    "scan_logs": {
-      text: "Scanner recovers deleted log: 2:03AM admin login, IP 185.56.12.99. Objective complete.",
-      options: ["Analyze clues", "Interview Security", "Back to Investigation"],
-      next: ["analyze_menu", "interview_sarah", "investigation_intro"],
-      action: () => window.markObjectiveComplete(3)
-    },
-    "open_notes_marcus": {
-      text: "Note: Marcus reports 2AM admin login, logs deleted. Need to recover entries.",
-      options: ["Back to Marcus"],
-      next: ["interview_marcus"]
-    },
-    "interview_sarah": {
-      text: "Sarah: 'Found a USB in the lift, generator rebooted at 2AM. If you want, analyze the USB.'",
-      options: [
-        "Ask about generator",
-        "Analyze USB",
-        "Back to Interview Menu"
-      ],
-      next: ["sarah_generator", "analyze_usb", "interview_menu"]
-    },
-    "sarah_generator": {
-      text: "Sarah: 'Whole lobby flickered. Thought it was a test, but now I'm not sure.'",
-      options: ["Back to Sarah"],
-      next: ["interview_sarah"]
-    },
-    "analyze_usb": {
-      text: "Malware found: credential-stealer, time-stamped 2:01AM. Objective complete.",
-      options: [
-        "Warn Marcus",
-        "Add to Notes",
-        "Back to Investigation"
-      ],
-      next: ["warn_marcus", "open_notes_usb", "investigation_intro"],
-      action: () => window.markObjectiveComplete(2)
-    },
-    "warn_marcus": {
-      text: "Marcus: 'Resetting admin passwords. Thanks for the catch.' Objective complete.",
-      options: ["Back to Interview Menu"],
-      next: ["interview_menu"],
-      action: () => window.markObjectiveComplete(4)
-    },
-    "open_notes_usb": {
-      text: "Note: Sarah's USB had credential-stealer malware. Linked to 2AM breach.",
-      options: ["Back to Investigation"],
-      next: ["investigation_intro"]
-    },
-    "interview_janitor": {
-      text: "Carlos: 'Saw a hoodie by the server room after midnight. Could be nothing.'",
-      options: ["Back to Interview Menu"],
-      next: ["interview_menu"]
-    },
-    "interview_receptionist": {
-      text: "Mia: 'Security hated that generator reboot. USBs everywhere lately.'",
-      options: ["Back to Interview Menu"],
-      next: ["interview_menu"]
-    },
-    "scan_menu": {
-      text: "What do you want to scan?",
-      options: ["Scan server logs", "Scan USB", "Back to Investigation"],
-      next: ["scan_logs", "analyze_usb", "investigation_intro"]
-    },
-    "analyze_menu": {
-      text: "What do you want to analyze?",
-      options: ["Analyze log fragment", "Analyze USB", "Back to Investigation"],
-      next: ["analyze_log_fragment", "analyze_usb", "investigation_intro"]
-    },
-    "analyze_log_fragment": {
-      text: "Analysis: Remote login from masked VPN node, attacker started at network hub. Objective complete.",
-      options: ["Back to Investigation"],
-      next: ["investigation_intro"],
-      action: () => window.markObjectiveComplete(0)
-    },
-    "objectives_view": {
-      text: "Objectives:\n- Identify the initial breach point\n- Analyze suspicious login attempts\n- Trace the attacker's IP address\n- Recover deleted system logs\n- Secure the compromised accounts",
-      options: ["Back to Investigation"],
-      next: ["investigation_intro"]
-    },
-
-    // === LEVEL 2: NEWS WEBSITE DEFACEMENT ===
-    "investigation2_intro": {
-      text: "Mission 2: News outlet's website has been defaced. All headlines replaced with 'PH4NT0M WAS HERE'.",
-      options: ["Interview Web Team", "Audit Website Code", "Scan for Malicious Scripts", "Objectives"],
-      next: ["interview2_menu", "audit2_code", "scan2_scripts", "objectives2_view"]
-    },
-    "interview2_menu": {
-      text: "Who do you want to interview?",
-      options: [
-        "Emma Rodriguez – Web Editor",
-        "David Kim – IT Support",
-        "Intern Billy",
-        "Back to Investigation"
-      ],
-      next: ["interview2_emma", "interview2_david", "interview2_intern", "investigation2_intro"]
-    },
-    "interview2_emma": {
-      text: "Emma: '6AM I found every headline was hacked. I'm not a coder! Maybe check the ticker script?'",
-      options: [
-        "Ask about suspicious emails",
-        "Audit Ticker Script",
-        "Back to Interview Menu"
-      ],
-      next: ["emma2_email", "audit2_code", "interview2_menu"]
-    },
-    "emma2_email": {
-      text: "Emma: 'Everyone got a fake IT password reset. Billy clicked it. His browser's a popup circus now.'",
-      options: ["Back to Emma"],
-      next: ["interview2_emma"]
-    },
-    "audit2_code": {
-      text: "You find an injected XSS payload in the news ticker. Objective complete.",
-      options: [
-        "Interview IT Support",
-        "Back to Investigation"
-      ],
-      next: ["interview2_david", "investigation2_intro"],
-      action: () => window.markObjectiveComplete(1)
-    },
-    "interview2_david": {
-      text: "David: 'Defacement came through a plugin vulnerability. Patch was postponed! Classic.'",
-      options: [
-        "Scan for Malicious Scripts",
-        "Back to Interview Menu"
-      ],
-      next: ["scan2_scripts", "interview2_menu"]
-    },
-    "scan2_scripts": {
-      text: "Malicious JavaScript found and removed. Headlines restored. Objective complete.",
-      options: [
-        "Interview Intern",
-        "Back to Investigation"
-      ],
-      next: ["interview2_intern", "investigation2_intro"],
-      action: () => window.markObjectiveComplete(0)
-    },
-    "interview2_intern": {
-      text: "Billy: 'I thought the password email was real. Next time, I'll ask first... Maybe.'",
-      options: ["Back to Interview Menu"],
-      next: ["interview2_menu"]
-    },
-    "objectives2_view": {
-      text: "Objectives:\n- Remove malicious headline script\n- Analyze XSS payload\n- Trace phishing email source\n- Patch CMS vulnerability",
-      options: ["Back to Investigation"],
-      next: ["investigation2_intro"]
-    },
-
-    // === LEVEL 3: BANK RANSOMWARE ===
-    "investigation3_intro": {
-      text: "Mission 3: The bank's network has been locked down by ransomware.",
-      options: ["Interview Staff", "Recover Malware Sample", "Analyze Network Spread", "Objectives"],
-      next: ["interview3_menu", "recover3_sample", "analyze3_spread", "objectives3_view"]
-    },
-    "interview3_menu": {
-      text: "Who do you want to interview?",
-      options: [
-        "Jennifer Park – Teller",
-        "Rajesh Singh – IT",
-        "Bank Guard",
-        "Back to Investigation"
-      ],
-      next: ["interview3_jennifer", "interview3_rajesh", "interview3_guard", "investigation3_intro"]
-    },
-    "interview3_jennifer": {
-      text: "Jennifer: 'I got an urgent HR email, opened a PDF, then everything froze.'",
-      options: [
-        "Ask for email and attachment",
-        "Warn other tellers",
-        "Back to Interview Menu"
-      ],
-      next: ["get3_email", "warn3_tellers", "interview3_menu"]
-    },
-    "get3_email": {
-      text: "You collect the phishing email and malicious PDF. Objective complete.",
-      options: ["Back to Jennifer"],
-      next: ["interview3_jennifer"],
-      action: () => window.markObjectiveComplete(1)
-    },
-    "warn3_tellers": {
-      text: "Other tellers warned. Only Jennifer opened it. Potential patient zero identified. Objective complete.",
-      options: ["Back to Interview Menu"],
-      next: ["interview3_menu"],
-      action: () => window.markObjectiveComplete(0)
-    },
-    "interview3_rajesh": {
-      text: "Rajesh: 'Malware sample is on the shared drive. Network map shows how it spread.'",
-      options: [
-        "Recover Malware Sample",
-        "Analyze Network Spread",
-        "Back to Interview Menu"
-      ],
-      next: ["recover3_sample", "analyze3_spread", "interview3_menu"]
-    },
-    "recover3_sample": {
-      text: "You isolate and recover the ransomware sample. Objective complete.",
-      options: ["Back to Investigation"],
-      next: ["investigation3_intro"],
-      action: () => window.markObjectiveComplete(2)
-    },
-    "analyze3_spread": {
-      text: "You map the lateral movement: spread via SMB after initial compromise. Objective complete.",
-      options: ["Back to Investigation"],
-      next: ["investigation3_intro"],
-      action: () => window.markObjectiveComplete(3)
-    },
-    "interview3_guard": {
-      text: "Bank Guard: 'Jennifer looked shaken after reading that email. You think it's related?'",
-      options: ["Back to Interview Menu"],
-      next: ["interview3_menu"]
-    },
-    "objectives3_view": {
-      text: "Objectives:\n- Identify patient zero\n- Analyze phishing email\n- Recover ransomware sample\n- Trace network spread\n- Restore banking services",
-      options: ["Back to Investigation"],
-      next: ["investigation3_intro"]
-    },
-
-    // === LEVEL 4: REPO COMPROMISED ===
-    "investigation4_intro": {
-      text: "Mission 4: Source code repo compromised. Malicious commit added a backdoor.",
-      options: ["Audit Recent Commits", "Interview Dev Team", "Revert Malicious Commit", "Objectives"],
-      next: ["audit4_commits", "interview4_menu", "revert4_commit", "objectives4_view"]
-    },
-    "audit4_commits": {
-      text: "You find a suspicious commit: 'Backdoor for testing.' Objective complete.",
-      options: ["Revert Commit", "Interview Dev Team"],
-      next: ["revert4_commit", "interview4_menu"],
-      action: () => window.markObjectiveComplete(0)
-    },
-    "interview4_menu": {
-      text: "Who do you want to interview?",
-      options: [
-        "Chloe Tan – DevOps Engineer",
-        "Tom Lin – Junior Developer",
-        "Senior Dev Priya",
-        "Back to Investigation"
-      ],
-      next: ["interview4_chloe", "interview4_tom", "interview4_priya", "investigation4_intro"]
-    },
-    "interview4_chloe": {
-      text: "Chloe: 'Malicious commit skipped review, Tom's token was reused.'",
-      options: [
-        "Audit Pipeline Warnings",
-        "Back to Interview Menu"
-      ],
-      next: ["audit4_pipeline", "interview4_menu"]
-    },
-    "audit4_pipeline": {
-      text: "Pipeline logs show one dev's token reused across multiple systems. Objective complete.",
-      options: ["Back to Investigation"],
-      next: ["investigation4_intro"],
-      action: () => window.markObjectiveComplete(1)
-    },
-    "interview4_tom": {
-      text: "Tom: 'I reused my password, okay? Changed everything now.'",
-      options: [
-        "Back to Interview Menu"
-      ],
-      next: ["interview4_menu"],
-      action: () => window.markObjectiveComplete(2)
-    },
-    "interview4_priya": {
-      text: "Priya: 'Told you all to use 2FA. Now buy us lunch.'",
-      options: ["Back to Interview Menu"],
-      next: ["interview4_menu"]
-    },
-    "revert4_commit": {
-      text: "You revert the malicious commit. Objective complete.",
-      options: ["Back to Investigation"],
-      next: ["investigation4_intro"],
-      action: () => window.markObjectiveComplete(3)
-    },
-    "objectives4_view": {
-      text: "Objectives:\n- Audit recent repo commits\n- Investigate pipeline warnings\n- Identify compromised developer account\n- Revert malicious commit",
-      options: ["Back to Investigation"],
-      next: ["investigation4_intro"]
-    },
-
-    // === LEVEL 5: GOVERNMENT SYSTEM BACKDOOR ===
-    "investigation5_intro": {
-      text: "Mission 5: Government server infected. Persistent backdoor detected.",
-      options: ["Interview Sysadmin", "Analyze Backdoor File", "Recover Deleted DB Records", "Objectives"],
-      next: ["interview5_sysadmin", "analyze5_backdoor", "recover5_db", "objectives5_view"]
-    },
-    "interview5_sysadmin": {
-      text: "Maria: 'Found a scheduled task—totally_safe.exe. Not mine.'",
-      options: [
-        "Analyze Backdoor File",
-        "Back to Investigation"
-      ],
-      next: ["analyze5_backdoor", "investigation5_intro"]
-    },
-    "analyze5_backdoor": {
-      text: "Analysis: Backdoor connects to random IP hourly. Quarantined and dumped binary. Objective complete.",
-      options: ["Back to Investigation"],
-      next: ["investigation5_intro"],
-      action: () => window.markObjectiveComplete(0)
-    },
-    "recover5_db": {
-      text: "You roll back to last night's DB restore point. Missing records mostly recovered. Objective complete.",
-      options: ["Back to Investigation"],
-      next: ["investigation5_intro"],
-      action: () => window.markObjectiveComplete(1)
-    },
-    "objectives5_view": {
-      text: "Objectives:\n- Analyze persistent malware\n- Recover deleted database records\n- Analyze unauthorized scheduled tasks",
-      options: ["Back to Investigation"],
-      next: ["investigation5_intro"]
-    },
-
-    // === LEVEL 6: POWER GRID BREACH ===
-    "investigation6_intro": {
-      text: "Mission 6: Power grid attack. Rogue USB found in SCADA system.",
-      options: ["Interview Grid Operator", "Scan USB Device", "Review Remote Access Logs", "Objectives"],
-      next: ["interview6_operator", "scan6_usb", "review6_logs", "objectives6_view"]
-    },
-    "interview6_operator": {
-      text: "Rachel: 'USB was plugged in at 3AM. Firmware looks different today.'",
-      options: [
-        "Scan USB Device",
-        "Analyze Firmware Diffs",
-        "Back to Investigation"
-      ],
-      next: ["scan6_usb", "analyze6_firmware", "investigation6_intro"]
-    },
-    "scan6_usb": {
-      text: "You find a rogue executable. Objective complete.",
-      options: ["Back to Investigation"],
-      next: ["investigation6_intro"],
-      action: () => window.markObjectiveComplete(0)
-    },
-    "analyze6_firmware": {
-      text: "Firmware diff: unauthorized code inserted overnight. Objective complete.",
-      options: ["Back to Investigation"],
-      next: ["investigation6_intro"],
-      action: () => window.markObjectiveComplete(1)
-    },
-    "review6_logs": {
-      text: "Remote admin connection logged at 3AM. Not an authorized user. Objective complete.",
-      options: ["Back to Investigation"],
-      next: ["investigation6_intro"],
-      action: () => window.markObjectiveComplete(2)
-    },
-    "objectives6_view": {
-      text: "Objectives:\n- Find rogue USB device\n- Analyze firmware changes\n- Review remote access logs",
-      options: ["Back to Investigation"],
-      next: ["investigation6_intro"]
-    },
-
-    // === LEVEL 7: INSIDER THREAT ===
-    "investigation7_intro": {
-      text: "Mission 7: Possible insider threat. Suspicious access and locker clue found.",
-      options: ["Interview Suspect", "Interview HR", "Analyze Process Hash", "Objectives"],
-      next: ["interview7_suspect", "interview7_hr", "analyze7_hash", "objectives7_view"]
-    },
-    "interview7_suspect": {
-      text: "Anita: 'My credentials were used, but it wasn't me!'",
-      options: [
-        "Check Access Logs",
-        "Check Locker for Clue",
-        "Back to Investigation"
-      ],
-      next: ["check7_logs", "check7_locker", "investigation7_intro"]
-    },
-    "check7_logs": {
-      text: "Access logs show suspicious logins at 2:30AM. Objective complete.",
-      options: ["Back to Investigation"],
-      next: ["investigation7_intro"],
-      action: () => window.markObjectiveComplete(0)
-    },
-    "check7_locker": {
-      text: "Encrypted note found in Anita's locker. Objective complete.",
-      options: ["Back to Investigation"],
-      next: ["investigation7_intro"],
-      action: () => window.markObjectiveComplete(1)
-    },
-    "interview7_hr": {
-      text: "Henry: 'Two staff requested leave right after the breach. Kim mentioned a \"clean exit\".'",
-      options: [
-        "Back to Investigation"
-      ],
-      next: ["investigation7_intro"],
-      action: () => window.markObjectiveComplete(3)
-    },
-    "analyze7_hash": {
-      text: "Process hash matches known malware. Objective complete.",
-      options: ["Back to Investigation"],
-      next: ["investigation7_intro"],
-      action: () => window.markObjectiveComplete(2)
-    },
-    "objectives7_view": {
-      text: "Objectives:\n- Analyze credential access logs\n- Investigate locker clue\n- Analyze process hash\n- Interview HR about leave requests",
-      options: ["Back to Investigation"],
-      next: ["investigation7_intro"]
-    },
-
-    // === LEVEL 8: DARK WEB TRACKING ===
-    "investigation8_intro": {
-      text: "Mission 8: Dark web activity detected. Track PH4NT0M's forum post.",
-      options: ["Contact Informant", "Trace Aliases", "Decrypt Auction Data", "Objectives"],
-      next: ["contact8_informant", "trace8_aliases", "decrypt8_auction", "objectives8_view"]
-    },
-    "contact8_informant": {
-      text: "Cipher: 'Here's PH4NT0M's encrypted forum post.'",
-      options: [
-        "Decrypt Forum Post",
-        "Back to Investigation"
-      ],
-      next: ["decrypt8_post", "investigation8_intro"]
-    },
-    "decrypt8_post": {
-      text: "Forum post decrypted. Clue obtained. Objective complete.",
-      options: ["Back to Investigation"],
-      next: ["investigation8_intro"],
-      action: () => window.markObjectiveComplete(0)
-    },
-    "trace8_aliases": {
-      text: "Analyzing alias logs... Ghostline's pattern matches found. Objective complete.",
-      options: ["Back to Investigation"],
-      next: ["investigation8_intro"],
-      action: () => window.markObjectiveComplete(1)
-    },
-    "decrypt8_auction": {
-      text: "Auction data decrypted. Zero-days for sale. Objective complete.",
-      options: ["Back to Investigation"],
-      next: ["investigation8_intro"],
-      action: () => window.markObjectiveComplete(2)
-    },
-    "objectives8_view": {
-      text: "Objectives:\n- Find PH4NT0M's forum post\n- Trace Ghostline's aliases\n- Decrypt auction data",
-      options: ["Back to Investigation"],
-      next: ["investigation8_intro"]
-    },
-
-    // === LEVEL 9: TRANSIT SYSTEM HACK ===
-    "investigation9_intro": {
-      text: "Mission 9: City transit system hacked. Trains halted and DDoS detected.",
-      options: ["Interview Supervisor", "Restore Control Center", "Analyze DDoS Log", "Objectives"],
-      next: ["interview9_supervisor", "restore9_control", "analyze9_ddos", "objectives9_view"]
-    },
-    "interview9_supervisor": {
-      text: "Lina: 'Everything crashed at 7:32AM. Find the rogue WiFi config?'",
-      options: [
-        "Patch Exploited Service",
-        "Remove Rogue WiFi Config",
-        "Back to Investigation"
-      ],
-      next: ["patch9_service", "remove9_wifi", "investigation9_intro"]
-    },
-    "restore9_control": {
-      text: "Control center systems restored. Trains running again. Objective complete.",
-      options: ["Back to Investigation"],
-      next: ["investigation9_intro"],
-      action: () => window.markObjectiveComplete(0)
-    },
-    "analyze9_ddos": {
-      text: "DDoS log analyzed. Attack origin narrowed down. Objective complete.",
-      options: ["Back to Investigation"],
-      next: ["investigation9_intro"],
-      action: () => window.markObjectiveComplete(1)
-    },
-    "patch9_service": {
-      text: "Ticket service buffer overflow patched. Objective complete.",
-      options: ["Back to Investigation"],
-      next: ["investigation9_intro"],
-      action: () => window.markObjectiveComplete(2)
-    },
-    "remove9_wifi": {
-      text: "Rogue WiFi config removed. Objective complete.",
-      options: ["Back to Investigation"],
-      next: ["investigation9_intro"],
-      action: () => window.markObjectiveComplete(3)
-    },
-    "objectives9_view": {
-      text: "Objectives:\n- Restore control center\n- Analyze DDoS log\n- Patch exploited service\n- Remove rogue WiFi config",
-      options: ["Back to Investigation"],
-      next: ["investigation9_intro"]
-    },
-
-    // === LEVEL 10: FINAL SHOWDOWN ===
-    "investigation10_intro": {
-      text: "Final Mission: Disarm the Silent Strings protocol and face GHOSTLINE.",
-      options: ["Disarm Protocol", "Trace Worm Propagation", "Decrypt Final Message", "Objectives"],
-      next: ["disarm10_protocol", "trace10_worm", "decrypt10_message", "objectives10_view"]
-    },
-    "disarm10_protocol": {
-      text: "You disarm the Silent Strings protocol. World systems stabilize. Objective complete.",
-      options: ["Back to Investigation"],
-      next: ["investigation10_intro"],
-      action: () => window.markObjectiveComplete(0)
-    },
-    "trace10_worm": {
-      text: "You trace worm propagation worldwide and neutralize hotspots. Objective complete.",
-      options: ["Back to Investigation"],
-      next: ["investigation10_intro"],
-      action: () => window.markObjectiveComplete(1)
-    },
-    "decrypt10_message": {
-      text: "You decrypt Ghostline's final message: 'The strings are cut, but the music plays on.' Objective complete.",
-      options: ["Back to Investigation"],
-      next: ["investigation10_intro"],
-      action: () => window.markObjectiveComplete(2)
-    },
-    "objectives10_view": {
-      text: "Objectives:\n- Disarm Silent Strings protocol\n- Trace global worm propagation\n- Decrypt Ghostline's final message",
-      options: ["Back to Investigation"],
-      next: ["investigation10_intro"]
-    }
-  };
+function saveDialogueState(state) {
+  localStorage.setItem(DIALOGUE_STATE_KEY, JSON.stringify(state));
+}
+function loadDialogueState() {
+  const state = localStorage.getItem(DIALOGUE_STATE_KEY);
+  return state ? JSON.parse(state) : null;
 }
 
-function showMissionDialogue(levelKey, npcKey) {
-  window.currentNPC = npcKey;
-  const npcDialogue = window.missionDialogues[levelKey][npcKey];
-  showDialogueRefactored(npcKey, npcDialogue.text, npcDialogue.choices);
-}
-
-function showDialogueNode(key, type = "branching") {
-    let node = null;
-    if (type === "mission") {
-        node = window.missionDialogues[currentLevel][key];
-    } else if (type === "branching") {
-        node = window.dialogues[key];
-    }
-    if (!node) {
-        showPopup("Dialogue node not found.");
-        return;
-    }
-    // Display the dialogue text and options as you already do:
-    const textEl = document.getElementById('dialogue-text');
-    const optionsBox = document.getElementById('dialogue-choices');
-    if (textEl) textEl.textContent = node.text || '';
-    if (optionsBox) optionsBox.innerHTML = '';
-    if (node.options && optionsBox) {
-        node.options.forEach((optionText, idx) => {
-            const btn = document.createElement('button');
-            btn.textContent = optionText;
-            btn.className = 'choice-btn';
-            btn.onclick = () => {
-                // If this option leads to a level switch:
-                if (node.next && node.next[idx] && node.next[idx].startsWith('level')) {
-                    setLevel(node.next[idx]);
-                    showDialogueNode('investigation_intro', 'branching');
-                } else {
-                    // --- AUTO NPC HANDLING ---
-                    // If the option matches an NPC in missionDialogues[currentLevel], show their dialogue
-                    const npcNames = Object.keys(window.missionDialogues[currentLevel] || {});
-                    if (npcNames.includes(optionText)) {
-                        showMissionDialogue(currentLevel, optionText);
-                    } else {
-                        showDialogueNode(node.next[idx], 'branching');
-                    }
-                }
-            };
-            optionsBox.appendChild(btn);
-        });
-    }
-}
-
-
-// --- NPC Avatar Randomizer ---
+// --- NPC Avatar System ---
 let npcAvatars = {};
 let npcSpriteData = null;
 function fetchNpcSpriteData(callback) {
@@ -1486,12 +764,12 @@ function fetchNpcSpriteData(callback) {
 }
 function randomizeNpcAvatar() {
   const avatar = {};
-  if (npcSpriteData.characters && npcSpriteData.characters.length > 0) {
+  if (npcSpriteData && npcSpriteData.characters && npcSpriteData.characters.length > 0) {
     const randChar = npcSpriteData.characters[Math.floor(Math.random() * npcSpriteData.characters.length)];
     avatar.characters = { name: randChar.name, img: randChar.img };
   }
   ["clothes", "hair", "face", "acc"].forEach(cat => {
-    if (npcSpriteData[cat]) {
+    if (npcSpriteData && npcSpriteData[cat]) {
       const subcats = Object.keys(npcSpriteData[cat]);
       if (subcats.length > 0) {
         const randSubcat = subcats[Math.floor(Math.random() * subcats.length)];
@@ -1532,108 +810,7 @@ function renderNpcAvatar(avatar, container) {
   });
 }
 
-// --- ADVANCED DIALOGUE SYSTEM ---
-const DIALOGUE_STATE_KEY = 'dialogue_progress';
-function saveDialogueState(state) {
-  localStorage.setItem(DIALOGUE_STATE_KEY, JSON.stringify(state));
-}
-function loadDialogueState() {
-  const state = localStorage.getItem(DIALOGUE_STATE_KEY);
-  return state ? JSON.parse(state) : null;
-}
-function setBackground(levelKey) {
-  document.body.style.backgroundImage = `url('/static/backgrounds/${levelKey}.jpg')`;
-  document.body.style.backgroundSize = 'cover';
-}
-function showDialogue(levelKey, npcKey, lineIdx = 0) {
-  setBackground(levelKey);
-  const npcLines = window.missionDialogues[levelKey][npcKey];
-  let idx = lineIdx;
-  function renderLine() {
-    const line = npcLines[idx];
-    document.getElementById('dialogueSpeaker').innerText = npcKey.replace(/_/g, ' ');
-    document.getElementById('dialogueText').innerText = line.text;
-    const opts = document.getElementById('dialogueOptions');
-    opts.innerHTML = '';
-    if (line.choices) {
-      line.choices.forEach((choice, i) => {
-        const btn = document.createElement('button');
-        btn.className = 'choice-btn';
-        btn.innerText = choice.text;
-        btn.onclick = () => {
-          saveDialogueState({ levelKey, npcKey, idx: choice.next });
-          idx = choice.next;
-          renderLine();
-        };
-        opts.appendChild(btn);
-      });
-    } else {
-      if (idx > 0) {
-        const prevBtn = document.createElement('button');
-        prevBtn.className = 'choice-btn';
-        prevBtn.innerText = 'Previous';
-        prevBtn.onclick = () => { idx--; renderLine(); };
-        opts.appendChild(prevBtn);
-      }
-      if (idx < npcLines.length - 1) {
-        const nextBtn = document.createElement('button');
-        nextBtn.className = 'choice-btn';
-        nextBtn.innerText = 'Next';
-        nextBtn.onclick = () => {
-          saveDialogueState({ levelKey, npcKey, idx: idx + 1 });
-          idx++;
-          renderLine();
-        };
-        opts.appendChild(nextBtn);
-      }
-    }
-    saveDialogueState({ levelKey, npcKey, idx });
-  }
-  renderLine();
-}
-function showBranchingDialogue(key) {
-  setBackground('default');
-  const d = window.dialogues[key];
-  if (!d) {
-    console.error(`Dialogue key '${key}' not found in dialogues.`);
-    return;
-  }
-  const speaker = document.getElementById('dialogueSpeaker');
-  const text = document.getElementById('dialogueText');
-  const opts = document.getElementById('dialogueOptions');
-  if (speaker) speaker.innerText = '';
-  if (text) text.innerText = d.text || '';
-  if (opts) opts.innerHTML = '';
-  if (Array.isArray(d.options)) {
-    d.options.forEach((opt, i) => {
-      const btn = document.createElement('button');
-      btn.className = 'choice-btn';
-      btn.innerText = opt;
-      btn.onclick = () => {
-        saveDialogueState({ branchKey: d.next[i] });
-        showBranchingDialogue(d.next[i]);
-      };
-      if (opts) opts.appendChild(btn);
-    });
-  }
-}
-window.addEventListener('DOMContentLoaded', () => {
-  const state = loadDialogueState();
-  if (state) {
-    if (state.branchKey) {
-      showBranchingDialogue(state.branchKey);
-    } else {
-      showDialogue(state.levelKey, state.npcKey, state.idx);
-    }
-  } else {
-    if (typeof window.dialogues !== 'undefined' && window.dialogues.intro) {
-      showBranchingDialogue('intro');
-    } else {
-      showDialogue('level1', Object.keys(window.missionDialogues['level1'])[0]);
-    }
-  }
-});
-// === Utility Functions ===
+// --- Utility Functions ---
 function getEl(id) {
   const el = document.getElementById(id);
   if (!el) console.error(`Element with id "${id}" not found.`);
@@ -1652,7 +829,8 @@ function createChoiceButton(text, onClick) {
   btn.onclick = onClick;
   return btn;
 }
-// === Refactored Dialogue Display ===
+
+// --- Unified Dialogue Display ---
 function showDialogueRefactored(npcName, dialogueText, choices = []) {
   window.currentNPC = npcName; // Track current NPC for hint system
   const npcNameEl = getEl('npc-name');
@@ -1665,11 +843,21 @@ function showDialogueRefactored(npcName, dialogueText, choices = []) {
   if (Array.isArray(choices) && choices.length > 0) {
     if (continueEl) continueEl.style.display = 'none';
     choices.forEach(choice => {
-      const btn = createChoiceButton(choice.text || "Continue", () => {
-        if (typeof choice.action === "function") choice.action();
-        if (choice.nextDialogue) {
-          showDialogueRefactored(choice.nextDialogue.npc, choice.nextDialogue.text, choice.nextDialogue.choices);
-        } else if (!choice.action) {
+      // Normalize option to object
+      const opt = typeof choice === 'string' ? { text: choice } : choice;
+      const btn = createChoiceButton(opt.text || "Continue", () => {
+        if (typeof opt.action === "function") opt.action();
+        if (opt.next) {
+          // If next is a string, treat as next dialogue node in missionDialogues
+          if (window.missionDialogues[currentLevel] && window.missionDialogues[currentLevel][opt.next]) {
+            const nextNode = window.missionDialogues[currentLevel][opt.next];
+            showDialogueRefactored(opt.next, nextNode.text, nextNode.options);
+          } else {
+            safeSetText(dialogueTextEl, "End of dialogue.");
+          }
+        } else if (opt.nextDialogue) {
+          showDialogueRefactored(opt.nextDialogue.npc, opt.nextDialogue.text, opt.nextDialogue.choices);
+        } else if (!opt.action) {
           safeSetText(dialogueTextEl, "End of dialogue.");
         }
       });
@@ -1680,39 +868,36 @@ function showDialogueRefactored(npcName, dialogueText, choices = []) {
   }
 }
 
-// --- Multi-Level Switching Support ---
-
-// Track the current mission/level
-let currentLevel = "level1";
+// --- Level/Mission Management ---
+const LEVEL_ORDER = [
+    "level1", "level2", "level3", "level4", "level5",
+    "level6", "level7", "level8", "level9", "level10"
+];
+const LEVEL_ACHIEVEMENTS = {
+  level1: 'usb_safety',
+  level2: 'cat_video',
+  level3: 'donut_detective',
+  level4: 'pizza_lover',
+  level5: 'ghostline_foe',
+  // Add more as desired
+};
 function setLevel(levelKey) {
     currentLevel = levelKey;
     localStorage.setItem('currentLevel', currentLevel);
     renderObjectives();
 }
-if (localStorage.getItem('currentLevel')) {
-    currentLevel = localStorage.getItem('currentLevel');
-}
-
-// Linear progression for demo; adjust as needed for branching
-const LEVEL_ORDER = [
-    "level1", "level2", "level3", "level4", "level5",
-    "level6", "level7", "level8", "level9", "level10"
-];
 function goToNextLevel() {
     const nextIndex = LEVEL_ORDER.indexOf(currentLevel) + 1;
-    // Unlock for the just-completed level
     if (LEVEL_ACHIEVEMENTS[currentLevel] && typeof unlockAchievement === 'function') {
         unlockAchievement(LEVEL_ACHIEVEMENTS[currentLevel]);
     }
     if (nextIndex < LEVEL_ORDER.length) {
         setLevel(LEVEL_ORDER[nextIndex]);
-        showDialogueNode('investigation_intro', 'branching');
+        showInterviewMenu();
     } else {
         showPopup("All missions complete!");
     }
 }
-
-// Render objectives for the current level
 function renderObjectives() {
     const objectives = window.missionObjectives ? (window.missionObjectives[currentLevel] || []) : [];
     const objectivesList = document.getElementById('objectives-list');
@@ -1724,34 +909,35 @@ function renderObjectives() {
         objectivesList.appendChild(li);
     });
 }
-
-// Dynamic NPC/interview menu for current level
 function showInterviewMenu() {
     const dialogues = window.missionDialogues[currentLevel];
     if (!dialogues) {
         showPopup("No interviews for this level!");
         return;
     }
-    const npcNames = Object.keys(dialogues);
+    const npcNames = Object.keys(dialogues).filter(n => n !== 'failStates');
     const choices = npcNames.map(n => ({
         text: `Talk to ${n}`,
         action: () => {
-            window.currentNPC = n; // Track current NPC for hint system
-            showDialogueRefactored(n, dialogues[n].text, dialogues[n].choices);
+            window.currentNPC = n;
+            showDialogueRefactored(n, dialogues[n].text, dialogues[n].options);
         }
     }));
-    // Optionally add a back button or summary
-    choices.push({ text: 'Back to Investigation', action: () => showDialogueNode('investigation_intro', 'branching') });
-    // Render interview menu
+    choices.push({ text: 'Back to Investigation', action: () => showDialogueRefactored('Investigation', 'Return to the investigation menu.', []) });
     showDialogueRefactored('Interview Menu', 'Who do you want to talk to?', choices);
 }
 
-// --- Level Completion Achievements ---
-const LEVEL_ACHIEVEMENTS = {
-  level1: 'usb_safety',
-  level2: 'cat_video',
-  level3: 'donut_detective',
-  level4: 'pizza_lover',
-  level5: 'ghostline_foe',
-  // Add more as desired
-}; 
+// --- DOMContentLoaded: Restore or Start Dialogue ---
+window.addEventListener('DOMContentLoaded', () => {
+  const state = loadDialogueState();
+  if (state && state.levelKey && state.npcKey) {
+    const node = window.missionDialogues[state.levelKey][state.npcKey];
+    if (node) {
+      showDialogueRefactored(state.npcKey, node.text, node.options);
+    } else {
+      showInterviewMenu();
+    }
+  } else {
+    showInterviewMenu();
+  }
+}); 

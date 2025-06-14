@@ -29,7 +29,7 @@ const level3Dialogues = {
         options: [{ text: "Back to Jennifer", next: "jennifer_intro" }]
       },
       "rajesh_intro": {
-        text: "Rajesh (IT): 'Sample’s on the shared drive. Network shows classic SMB worm spread.'",
+        text: "Rajesh (IT): 'Sample's on the shared drive. Network shows classic SMB worm spread.'",
         options: [
           { text: "Recover malware sample (File Recovery Tool)", toolRequired: "File Recovery Tool", next: "recover_sample" },
           { text: "Analyze network logs (Log Analyzer)", toolRequired: "Log Analyzer", next: "analyze_network" },
