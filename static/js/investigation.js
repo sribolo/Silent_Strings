@@ -493,15 +493,7 @@ document.addEventListener('DOMContentLoaded', () => {
     setBackgroundImage();
     setupMenuAndModals();
     setNpcPortrait();
-    // Show the start node from the loaded dialogue file
-    const nodes = getCurrentDialogueNodes();
-    if (nodes['start']) {
-        showDialogue('System', nodes['start'].text, [
-            { text: 'Begin Investigation', action: showInterviewMenu }
-        ]);
-    } else {
-        showInterviewMenu();
-    }
+    // Removed legacy dialogue initialization to avoid conflict with modern system
 });
 
 let lastInterviewedNpc = null;
