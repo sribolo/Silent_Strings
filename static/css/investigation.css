@@ -286,4 +286,26 @@
 @media (max-width: 600px) {
   .dialogue-box { padding: 12px 8px; }
   .modal-content { padding: 16px 8px; }
+}
+
+#objectives-hover-container {
+  position: fixed;
+  top: 40px;
+  left: 40px;
+  z-index: 1000;
+}
+
+#objectives-list {
+  display: none;
+  background: rgba(30,30,60,0.95);
+  color: #fff;
+  padding: 18px 24px;
+  border-radius: 12px;
+  min-width: 320px;
+  font-family: 'Share Tech Mono', monospace;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.3);
+}
+
+#objectives-hover-container:hover #objectives-list {
+  display: block;
 } 

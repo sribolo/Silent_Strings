@@ -78,10 +78,10 @@ function getToolsForObjectives(objectives) {
 
 function getCompletedObjectives(levelKey) {
     return JSON.parse(localStorage.getItem('completedObjectives_' + levelKey)) || [];
-  }
-  function setCompletedObjectives(levelKey, arr) {
+}
+function setCompletedObjectives(levelKey, arr) {
     localStorage.setItem('completedObjectives_' + levelKey, JSON.stringify(arr));
-  }  
+}
 
 function setupMenuAndModals() {
     const hamburger = document.getElementById('hamburger-menu');
@@ -200,23 +200,15 @@ function showToolModal(title, content) {
 
 // --- Objectives UI ---
 function markObjectiveComplete(idx) {
-    const bg = document.querySelector('.location-background');
-    const loc = bg ? bg.dataset.location : 'hq';
-
-    // Get & update completed objectives for this level
-    let completed = getCompletedObjectives('current');
+    const levelKey = getCurrentLevelKey();
+    let completed = getCompletedObjectives(levelKey);
     if (!completed.includes(idx)) {
         completed.push(idx);
-        setCompletedObjectives('current', completed);
+        setCompletedObjectives(levelKey, completed);
     }
-
-    // Always re-render objectives so UI is in sync!
     renderObjectives();
-
-    // Show a popup for feedback (optional)
     const objectives = window.objectives || [];
     if (objectives[idx]) showPopup("Objective completed: " + objectives[idx]);
-
     if (completed.length === objectives.length) {
         setTimeout(showCelebrationModal, 800);
     }
@@ -227,7 +219,8 @@ function renderObjectives() {
     const objectivesList = document.getElementById('objectives-list');
     if (!objectivesList) return;
     objectivesList.innerHTML = '';
-    const completed = getCompletedObjectives('current');
+    const levelKey = getCurrentLevelKey();
+    const completed = getCompletedObjectives(levelKey);
     objectives.forEach((obj, idx) => {
         const li = document.createElement('li');
         li.dataset.index = idx;
@@ -577,13 +570,16 @@ function showMissionDialogue(level, nodeName) {
   const node = window.missionDialogues[level]?.[nodeName];
   const textBox = document.getElementById('dialogue-text');
   const choicesBox = document.getElementById('dialogue-choices');
+  const npcNameEl = document.getElementById('npc-name');
   if (!node) {
     textBox.textContent = "Dialogue not found!";
     choicesBox.innerHTML = '';
+    if (npcNameEl) npcNameEl.textContent = "";
     return;
   }
   textBox.textContent = node.text;
   choicesBox.innerHTML = '';
+  if (npcNameEl && node.speaker) npcNameEl.textContent = node.speaker;
   if (Array.isArray(node.objectivesCompleted)) {
     node.objectivesCompleted.forEach(idx => markObjectiveComplete(idx));
   }

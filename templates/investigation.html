@@ -51,13 +51,10 @@
     <!-- Objectives Panel -->
     <div class="objectives-panel">
         <h3>Objectives</h3>
-        <ul class="objectives-list" id="objectives-list">
-            {% for obj in objectives %}
-            <li data-index="{{ loop.index0 }}">
-                <span class="objective-status">[ ]</span> {{ obj }}
-            </li>
-            {% endfor %}
-        </ul>
+        <div id="objectives-hover-container">
+            <div id="objectives-hover-icon" style="cursor:pointer; font-size: 1.5em;">🎯 Objectives</div>
+            <div id="objectives-list"></div>
+        </div>
     </div>
 
     <!-- Modal for Tools -->

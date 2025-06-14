@@ -295,7 +295,7 @@ window.missionDialogues = {
       "get_email": {
         speaker: "Jennifer - Teller",
         text: "You isolate the phishing email and ransom note. It's a targeted campaign.",
-        objectivesCompleted: [1, 2],
+        objectivesCompleted: [1],
         options: [{ text: "Back to Jennifer", next: "jennifer_intro" }]
       },
       "warn_tellers": {
@@ -391,9 +391,9 @@ window.missionDialogues = {
       },
       "commit_author": {
         speaker: "Chloe - DevOps Engineer",
-        text: 'Chloe: \'Tom\'s account. He swears he\'s innocent.\'',
+        text: "Chloe: 'Tom's account. He swears he's innocent.'",
         objectivesCompleted: [2],
-        options: [{ text: 'Back to Chloe', next: 'chloe_intro' }]
+        options: [{ text: "Back to Chloe", next: "chloe_intro" }]
       },
       "tom_intro": {
         speaker: "Tom - Junior Dev",
@@ -421,9 +421,9 @@ window.missionDialogues = {
       },
       "audit_commits": {
         speaker: "Priya - Senior Dev",
-        text: 'Code Diff Tool reveals a malicious commit named \'Backdoor for testing.\' You revert it. Repo is secure.',
+        text: "Code Diff Tool reveals a malicious commit named 'Backdoor for testing.' You revert it. Repo is secure.",
         objectivesCompleted: [0, 3],
-        options: [{ text: 'Back to menu', next: 'start' }]
+        options: [{ text: "Back to menu", next: "start" }]
       },
       "objectives": {
         speaker: "System",
@@ -481,6 +481,7 @@ window.missionDialogues = {
       "maria_admin": {
         speaker: "Maria - Sysadmin",
         text: "Maria: 'Only me and the app lead. Their logs are clean.'",
+        objectivesCompleted: [1, 3],
         options: [{ text: "Back to Maria", next: "maria_intro" }]
       },
       "front_intro": {
@@ -491,7 +492,7 @@ window.missionDialogues = {
       "recover_db": {
         speaker: "Maria - Sysadmin",
         text: "File Recovery Tool restores most records from last night's backup. Database mostly intact.",
-        objectivesCompleted: [1],
+        objectivesCompleted: [2],
         options: [{ text: "Back to menu", next: "start" }]
       },
       "objectives": {
@@ -554,7 +555,7 @@ window.missionDialogues = {
       "scan_firmware": {
         speaker: "Rachel - Grid Operator",
         text: "Firmware Scanner: Code injected in latest build. Alarm system code modified.",
-        objectivesCompleted: [1],
+        objectivesCompleted: [1, 3],
         options: [{ text: "Back to Rachel", next: "rachel_intro" }]
       },
       "rachel_remote": {
@@ -622,6 +623,7 @@ window.missionDialogues = {
       "anita_locker": {
         speaker: "Anita - Suspect",
         text: "Anita: 'Found an encrypted note in my locker. Weird, right?'",
+        objectivesCompleted: [1],
         options: [
           { text: "Analyze with Encryption Cracker", toolRequired: "Encryption Cracker", next: "analyze_note" },
           { text: "Back to Anita", next: "anita_intro" }
@@ -630,14 +632,14 @@ window.missionDialogues = {
       "analyze_note": {
         speaker: "Anita - Suspect",
         text: "Encryption Cracker: Note is a password for external exfiltration service.",
-        objectivesCompleted: [1],
+        objectivesCompleted: [2],
         options: [{ text: "Back to Anita", next: "anita_intro" }]
       },
       "henry_intro": {
         speaker: "Henry - HR",
-        text: 'Henry: \'Kim and Lee both requested emergency leave. Kim said something about a "clean exit".\'',
+        text: "Henry: 'Kim and Lee both requested emergency leave. Kim said something about a \"clean exit\".'",
         objectivesCompleted: [3],
-        options: [{ text: 'Back to menu', next: 'start' }]
+        options: [{ text: "Back to menu", next: "start" }]
       },
       "cafeteria_intro": {
         speaker: "Cafeteria Staff",
@@ -695,7 +697,7 @@ window.missionDialogues = {
       "trace_aliases": {
         speaker: "System",
         text: "OSINT Suite: Linguistic pattern matches found. Ghostline's real alias logged.",
-        objectivesCompleted: [1],
+        objectivesCompleted: [1, 3],
         options: [{ text: "Back to menu", next: "start" }]
       },
       "decrypt_auction": {
@@ -841,7 +843,7 @@ window.missionDialogues = {
       "trace_worm": {
         speaker: "System",
         text: "Code Tracer: You track worm propagation, neutralize global hotspots.",
-        objectivesCompleted: [1],
+        objectivesCompleted: [1, 3],
         options: [{ text: "Back to menu", next: "start" }]
       },
       "decrypt_message": {
