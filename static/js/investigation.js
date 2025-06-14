@@ -275,7 +275,8 @@ function getCurrentLevelKey() {
 
 // --- Modern Branching Interview System ---
 function showInterviewMenu() {
-    const dialogues = window.missionDialogues[currentLevel];
+    const levelKey = getCurrentLevelKey();
+    const dialogues = window.missionDialogues[levelKey];
     if (!dialogues) {
         showPopup("No interviews for this level!");
         return;
@@ -293,7 +294,8 @@ function showInterviewMenu() {
 }
 
 function showSummary() {
-    const dialogues = window.missionDialogues[currentLevel];
+    const levelKey = getCurrentLevelKey();
+    const dialogues = window.missionDialogues[levelKey];
     const npcNames = Object.keys(dialogues).filter(n => n !== 'failStates' && n !== 'objectives' && n !== 'start');
     let summary = '<strong>Interviewed NPCs:</strong><ul>';
     npcNames.forEach(n => { summary += `<li>${n}</li>`; });
