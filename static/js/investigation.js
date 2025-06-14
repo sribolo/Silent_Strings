@@ -482,8 +482,16 @@ document.addEventListener('DOMContentLoaded', () => {
     setBackgroundImage();
     setupMenuAndModals();
     setNpcPortrait();
-    // Auto-start mission dialogue for the current level
+    // Auto-set objectives for the current level
     const levelKey = getCurrentLevelKey();
+    if (window.missionDialogues && window.missionDialogues[levelKey] && window.missionDialogues[levelKey].objectives) {
+        window.objectives = window.missionDialogues[levelKey].objectives.text
+            .split('\n')
+            .filter(line => line.trim().startsWith('-'))
+            .map(line => line.replace(/^- /, '').trim());
+    }
+    renderObjectives();
+    // Auto-start mission dialogue for the current level
     if (window.missionDialogues && window.missionDialogues[levelKey] && window.missionDialogues[levelKey].start) {
         showMissionDialogue(levelKey, 'start');
     }
