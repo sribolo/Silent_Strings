@@ -4,7 +4,7 @@
         "title": "Breach at Base",
         "target": "SECTOR-9 HQ",
         "skills": ["Log analysis", "Phishing detection"],
-        "timeLimit": 1800,
+        "timeLimit": 300,
         "objectives": [
           "Identify the initial breach point",
           "Analyze suspicious login attempts",
@@ -47,7 +47,7 @@
         "title": "Operation Deadlink",
         "target": "News Outlet",
         "skills": ["XSS analysis", "JS analysis"],
-        "timeLimit": 1800,
+        "timeLimit": 300,
         "objectives": [
           "Identify website defacement source",
           "Analyze injected JavaScript",
@@ -84,7 +84,7 @@
         "title": "PhishNet",
         "target": "Bank",
         "skills": ["Email forensics"],
-        "timeLimit": 1800,
+        "timeLimit": 300,
         "objectives": [
           "Identify Patient Zero",
           "Find the ransomware note and sample",
@@ -123,7 +123,7 @@
         "title": "Shadow Repo",
         "target": "Software Company",
         "skills": ["Secure coding", "Supply chain analysis"],
-        "timeLimit": 1800,
+        "timeLimit": 300,
         "objectives": [
           "Detect code injection in repo",
           "Audit CI/CD pipeline",
@@ -160,7 +160,7 @@
         "title": "Trojan Trap",
         "target": "Government Server",
         "skills": ["Malware sandboxing", "Persistence detection"],
-        "timeLimit": 1800,
+        "timeLimit": 300,
         "objectives": [
           "Find persistent malware",
           "Analyze unauthorized scheduled tasks",
@@ -198,7 +198,7 @@
         "title": "Dark Tunn3l",
         "target": "Power Grid",
         "skills": ["USB decryption", "SCADA forensics"],
-        "timeLimit": 1800,
+        "timeLimit": 300,
         "objectives": [
           "Find rogue USB device",
           "Analyze firmware changes",
@@ -233,7 +233,7 @@
         "title": "Ghost Protocol",
         "target": "SECTOR-9 Insider Threat",
         "skills": ["Behavior analytics", "Insider forensics"],
-        "timeLimit": 1800,
+        "timeLimit": 300,
         "objectives": [
           "Identify rogue agent",
           "Analyze credential access logs",
@@ -268,7 +268,7 @@
         "title": "Deep Dive",
         "target": "Dark Web",
         "skills": ["OSINT", "Encryption", "Dark web navigation"],
-        "timeLimit": 1800,
+        "timeLimit": 300,
         "objectives": [
           "Locate PH4NT0M forum posts",
           "Identify Ghostline’s aliases",
@@ -303,7 +303,7 @@
         "title": "Red Flag",
         "target": "Public Transport",
         "skills": ["Live DDoS defense", "Incident coordination"],
-        "timeLimit": 1800,
+        "timeLimit": 300,
         "objectives": [
           "Restore control center",
           "Analyze attack message",
@@ -338,7 +338,7 @@
         "title": "Final String",
         "target": "Global Systems",
         "skills": ["Worm deactivation", "Code tracing", "Crisis response"],
-        "timeLimit": 1800,
+        "timeLimit": 300,
         "objectives": [
           "Disarm Silent Strings protocol",
           "Trace global worm propagation",

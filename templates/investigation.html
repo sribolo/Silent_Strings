@@ -6,6 +6,7 @@
 {% endblock %}
 
 {% block content %}
+<div id="main-game-content">
 <div class="investigation-interface">
     <!-- Location Background -->
     <div class="location-background" data-location="{{ location }}"></div>
@@ -81,6 +82,8 @@
             <div id="hint-content"></div>
         </div>
     </div>
+</div>
+</div>
 {% endblock%}
 {% block extra_scripts %}
 <script src="{{ url_for('static', filename='js/dialogue_advanced.js') }}" defer></script>

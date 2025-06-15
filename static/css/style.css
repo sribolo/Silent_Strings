@@ -1646,6 +1646,19 @@ input::placeholder {
   cursor: pointer;
 }
 
+.map-area-hospital {
+  position: absolute;
+  /* Approximate position for your circled cafe. Tune these values until it fits! */
+  left: 1000px;   /* X position (px from the left of the map image container) */
+  top: 370px;    /* Y position (px from the top of the map image container) */
+  width: 210px;  /* Width of the button box (adjust as needed) */
+  height: 150px; /* Height of the button box (adjust as needed) */
+  z-index: 20;
+  background: rgba(255,255,255,0.01); /* Almost invisible, but clickable */
+  border: none;
+  cursor: pointer;
+}
+
 .map-area-school {
   position: absolute;
   left: 95px;    /* Move horizontally - adjust until box fits */
@@ -2291,6 +2304,96 @@ input::placeholder {
   justify-content: center;
   width: 100%;
   margin-bottom: 20px;
+}
+
+/* Force landscape mode: show overlay in portrait */
+@media only screen and (orientation: portrait) {
+  body::before {
+    content: "Please rotate your device to landscape mode for the best experience.";
+    position: fixed;
+    z-index: 9999;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: #222;
+    color: #fff;
+    font-size: 2em;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 2em;
+  }
+  #main-game-content {
+    display: none !important;
+  }
+}
+@media only screen and (orientation: landscape) {
+  body::before {
+    display: none;
+  }
+  #main-game-content {
+    display: block;
+  }
+}
+
+/* Universal Responsive Design Media Queries */
+
+/* Base: make containers flexible */
+#main-game-content, .mission-page-container, .dialogue-page-container, .investigation-interface, .tools-container {
+  width: 100vw;
+  max-width: 100vw;
+  min-height: 100vh;
+  box-sizing: border-box;
+  overflow-x: auto;
+  overflow-y: auto;
+  padding: 2vw;
+}
+
+body {
+  font-size: clamp(1rem, 2vw, 2rem);
+}
+
+button, .tool-btn, .use-tool {
+  min-width: 44px;
+  min-height: 44px;
+  font-size: 1.1em;
+  padding: 0.5em 1.2em;
+}
+
+/* Tablet breakpoint */
+@media (max-width: 900px) {
+  .mission-header, .dialogue-header {
+    font-size: 1.5em;
+    padding: 2vw 2vw;
+  }
+  .tools-list, .mission-body {
+    flex-direction: column !important;
+    gap: 2vw;
+  }
+  .tool-item, .tool-btn {
+    font-size: 1em;
+  }
+}
+
+/* Mobile breakpoint */
+@media (max-width: 600px) {
+  .mission-header, .dialogue-header {
+    font-size: 1.1em;
+    padding: 1vw 1vw;
+  }
+  .tools-list, .mission-body {
+    flex-direction: column !important;
+    gap: 1vw;
+  }
+  .tool-item, .tool-btn {
+    font-size: 0.95em;
+  }
+  .objectives-list, #objectives-list {
+    font-size: 0.95em;
+  }
+  .start-mission-btn, .nav-btn {
+    font-size: 1em;
+    padding: 0.7em 1.2em;
+  }
 }
 
 

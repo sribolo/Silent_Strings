@@ -1,28 +1,226 @@
 .achievement {
-  background: #fbe8d3;
+  background: linear-gradient(135deg, #fbe8d3 0%, #f5d7b5 100%);
   border: 2px solid #c2a477;
-  border-radius: 8px;
-  margin: 8px 0;
-  padding: 10px 16px;
+  border-radius: 12px;
+  margin: 12px 0;
+  padding: 15px 20px;
   font-size: 1.1em;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  transition: transform 0.2s ease;
 }
-.achievement-popup {
+
+.achievement:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+
+.achievement strong {
+  color: #7a5c2e;
+  font-size: 1.2em;
+  display: block;
+  margin-bottom: 8px;
+}
+
+.achievement p {
+  color: #5d4a2e;
+  margin: 8px 0;
+}
+
+.achievement em {
+  color: #8b7355;
+  font-style: italic;
+  font-size: 0.9em;
+  display: block;
+  margin-top: 8px;
+  padding-top: 8px;
+  border-top: 1px dashed #c2a477;
+}
+
+/* Reward Styles */
+.reward-item {
+  background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
+  border: 2px solid #64b5f6;
+  border-radius: 12px;
+  margin: 12px 0;
+  padding: 15px 20px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.reward-item h4 {
+  color: #1976d2;
+  margin: 0 0 8px 0;
+  font-size: 1.2em;
+}
+
+.reward-item p {
+  color: #0d47a1;
+  margin: 0;
+  font-size: 0.9em;
+}
+
+.reward-popup {
   position: fixed;
   top: 30px;
   right: 30px;
-  background: #ffe082;
-  color: #7a5c2e;
-  border: 2px solid #c2a477;
+  background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
+  color: #1976d2;
+  border: 2px solid #64b5f6;
   border-radius: 12px;
-  padding: 18px 28px;
+  padding: 20px 30px;
   font-size: 1.2em;
   z-index: 9999;
   box-shadow: 0 4px 16px rgba(0,0,0,0.15);
-  animation: fadeInOut 3.5s;
+  animation: slideInRight 0.5s ease, fadeOut 0.5s ease 3.5s;
 }
-@keyframes fadeInOut {
-  0% { opacity: 0; transform: translateY(-20px); }
-  10% { opacity: 1; transform: translateY(0); }
-  90% { opacity: 1; }
-  100% { opacity: 0; transform: translateY(-20px); }
+
+.reward-popup h3 {
+  color: #0d47a1;
+  margin: 0 0 10px 0;
+  font-size: 1.3em;
+}
+
+.reward-popup p {
+  margin: 5px 0;
+}
+
+@keyframes slideInRight {
+  from { transform: translateX(100%); opacity: 0; }
+  to { transform: translateX(0); opacity: 1; }
+}
+
+/* Rewards Container */
+#rewards-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 20px;
+  padding: 20px;
+  background: #f5f5f5;
+  border-radius: 12px;
+  margin: 20px 0;
+}
+
+/* Achievement Popup Enhancement */
+.achievement-popup {
+  background: linear-gradient(135deg, #fbe8d3 0%, #f5d7b5 100%);
+  border: 2px solid #c2a477;
+  padding: 20px 30px;
+  border-radius: 12px;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.15);
+  animation: slideInDown 0.5s ease, fadeOut 0.5s ease 3s;
+}
+
+@keyframes slideInDown {
+  from { transform: translateY(-20px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+/* Time-based challenge styles */
+#timer-display {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background: #2c3e50;
+    color: #ecf0f1;
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-size: 1.5em;
+    font-family: monospace;
+    z-index: 1000;
+    transition: all 0.3s ease;
+}
+
+#timer-display.time-warning {
+    background: #e67e22;
+    animation: pulse 1s infinite;
+}
+
+#timer-display.time-critical {
+    background: #c0392b;
+    animation: pulse 0.5s infinite;
+}
+
+.time-up-message {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: rgba(44, 62, 80, 0.95);
+    color: #ecf0f1;
+    padding: 30px;
+    border-radius: 12px;
+    text-align: center;
+    z-index: 2000;
+    box-shadow: 0 0 20px rgba(0,0,0,0.3);
+}
+
+.time-up-message button {
+    background: #3498db;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    margin-top: 20px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+}
+
+.time-up-message button:hover {
+    background: #2980b9;
+}
+
+.time-bonus {
+    position: fixed;
+    top: 80px;
+    right: 20px;
+    background: #27ae60;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 8px;
+    animation: slideIn 0.5s ease, fadeOut 0.5s ease 2.5s;
+    z-index: 1000;
+}
+
+@keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+    100% { transform: scale(1); }
+}
+
+@keyframes slideIn {
+    from { transform: translateX(100%); opacity: 0; }
+    to { transform: translateX(0); opacity: 1; }
+}
+
+@keyframes fadeOut {
+    from { opacity: 1; }
+    to { opacity: 0; }
+}
+
+/* Force landscape mode: show overlay in portrait */
+@media only screen and (orientation: portrait) {
+  body::before {
+    content: "Please rotate your device to landscape mode for the best experience.";
+    position: fixed;
+    z-index: 9999;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: #222;
+    color: #fff;
+    font-size: 2em;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 2em;
+  }
+  #main-game-content {
+    display: none !important;
+  }
+}
+@media only screen and (orientation: landscape) {
+  body::before {
+    display: none;
+  }
+  #main-game-content {
+    display: block;
+  }
 } 

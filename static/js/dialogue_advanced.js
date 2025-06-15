@@ -878,3 +878,121 @@ window.missionDialogues = {
       }
   }
 };
+
+// Time-based challenge system
+let missionTimer;
+let difficultyMultiplier = 1.0;
+let timeBonus = 0;
+
+function initializeTimeChallenge(level, difficulty) {
+    // Set difficulty multiplier based on level and user's skill
+    difficultyMultiplier = calculateDifficultyMultiplier(level, difficulty);
+    
+    // Get base time limit from mission data
+    const baseTimeLimit = parseInt(document.getElementById('mission-data').dataset.time) || 1800;
+    const adjustedTimeLimit = Math.floor(baseTimeLimit * difficultyMultiplier);
+    
+    // Initialize timer display
+    const timerDisplay = document.getElementById('timer-display');
+    if (!timerDisplay) return;
+    
+    let timeLeft = adjustedTimeLimit;
+    timeBonus = Math.floor(adjustedTimeLimit * 0.2); // 20% bonus for completing early
+    
+    // Clear any existing timer
+    if (missionTimer) clearInterval(missionTimer);
+    
+    // Start new timer
+    missionTimer = setInterval(() => {
+        const minutes = Math.floor(timeLeft / 60);
+        const seconds = timeLeft % 60;
+        timerDisplay.textContent = `${minutes}:${seconds.toString().padStart(2, '0')}`;
+        
+        // Visual feedback for time pressure
+        if (timeLeft <= 60) {
+            timerDisplay.classList.add('time-critical');
+        } else if (timeLeft <= 300) {
+            timerDisplay.classList.add('time-warning');
+        }
+        
+        if (timeLeft <= 0) {
+            clearInterval(missionTimer);
+            handleTimeUp();
+        }
+        timeLeft--;
+    }, 1000);
+}
+
+function calculateDifficultyMultiplier(level, difficulty) {
+    // Base multiplier on level number (higher levels = less time)
+    let multiplier = 1.0 - (level * 0.05);
+    
+    // Adjust for difficulty setting
+    switch(difficulty) {
+        case 'easy':
+            multiplier *= 1.2;
+            break;
+        case 'hard':
+            multiplier *= 0.8;
+            break;
+        case 'expert':
+            multiplier *= 0.6;
+            break;
+    }
+    
+    // Ensure multiplier doesn't go below 0.4
+    return Math.max(multiplier, 0.4);
+}
+
+function handleTimeUp() {
+    // Show time up message
+    const timeUpMessage = document.createElement('div');
+    timeUpMessage.className = 'time-up-message';
+    timeUpMessage.innerHTML = `
+        <h2>Time's Up!</h2>
+        <p>The mission has failed due to time constraints.</p>
+        <button onclick="retryMission()">Retry Mission</button>
+    `;
+    document.body.appendChild(timeUpMessage);
+    
+    // Trigger mission failure
+    if (typeof loadDialogue === 'function') {
+        loadDialogue("mission_failed");
+    }
+}
+
+function retryMission() {
+    // Remove time up message
+    const timeUpMessage = document.querySelector('.time-up-message');
+    if (timeUpMessage) timeUpMessage.remove();
+    
+    // Reset timer and restart mission
+    if (missionTimer) clearInterval(missionTimer);
+    const currentLevel = document.getElementById('mission-data').dataset.location;
+    initializeTimeChallenge(currentLevel, 'normal');
+}
+
+function completeMission() {
+    if (missionTimer) {
+        clearInterval(missionTimer);
+        const timeLeft = parseInt(document.getElementById('timer-display').textContent.split(':').reduce((acc, time) => (60 * acc) + parseInt(time), 0));
+        
+        // Award time bonus if completed early
+        if (timeLeft > 0) {
+            const bonus = Math.floor(timeLeft * (timeBonus / 1800));
+            showTimeBonus(bonus);
+            // Add bonus to player's score
+            if (typeof updateScore === 'function') {
+                updateScore(bonus);
+            }
+        }
+    }
+}
+
+function showTimeBonus(bonus) {
+    const bonusDisplay = document.createElement('div');
+    bonusDisplay.className = 'time-bonus';
+    bonusDisplay.innerHTML = `Time Bonus: +${bonus} points!`;
+    document.body.appendChild(bonusDisplay);
+    setTimeout(() => bonusDisplay.remove(), 3000);
+}

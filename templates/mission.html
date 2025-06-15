@@ -6,16 +6,31 @@
 {% endblock %}
 
 {% block content %}
+<div id="main-game-content">
 <div class="mission-page-container">
     {% if error %}
         <h2>{{ error }}</h2>
         <a href="{{ url_for('game') }}" class="back-btn">Back to Map</a>
     {% else %}
         <div class="mission-briefing-box pixelated-border">
-            <h1>{{ mission.title }}</h1>
-            <div id="mission-timer" class="mission-timer-bar">
-                Time Left: <span id="timer-value"></span>
+            <div class="mission-header">
+                <h1>{{ mission.title }}</h1>
+                <div class="mission-info">
+                    <span class="target">Target: {{ mission.target }}</span>
+                    <div class="difficulty-selector">
+                        <label for="difficulty">Difficulty:</label>
+                        <select id="difficulty" onchange="updateDifficulty(this.value)">
+                            <option value="easy">Easy</option>
+                            <option value="normal" selected>Normal</option>
+                            <option value="hard">Hard</option>
+                            <option value="expert">Expert</option>
+                        </select>
+                    </div>
+                </div>
             </div>
+
+            <div id="timer-display">30:00</div>
+
             <div class="mission-body">
                 <div class="mission-objectives">
                     <h3>Objectives:</h3>
@@ -42,18 +57,12 @@
             <div class="available-tools-section">
                 <h3>Available Tools:</h3>
                 <div class="tools-list">
-                    {% if 'Network Scanner' in mission.tools_available %}
-                    <button class="tool-btn" data-tool="network-scanner">Network Scanner</button>
-                    {% endif %}
-                    {% if 'Log Analyzer' in mission.tools_available %}
-                    <button class="tool-btn" data-tool="log-analyzer">Log Analyzer</button>
-                    {% endif %}
-                    {% if 'Password Cracker' in mission.tools_available %}
-                    <button class="tool-btn" data-tool="password-cracker">Password Cracker</button>
-                    {% endif %}
-                    {% if 'File Recovery' in mission.tools_available %}
-                    <button class="tool-btn" data-tool="file-recovery">File Recovery</button>
-                    {% endif %}
+                    {% for tool in mission.tools_available %}
+                    <div class="tool-item" data-tool="{{ tool }}">
+                        <span class="tool-name">{{ tool }}</span>
+                        <button class="use-tool" onclick="useTool('{{ tool }}')">Use</button>
+                    </div>
+                    {% endfor %}
                 </div>
                 <div id="tool-interfaces">
                     {% if 'Network Scanner' in mission.tools_available %}
@@ -160,11 +169,28 @@
         <a href="{{ url_for('game') }}" class="back-btn">Back to Map</a>
     {% endif %}
 </div>
+</div>
 {% endblock %}
 
 {% block extra_js %}
 {% set completed_json = completed_objectives|tojson|safe %}
-<div id="mission-data" data-completed='{{ completed_json }}' data-total="{{ mission.objectives|length }}" data-location="{{ location }}" data-time="{{ mission.timeLimit if mission and mission.timeLimit else 1800 }}"></div>
+<div id="mission-data" data-completed='{{ completed_json }}' data-total="{{ mission.objectives|length }}" data-location="{{ location }}" data-time="{{ mission.timeLimit if mission and mission.timeLimit else 1800 }}" data-difficulty="normal"></div>
 <script src="{{ url_for('static', filename='js/mission.js') }}" defer></script>
 <script src="{{ url_for('static', filename='js/tools.js') }}" defer></script>
+<script>
+    // Initialize time challenge when mission loads
+    document.addEventListener('DOMContentLoaded', function() {
+        const missionData = document.getElementById('mission-data');
+        const level = missionData.dataset.location;
+        const difficulty = missionData.dataset.difficulty;
+        initializeTimeChallenge(level, difficulty);
+    });
+    
+    function updateDifficulty(difficulty) {
+        const missionData = document.getElementById('mission-data');
+        missionData.dataset.difficulty = difficulty;
+        const level = missionData.dataset.location;
+        initializeTimeChallenge(level, difficulty);
+    }
+</script>
 {% endblock %}
