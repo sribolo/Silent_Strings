@@ -1649,26 +1649,22 @@ input::placeholder {
 
 .map-area-bank {
   position: absolute;
-  /* Approximate position for your circled cafe. Tune these values until it fits! */
-  left: 919.24px;   /* X position (px from the left of the map image container) */
-  top: 360px;    /* Y position (px from the top of the map image container) */
-  width: 210px;  /* Width of the button box (adjust as needed) */
-  height: 150px; /* Height of the button box (adjust as needed) */
+  left: 919.24px;  
+  top: 360px;   
+  width: 210px;  
+  height: 150px; 
   z-index: 20;
-  background: rgba(255,255,255,0.01); /* Almost invisible, but clickable */
-  border: none;
+  background: rgba(255,255,255,0.01); 
   cursor: pointer;
 }
 
 .map-area-hospital {
   position: absolute;
-  /* Approximate position for your circled cafe. Tune these values until it fits! */
-  left: 353.34px;   /* X position (px from the left of the map image container) */
-  top: 446.51px;    /* Y position (px from the top of the map image container) */
-  width: 210px;  /* Width of the button box (adjust as needed) */
-  height: 150px; /* Height of the button box (adjust as needed) */
-  z-index: 20;
-  background: rgba(255,255,255,0.01); /* Almost invisible, but clickable */
+  left: 353.34px;  
+  top: 446.51px;   
+  width: 210px; 
+  height: 150px; 
+  background: rgba(255,255,255,0.01); 
   border: none;
   cursor: pointer;
 }
@@ -1680,31 +1676,31 @@ input::placeholder {
   width: 197.7px;
   height: 154.56px;
   z-index: 20;
-  background: rgba(0,255,0,0.15); /* For testing only! */
+  background: rgba(0,255,0,0.15); 
   border: none;
   cursor: pointer;
 }
 
 .map-area-cafe {
   position: absolute;
-  left: 62.82px;     /* Move horizontally from the left edge of the map */
-  top: 505.3px;     /* Move vertically from the top edge of the map */
-  width: 190px;   /* Width of the clickable area - adjust if needed */
-  height: 125px;  /* Height of the clickable area - adjust if needed */
+  left: 62.82px;    
+  top: 505.3px;    
+  width: 190px;  
+  height: 125px; 
   z-index: 20;
-  background: rgba(0,255,0,0.18); /* For testing, make 0 or 0.01 for production */
+  background: rgba(0,255,0,0.18); 
   border: none;
   cursor: pointer;
 }
 
 .map-area-transport {
   position: absolute;
-  left: 530px;   /* Horizontal position (tweak if needed) */
-  top: 410px;    /* Vertical position (tweak if needed) */
-  width: 115px;  /* Width of clickable area */
-  height: 60px;  /* Height of clickable area */
+  left: 530px;  
+  top: 410px;   
+  width: 115px; 
+  height: 60px; 
   z-index: 20;
-  background: rgba(0,255,0,0.18); /* Testing only! Set to transparent for production */
+  background: rgba(0,255,0,0.18); 
   border: none;
   cursor: pointer;
 }
@@ -1712,48 +1708,48 @@ input::placeholder {
 
 .map-area-company {
   position: absolute;
-  left: 474.24px;    /* Horizontal position (adjust as needed) */
-  top: 248.67px;     /* Vertical position (adjust as needed) */
-  width: 220px;   /* Width of clickable area */
-  height: 150px;  /* Height of clickable area */
+  left: 474.24px;   
+  top: 248.67px;    
+  width: 220px;  
+  height: 150px; 
   z-index: 20;
-  background: rgba(0,255,0,0.18); /* For testing, make 0.01 for production */
+  background: rgba(0,255,0,0.18); 
   border: none;
   cursor: pointer;
 }
 
 .map-area-hq {
   position: absolute;
-  left: 584.23px;   /* Move horizontally (adjust if needed) */
-  top: 60.13px;     /* Move vertically (adjust if needed) */
-  width: 210px;  /* Width of the clickable area */
-  height: 145px; /* Height of the clickable area */
+  left: 584.23px;  
+  top: 60.13px;    
+  width: 210px; 
+  height: 145px; 
   z-index: 20;
-  background: rgba(0,255,0,0.18); /* For testing; make 0 or 0.01 for production */
+  background: rgba(0,255,0,0.18); 
   border: none;
   cursor: pointer;
 }
 
 .map-area-government {
   position: absolute;
-  left: 776.12px;   /* Horizontal position - adjust if needed */
-  top: 135.35px;    /* Vertical position - adjust if needed */
-  width: 235px;  /* Width of clickable area */
-  height: 185px; /* Height of clickable area */
+  left: 776.12px;  
+  top: 135.35px;   
+  width: 235px; 
+  height: 185px; 
   z-index: 20;
-  background: rgba(0,255,0,0.18); /* For testing, use 0.01 for production */
+  background: rgba(0,255,0,0.18); 
   border: none;
   cursor: pointer;
 }
 
 .map-area-news {
   position: absolute;
-  left: 39.16px;     /* Horizontal position - adjust if needed */
-  top: 282.72px;     /* Vertical position - adjust if needed */
-  width: 225px;   /* Width of clickable area */
-  height: 160px;  /* Height of clickable area */
+  left: 39.16px;    
+  top: 282.72px;    
+  width: 225px;  
+  height: 160px; 
   z-index: 20;
-  background: rgba(0,255,0,0.18); /* For testing; use 0.01 for production */
+  background: rgba(0,255,0,0.18); 
   border: none;
   cursor: pointer;
 }
