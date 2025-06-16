@@ -1661,12 +1661,12 @@ input::placeholder {
 
 .map-area-school {
   position: absolute;
-  left: 95px;    /* Move horizontally - adjust until box fits */
-  top: 50px;     /* Move vertically - adjust until box fits */
-  width: 240px;  /* Width of the clickable area - adjust until it covers the school */
-  height: 170px; /* Height of the clickable area - adjust until it covers the school */
+  left: 128.55px;
+  top: 45.21px;
+  width: 197.7px;
+  height: 154.56px;
   z-index: 20;
-  background: rgba(0,255,0,0.15); /* For testing only! Set to rgba(0,0,0,0) or 0.01 when done */
+  background: rgba(0,255,0,0.15); /* For testing only! */
   border: none;
   cursor: pointer;
 }
