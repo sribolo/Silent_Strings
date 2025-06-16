@@ -67,6 +67,7 @@
             Clear Cache
         </a>
         <form action="{{ url_for('admin_reset_progress') }}" method="post" class="inline-form">
+            {{ csrf_token() }}
             <button type="submit" class="action-btn btn-warning" onclick="return confirm('Reset your mission progress for testing?');">
                 <i class="fas fa-undo"></i>
                 Reset Progress
