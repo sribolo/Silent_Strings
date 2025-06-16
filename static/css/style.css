@@ -1646,7 +1646,34 @@ input::placeholder {
   z-index: 100;
   animation: pulse 2s infinite;
 }
+.map-area-locked {
+  position: absolute;
+  left: 559.57px;                
+  top: 566.67px;                 
+  width: 100px;
+  height: 100px;
+  background: rgba(80, 80, 80, 0.7); 
+  border: 3px solid #888;
+  border-radius: 50%;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #ffd700;
+  font-size: 2.5em;
+  font-weight: bold;
+  box-shadow: 0 0 10px rgba(80,80,80,0.5);
+  cursor: not-allowed;
+  pointer-events: none;     
+  user-select: none;
+}
 
+.map-area-locked::after {
+  content: '🔒';
+  font-size: 2.5em;
+  color: #ffd700;
+  display: block;
+}
 .map-area-bank {
   position: absolute;
   left: 919.24px;  

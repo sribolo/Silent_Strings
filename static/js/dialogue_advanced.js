@@ -996,3 +996,4 @@ function showTimeBonus(bonus) {
     document.body.appendChild(bonusDisplay);
     setTimeout(() => bonusDisplay.remove(), 3000);
 }
+q   
