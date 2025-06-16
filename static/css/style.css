@@ -1636,8 +1636,8 @@ input::placeholder {
 .map-area-bank {
   position: absolute;
   /* Approximate position for your circled cafe. Tune these values until it fits! */
-  left: 740px;   /* X position (px from the left of the map image container) */
-  top: 370px;    /* Y position (px from the top of the map image container) */
+  left: 919.24px;   /* X position (px from the left of the map image container) */
+  top: 360px;    /* Y position (px from the top of the map image container) */
   width: 210px;  /* Width of the button box (adjust as needed) */
   height: 150px; /* Height of the button box (adjust as needed) */
   z-index: 20;
@@ -1649,8 +1649,8 @@ input::placeholder {
 .map-area-hospital {
   position: absolute;
   /* Approximate position for your circled cafe. Tune these values until it fits! */
-  left: 1000px;   /* X position (px from the left of the map image container) */
-  top: 370px;    /* Y position (px from the top of the map image container) */
+  left: 353.34px;   /* X position (px from the left of the map image container) */
+  top: 446.51px;    /* Y position (px from the top of the map image container) */
   width: 210px;  /* Width of the button box (adjust as needed) */
   height: 150px; /* Height of the button box (adjust as needed) */
   z-index: 20;
@@ -1673,8 +1673,8 @@ input::placeholder {
 
 .map-area-cafe {
   position: absolute;
-  left: 80px;     /* Move horizontally from the left edge of the map */
-  top: 520px;     /* Move vertically from the top edge of the map */
+  left: 62.82px;     /* Move horizontally from the left edge of the map */
+  top: 505.3px;     /* Move vertically from the top edge of the map */
   width: 190px;   /* Width of the clickable area - adjust if needed */
   height: 125px;  /* Height of the clickable area - adjust if needed */
   z-index: 20;
@@ -1697,8 +1697,8 @@ input::placeholder {
 
 .map-area-company {
   position: absolute;
-  left: 340px;    /* Horizontal position (adjust as needed) */
-  top: 205px;     /* Vertical position (adjust as needed) */
+  left: 474.24px;    /* Horizontal position (adjust as needed) */
+  top: 248.67px;     /* Vertical position (adjust as needed) */
   width: 220px;   /* Width of clickable area */
   height: 150px;  /* Height of clickable area */
   z-index: 20;
@@ -1709,8 +1709,8 @@ input::placeholder {
 
 .map-area-hq {
   position: absolute;
-  left: 600px;   /* Move horizontally (adjust if needed) */
-  top: 75px;     /* Move vertically (adjust if needed) */
+  left: 584.23px;   /* Move horizontally (adjust if needed) */
+  top: 60.13px;     /* Move vertically (adjust if needed) */
   width: 210px;  /* Width of the clickable area */
   height: 145px; /* Height of the clickable area */
   z-index: 20;
@@ -1721,8 +1721,8 @@ input::placeholder {
 
 .map-area-government {
   position: absolute;
-  left: 880px;   /* Horizontal position - adjust if needed */
-  top: 170px;    /* Vertical position - adjust if needed */
+  left: 776.12px;   /* Horizontal position - adjust if needed */
+  top: 135.35px;    /* Vertical position - adjust if needed */
   width: 235px;  /* Width of clickable area */
   height: 185px; /* Height of clickable area */
   z-index: 20;
@@ -1733,8 +1733,8 @@ input::placeholder {
 
 .map-area-news {
   position: absolute;
-  left: 85px;     /* Horizontal position - adjust if needed */
-  top: 260px;     /* Vertical position - adjust if needed */
+  left: 39.16px;     /* Horizontal position - adjust if needed */
+  top: 282.72px;     /* Vertical position - adjust if needed */
   width: 225px;   /* Width of clickable area */
   height: 160px;  /* Height of clickable area */
   z-index: 20;
@@ -1803,8 +1803,8 @@ input::placeholder {
 /* Locked level styling */
 .map-area-locked {
   position: absolute;
-  left: 50%;
-  top: 50%;
+  left: 559.57px;
+  top: 566.67px;
   width: 100px;
   height: 100px;
   background: rgba(128,128,128,0.3);
