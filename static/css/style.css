@@ -1633,24 +1633,7 @@ input::placeholder {
   pointer-events: none; 
 }
 /* Map area buttons */
-.map-area-locked {
-  position: absolute;
-  left: 559.57px;
-  top: 566.67px;
-  width: 100px;
-  height: 100px;
-  background: rgba(128,128,128,0.3);
-  border: 3px solid #666;
-  border-radius: 50%;
-  z-index: 100;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: #666;
-  font-size: 2em;
-  cursor: not-allowed;
-  opacity: 0.6;
-}
+
 .map-area-global {
   position: absolute;
   left:559.57px;
