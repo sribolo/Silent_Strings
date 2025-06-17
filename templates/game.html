@@ -51,8 +51,6 @@
     <!-- Final level - only show if all others completed -->
     {% if global_unlocked %}
     <button class="map-area-btn map-area-global{% if 'global' in completed_missions %} completed{% endif %} unlocked" data-mission="global" title="Final String - Global Network{% if 'global' in completed_missions %} ✅ COMPLETED{% endif %}"></button>
-    {% else %}
-    <div class="map-area-locked" title="🔒 Complete all 9 missions to unlock the Final String">🔒</div>
     {% endif %}
     
     <!-- OVERLAY: TOP-RIGHT CORNER ONLY, FLOATS ABOVE MAP, NEVER MOVES -->
