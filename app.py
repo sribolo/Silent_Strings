@@ -14,7 +14,7 @@ from flask_limiter.util import get_remote_address
 from werkzeug.security import generate_password_hash, check_password_hash
 from dotenv import load_dotenv
 from flask_sqlalchemy import SQLAlchemy
-from forms import SignupForm, LoginForm, ForgotPasswordForm, ResetPasswordForm
+from forms import SignupForm, LoginForm, ForgotPasswordForm, ResetPasswordForm, ResetProgressForm
 from flask_migrate import Migrate
 from itsdangerous import URLSafeTimedSerializer
 from flask_mail import Mail, Message
@@ -1141,12 +1141,13 @@ def admin_dashboard():
     
     # Recent users (last 10)
     recent_users = User.query.order_by(User.id.desc()).limit(10).all()
-    
+    form = ResetProgressForm()
     return render_template('admin/dashboard.html', 
                          total_users=total_users,
                          total_admins=total_admins,
                          guest_sessions=guest_sessions,
-                         recent_users=recent_users)
+                         recent_users=recent_users,
+                         form=form)
 
 @app.route('/admin/users')
 @admin_required

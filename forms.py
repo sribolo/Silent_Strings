@@ -38,3 +38,6 @@ class ResetPasswordForm(FlaskForm):
         EqualTo('password', message='Passwords must match')
     ])
     submit = SubmitField('Reset Password')
+
+class ResetProgressForm(FlaskForm):
+    pass
