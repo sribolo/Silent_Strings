@@ -17,7 +17,7 @@ from flask_limiter.util import get_remote_address
 from werkzeug.security import generate_password_hash, check_password_hash
 from dotenv import load_dotenv
 from flask_sqlalchemy import SQLAlchemy
-from forms import SignupForm, LoginForm, ForgotPasswordForm, ResetPasswordForm, ResetProgressForm, MFAVerificationForm, MFASetupForm
+from forms import SignupForm, LoginForm, ForgotPasswordForm, ResetPasswordForm, ResetProgressForm, MFAVerificationForm, MFASetupForm, MFARecoveryForm
 from flask_migrate import Migrate
 from itsdangerous import URLSafeTimedSerializer
 from flask_mail import Mail, Message
@@ -29,6 +29,7 @@ try:
 except ImportError:
     PickleType = None
 import json
+import secrets
 
 
 # === Load Environment Variables ===
@@ -73,6 +74,7 @@ class User(db.Model, UserMixin):
     # MFA and Privacy fields
     otp_secret = db.Column(db.String(64), nullable=True)
     mfa_enabled = db.Column(db.Boolean, default=False)
+    recovery_codes = db.Column(JSON, nullable=True)
     profile_public = db.Column(db.Boolean, default=True)
 
 # === CSRF Protection ===
@@ -783,14 +785,56 @@ def setup_mfa():
     if user:
         user.otp_secret = temp_secret
         user.mfa_enabled = True
+        
+        # Generate and store hashed recovery codes
+        recovery_codes_plain = [secrets.token_hex(8) for _ in range(10)]
+        user.recovery_codes = [generate_password_hash(code) for code in recovery_codes_plain]
+        
         db.session.commit()
         
         # Clear temporary secret
         session.pop('temp_otp_secret', None)
         
-        return jsonify({"success": "MFA enabled successfully"})
+        return jsonify({
+            "success": "MFA enabled successfully",
+            "recovery_codes": recovery_codes_plain
+        })
     
     return jsonify({"error": "User not found"}), 404
+
+@app.route("/verify-mfa-recovery", methods=["GET", "POST"])
+def verify_mfa_recovery():
+    if 'pending_mfa_user' not in session:
+        return redirect(url_for("login"))
+
+    form = MFARecoveryForm()
+    if form.validate_on_submit():
+        email = session['pending_mfa_user']['email']
+        user = User.query.filter_by(email=email).first()
+        recovery_code = form.recovery_code.data
+
+        if user and user.mfa_enabled and user.recovery_codes:
+            for i, hashed_code in enumerate(user.recovery_codes):
+                if check_password_hash(hashed_code, recovery_code):
+                    # Valid code, log user in and disable MFA
+                    login_user(user)
+                    user.mfa_enabled = False
+                    
+                    # Remove the used code
+                    user.recovery_codes.pop(i)
+                    
+                    db.session.commit()
+                    
+                    session.pop('pending_mfa_user', None)
+                    flash("Account recovered and MFA disabled. Please re-enable it for security.", "success")
+                    return redirect(url_for("customise"))
+
+            flash("Invalid recovery code", "error")
+        else:
+            flash("Recovery failed. Please contact support.", "error")
+            return redirect(url_for("login"))
+
+    return render_template("verify_mfa_recovery.html", form=form)
 
 @app.route('/disable-mfa', methods=['POST'])
 @csrf.exempt

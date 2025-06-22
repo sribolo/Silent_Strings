@@ -55,3 +55,10 @@ class MFASetupForm(FlaskForm):
         Length(min=6, max=6, message="OTP code must be 6 digits")
     ])
     submit = SubmitField('Enable MFA')
+
+class MFARecoveryForm(FlaskForm):
+    recovery_code = StringField('Recovery Code', validators=[
+        DataRequired(),
+        Length(min=16, max=16, message="Recovery code must be 16 characters")
+    ])
+    submit = SubmitField('Recover Access')

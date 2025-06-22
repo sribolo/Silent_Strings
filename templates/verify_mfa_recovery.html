@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% block title %}MFA Verification{% endblock %}
+{% block title %}MFA Recovery{% endblock %}
 
 {% block extra_css %}
 <link rel="stylesheet" href="{{ url_for('static', filename='css/mfa_verification.css') }}">
@@ -13,12 +13,12 @@
 
 <div class="overlay">
     <div class="mission-container pixelated-border">
-        <h2>Two-Factor Authentication</h2>
+        <h2>Account Recovery</h2>
         <div class="mfa-verification-content">
             <div class="mfa-icon">
-                <i class="fa-solid fa-shield-check"></i>
+                <i class="fa-solid fa-key"></i>
             </div>
-            <p class="mfa-instruction">Enter the 6-digit code from your authenticator app:</p>
+            <p class="mfa-instruction">Enter one of your 16-character recovery codes to regain access to your account.</p>
             
             {% with messages = get_flashed_messages(with_categories=true) %}
                 {% if messages %}
@@ -33,24 +33,18 @@
             <form method="post" autocomplete="off" class="mfa-form">
                 {{ form.hidden_tag() }}
                 <div class="otp-input-container">
-                    {{ form.otp_code(class_="pixel-input otp-input", placeholder="000000", id="otp-code", maxlength="6") }}
+                    {{ form.recovery_code(class_="pixel-input otp-input", placeholder="xxxxxxxx-xxxxxxxx", id="recovery-code", maxlength="16") }}
                 </div>
-                {% for error in form.otp_code.errors %}
+                {% for error in form.recovery_code.errors %}
                     <div class="flash error">{{ error }}</div>
                 {% endfor %}
                 {{ form.submit(class_="pixel-btn mfa-submit") }}
             </form>
             
             <div class="mfa-actions">
-                <a href="{{ url_for('verify_mfa_recovery') }}" class="return-link">Use a recovery code</a>
-                <span class="link-divider">|</span>
-                <a href="{{ url_for('login') }}" class="return-link">Back to Login</a>
+                <a href="{{ url_for('verify_mfa_login') }}" class="return-link">Try OTP code again</a>
             </div>
         </div>
     </div>
 </div>
-{% endblock %}
-
-{% block extra_scripts %}
-<script src="{{ url_for('static', filename='js/mfa_verification.js') }}"></script>
 {% endblock %} 

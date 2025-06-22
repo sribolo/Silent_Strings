@@ -54,4 +54,9 @@
 
 .return-link:hover {
     color: #bcb9ff;
+}
+
+.link-divider {
+    color: #8a8a8a;
+    margin: 0 10px;
 } 

@@ -119,6 +119,21 @@
                     {% endif %}
                 </div>
 
+                <!-- Recovery Codes Modal -->
+                <div id="recovery-codes-modal" class="modal">
+                    <div class="modal-content pixelated-border">
+                        <h3>Save Your Recovery Codes</h3>
+                        <p>Store these codes in a safe place. You can use them to access your account if you lose your device.</p>
+                        <div id="recovery-codes-list" class="recovery-codes-container">
+                            <!-- Codes will be inserted here by JS -->
+                        </div>
+                        <div class="modal-buttons">
+                            <button type="button" class="modal-button" id="copy-recovery-codes-btn">Copy Codes</button>
+                            <button type="button" class="modal-button confirm" id="close-recovery-codes-btn">I have saved these codes</button>
+                        </div>
+                    </div>
+                </div>
+
                 <!-- Back to Profile -->
                 <div class="profile-actions">
                     <a href="{{ url_for('profile') }}" class="profile-link">Back to Profile</a>

@@ -94,7 +94,11 @@ document.addEventListener('DOMContentLoaded', function() {
             .then(data => {
                 if (data.success) {
                     showToast('MFA enabled successfully!', 'success');
-                    setTimeout(() => window.location.reload(), 1500);
+                    if (data.recovery_codes) {
+                        displayRecoveryCodes(data.recovery_codes);
+                    } else {
+                        setTimeout(() => window.location.reload(), 1500);
+                    }
                 } else {
                     showToast(data.error || 'Failed to enable MFA', 'error');
                 }
@@ -210,4 +214,33 @@ function showToast(message, type = 'info') {
         toast.style.opacity = '0';
         setTimeout(() => toast.remove(), 300);
     }, 3000);
+}
+
+function displayRecoveryCodes(codes) {
+    const modal = document.getElementById('recovery-codes-modal');
+    const list = document.getElementById('recovery-codes-list');
+    const copyBtn = document.getElementById('copy-recovery-codes-btn');
+    const closeBtn = document.getElementById('close-recovery-codes-btn');
+
+    // Populate codes
+    list.innerHTML = codes.map(code => `<code>${code}</code>`).join('');
+
+    // Show modal
+    if (modal) {
+        modal.style.display = 'block';
+    }
+
+    // Copy button
+    copyBtn.addEventListener('click', () => {
+        const codesText = codes.join('\n');
+        navigator.clipboard.writeText(codesText).then(() => {
+            showToast('Copied to clipboard!', 'success');
+        });
+    });
+
+    // Close button
+    closeBtn.addEventListener('click', () => {
+        modal.style.display = 'none';
+        window.location.reload();
+    });
 }
