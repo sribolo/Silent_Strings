@@ -11,97 +11,117 @@
         <div class="overlay">
             <div class="mission-container pixelated-border">
                 <h1 class="profile-title">Settings</h1>
+                
+                <!-- Audio Settings Section -->
+                <div class="settings-section">
+                    <h2 class="section-title">Audio Settings</h2>
                 <form id="settings-form">
-                    <!-- Audio Settings Section -->
-                    <div class="settings-section">
-                        <h2 class="section-title">Audio Settings</h2>
-                        <label class="setting-item">
+                    <div class="profile-info">
+                            <label class="setting-item">
                             <input type="checkbox" id="sfx-toggle" {% if sfx_enabled %}checked{% endif %}>
-                            <span class="setting-label">Enable Sound Effects (SFX)</span>
+                                <span class="setting-label">Enable Sound Effects (SFX)</span>
                         </label>
-                        <label class="setting-item">
+                        <br>
+                            <label class="setting-item">
                             <input type="checkbox" id="music-toggle" {% if music_enabled %}checked{% endif %}>
-                            <span class="setting-label">Enable Music</span>
-                        </label>
-                    </div>
+                                <span class="setting-label">Enable Music</span>
+                            </label>
+                        </div>
+                        <button type="button" class="profile-link" id="save-settings-btn">Save Audio Settings</button>
+                    </form>
+                </div>
 
-                    <!-- Privacy Settings Section -->
-                    <div class="settings-section">
-                        <h2 class="section-title">Privacy Settings</h2>
+                <!-- Privacy Settings Section -->
+                <div class="settings-section">
+                    <h2 class="section-title">Privacy Settings</h2>
+                    <div class="profile-info">
                         <label class="setting-item">
                             <input type="checkbox" id="profile-public-toggle" {% if user.profile_public %}checked{% endif %}>
                             <span class="setting-label">Make Profile Public</span>
                         </label>
+                        <p class="setting-description">When enabled, other agents can view your profile and achievements.</p>
                     </div>
+                </div>
 
-                    <!-- MFA Section -->
-                    <div class="settings-section">
-                        <h2 class="section-title">Multi-Factor Authentication</h2>
-                        {% if user.mfa_enabled %}
-                            <div class="mfa-status enabled">
-                                <div class="mfa-status-header">
-                                    <i class="fa-solid fa-shield-check"></i>
-                                    <span>MFA is currently enabled</span>
-                                </div>
-                                <p class="setting-description">Your account is protected with two-factor authentication.</p>
-                                <div class="mfa-action">
-                                    <button type="button" class="pixel-btn danger" id="disable-mfa-btn">
-                                        <i class="fa-solid fa-shield-xmark"></i>
-                                        Disable MFA
-                                    </button>
-                                </div>
-                                <div id="disable-mfa-modal" class="modal">
-                                    <div class="modal-content pixelated-border">
-                                        <h3>Disable Multi-Factor Authentication</h3>
-                                        <p>Enter your current OTP code to disable MFA:</p>
-                                        <input type="text" id="disable-mfa-otp" placeholder="Enter 6-digit code" maxlength="6" class="pixel-input">
-                                        <div class="modal-buttons">
-                                            <button type="button" class="modal-button" onclick="closeModal('disable-mfa-modal')">Cancel</button>
-                                            <button type="button" class="modal-button confirm" onclick="disableMFA()">Disable MFA</button>
-                                        </div>
+                <!-- Multi-Factor Authentication Section -->
+                <div class="settings-section">
+                    <h2 class="section-title">Multi-Factor Authentication</h2>
+                    
+                    {% if user.mfa_enabled %}
+                        <!-- MFA Enabled State -->
+                        <div class="mfa-status enabled">
+                            <div class="mfa-status-header">
+                                <i class="fa-solid fa-shield-check"></i>
+                                <span>MFA is currently enabled</span>
+                            </div>
+                            <p class="setting-description">Your account is protected with two-factor authentication.</p>
+                            
+                            <!-- Disable MFA -->
+                            <div class="mfa-action">
+                                <button type="button" class="pixel-btn danger" id="disable-mfa-btn">
+                                    <i class="fa-solid fa-shield-xmark"></i>
+                                    Disable MFA
+                                </button>
+                            </div>
+                            
+                            <!-- Disable MFA Modal -->
+                            <div id="disable-mfa-modal" class="modal">
+                                <div class="modal-content pixelated-border">
+                                    <h3>Disable Multi-Factor Authentication</h3>
+                                    <p>Enter your current OTP code to disable MFA:</p>
+                                    <input type="text" id="disable-mfa-otp" placeholder="Enter 6-digit code" maxlength="6" class="pixel-input">
+                                    <div class="modal-buttons">
+                                        <button type="button" class="modal-button" onclick="closeModal('disable-mfa-modal')">Cancel</button>
+                                        <button type="button" class="modal-button confirm" onclick="disableMFA()">Disable MFA</button>
                                     </div>
                                 </div>
                             </div>
-                        {% else %}
-                            <div class="mfa-status disabled">
-                                <div class="mfa-status-header">
-                                    <i class="fa-solid fa-shield-exclamation"></i>
-                                    <span>MFA is currently disabled</span>
-                                </div>
-                                <p class="setting-description">Enable two-factor authentication to add an extra layer of security to your account.</p>
-                                <div class="mfa-setup">
-                                    {% if qr_code_data %}
-                                        <div class="qr-section">
-                                            <h4>Step 1: Scan QR Code</h4>
-                                            <p>Use your authenticator app (Google Authenticator, Authy, etc.) to scan this QR code:</p>
-                                            <div class="qr-container">
-                                                <img src="data:image/png;base64,{{ qr_code_data }}" alt="MFA QR Code" class="qr-code">
-                                            </div>
-                                            <p class="qr-note">Or manually enter the secret key in your authenticator app.</p>
-                                        </div>
-                                        <div class="otp-section">
-                                            <h4>Step 2: Enter Verification Code</h4>
-                                            <p>Enter the 6-digit code from your authenticator app:</p>
-                                            <input type="text" id="setup-mfa-otp" placeholder="Enter 6-digit code" maxlength="6" class="pixel-input">
-                                            <button type="button" class="pixel-btn" id="setup-mfa-btn">
-                                                <i class="fa-solid fa-shield-check"></i>
-                                                Enable MFA
-                                            </button>
-                                        </div>
-                                    {% else %}
-                                        <button type="button" class="pixel-btn" id="start-mfa-setup-btn">
-                                            <i class="fa-solid fa-shield-plus"></i>
-                                            Setup MFA
-                                        </button>
-                                    {% endif %}
-                                </div>
+                        </div>
+                    {% else %}
+                        <!-- MFA Disabled State -->
+                        <div class="mfa-status disabled">
+                            <div class="mfa-status-header">
+                                <i class="fa-solid fa-shield-exclamation"></i>
+                                <span>MFA is currently disabled</span>
                             </div>
-                        {% endif %}
-                    </div>
+                            <p class="setting-description">Enable two-factor authentication to add an extra layer of security to your account.</p>
+                            
+                            <!-- Setup MFA -->
+                            <div class="mfa-setup">
+                                {% if qr_code_data %}
+                                    <div class="qr-section">
+                                        <h4>Step 1: Scan QR Code</h4>
+                                        <p>Use your authenticator app (Google Authenticator, Authy, etc.) to scan this QR code:</p>
+                                        <div class="qr-container">
+                                            <img src="data:image/png;base64,{{ qr_code_data }}" alt="MFA QR Code" class="qr-code">
+                                        </div>
+                                        <p class="qr-note">Or manually enter the secret key in your authenticator app.</p>
+                                    </div>
+                                    
+                                    <div class="otp-section">
+                                        <h4>Step 2: Enter Verification Code</h4>
+                                        <p>Enter the 6-digit code from your authenticator app:</p>
+                                        <input type="text" id="setup-mfa-otp" placeholder="Enter 6-digit code" maxlength="6" class="pixel-input">
+                                        <button type="button" class="pixel-btn" id="setup-mfa-btn">
+                                            <i class="fa-solid fa-shield-check"></i>
+                                            Enable MFA
+                                        </button>
+                                    </div>
+                                {% else %}
+                                    <button type="button" class="pixel-btn" id="start-mfa-setup-btn">
+                                        <i class="fa-solid fa-shield-plus"></i>
+                                        Setup MFA
+                                    </button>
+                                {% endif %}
+                            </div>
+                        </div>
+                    {% endif %}
+                </div>
 
-                    <!-- Save Button at the bottom -->
-                    <button type="button" id="save-settings-btn">Save Settings</button>
-                </form>
+                <!-- Back to Profile -->
+                <div class="profile-actions">
+                    <a href="{{ url_for('profile') }}" class="profile-link">Back to Profile</a>
+                </div>
             </div>
         </div>
     </div>
