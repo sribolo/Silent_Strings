@@ -4,14 +4,13 @@ import requests
 from flask import (
     Flask, g, json,
     render_template, request, jsonify, session,
-    redirect, url_for, send_from_directory, flash
+    redirect, url_for, send_from_directory, flash, send_file, make_response
 )
 from flask_dance.contrib.google import make_google_blueprint, google
 from flask_session import Session
 from flask_wtf import CSRFProtect
 from flask_limiter import Limiter
 from flask_limiter.util import get_remote_address
-from werkzeug.security import generate_password_hash, check_password_hash
 from dotenv import load_dotenv
 from flask_sqlalchemy import SQLAlchemy
 from forms import SignupForm, LoginForm, ForgotPasswordForm, ResetPasswordForm, ResetProgressForm
@@ -26,6 +25,10 @@ try:
 except ImportError:
     PickleType = None
 import json
+import bcrypt
+from io import BytesIO
+import pyotp
+import qrcode
 
 
 # === Load Environment Variables ===
@@ -59,6 +62,9 @@ class User(db.Model):
     username = db.Column(db.String(80), unique=True, nullable=False)
     email = db.Column(db.String(120), unique=True, nullable=False)
     pwd_hash = db.Column(db.String(256), nullable=False)
+    otp_secret = db.Column(db.String(16), nullable=True)
+    mfa_enabled = db.Column(db.Boolean, default=False)
+    profile_public = db.Column(db.Boolean, default=True)
     avatar_character = db.Column(db.String(120), nullable=True)
     avatar_hair = db.Column(db.JSON, nullable=True)  # Store full hair data
     avatar_clothes = db.Column(db.JSON, nullable=True)  # Store full clothes data
@@ -173,8 +179,8 @@ def signup():
             flash("That email is already registered. Please log in.", "error")
             return render_template("signup.html", form=form, recaptcha_site_key=os.getenv("RECAPTCHA_SITE_KEY"))
 
-        pwd_hash = generate_password_hash(pwd)
-        user = User(username=username, email=email, pwd_hash=pwd_hash)
+        pwd_hash = bcrypt.hashpw(pwd.encode('utf-8'), bcrypt.gensalt())
+        user = User(username=username, email=email, pwd_hash=pwd_hash.decode('utf-8'))
         db.session.add(user)
         db.session.commit()
         session["user"] = {"username": username, "email": email}
@@ -198,7 +204,10 @@ def login():
         pwd   = form.password.data
         user  = User.query.filter_by(email=email).first()
 
-        if user and check_password_hash(user.pwd_hash, pwd):
+        if user and bcrypt.checkpw(pwd.encode('utf-8'), user.pwd_hash.encode('utf-8')):
+            if user.mfa_enabled:
+                session['email_for_mfa'] = user.email
+                return redirect(url_for('verify_mfa'))
             session["user"] = {"username": user.username, "email": email}
             return redirect(url_for("customise"))
         flash("Invalid email or password", "error")
@@ -507,7 +516,7 @@ def reset_password(token):
     if form.validate_on_submit():
         user = User.query.filter_by(email=email).first()
         if user:
-            user.pwd_hash = generate_password_hash(form.password.data)
+            user.pwd_hash = bcrypt.hashpw(form.password.data.encode('utf-8'), bcrypt.gensalt())
             db.session.commit()
             flash("Password updated!", "success")
             return redirect(url_for('login'))
@@ -544,15 +553,19 @@ def profile():
         is_guest = False
 
         user = User.query.filter_by(email=email).first()
-        if user:
-            clothes = user.avatar_clothes if isinstance(user.avatar_clothes, dict) else {}
-            avatar_parts = {
-                'characters': user.avatar_character,
-                'hair': user.avatar_hair,
-                'clothes': clothes,
-                'acc': user.avatar_acc,
-                'face': user.avatar_face
-            }
+        if not user:
+            flash('User not found.', 'error')
+            return redirect(url_for('login'))
+
+        # Flatten avatar parts for rendering
+        avatar_parts = {
+            'characters': user.avatar_character,
+            'hair': user.avatar_hair,
+            'clothes': user.avatar_clothes,
+            'acc': user.avatar_acc,
+            'face': user.avatar_face
+        }
+        avatar_parts = flatten_avatar_parts(avatar_parts)
     elif session.get("guest"):
         username = session.get("agent_name", "Guest Agent")
         email = None
@@ -560,9 +573,6 @@ def profile():
         avatar_parts = session.get("avatar_parts", {})
     else:
         return redirect(url_for('login'))
-
-    # Flatten avatar_parts so all keys are directly accessible by the template
-    avatar_parts = flatten_avatar_parts(avatar_parts)
 
     # Check if avatar is complete
     required_parts = ['characters', 'clothes', 'hair', 'face', 'acc']
@@ -592,17 +602,166 @@ def profile():
 
 @app.route('/settings', methods=['GET', 'POST'])
 def settings():
+    if "user" not in session:
+        return redirect(url_for('login'))
+    
+    email = session['user']['email']
+    user = User.query.filter_by(email=email).first()
+    if not user:
+        flash('User not found.', 'error')
+        return redirect(url_for('login'))
+
     sfx_enabled = session.get('sfx_enabled', True)
     music_enabled = session.get('music_enabled', True)
-    return render_template('settings.html', sfx_enabled=sfx_enabled, music_enabled=music_enabled)
+    
+    return render_template('settings.html', 
+                           sfx_enabled=sfx_enabled, 
+                           music_enabled=music_enabled,
+                           mfa_enabled=user.mfa_enabled,
+                           profile_public=user.profile_public)
 
 @app.route('/save-settings', methods=['POST'])
 @csrf.exempt
 def save_settings():
+    if "user" not in session:
+        return jsonify(status="error", message="Not logged in"), 401
+
     data = request.get_json()
+    email = session['user']['email']
+    user = User.query.filter_by(email=email).first()
+    if not user:
+        return jsonify(status="error", message="User not found"), 404
+
     session['sfx_enabled'] = data.get('sfx_enabled', True)
     session['music_enabled'] = data.get('music_enabled', True)
+    user.profile_public = data.get('profile_public', True)
+    
+    db.session.commit()
+    
     return jsonify(status="ok")
+
+@app.route('/enable-mfa', methods=['GET'])
+def enable_mfa():
+    if "user" not in session:
+        return redirect(url_for('login'))
+    
+    email = session['user']['email']
+    user = User.query.filter_by(email=email).first()
+    if not user:
+        flash('User not found.', 'error')
+        return redirect(url_for('login'))
+
+    user.otp_secret = pyotp.random_base32()
+    db.session.commit()
+    
+    totp = pyotp.TOTP(user.otp_secret)
+    qr_uri = totp.provisioning_uri(name=user.email, issuer_name='Silent_Strings')
+    
+    img = qrcode.make(qr_uri)
+    buf = BytesIO()
+    img.save(buf)
+    buf.seek(0)
+    
+    return send_file(buf, mimetype='image/png')
+
+@app.route('/verify-mfa', methods=['GET', 'POST'])
+def verify_mfa():
+    email = session.get('email_for_mfa')
+    if not email:
+        return redirect(url_for('login'))
+
+    user = User.query.filter_by(email=email).first()
+    if not user:
+        flash("User not found.", "error")
+        return redirect(url_for('login'))
+
+    if request.method == 'POST':
+        token = request.form.get('token')
+        totp = pyotp.TOTP(user.otp_secret)
+        if totp.verify(token):
+            if 'email_for_mfa' in session: # Coming from login
+                user.mfa_enabled = True
+                db.session.commit()
+                session.pop('email_for_mfa', None)
+                session["user"] = {"username": user.username, "email": user.email}
+                flash('MFA enabled successfully!', 'success')
+                return redirect(url_for('customise'))
+            else: # Coming from settings
+                user.mfa_enabled = True
+                db.session.commit()
+                flash('MFA enabled successfully!', 'success')
+                return redirect(url_for('settings'))
+        else:
+            flash('Invalid MFA token.', 'error')
+
+    return render_template('verify_mfa.html')
+
+
+@app.route('/disable-mfa', methods=['POST'])
+def disable_mfa():
+    if "user" not in session:
+        return redirect(url_for('login'))
+
+    email = session['user']['email']
+    user = User.query.filter_by(email=email).first()
+    if not user:
+        flash("User not found.", "error")
+        return redirect(url_for('login'))
+
+    user.mfa_enabled = False
+    user.otp_secret = None
+    db.session.commit()
+    flash('MFA has been disabled.', 'success')
+    return redirect(url_for('settings'))
+
+
+@app.route('/download-data')
+def download_data():
+    if "user" not in session:
+        return redirect(url_for('login'))
+
+    email = session['user']['email']
+    user = User.query.filter_by(email=email).first()
+    if not user:
+        flash("User not found.", "error")
+        return redirect(url_for('login'))
+
+    user_data = {
+        "username": user.username,
+        "email": user.email,
+        "profile_public": user.profile_public,
+        "avatar": {
+            'character': user.avatar_character,
+            'hair': user.avatar_hair,
+            'clothes': user.avatar_clothes,
+            'acc': user.avatar_acc,
+            'face': user.avatar_face
+        },
+        "achievements": user.achievements,
+        "unlocks": user.unlocks
+    }
+    
+    response = make_response(json.dumps(user_data, indent=4))
+    response.headers.set('Content-Type', 'application/json')
+    response.headers.set('Content-Disposition', 'attachment', filename=f'{user.username}_data.json')
+    return response
+
+@app.route('/delete-account', methods=['POST'])
+def delete_account():
+    if "user" not in session:
+        return redirect(url_for('login'))
+
+    email = session['user']['email']
+    user = User.query.filter_by(email=email).first()
+    if not user:
+        flash("User not found.", "error")
+        return redirect(url_for('login'))
+
+    db.session.delete(user)
+    db.session.commit()
+    session.clear()
+    flash('Your account has been permanently deleted.', 'success')
+    return redirect(url_for('home'))
 
 @app.route('/level/<level_name>')
 def load_level(level_name):

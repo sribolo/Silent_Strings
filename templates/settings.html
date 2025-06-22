@@ -23,8 +23,42 @@
                             Enable Music
                         </label>
                     </div>
-                    <button type="button" class="profile-link" id="save-settings-btn">Save</button>
+
+                    <h2 class="profile-subtitle">Privacy</h2>
+                    <div class="profile-info">
+                        <label>
+                            <input type="checkbox" id="profile-public-toggle" {% if profile_public %}checked{% endif %}>
+                            Public Profile
+                        </label>
+                    </div>
+
+                    <h2 class="profile-subtitle">Security</h2>
+                    <div class="profile-info">
+                        {% if mfa_enabled %}
+                            <p>Multi-Factor Authentication is <strong>enabled</strong>.</p>
+                            <form action="{{ url_for('disable_mfa') }}" method="POST" id="disable-mfa-form">
+                                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+                                <button type="submit" class="profile-link">Disable MFA</button>
+                            </form>
+                        {% else %}
+                            <p>Multi-Factor Authentication is <strong>disabled</strong>.</p>
+                            <button type="button" class="profile-link" id="enable-mfa-btn">Enable MFA</button>
+                            <div id="mfa-qr-code"></div>
+                        {% endif %}
+                    </div>
+
+                    <button type="button" class="profile-link" id="save-settings-btn">Save Settings</button>
                 </form>
+
+                <h2 class="profile-subtitle">Account</h2>
+                <div class="profile-actions">
+                    <a href="{{ url_for('download_data') }}" class="profile-link">Download My Data</a>
+                    <form action="{{ url_for('delete_account') }}" method="POST" id="delete-account-form">
+                        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+                        <button type="submit" class="profile-link delete-btn">Delete My Account</button>
+                    </form>
+                </div>
+
                 <div class="profile-actions">
                     <a href="{{ url_for('profile') }}" class="profile-link">Back to Profile</a>
                 </div>

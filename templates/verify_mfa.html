@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block title %}Verify MFA{% endblock %}
+{% block content %}
+<div class="bg-container">
+    <img src="{{ url_for('static', filename='images/background.gif') }}" class="background">
+    <div class="darken"></div>
+    <div class="overlay">
+        <div class="mission-container pixelated-border">
+            <h1 class="profile-title">Two-Factor Authentication</h1>
+            <form method="POST" action="{{ url_for('verify_mfa') }}">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+                <p>Enter the code from your authenticator app.</p>
+                <div class="profile-info">
+                    <label for="token">MFA Token</label>
+                    <input type="text" id="token" name="token" required autocomplete="one-time-code" autofocus>
+                </div>
+                <button type="submit" class="profile-link">Verify</button>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %} 
