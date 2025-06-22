@@ -54,22 +54,9 @@
       <p>Have an account? <a href="{{ url_for('login') }}">Log In</a></p>
     </div>
   </div>
-  <script src="https://www.google.com/recaptcha/api.js" async defer></script>
-  <script nonce="{{ csp_nonce }}">
-    document.addEventListener("DOMContentLoaded", function () {
-      document.querySelectorAll('.show-password-btn').forEach(function(btn) {
-        btn.addEventListener('click', function() {
-          const inputId = btn.getAttribute('data-target');
-          var pwInput = document.getElementById(inputId);
-          var icon = btn.querySelector('i');
-          if (pwInput && icon) {
-            const isHidden = pwInput.type === 'password';
-            pwInput.type = isHidden ? 'text' : 'password';
-            icon.classList.toggle('fa-eye', !isHidden);
-            icon.classList.toggle('fa-eye-slash', isHidden);
-          }
-        });
-      });
-    });
-  </script>
+{% endblock %}
+
+{% block extra_scripts %}
+<script src="https://www.google.com/recaptcha/api.js" async defer></script>
+<script src="{{ url_for('static', filename='js/password_visibility.js') }}"></script>
 {% endblock %}

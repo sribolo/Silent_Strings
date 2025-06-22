@@ -1,0 +1,57 @@
+/* MFA Verification Page Styles */
+.mfa-verification-content {
+    text-align: center;
+    padding: 20px;
+}
+
+.mfa-icon {
+    font-size: 3em;
+    color: #6C5CE7;
+    margin-bottom: 20px;
+}
+
+.mfa-instruction {
+    color: #bcb9ff;
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 1.1em;
+    margin-bottom: 25px;
+    line-height: 1.4;
+}
+
+.mfa-form {
+    margin: 20px 0;
+}
+
+.otp-input-container {
+    margin-bottom: 20px;
+}
+
+.otp-input {
+    font-size: 1.5em;
+    letter-spacing: 8px;
+    text-align: center;
+    width: 200px;
+    max-width: 100%;
+}
+
+.mfa-submit {
+    margin-top: 15px;
+    padding: 15px 30px;
+    font-size: 1.1em;
+}
+
+.mfa-actions {
+    margin-top: 25px;
+}
+
+.return-link {
+    color: #8a8a8a;
+    text-decoration: none;
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.9em;
+    transition: color 0.2s;
+}
+
+.return-link:hover {
+    color: #bcb9ff;
+} 

@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+{% block title %}MFA Verification{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/mfa_verification.css') }}">
+{% endblock %}
+
+{% block content %}
+<div class="bg-container">
+    <img src="{{ url_for('static', filename='images/background.gif') }}" class="background" alt="Background">
+    <div class="darken"></div>
+</div>
+
+<div class="overlay">
+    <div class="mission-container pixelated-border">
+        <h2>Two-Factor Authentication</h2>
+        <div class="mfa-verification-content">
+            <div class="mfa-icon">
+                <i class="fa-solid fa-shield-check"></i>
+            </div>
+            <p class="mfa-instruction">Enter the 6-digit code from your authenticator app:</p>
+            
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    <ul class="flashes">
+                        {% for category, msg in messages %}
+                            <li class="flash {{ category }}">{{ msg }}</li>
+                        {% endfor %}
+                    </ul>
+                {% endif %}
+            {% endwith %}
+            
+            <form method="post" autocomplete="off" class="mfa-form">
+                {{ form.hidden_tag() }}
+                <div class="otp-input-container">
+                    {{ form.otp_code(class_="pixel-input otp-input", placeholder="000000", id="otp-code", maxlength="6") }}
+                </div>
+                {% for error in form.otp_code.errors %}
+                    <div class="flash error">{{ error }}</div>
+                {% endfor %}
+                {{ form.submit(class_="pixel-btn mfa-submit") }}
+            </form>
+            
+            <div class="mfa-actions">
+                <a href="{{ url_for('login') }}" class="return-link">Back to Login</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script src="{{ url_for('static', filename='js/mfa_verification.js') }}"></script>
+{% endblock %} 

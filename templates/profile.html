@@ -52,6 +52,14 @@
                         <span class="email-label">{{ email }}</span>
                     {% endif %}
                 </div>
+                {% if user and not viewing_other_profile %}
+                <div>
+                    <span class="profile-label">Privacy:</span>
+                    <span class="privacy-status {% if user.profile_public %}public{% else %}private{% endif %}">
+                        {% if user.profile_public %}Public{% else %}Private{% endif %}
+                    </span>
+                </div>
+                {% endif %}
             </div>
             <div class="profile-achievements">
             <h3>Achievements</h3>
@@ -83,28 +91,14 @@
         </div>
     </div>
 </div>
+{% endblock %}
+
+{% block extra_css %}
 <link rel="stylesheet" href="{{ url_for('static', filename='css/achievements.css') }}">
+{% endblock %}
+
+{% block extra_scripts %}
 <script src="{{ url_for('static', filename='js/achievements.js') }}"></script>
+<script src="{{ url_for('static', filename='js/profile.js') }}"></script>
 <div id="user-data" data-logged-in="{{ is_logged_in|default(false)|tojson }}"></div>
-<script>
-  function loadAchievementsFromBackend() {
-    fetch('/api/achievements')
-      .then(res => res.json())
-      .then(data => {
-        localStorage.setItem('achievements', JSON.stringify(data.achievements || []));
-        localStorage.setItem('unlocks', JSON.stringify(data.unlocks || []));
-        renderAchievements('achievements-list');
-      });
-  }
-  document.addEventListener('DOMContentLoaded', function() {
-    const userData = document.getElementById('user-data');
-    const isLoggedIn = userData ? JSON.parse(userData.dataset.loggedIn) : false;
-    
-    if (isLoggedIn) {
-      loadAchievementsFromBackend();
-    } else {
-      renderAchievements('achievements-list');
-    }
-  });
-</script>
 {% endblock %}

@@ -23,6 +23,4 @@ Flask-Migrate
 Flask-Mail
 Flask_login
 pyotp
-qrcode
-Pillow
-bcrypt
+qrcode[pil]

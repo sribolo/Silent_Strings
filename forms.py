@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField,SubmitField
+from wtforms import StringField, PasswordField, SubmitField, BooleanField
 from wtforms.validators import DataRequired, Email, Length, Regexp, EqualTo
 
 class SignupForm(FlaskForm):
@@ -41,3 +41,17 @@ class ResetPasswordForm(FlaskForm):
 
 class ResetProgressForm(FlaskForm):
     pass
+
+class MFAVerificationForm(FlaskForm):
+    otp_code = StringField('OTP Code', validators=[
+        DataRequired(),
+        Length(min=6, max=6, message="OTP code must be 6 digits")
+    ])
+    submit = SubmitField('Verify')
+
+class MFASetupForm(FlaskForm):
+    otp_code = StringField('OTP Code', validators=[
+        DataRequired(),
+        Length(min=6, max=6, message="OTP code must be 6 digits")
+    ])
+    submit = SubmitField('Enable MFA')

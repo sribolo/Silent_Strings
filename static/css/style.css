@@ -2327,4 +2327,293 @@ input::placeholder {
   margin-bottom: 20px;
 }
 
+/* Settings Page Styles */
+.settings-section {
+    margin-bottom: 30px;
+    padding: 20px;
+    background: rgba(20, 18, 38, 0.8);
+    border-radius: 16px;
+    border: 2px solid #6C5CE7;
+}
+
+.section-title {
+    color: #A499FF;
+    font-family: 'Press Start 2P', monospace;
+    font-size: 1.2em;
+    margin-bottom: 15px;
+    text-align: center;
+    letter-spacing: 1px;
+}
+
+.setting-item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 15px;
+    cursor: pointer;
+    padding: 10px;
+    border-radius: 8px;
+    transition: background-color 0.2s;
+}
+
+.setting-item:hover {
+    background: rgba(108, 92, 231, 0.1);
+}
+
+.setting-item input[type="checkbox"] {
+    margin-right: 12px;
+    transform: scale(1.2);
+    accent-color: #6C5CE7;
+}
+
+.setting-label {
+    color: #bcb9ff;
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 1.1em;
+    font-weight: 500;
+}
+
+.setting-description {
+    color: #8a8a8a;
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.9em;
+    margin-top: 8px;
+    margin-left: 24px;
+    line-height: 1.4;
+}
+
+/* MFA Styles */
+.mfa-status {
+    padding: 20px;
+    border-radius: 12px;
+    border: 2px solid;
+}
+
+.mfa-status.enabled {
+    background: rgba(56, 211, 159, 0.1);
+    border-color: #38d39f;
+}
+
+.mfa-status.disabled {
+    background: rgba(255, 107, 107, 0.1);
+    border-color: #ff6b6b;
+}
+
+.mfa-status-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 1.1em;
+    font-weight: bold;
+}
+
+.mfa-status.enabled .mfa-status-header {
+    color: #38d39f;
+}
+
+.mfa-status.disabled .mfa-status-header {
+    color: #ff6b6b;
+}
+
+.mfa-status-header i {
+    margin-right: 10px;
+    font-size: 1.2em;
+}
+
+.mfa-action {
+    margin-top: 15px;
+}
+
+.mfa-setup {
+    margin-top: 15px;
+}
+
+.qr-section, .otp-section {
+    margin-bottom: 20px;
+}
+
+.qr-section h4, .otp-section h4 {
+    color: #A499FF;
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 1em;
+    margin-bottom: 8px;
+}
+
+.qr-container {
+    display: flex;
+    justify-content: center;
+    margin: 15px 0;
+    padding: 15px;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 8px;
+}
+
+.qr-code {
+    max-width: 200px;
+    height: auto;
+    border-radius: 8px;
+}
+
+.qr-note {
+    color: #8a8a8a;
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.8em;
+    text-align: center;
+    font-style: italic;
+}
+
+/* Modal Styles */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.8);
+    backdrop-filter: blur(5px);
+}
+
+.modal-content {
+    background: rgba(20, 18, 38, 0.95);
+    margin: 15% auto;
+    padding: 30px;
+    border-radius: 16px;
+    width: 90%;
+    max-width: 400px;
+    text-align: center;
+    border: 2px solid #6C5CE7;
+}
+
+.modal-content h3 {
+    color: #A499FF;
+    font-family: 'Press Start 2P', monospace;
+    font-size: 1.1em;
+    margin-bottom: 15px;
+}
+
+.modal-content p {
+    color: #bcb9ff;
+    font-family: 'Share Tech Mono', monospace;
+    margin-bottom: 20px;
+}
+
+.modal-buttons {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+.modal-button {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 8px;
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.9em;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.modal-button.confirm {
+    background: #6C5CE7;
+    color: white;
+}
+
+.modal-button.confirm:hover {
+    background: #8A2BE2;
+}
+
+.modal-button:not(.confirm) {
+    background: #4a4a4a;
+    color: #bcb9ff;
+}
+
+.modal-button:not(.confirm):hover {
+    background: #5a5a5a;
+}
+
+/* Button Styles */
+.pixel-btn.danger {
+    background: #ff6b6b;
+    color: white;
+    border: 2px solid #ff6b6b;
+}
+
+.pixel-btn.danger:hover {
+    background: #ff5252;
+    border-color: #ff5252;
+    box-shadow: 0 0 20px rgba(255, 107, 107, 0.4);
+}
+
+/* Input Styles */
+.pixel-input {
+    background: rgba(35, 35, 43, 0.8);
+    border: 2px solid #6C5CE7;
+    color: #bcb9ff;
+    font-family: 'Share Tech Mono', monospace;
+    padding: 12px;
+    border-radius: 8px;
+    font-size: 1em;
+    text-align: center;
+    letter-spacing: 2px;
+    width: 100%;
+    max-width: 200px;
+    margin: 10px 0;
+}
+
+.pixel-input:focus {
+    outline: none;
+    border-color: #A499FF;
+    box-shadow: 0 0 10px rgba(164, 153, 255, 0.3);
+}
+
+.pixel-input::placeholder {
+    color: #8a8a8a;
+    letter-spacing: 1px;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .settings-section {
+        padding: 15px;
+        margin-bottom: 20px;
+    }
+    
+    .section-title {
+        font-size: 1em;
+    }
+    
+    .qr-code {
+        max-width: 150px;
+    }
+    
+    .modal-content {
+        margin: 10% auto;
+        padding: 20px;
+    }
+}
+
+/* Privacy Status Styles */
+.privacy-status {
+    font-family: 'Share Tech Mono', monospace;
+    font-weight: bold;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 0.9em;
+}
+
+.privacy-status.public {
+    background: rgba(56, 211, 159, 0.2);
+    color: #38d39f;
+    border: 1px solid #38d39f;
+}
+
+.privacy-status.private {
+    background: rgba(255, 107, 107, 0.2);
+    color: #ff6b6b;
+    border: 1px solid #ff6b6b;
+}
+
 

@@ -45,49 +45,169 @@ document.addEventListener('DOMContentLoaded', function() {
             })
             .then(res => res.json())
             .then(data => {
-                if (data.status === 'ok') {
-                    alert('Settings saved!');
-                } else {
-                    alert('Failed to save settings: ' + data.message);
+                // Apply settings immediately after saving
+                if (bgm) {
+                    if (!musicToggle.checked) {
+                        bgm.pause();
+                        bgm.muted = true;
+                    } else {
+                        bgm.muted = false;
+                        if (bgm.paused) bgm.play();
+                    }
                 }
+                showToast('Settings saved!');
             })
             .catch(error => {
                 console.error('Fetch error:', error);
-                alert('Failed to save settings!');
+                showToast('Failed to save settings!', 'error');
             });
         });
     }
 
-    // MFA Button
-    const enableMfaBtn = document.getElementById('enable-mfa-btn');
-    const mfaQrCodeDiv = document.getElementById('mfa-qr-code');
-    if (enableMfaBtn) {
-        enableMfaBtn.addEventListener('click', function() {
-            fetch('/enable-mfa')
-                .then(response => response.blob())
-                .then(blob => {
-                    const qrUrl = URL.createObjectURL(blob);
-                    mfaQrCodeDiv.innerHTML = `
-                        <img src="${qrUrl}" alt="MFA QR Code">
-                        <p>Scan this QR code with your authenticator app, then verify.</p>
-                        <a href="/verify-mfa" class="profile-link">Verify Token</a>
-                    `;
-                    mfaQrCodeDiv.style.display = 'block';
-                })
-                .catch(error => {
-                    console.error('MFA QR code error:', error);
-                    alert('Could not generate MFA QR code.');
-                });
+    // MFA Setup Button
+    const startMfaSetupBtn = document.getElementById('start-mfa-setup-btn');
+    if (startMfaSetupBtn) {
+        startMfaSetupBtn.addEventListener('click', function() {
+            // Reload the page to generate new QR code
+            window.location.reload();
         });
     }
 
-    // Delete account confirmation
-    const deleteForm = document.getElementById('delete-account-form');
-    if (deleteForm) {
-        deleteForm.addEventListener('submit', function(e) {
-            if (!confirm('Are you sure you want to permanently delete your account? This action cannot be undone.')) {
-                e.preventDefault();
+    // MFA Setup Verification
+    const setupMfaBtn = document.getElementById('setup-mfa-btn');
+    if (setupMfaBtn) {
+        setupMfaBtn.addEventListener('click', function() {
+            const otpInput = document.getElementById('setup-mfa-otp');
+            const otpCode = otpInput.value.trim();
+            
+            if (otpCode.length !== 6) {
+                showToast('Please enter a 6-digit code', 'error');
+                return;
+            }
+            
+            fetch('/setup-mfa', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({ otp_code: otpCode })
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (data.success) {
+                    showToast('MFA enabled successfully!', 'success');
+                    setTimeout(() => window.location.reload(), 1500);
+                } else {
+                    showToast(data.error || 'Failed to enable MFA', 'error');
+                }
+            })
+            .catch(error => {
+                console.error('Fetch error:', error);
+                showToast('Failed to enable MFA', 'error');
+            });
+        });
+    }
+
+    // Disable MFA Button
+    const disableMfaBtn = document.getElementById('disable-mfa-btn');
+    if (disableMfaBtn) {
+        disableMfaBtn.addEventListener('click', function() {
+            const modal = document.getElementById('disable-mfa-modal');
+            if (modal) {
+                modal.style.display = 'block';
             }
         });
     }
+
+    // Close modal when clicking outside
+    window.addEventListener('click', function(event) {
+        const modals = document.querySelectorAll('.modal');
+        modals.forEach(modal => {
+            if (event.target === modal) {
+                modal.style.display = 'none';
+            }
+        });
+    });
+
+    // OTP input formatting
+    const otpInputs = document.querySelectorAll('input[type="text"][maxlength="6"]');
+    otpInputs.forEach(input => {
+        input.addEventListener('input', function() {
+            // Only allow numbers
+            this.value = this.value.replace(/[^0-9]/g, '');
+            
+            // Auto-submit when 6 digits are entered
+            if (this.value.length === 6) {
+                const setupBtn = document.getElementById('setup-mfa-btn');
+                const disableBtn = document.querySelector('.modal-button.confirm');
+                
+                if (setupBtn && this.id === 'setup-mfa-otp') {
+                    setupBtn.click();
+                } else if (disableBtn && this.id === 'disable-mfa-otp') {
+                    disableBtn.click();
+                }
+            }
+        });
+    });
 });
+
+// Global functions for modals and MFA
+function closeModal(modalId) {
+    const modal = document.getElementById(modalId);
+    if (modal) {
+        modal.style.display = 'none';
+    }
+}
+
+function disableMFA() {
+    const otpInput = document.getElementById('disable-mfa-otp');
+    const otpCode = otpInput.value.trim();
+    
+    if (otpCode.length !== 6) {
+        showToast('Please enter a 6-digit code', 'error');
+        return;
+    }
+    
+    fetch('/disable-mfa', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({ otp_code: otpCode })
+    })
+    .then(res => res.json())
+    .then(data => {
+        if (data.success) {
+            showToast('MFA disabled successfully!', 'success');
+            closeModal('disable-mfa-modal');
+            setTimeout(() => window.location.reload(), 1500);
+        } else {
+            showToast(data.error || 'Failed to disable MFA', 'error');
+        }
+    })
+    .catch(error => {
+        console.error('Fetch error:', error);
+        showToast('Failed to disable MFA', 'error');
+    });
+}
+
+function showToast(message, type = 'info') {
+    const toast = document.createElement('div');
+    toast.textContent = message;
+    toast.style.position = 'fixed';
+    toast.style.bottom = '20px';
+    toast.style.left = '50%';
+    toast.style.transform = 'translateX(-50%)';
+    toast.style.background = type === 'error' ? '#ff6b6b' : type === 'success' ? '#38d39f' : '#6C5CE7';
+    toast.style.color = 'white';
+    toast.style.padding = '12px 24px';
+    toast.style.borderRadius = '8px';
+    toast.style.zIndex = '9999';
+    toast.style.fontSize = '1em';
+    toast.style.fontFamily = 'Share Tech Mono, monospace';
+    toast.style.boxShadow = '0 4px 12px rgba(0, 0, 0, 0.3)';
+    toast.style.transition = 'opacity 0.3s ease';
+    
+    document.body.appendChild(toast);
+    
+    setTimeout(() => {
+        toast.style.opacity = '0';
+        setTimeout(() => toast.remove(), 300);
+    }, 3000);
+}

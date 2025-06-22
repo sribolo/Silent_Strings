@@ -1,19 +1,23 @@
 import os
 import base64
 import requests
+import pyotp
+import qrcode
+import io
 from flask import (
     Flask, g, json,
     render_template, request, jsonify, session,
-    redirect, url_for, send_from_directory, flash, send_file, make_response
+    redirect, url_for, send_from_directory, flash
 )
 from flask_dance.contrib.google import make_google_blueprint, google
 from flask_session import Session
 from flask_wtf import CSRFProtect
 from flask_limiter import Limiter
 from flask_limiter.util import get_remote_address
+from werkzeug.security import generate_password_hash, check_password_hash
 from dotenv import load_dotenv
 from flask_sqlalchemy import SQLAlchemy
-from forms import SignupForm, LoginForm, ForgotPasswordForm, ResetPasswordForm, ResetProgressForm
+from forms import SignupForm, LoginForm, ForgotPasswordForm, ResetPasswordForm, ResetProgressForm, MFAVerificationForm, MFASetupForm
 from flask_migrate import Migrate
 from itsdangerous import URLSafeTimedSerializer
 from flask_mail import Mail, Message
@@ -25,10 +29,6 @@ try:
 except ImportError:
     PickleType = None
 import json
-import bcrypt
-from io import BytesIO
-import pyotp
-import qrcode
 
 
 # === Load Environment Variables ===
@@ -62,9 +62,6 @@ class User(db.Model):
     username = db.Column(db.String(80), unique=True, nullable=False)
     email = db.Column(db.String(120), unique=True, nullable=False)
     pwd_hash = db.Column(db.String(256), nullable=False)
-    otp_secret = db.Column(db.String(16), nullable=True)
-    mfa_enabled = db.Column(db.Boolean, default=False)
-    profile_public = db.Column(db.Boolean, default=True)
     avatar_character = db.Column(db.String(120), nullable=True)
     avatar_hair = db.Column(db.JSON, nullable=True)  # Store full hair data
     avatar_clothes = db.Column(db.JSON, nullable=True)  # Store full clothes data
@@ -73,6 +70,10 @@ class User(db.Model):
     achievements = db.Column(JSON if JSON else PickleType, default=list)
     unlocks = db.Column(JSON if JSON else PickleType, default=list)
     is_admin = db.Column(db.Boolean, default=False)
+    # MFA and Privacy fields
+    otp_secret = db.Column(db.String(16), nullable=True)
+    mfa_enabled = db.Column(db.Boolean, default=False)
+    profile_public = db.Column(db.Boolean, default=True)
 
 # === CSRF Protection ===
 csrf = CSRFProtect(app)
@@ -179,8 +180,8 @@ def signup():
             flash("That email is already registered. Please log in.", "error")
             return render_template("signup.html", form=form, recaptcha_site_key=os.getenv("RECAPTCHA_SITE_KEY"))
 
-        pwd_hash = bcrypt.hashpw(pwd.encode('utf-8'), bcrypt.gensalt())
-        user = User(username=username, email=email, pwd_hash=pwd_hash.decode('utf-8'))
+        pwd_hash = generate_password_hash(pwd)
+        user = User(username=username, email=email, pwd_hash=pwd_hash)
         db.session.add(user)
         db.session.commit()
         session["user"] = {"username": username, "email": email}
@@ -204,16 +205,47 @@ def login():
         pwd   = form.password.data
         user  = User.query.filter_by(email=email).first()
 
-        if user and bcrypt.checkpw(pwd.encode('utf-8'), user.pwd_hash.encode('utf-8')):
+        if user and check_password_hash(user.pwd_hash, pwd):
+            # Check if MFA is enabled
             if user.mfa_enabled:
-                session['email_for_mfa'] = user.email
-                return redirect(url_for('verify_mfa'))
-            session["user"] = {"username": user.username, "email": email}
-            return redirect(url_for("customise"))
+                # Store user info temporarily and redirect to MFA verification
+                session['pending_mfa_user'] = {"username": user.username, "email": email}
+                return redirect(url_for("verify_mfa_login"))
+            else:
+                # No MFA, proceed with normal login
+                session["user"] = {"username": user.username, "email": email}
+                return redirect(url_for("customise"))
         flash("Invalid email or password", "error")
     return render_template("login.html", form=form, recaptcha_site_key=os.getenv("RECAPTCHA_SITE_KEY"))
 
-
+@app.route("/verify-mfa-login", methods=["GET", "POST"])
+def verify_mfa_login():
+    if 'pending_mfa_user' not in session:
+        return redirect(url_for("login"))
+    
+    form = MFAVerificationForm()
+    if form.validate_on_submit():
+        otp_code = form.otp_code.data
+        email = session['pending_mfa_user']['email']
+        user = User.query.filter_by(email=email).first()
+        
+        if user and user.mfa_enabled:
+            # Verify the OTP code
+            totp = pyotp.TOTP(user.otp_secret)
+            if totp.verify(otp_code):
+                # MFA verified, complete login
+                session["user"] = session['pending_mfa_user']
+                session.pop('pending_mfa_user', None)
+                session['mfa_verified'] = True
+                return redirect(url_for("customise"))
+            else:
+                flash("Invalid OTP code", "error")
+        else:
+            flash("MFA verification failed", "error")
+            session.pop('pending_mfa_user', None)
+            return redirect(url_for("login"))
+    
+    return render_template("verify_mfa_login.html", form=form)
 
 @app.route('/guest_login', methods=['POST'])
 def guest_login():
@@ -516,7 +548,7 @@ def reset_password(token):
     if form.validate_on_submit():
         user = User.query.filter_by(email=email).first()
         if user:
-            user.pwd_hash = bcrypt.hashpw(form.password.data.encode('utf-8'), bcrypt.gensalt())
+            user.pwd_hash = generate_password_hash(form.password.data)
             db.session.commit()
             flash("Password updated!", "success")
             return redirect(url_for('login'))
@@ -553,19 +585,15 @@ def profile():
         is_guest = False
 
         user = User.query.filter_by(email=email).first()
-        if not user:
-            flash('User not found.', 'error')
-            return redirect(url_for('login'))
-
-        # Flatten avatar parts for rendering
-        avatar_parts = {
-            'characters': user.avatar_character,
-            'hair': user.avatar_hair,
-            'clothes': user.avatar_clothes,
-            'acc': user.avatar_acc,
-            'face': user.avatar_face
-        }
-        avatar_parts = flatten_avatar_parts(avatar_parts)
+        if user:
+            clothes = user.avatar_clothes if isinstance(user.avatar_clothes, dict) else {}
+            avatar_parts = {
+                'characters': user.avatar_character,
+                'hair': user.avatar_hair,
+                'clothes': clothes,
+                'acc': user.avatar_acc,
+                'face': user.avatar_face
+            }
     elif session.get("guest"):
         username = session.get("agent_name", "Guest Agent")
         email = None
@@ -573,6 +601,9 @@ def profile():
         avatar_parts = session.get("avatar_parts", {})
     else:
         return redirect(url_for('login'))
+
+    # Flatten avatar_parts so all keys are directly accessible by the template
+    avatar_parts = flatten_avatar_parts(avatar_parts)
 
     # Check if avatar is complete
     required_parts = ['characters', 'clothes', 'hair', 'face', 'acc']
@@ -596,172 +627,213 @@ def profile():
         is_guest=is_guest,
         avatar_parts=avatar_parts,
         is_logged_in=("user" in session),
-        is_admin=is_admin
+        is_admin=is_admin,
+        user=user if "user" in session else None
     )
 
+@app.route('/profile/<username>')
+def view_profile(username):
+    """View another user's profile (respecting privacy settings)"""
+    if "user" not in session and not session.get("guest"):
+        return redirect(url_for('login'))
+    
+    # Find the user by username
+    user = User.query.filter_by(username=username).first()
+    if not user:
+        flash("User not found", "error")
+        return redirect(url_for('game'))
+    
+    # Check privacy settings
+    if not user.profile_public:
+        flash("This profile is private", "error")
+        return redirect(url_for('game'))
+    
+    # Check if viewing own profile
+    current_user_email = session.get("user", {}).get("email")
+    is_own_profile = current_user_email == user.email
+    
+    # Prepare avatar parts
+    clothes = user.avatar_clothes if isinstance(user.avatar_clothes, dict) else {}
+    avatar_parts = {
+        'characters': user.avatar_character,
+        'hair': user.avatar_hair,
+        'clothes': clothes,
+        'acc': user.avatar_acc,
+        'face': user.avatar_face
+    }
+    avatar_parts = flatten_avatar_parts(avatar_parts)
+    
+    return render_template(
+        "profile.html",
+        username=user.username,
+        email=user.email if is_own_profile else None,
+        is_guest=False,
+        avatar_parts=avatar_parts,
+        is_logged_in=("user" in session),
+        is_admin=user.is_admin,
+        user=user,
+        is_own_profile=is_own_profile,
+        viewing_other_profile=not is_own_profile
+    )
 
 @app.route('/settings', methods=['GET', 'POST'])
 def settings():
     if "user" not in session:
-        return redirect(url_for('login'))
+        return redirect(url_for("login"))
     
-    email = session['user']['email']
+    email = session["user"]["email"]
     user = User.query.filter_by(email=email).first()
+    
     if not user:
-        flash('User not found.', 'error')
-        return redirect(url_for('login'))
-
+        return redirect(url_for("login"))
+    
     sfx_enabled = session.get('sfx_enabled', True)
     music_enabled = session.get('music_enabled', True)
     
+    # Generate QR code for MFA setup if not already enabled
+    qr_code_data = None
+    if not user.mfa_enabled:
+        # Generate a new secret for setup
+        secret = pyotp.random_base32()
+        totp = pyotp.TOTP(secret)
+        provisioning_uri = totp.provisioning_uri(
+            name=user.email,
+            issuer_name="Silent Strings"
+        )
+        
+        # Generate QR code
+        qr = qrcode.QRCode(version=1, box_size=10, border=5)
+        qr.add_data(provisioning_uri)
+        qr.make(fit=True)
+        img = qr.make_image(fill_color="black", back_color="white")
+        
+        # Convert to base64
+        buffer = io.BytesIO()
+        img.save(buffer, format='PNG')
+        qr_code_data = base64.b64encode(buffer.getvalue()).decode()
+        
+        # Store secret temporarily in session
+        session['temp_otp_secret'] = secret
+    
     return render_template('settings.html', 
-                           sfx_enabled=sfx_enabled, 
-                           music_enabled=music_enabled,
-                           mfa_enabled=user.mfa_enabled,
-                           profile_public=user.profile_public)
+                         sfx_enabled=sfx_enabled, 
+                         music_enabled=music_enabled,
+                         user=user,
+                         qr_code_data=qr_code_data)
 
 @app.route('/save-settings', methods=['POST'])
 @csrf.exempt
 def save_settings():
     if "user" not in session:
-        return jsonify(status="error", message="Not logged in"), 401
-
+        return jsonify({"error": "Not authenticated"}), 401
+    
     data = request.get_json()
-    email = session['user']['email']
-    user = User.query.filter_by(email=email).first()
-    if not user:
-        return jsonify(status="error", message="User not found"), 404
-
     session['sfx_enabled'] = data.get('sfx_enabled', True)
     session['music_enabled'] = data.get('music_enabled', True)
-    user.profile_public = data.get('profile_public', True)
     
-    db.session.commit()
+    # Update privacy settings
+    email = session["user"]["email"]
+    user = User.query.filter_by(email=email).first()
+    if user:
+        user.profile_public = data.get('profile_public', True)
+        db.session.commit()
     
     return jsonify(status="ok")
 
-@app.route('/enable-mfa', methods=['GET'])
-def enable_mfa():
+@app.route('/setup-mfa', methods=['POST'])
+@csrf.exempt
+def setup_mfa():
     if "user" not in session:
-        return redirect(url_for('login'))
+        return jsonify({"error": "Not authenticated"}), 401
     
-    email = session['user']['email']
+    data = request.get_json()
+    otp_code = data.get('otp_code')
+    
+    if not otp_code or len(otp_code) != 6:
+        return jsonify({"error": "Invalid OTP code"}), 400
+    
+    # Get the temporary secret from session
+    temp_secret = session.get('temp_otp_secret')
+    if not temp_secret:
+        return jsonify({"error": "No MFA setup in progress"}), 400
+    
+    # Verify the OTP code
+    totp = pyotp.TOTP(temp_secret)
+    if not totp.verify(otp_code):
+        return jsonify({"error": "Invalid OTP code"}), 400
+    
+    # Save the secret and enable MFA
+    email = session["user"]["email"]
     user = User.query.filter_by(email=email).first()
-    if not user:
-        flash('User not found.', 'error')
-        return redirect(url_for('login'))
-
-    user.otp_secret = pyotp.random_base32()
-    db.session.commit()
+    if user:
+        user.otp_secret = temp_secret
+        user.mfa_enabled = True
+        db.session.commit()
+        
+        # Clear temporary secret
+        session.pop('temp_otp_secret', None)
+        
+        return jsonify({"success": "MFA enabled successfully"})
     
-    totp = pyotp.TOTP(user.otp_secret)
-    qr_uri = totp.provisioning_uri(name=user.email, issuer_name='Silent_Strings')
-    
-    img = qrcode.make(qr_uri)
-    buf = BytesIO()
-    img.save(buf)
-    buf.seek(0)
-    
-    return send_file(buf, mimetype='image/png')
-
-@app.route('/verify-mfa', methods=['GET', 'POST'])
-def verify_mfa():
-    email = session.get('email_for_mfa')
-    if not email:
-        return redirect(url_for('login'))
-
-    user = User.query.filter_by(email=email).first()
-    if not user:
-        flash("User not found.", "error")
-        return redirect(url_for('login'))
-
-    if request.method == 'POST':
-        token = request.form.get('token')
-        totp = pyotp.TOTP(user.otp_secret)
-        if totp.verify(token):
-            if 'email_for_mfa' in session: # Coming from login
-                user.mfa_enabled = True
-                db.session.commit()
-                session.pop('email_for_mfa', None)
-                session["user"] = {"username": user.username, "email": user.email}
-                flash('MFA enabled successfully!', 'success')
-                return redirect(url_for('customise'))
-            else: # Coming from settings
-                user.mfa_enabled = True
-                db.session.commit()
-                flash('MFA enabled successfully!', 'success')
-                return redirect(url_for('settings'))
-        else:
-            flash('Invalid MFA token.', 'error')
-
-    return render_template('verify_mfa.html')
-
+    return jsonify({"error": "User not found"}), 404
 
 @app.route('/disable-mfa', methods=['POST'])
+@csrf.exempt
 def disable_mfa():
     if "user" not in session:
-        return redirect(url_for('login'))
-
-    email = session['user']['email']
+        return jsonify({"error": "Not authenticated"}), 401
+    
+    data = request.get_json()
+    otp_code = data.get('otp_code')
+    
+    if not otp_code or len(otp_code) != 6:
+        return jsonify({"error": "Invalid OTP code"}), 400
+    
+    email = session["user"]["email"]
     user = User.query.filter_by(email=email).first()
-    if not user:
-        flash("User not found.", "error")
-        return redirect(url_for('login'))
-
+    
+    if not user or not user.mfa_enabled:
+        return jsonify({"error": "MFA not enabled"}), 400
+    
+    # Verify the OTP code
+    totp = pyotp.TOTP(user.otp_secret)
+    if not totp.verify(otp_code):
+        return jsonify({"error": "Invalid OTP code"}), 400
+    
+    # Disable MFA
     user.mfa_enabled = False
     user.otp_secret = None
     db.session.commit()
-    flash('MFA has been disabled.', 'success')
-    return redirect(url_for('settings'))
-
-
-@app.route('/download-data')
-def download_data():
-    if "user" not in session:
-        return redirect(url_for('login'))
-
-    email = session['user']['email']
-    user = User.query.filter_by(email=email).first()
-    if not user:
-        flash("User not found.", "error")
-        return redirect(url_for('login'))
-
-    user_data = {
-        "username": user.username,
-        "email": user.email,
-        "profile_public": user.profile_public,
-        "avatar": {
-            'character': user.avatar_character,
-            'hair': user.avatar_hair,
-            'clothes': user.avatar_clothes,
-            'acc': user.avatar_acc,
-            'face': user.avatar_face
-        },
-        "achievements": user.achievements,
-        "unlocks": user.unlocks
-    }
     
-    response = make_response(json.dumps(user_data, indent=4))
-    response.headers.set('Content-Type', 'application/json')
-    response.headers.set('Content-Disposition', 'attachment', filename=f'{user.username}_data.json')
-    return response
+    return jsonify({"success": "MFA disabled successfully"})
 
-@app.route('/delete-account', methods=['POST'])
-def delete_account():
+@app.route('/verify-mfa', methods=['POST'])
+@csrf.exempt
+def verify_mfa():
     if "user" not in session:
-        return redirect(url_for('login'))
-
-    email = session['user']['email']
+        return jsonify({"error": "Not authenticated"}), 401
+    
+    data = request.get_json()
+    otp_code = data.get('otp_code')
+    
+    if not otp_code or len(otp_code) != 6:
+        return jsonify({"error": "Invalid OTP code"}), 400
+    
+    email = session["user"]["email"]
     user = User.query.filter_by(email=email).first()
-    if not user:
-        flash("User not found.", "error")
-        return redirect(url_for('login'))
-
-    db.session.delete(user)
-    db.session.commit()
-    session.clear()
-    flash('Your account has been permanently deleted.', 'success')
-    return redirect(url_for('home'))
+    
+    if not user or not user.mfa_enabled:
+        return jsonify({"error": "MFA not enabled"}), 400
+    
+    # Verify the OTP code
+    totp = pyotp.TOTP(user.otp_secret)
+    if not totp.verify(otp_code):
+        return jsonify({"error": "Invalid OTP code"}), 400
+    
+    # Mark MFA as verified for this session
+    session['mfa_verified'] = True
+    
+    return jsonify({"success": "MFA verified successfully"})
 
 @app.route('/level/<level_name>')
 def load_level(level_name):
