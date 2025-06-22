@@ -23,7 +23,7 @@ from itsdangerous import URLSafeTimedSerializer
 from flask_mail import Mail, Message
 from functools import wraps
 from sqlalchemy.dialects.postgresql import JSON
-from flask_login import login_required, current_user
+from flask_login import LoginManager, UserMixin, current_user, login_required, login_user, logout_user
 try:
     from sqlalchemy import PickleType
 except ImportError:
@@ -56,7 +56,7 @@ mail = Mail(app)
 Session(app)
 
 
-class User(db.Model):
+class User(db.Model, UserMixin):
     __tablename__ = "users"
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(80), unique=True, nullable=False)
@@ -80,6 +80,15 @@ csrf = CSRFProtect(app)
 
 # === Rate Limiter ===
 limiter = Limiter( app=app, key_func=get_remote_address, storage_uri=os.getenv("RATELIMIT_STORAGE_URL"))
+
+# === Login Manager Setup ===
+login_manager = LoginManager()
+login_manager.init_app(app)
+login_manager.login_view = 'login'
+
+@login_manager.user_loader
+def load_user(user_id):
+    return User.query.get(int(user_id))
 
 # === Generate a CSP Nonce Per Request ===
 @app.before_request
@@ -184,7 +193,7 @@ def signup():
         user = User(username=username, email=email, pwd_hash=pwd_hash)
         db.session.add(user)
         db.session.commit()
-        session["user"] = {"username": username, "email": email}
+        login_user(user)
         flash("Account created!", "success")
         return redirect(url_for("customise"))
 
@@ -213,7 +222,7 @@ def login():
                 return redirect(url_for("verify_mfa_login"))
             else:
                 # No MFA, proceed with normal login
-                session["user"] = {"username": user.username, "email": email}
+                login_user(user)
                 return redirect(url_for("customise"))
         flash("Invalid email or password", "error")
     return render_template("login.html", form=form, recaptcha_site_key=os.getenv("RECAPTCHA_SITE_KEY"))
@@ -234,10 +243,15 @@ def verify_mfa_login():
             totp = pyotp.TOTP(user.otp_secret)
             if totp.verify(otp_code):
                 # MFA verified, complete login
-                session["user"] = session['pending_mfa_user']
-                session.pop('pending_mfa_user', None)
-                session['mfa_verified'] = True
-                return redirect(url_for("customise"))
+                user_data = session.pop('pending_mfa_user', None)
+                user = User.query.filter_by(email=user_data['email']).first()
+                if user:
+                    login_user(user)
+                    session['mfa_verified'] = True
+                    return redirect(url_for("customise"))
+                else:
+                    flash("Could not complete login.", "error")
+                    return redirect(url_for("login"))
             else:
                 flash("Invalid OTP code", "error")
         else:
@@ -257,7 +271,10 @@ def guest_login():
 # Log-Out
 @app.route("/logout")
 def logout():
+    """Logs out the user"""
+    logout_user()
     session.clear()
+    flash("You have been logged out.", "success")
     return redirect(url_for("home"))
 
 # Avatar Customisation
@@ -272,11 +289,11 @@ def customise():
             user = User(username=info.get("name"), email=email, pwd_hash="")
             db.session.add(user)
             db.session.commit()
-        session["user"] = {"username": info.get("name"), "email": email}
+        login_user(user)
         name = info.get("name")
 
-    if "user" in session:
-        name = session["user"]["username"]
+    if current_user.is_authenticated:
+        name = current_user.username
     elif "agent_name" in session:
         name = session["agent_name"]
     else:
@@ -466,8 +483,8 @@ def save_avatar():
         session['agent_name'] = name
         session['avatar_parts'] = selections
 
-        if "user" in session:
-            user = User.query.filter_by(email=session["user"]["email"]).first()
+        if current_user.is_authenticated:
+            user = User.query.filter_by(email=current_user.email).first()
             if user:
                 char = selections.get('characters')
                 user.avatar_character = char.get('name') if isinstance(char, dict) else char
@@ -492,8 +509,8 @@ def get_avatar():
     if not avatar:
         return jsonify(error="No avatar data found"), 404
 
-    if "user" in session:
-        name = session["user"].get("username", "Agent")
+    if current_user.is_authenticated:
+        name = current_user.username
     elif "agent_name" in session:
         name = session.get("agent_name", "Agent")
     else:
@@ -578,13 +595,14 @@ def profile():
     email = None
     avatar_parts = {}
     is_guest = False
+    user = None
 
-    if "user" in session:
-        username = session["user"]["username"]
-        email = session["user"]["email"]
+    if current_user.is_authenticated:
+        user = current_user
+        username = user.username
+        email = user.email
         is_guest = False
 
-        user = User.query.filter_by(email=email).first()
         if user:
             clothes = user.avatar_clothes if isinstance(user.avatar_clothes, dict) else {}
             avatar_parts = {
@@ -615,10 +633,8 @@ def profile():
 
     # Check if user is admin
     is_admin = False
-    if "user" in session:
-        user = User.query.filter_by(email=session["user"]["email"]).first()
-        if user:
-            is_admin = user.is_admin
+    if current_user.is_authenticated:
+        is_admin = current_user.is_admin
 
     return render_template(
         "profile.html",
@@ -626,15 +642,15 @@ def profile():
         email=email,
         is_guest=is_guest,
         avatar_parts=avatar_parts,
-        is_logged_in=("user" in session),
+        is_logged_in=current_user.is_authenticated,
         is_admin=is_admin,
-        user=user if "user" in session else None
+        user=user
     )
 
 @app.route('/profile/<username>')
 def view_profile(username):
     """View another user's profile (respecting privacy settings)"""
-    if "user" not in session and not session.get("guest"):
+    if not current_user.is_authenticated and not session.get("guest"):
         return redirect(url_for('login'))
     
     # Find the user by username
@@ -649,8 +665,7 @@ def view_profile(username):
         return redirect(url_for('game'))
     
     # Check if viewing own profile
-    current_user_email = session.get("user", {}).get("email")
-    is_own_profile = current_user_email == user.email
+    is_own_profile = current_user.is_authenticated and current_user.email == user.email
     
     # Prepare avatar parts
     clothes = user.avatar_clothes if isinstance(user.avatar_clothes, dict) else {}
@@ -669,7 +684,7 @@ def view_profile(username):
         email=user.email if is_own_profile else None,
         is_guest=False,
         avatar_parts=avatar_parts,
-        is_logged_in=("user" in session),
+        is_logged_in=current_user.is_authenticated,
         is_admin=user.is_admin,
         user=user,
         is_own_profile=is_own_profile,
@@ -678,10 +693,10 @@ def view_profile(username):
 
 @app.route('/settings', methods=['GET', 'POST'])
 def settings():
-    if "user" not in session:
+    if not current_user.is_authenticated:
         return redirect(url_for("login"))
     
-    email = session["user"]["email"]
+    email = current_user.email
     user = User.query.filter_by(email=email).first()
     
     if not user:
@@ -724,7 +739,7 @@ def settings():
 @app.route('/save-settings', methods=['POST'])
 @csrf.exempt
 def save_settings():
-    if "user" not in session:
+    if not current_user.is_authenticated:
         return jsonify({"error": "Not authenticated"}), 401
     
     data = request.get_json()
@@ -732,7 +747,7 @@ def save_settings():
     session['music_enabled'] = data.get('music_enabled', True)
     
     # Update privacy settings
-    email = session["user"]["email"]
+    email = current_user.email
     user = User.query.filter_by(email=email).first()
     if user:
         user.profile_public = data.get('profile_public', True)
@@ -743,7 +758,7 @@ def save_settings():
 @app.route('/setup-mfa', methods=['POST'])
 @csrf.exempt
 def setup_mfa():
-    if "user" not in session:
+    if not current_user.is_authenticated:
         return jsonify({"error": "Not authenticated"}), 401
     
     data = request.get_json()
@@ -763,7 +778,7 @@ def setup_mfa():
         return jsonify({"error": "Invalid OTP code"}), 400
     
     # Save the secret and enable MFA
-    email = session["user"]["email"]
+    email = current_user.email
     user = User.query.filter_by(email=email).first()
     if user:
         user.otp_secret = temp_secret
@@ -780,7 +795,7 @@ def setup_mfa():
 @app.route('/disable-mfa', methods=['POST'])
 @csrf.exempt
 def disable_mfa():
-    if "user" not in session:
+    if not current_user.is_authenticated:
         return jsonify({"error": "Not authenticated"}), 401
     
     data = request.get_json()
@@ -789,7 +804,7 @@ def disable_mfa():
     if not otp_code or len(otp_code) != 6:
         return jsonify({"error": "Invalid OTP code"}), 400
     
-    email = session["user"]["email"]
+    email = current_user.email
     user = User.query.filter_by(email=email).first()
     
     if not user or not user.mfa_enabled:
@@ -810,7 +825,7 @@ def disable_mfa():
 @app.route('/verify-mfa', methods=['POST'])
 @csrf.exempt
 def verify_mfa():
-    if "user" not in session:
+    if not current_user.is_authenticated:
         return jsonify({"error": "Not authenticated"}), 401
     
     data = request.get_json()
@@ -819,7 +834,7 @@ def verify_mfa():
     if not otp_code or len(otp_code) != 6:
         return jsonify({"error": "Invalid OTP code"}), 400
     
-    email = session["user"]["email"]
+    email = current_user.email
     user = User.query.filter_by(email=email).first()
     
     if not user or not user.mfa_enabled:
@@ -850,9 +865,9 @@ def game():
     avatar_parts = {}
     is_guest = False
 
-    if "user" in session:
-        username = session["user"]["username"]
-        email = session["user"]["email"]
+    if current_user.is_authenticated:
+        username = current_user.username
+        email = current_user.email
         is_guest = False
         user = User.query.filter_by(email=email).first()
         if user:
@@ -1322,7 +1337,7 @@ def mission(location):
 def login_required(f):
     @wraps(f)
     def decorated_function(*args, **kwargs):
-        if "user" not in session and not session.get("guest"):
+        if not current_user.is_authenticated:
             return redirect(url_for("login"))
         return f(*args, **kwargs)
     return decorated_function
@@ -1337,7 +1352,7 @@ def tools():
 def api_achievements():
     # It's possible that a user is in session but not in the database
     # or that current_user is not correctly populated.
-    if not hasattr(current_user, 'email'):
+    if not current_user.is_authenticated:
         return jsonify({"error": "Not authenticated or user data missing"}), 401
         
     user = User.query.filter_by(email=current_user.email).first()
@@ -1360,12 +1375,11 @@ def api_achievements():
 def admin_required(f):
     @wraps(f)
     def decorated_function(*args, **kwargs):
-        if "user" not in session:
+        if not current_user.is_authenticated:
             flash("Please log in to access this page.", "error")
             return redirect(url_for('login'))
         
-        user = User.query.filter_by(email=session["user"]["email"]).first()
-        if not user or not user.is_admin:
+        if not current_user.is_admin:
             flash("Admin access required.", "error")
             return redirect(url_for('home'))
         return f(*args, **kwargs)
