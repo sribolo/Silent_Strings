@@ -100,7 +100,7 @@ def add_security_headers(response):
         f"script-src 'self' https://www.google.com/recaptcha/ https://www.gstatic.com/recaptcha/ 'nonce-{nonce}'; "
         f"style-src  'self' 'nonce-{nonce}' 'unsafe-inline' https://fonts.googleapis.com; "
         "font-src   'self' https://fonts.gstatic.com; "
-        "img-src    'self' https://www.google.com/recaptcha/ https://www.gstatic.com/recaptcha/; "
+        "img-src    'self' data: https://www.google.com/recaptcha/ https://www.gstatic.com/recaptcha/; "
         "frame-src  https://www.google.com/recaptcha/ https://www.gstatic.com/recaptcha/; "
         "connect-src 'self' https://www.google.com/recaptcha/ https://www.gstatic.com/recaptcha/; "
     )
