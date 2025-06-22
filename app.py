@@ -100,7 +100,7 @@ def add_security_headers(response):
         f"script-src 'self' https://www.google.com/recaptcha/ https://www.gstatic.com/recaptcha/ 'nonce-{nonce}'; "
         f"style-src  'self' 'nonce-{nonce}' 'unsafe-inline' https://fonts.googleapis.com; "
         "font-src   'self' https://fonts.gstatic.com; "
-        "img-src    'self' https://www.google.com/recaptcha/ https://www.gstatic.com/recaptcha/; "
+        "img-src    'self' data: https://www.google.com/recaptcha/ https://www.gstatic.com/recaptcha/; "
         "frame-src  https://www.google.com/recaptcha/ https://www.gstatic.com/recaptcha/; "
         "connect-src 'self' https://www.google.com/recaptcha/ https://www.gstatic.com/recaptcha/; "
     )
@@ -1335,7 +1335,16 @@ def tools():
 @app.route('/api/achievements', methods=['GET', 'POST'])
 @login_required
 def api_achievements():
+    # It's possible that a user is in session but not in the database
+    # or that current_user is not correctly populated.
+    if not hasattr(current_user, 'email'):
+        return jsonify({"error": "Not authenticated or user data missing"}), 401
+        
     user = User.query.filter_by(email=current_user.email).first()
+
+    if not user:
+        return jsonify({"error": "User not found"}), 404
+
     if request.method == 'GET':
         return jsonify({
             "achievements": user.achievements or [],
