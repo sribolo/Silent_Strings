@@ -137,7 +137,7 @@ document.addEventListener('DOMContentLoaded', function() {
             // Auto-submit when 6 digits are entered
             if (this.value.length === 6) {
                 const setupBtn = document.getElementById('setup-mfa-btn');
-                const disableBtn = document.querySelector('.modal-button.confirm');
+                const disableBtn = document.getElementById('confirm-disable-mfa-btn');
                 
                 if (setupBtn && this.id === 'setup-mfa-otp') {
                     setupBtn.click();
