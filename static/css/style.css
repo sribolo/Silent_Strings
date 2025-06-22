@@ -2548,20 +2548,7 @@ input::placeholder {
 }
 
 /* Input Styles */
-.pixel-input {
-    background: rgba(35, 35, 43, 0.8);
-    border: 2px solid #6C5CE7;
-    color: #bcb9ff;
-    font-family: 'Share Tech Mono', monospace;
-    padding: 12px;
-    border-radius: 8px;
-    font-size: 1em;
-    text-align: center;
-    letter-spacing: 2px;
-    width: 100%;
-    max-width: 200px;
-    margin: 10px 0;
-}
+
 
 .pixel-input:focus {
     outline: none;
