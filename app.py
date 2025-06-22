@@ -71,7 +71,7 @@ class User(db.Model, UserMixin):
     unlocks = db.Column(JSON if JSON else PickleType, default=list)
     is_admin = db.Column(db.Boolean, default=False)
     # MFA and Privacy fields
-    otp_secret = db.Column(db.String(16), nullable=True)
+    otp_secret = db.Column(db.String(64), nullable=True)
     mfa_enabled = db.Column(db.Boolean, default=False)
     profile_public = db.Column(db.Boolean, default=True)
 
