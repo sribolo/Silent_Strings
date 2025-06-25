@@ -28,7 +28,7 @@
             <header class="admin-header">
                 <h1>{% block page_title %}Dashboard{% endblock %}</h1>
                 <div class="admin-user-info">
-                    <span>Welcome, {{ session.user.username }}</span>
+                    <span>Welcome, {{ session['user']['username'] if session.get('user') else 'Guest' }}</span>
                 </div>
             </header>
 
