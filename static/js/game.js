@@ -2,7 +2,7 @@ const player = document.getElementById('player-avatar');
 const map = document.getElementById('game-map');
 
 // Avatar config
-const AVATAR_SIZE = 64;  // Change to 96 if you want bigger avatars!
+const AVATAR_SIZE = 64;  
 const NUM_NPCS = 5;
 const npcElements = [];
 let spriteData = null;
@@ -13,7 +13,7 @@ fetch('/get_sprites')
   .then(data => {
     spriteData = data;
     spawnNpcs();
-    setPlayerFrame(); // Ensure correct size for player layers
+    setPlayerFrame(); 
   });
 
 // --- SPAWN NPCs ---
@@ -41,7 +41,7 @@ function spawnNpcs() {
 
 // --- RENDER LAYERED AVATAR ---
 function renderAvatarLayers(container, avatar) {
-  container.innerHTML = ''; // Clear existing
+  container.innerHTML = ''; 
   if (avatar.characters && avatar.characters.img) {
     const charImg = document.createElement('img');
     charImg.src = avatar.characters.img;
@@ -161,7 +161,7 @@ function randomNpcAvatar(spriteData) {
     }
   }
 
-  // --- Always add hair if possible ---
+ 
   if (spriteData.hair) {
     const subcats = Object.keys(spriteData.hair);
     if (subcats.length > 0) {
@@ -175,7 +175,7 @@ function randomNpcAvatar(spriteData) {
     }
   }
 
-  // --- Always add at least 1 face feature (if you want) ---
+ 
   if (spriteData.face) {
     const subcats = Object.keys(spriteData.face);
     if (subcats.length > 0) {
@@ -189,7 +189,7 @@ function randomNpcAvatar(spriteData) {
     }
   }
 
-  // --- Accessories (optional) ---
+  // --- Accessories  ---
   if (spriteData.acc) {
     const subcats = Object.keys(spriteData.acc);
     if (subcats.length > 0) {
@@ -203,7 +203,7 @@ function randomNpcAvatar(spriteData) {
     }
   }
 
-  // --- Shoes (optional) ---
+  // --- Shoes ---
   if (spriteData.clothes && spriteData.clothes.shoes && spriteData.clothes.shoes.length > 0) {
     const shoes = getRandomElement(spriteData.clothes.shoes);
     avatar.clothes.shoes = { name: shoes.name, img: shoes.img };
@@ -213,7 +213,7 @@ function randomNpcAvatar(spriteData) {
 }
 
 
-// --- ANIMATE NPCs (optional, you can comment this out if not wanted) ---
+// --- ANIMATE NPCs ---
 function moveNpc(npcDiv) {
   const currentLeft = parseFloat(npcDiv.style.left);
   const currentTop = parseFloat(npcDiv.style.top);
@@ -244,13 +244,13 @@ setInterval(() => {
 // --- INIT PLAYER LAYER SIZES ON LOAD ---
 window.addEventListener('DOMContentLoaded', setPlayerFrame);
 
-// --- OPTIONAL: Sound setup ---
+// --- Sound setup ---
 window.onload = function() {
   const bgm = document.getElementById('bgm');
   if (bgm) bgm.volume = 0.3;
 };
 
-// --- Mission Buttons (if you have them) ---
+// --- Mission Buttons  ---
 document.addEventListener('DOMContentLoaded', function() {
   document.querySelectorAll('.map-area-btn').forEach(function(btn) {
     btn.addEventListener('click', function() {

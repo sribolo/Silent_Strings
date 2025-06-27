@@ -203,4 +203,3 @@ function showAchievementPopup(name, description) {
     setTimeout(() => popup.remove(), 3500);
 }
 
-// Example usage: unlockAchievement('pizza_lover'); 

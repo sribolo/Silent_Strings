@@ -2,13 +2,13 @@
 
 window.addEventListener('DOMContentLoaded', () => {
   const dataDiv = document.getElementById('mission-data');
-  if (!dataDiv) return; // No data, bail out
+  if (!dataDiv) return; 
 
   // Parse dataset
   window.completedObjectives = JSON.parse(dataDiv.dataset.completed || '[]');
   window.totalObjectives = parseInt(dataDiv.dataset.total || '0');
   window.missionLocation = dataDiv.dataset.location;
-  let timeLeft = parseInt(dataDiv.dataset.time || '300'); // seconds
+  let timeLeft = parseInt(dataDiv.dataset.time || '300'); 
 
   // ------------------- TIMER -------------------
   const timerValue = document.getElementById('timer-value');

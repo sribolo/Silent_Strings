@@ -1,4 +1,4 @@
-// Guest Modal JavaScript
+
 document.addEventListener('DOMContentLoaded', function() {
     const guestBtn = document.getElementById('guestBtn');
     const guestModal = document.getElementById('guestModal');

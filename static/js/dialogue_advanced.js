@@ -512,7 +512,7 @@ window.missionDialogues = {
         text: "You failed to analyze the persistent malware. Attackers maintain remote access to the government network.<br><b>MISSION FAILED.</b>",
         options: [{ text: "Restart Mission", next: "start" }]
       },
-      // Soft Fail: Didn't restore database
+      
       "fail_database_not_restored": {
         speaker: "System",
         text: "You failed to recover deleted database records. Some data is lost and audit will be harder.",
@@ -798,13 +798,13 @@ window.missionDialogues = {
           text: "The malware spread too far. The city is compromised.",
           options: [{ text: "Retry", next: "start" }]
         },
-        // Hard Fail: Didn't analyze DDoS logs, attack repeats
+       
         "fail_ddos_not_analyzed": {
           speaker: "System",
           text: "You failed to analyze DDoS logs. The attack repeats and the city loses control of transit.<br><b>MISSION FAILED.</b>",
           options: [{ text: "Restart Mission", next: "start" }]
         },
-        // Soft Fail: Didn't remove rogue WiFi
+        
         "fail_wifi_not_removed": {
           speaker: "System",
           text: "You didn't remove rogue WiFi configs. Systems are exposed to new threats.",
@@ -859,13 +859,13 @@ window.missionDialogues = {
       }
     },
     failStates: {
-      // Hard Fail: Didn't disarm protocol, global disaster
+      
       "fail_protocol_not_disarmed": {
         speaker: "System",
         text: "You failed to disarm the Silent Strings protocol. Global chaos ensues.<br><b>MISSION FAILED.</b>",
         options: [{ text: "Restart Final Mission", next: "start" }]
       },
-      // Soft Fail: Didn't decrypt Ghostline's message
+      
       "fail_message_not_decrypted": {
         speaker: "System",
         text: "You didn't decrypt Ghostline's last message. The true identity is lost.",
@@ -940,7 +940,7 @@ function calculateDifficultyMultiplier(level, difficulty) {
             break;
     }
     
-    // Ensure multiplier doesn't go below 0.4
+    
     return Math.max(multiplier, 0.4);
 }
 

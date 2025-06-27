@@ -443,7 +443,7 @@ def get_sprites():
         subcategories = {}
         for root, dirs, files in os.walk(category_path):
             rel_root = os.path.relpath(root, category_path)
-            # Skip root if not a subcategory (e.g. for face, acc, etc.)
+
             if rel_root == '.':
                 subcat_name = 'default'
             else:
@@ -1359,7 +1359,7 @@ def mission(location):
         session[progress_key] = completed
         session.modified = True
         
-        # Check if mission is completed (all objectives done)
+        # Check if mission is completed 
         total_objectives = len(mission_data.get('objectives', []))
         if len(completed) == total_objectives:
             completed_missions = session.get('completed_missions', [])

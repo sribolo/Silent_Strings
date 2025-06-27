@@ -36,5 +36,3 @@ if __name__ == "__main__":
         subfolder_path = os.path.join(hair_base, subfolder)
         if os.path.isdir(subfolder_path):
             rename_files(subfolder_path, subfolder)
-
-    # You can add more folders here if needed (e.g., acc, other face subfolders, etc.)

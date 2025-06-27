@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+
 """
 Script to grant admin privileges to a user
 Usage: python3 make_admin.py <email>

@@ -4,11 +4,11 @@ import json
 # Only reference files that exist in your static folders!
 all_avatar_parts = [
     {
-        'characters': 'char_1',  # exists
-        'clothes': {'subcategory': 'shoes', 'name': 'shoe18'},  # exists
-        'hair': {'subcategory': 'ponytail', 'name': 'ponytail9'},  # check if exists in your static folder
-        'face': {'subcategory': 'blush', 'name': 'blush2'},  # exists
-        'acc': 'glasses001',  # exists
+        'characters': 'char_1',  
+        'clothes': {'subcategory': 'shoes', 'name': 'shoe18'},  
+        'hair': {'subcategory': 'ponytail', 'name': 'ponytail9'},  
+        'face': {'subcategory': 'blush', 'name': 'blush2'},  
+        'acc': 'glasses001',  
     },
     {
         'characters': 'char_2',
@@ -17,7 +17,7 @@ all_avatar_parts = [
         'face': {'subcategory': 'blush', 'name': 'blush3'},
         'acc': 'glasses010',
     },
-    # Add more avatar_parts dicts as needed, but only use filenames you have in your static folders!
+  
 ]
 
 STATIC_ROOT = os.path.join(os.path.dirname(__file__), 'static', 'images', 'avatar_parts')

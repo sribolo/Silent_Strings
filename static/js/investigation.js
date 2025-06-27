@@ -1,6 +1,3 @@
-// Investigation Page Script
-// Handles background, menu, modals, dialogue, objectives, and notes
-
 // --- Text Animation Helper ---
 function typeText(text, element, speed = 30) {
     if (!element) return;
@@ -43,7 +40,7 @@ function setBackgroundImage() {
     };
     img.onerror = function() {
         bgDiv.style.backgroundImage = 'none';
-        bgDiv.style.backgroundColor = '#222'; // fallback color
+        bgDiv.style.backgroundColor = '#222'; 
     };
     img.src = imageUrl;
 }
@@ -55,17 +52,16 @@ const objectiveToolMap = {
   scanner: 'scan-btn',
   analyze: 'analyze-btn',
   analysis: 'analyze-btn',
-  recover: 'scan-btn', // or a specific recovery tool if you have one
+  recover: 'scan-btn',
   credential: 'analyze-btn',
   password: 'analyze-btn',
   interview: 'interview-btn',
   note: 'notes-btn',
   log: 'analyze-btn',
-  // Add more mappings as needed
 };
 
 function getToolsForObjectives(objectives) {
-  const toolSet = new Set(['interview-btn', 'notes-btn']); // Always include interview and notes
+  const toolSet = new Set(['interview-btn', 'notes-btn']); 
   objectives.forEach(obj => {
     for (const [keyword, toolId] of Object.entries(objectiveToolMap)) {
       if (obj.toLowerCase().includes(keyword)) {
@@ -212,7 +208,7 @@ function markObjectiveComplete(idx) {
     if (completed.length === objectives.length) {
         showToast('Mission Complete! All objectives accomplished!');
         setTimeout(function() {
-            window.location.href = '/game'; // or your desired location
+            window.location.href = '/game'; 
         }, 2000);
     }
 }
@@ -253,7 +249,6 @@ function getCurrentDialogueNodes() {
     const bg = document.querySelector('.location-background');
     const loc = bg ? bg.dataset.location : 'hq';
     const levelKey = locationToLevel[loc] || 'level1';
-    // The dialogue file should define e.g. window.level1Dialogues
     const dialogueObj = window[levelKey + 'Dialogues'];
     return dialogueObj && dialogueObj.nodes ? dialogueObj.nodes : {};
 }
@@ -316,7 +311,7 @@ function showSummary() {
     }
 }
 
-// --- NPC Portrait Rendering (using game.js logic) ---
+// --- NPC Portrait Rendering ---
 const AVATAR_SIZE = 128;
 let investigationSpriteData = null;
 let investigationNpcAvatars = {};
@@ -468,7 +463,7 @@ function showToast(msg) {
 }
 
 
-// --- Hint System (placeholder) ---
+// --- Hint System  ---
 function showHint() {
     const hintBox = document.getElementById('hint-box');
     const hintContent = document.getElementById('hint-content');
@@ -533,7 +528,6 @@ document.addEventListener('DOMContentLoaded', function() {
     hamburger.onclick = function() {
       dropdown.classList.toggle('hidden');
     };
-    // Optional: close menu when clicking outside
     document.addEventListener('click', function(e) {
       if (!dropdown.contains(e.target) && e.target !== hamburger) {
         dropdown.classList.add('hidden');
@@ -559,7 +553,7 @@ function showCelebrationModal() {
   `;
   document.body.appendChild(modal);
   document.getElementById('exit-mission-btn').onclick = function() {
-    window.location.href = '/game'; // Change this to your desired exit location
+    window.location.href = '/game'; 
   };
 }
 

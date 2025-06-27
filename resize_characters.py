@@ -3,7 +3,7 @@ import os
 
 
 
-# Update these paths!
+
 sprite_sheet_path = "static/images/avatar_parts/characters/char_all.png"
 output_folder = "static/images/avatar_parts/characters/char_all_tiles"
 

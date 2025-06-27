@@ -54,7 +54,7 @@
 {% block extra_js %}
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    // Set the current level based on the location (if needed)
+    // Set the current level based on the location 
     if (typeof setLevel === 'function') {
         setLevel("{{ location }}");
     }

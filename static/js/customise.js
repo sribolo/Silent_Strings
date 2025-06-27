@@ -360,14 +360,13 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   };
 
-}); // end DOMContentLoaded
+}); 
 
 // === Function to update the big preview on the left ===
 function updateAvatarPreview(selections) {
   const preview = document.getElementById('avatar-preview');
   preview.innerHTML = "";
 
-  // Always render character first if present
   if (selections.characters && selections.characters.name) {
     const img = document.createElement('img');
     img.src = getAvatarImgPath('characters', selections.characters);
@@ -375,14 +374,13 @@ function updateAvatarPreview(selections) {
     preview.appendChild(img);
   }
 
-  // Render other layers (skip characters)
+
   const LAYER_ORDER = ['clothes', 'hair', 'face', 'acc'];
   LAYER_ORDER.forEach(category => {
     if (selections[category]) {
       if (typeof selections[category] === 'object' && !Array.isArray(selections[category])) {
         Object.values(selections[category]).forEach(sel => {
           if (sel && sel.name) {
-            // PATCH: use "default" if subcategory is empty
             const img = document.createElement('img');
             img.src = getAvatarImgPath(category, { ...sel, subcategory: sel.subcategory || "default" });
             img.className = 'avatar-layer';
@@ -400,7 +398,6 @@ function getAvatarImgPath(part, value) {
   if (part === 'characters') {
     return `/static/images/avatar_parts/characters/${value.name}.png`;
   } else if (part === 'acc' && value.name) {
-    // For accessories: NO subfolder, just the file name!
     return `/static/images/avatar_parts/acc/${value.name}.png`;
   } else if (value.name) {
     const subcat = value.subcategory || "default";

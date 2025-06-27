@@ -40,7 +40,7 @@ const sfx = {
         if (sound) {
             // Clone the audio to allow overlapping sounds
             const soundClone = sound.cloneNode();
-            soundClone.volume = 0.2; // Set UI sounds to 20% volume
+            soundClone.volume = 0.2; 
             soundClone.play().catch(e => console.log('Audio play failed:', e));
         }
     },

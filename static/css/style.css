@@ -56,8 +56,8 @@ html, body {
   top: 0;
   left: 0;
   display: flex;
-  align-items: center;   /* Vertically center */
-  justify-content: center; /* Horizontally center */
+  align-items: center;   
+  justify-content: center; 
 }
 
 
@@ -170,7 +170,7 @@ game-title {
   max-width: 400px;
   max-height: 94vh;
   box-sizing: border-box;
-  overflow-y: auto; /* So it never leaves screen */
+  overflow-y: auto; 
 }
 
 .center-stack-container {
@@ -340,57 +340,7 @@ game-title {
   border-radius: 8px;
   transition: width 0.3s ease;
 }
-/* === Hidden Evidence Object Styles === */
-/* Use for any clickable hidden object (e.g., USB stick, sticky note, etc) */
-.hidden-evidence {
-  /* Make it clickable, position it absolutely on the map or scene */
-  cursor: pointer;
-  transition: opacity 0.2s;
-  z-index: 22; /* Should be above most elements */
-}
 
-/* When the object is collected (pointer-events: none), fade it */
-.hidden-evidence[style*="pointer-events: none"] {
-  opacity: 0.4 !important;
-}
-
-/* === Mini-Report Evidence Panel Styles === */
-.mini-report-panel {
-  /* Panel background and appearance */
-  background: #24243a;
-  color: #fff;
-  border-radius: 12px;
-  padding: 18px 18px 10px 18px;
-  margin-bottom: 16px;
-  box-shadow: 0 2px 16px #0004;
-  min-width: 220px;
-}
-
-.mini-report-panel ul {
-  /* Remove default list indent and style as disc */
-  list-style: disc inside;
-  margin: 8px 0 0 0;
-  padding-left: 0;
-}
-
-.mini-report-panel li {
-  margin-bottom: 4px;
-  color: #38d39f;  /* Evidence text is green for cyber feel */
-}
-
-/* === Clue Links (for clickable clues in dialogue) === */
-.clue-link {
-  cursor: pointer;
-  text-decoration: underline;
-  color: #A3FFB0;
-  transition: opacity 0.2s;
-}
-
-/* Faded clue after being collected */
-.clue-link.collected {
-  pointer-events: none;
-  opacity: 0.5;
-}
 
 /* Cursor Animation */
 @keyframes blink {
@@ -795,8 +745,8 @@ button:hover {
   padding: 24px 16px;
   border-radius: 22px;
   box-shadow: 0 3px 18px #0002;
-  min-height: 120px;    /* Increase this */
-  max-height: 320px;    /* Increase this to 320–400px as needed */
+  min-height: 120px;   
+  max-height: 320px;    
   width: 100%;
   overflow-y: auto;
   justify-content: center;
@@ -966,17 +916,15 @@ button:hover {
   max-width: 900px;
   background: rgba(20, 18, 38, 0.94);
   border-radius: 28px;
-  /* Reduce height from 600px to 420px */
   height: 420px;
   box-sizing: border-box;
   margin-top: 0;
   margin-bottom: 0;
   box-shadow: 0 4px 36px #0a0a20a1;
   padding: 0;
-  overflow: hidden; /* Important for child scroll! */
+  overflow: hidden;
 }
 
-/* Left column: avatar preview vertically stacked */
 
 .customise-col-left {
   display: flex;
@@ -999,7 +947,6 @@ button:hover {
   letter-spacing: 1px;
 }
 
-/* Right column: all options stacked vertically */
 .customise-col-right {
   display: flex;
   flex-direction: column;
@@ -1011,17 +958,15 @@ button:hover {
 }
 
 
-
-/* Bottom action row: randomize, agent name, save button (aligned right) */
 .customise-actions-row {
   display: flex;
   flex-direction: row;
   justify-content: flex-end;
   align-items: center;
   gap: 14px;
-  margin-top: auto;   /* Push to bottom of column */
+  margin-top: auto;   
   width: 100%;
-  padding-bottom: 12px; /* Add space from bottom edge */
+  padding-bottom: 12px; 
 }
 
 .randomize-btn {
@@ -1444,7 +1389,7 @@ input::placeholder {
   height: 100%;
   background: linear-gradient(90deg, #6C5CE7 60%, #A499FF 100%);
   border-radius: 7px;
-  width: 0; /* will be set inline in HTML */
+  width: 0; 
   transition: width 0.5s;
 }
 
@@ -1590,7 +1535,7 @@ input::placeholder {
   width: 64px;
   height: 64px;
   z-index: 10;
-  pointer-events: none; /* prevent them from blocking clicks */
+  pointer-events: none; 
 }
 
 /* All layered images for player/NPC: perfect stacking! */
@@ -1608,16 +1553,16 @@ input::placeholder {
   z-index: 1;
 }
 
-/* Optionally, if you want to allow click/hover on player: */
+
 
 #player-avatar .avatar-layer {
-  width: 64px !important;   /* or 96px, or 120px, up to you */
-  height: 64px !important;
+  width: 64px;   
+  height: 64px;
   position: absolute;
   top: 0;
   left: 0;
   image-rendering: pixelated;
-  object-fit: contain;      /* or "cover" if you want it to always fill */
+  object-fit: contain;      
   pointer-events: none;
   margin: 0;
   padding: 0;
@@ -1839,7 +1784,7 @@ input::placeholder {
   animation: pulse 2s infinite;
 }
 
-/* Locked level styling *
+
 
 /* Visual Novel Dialogue System */
 .dialogue-overlay {

@@ -1,7 +1,7 @@
 import re
 import json
 
-# Path to your dialogue JS file
+
 input_path = "static/js/dialogue_advanced.js"
 output_path = "static/js/dialogue_advanced_with_speaker.js"
 
@@ -54,7 +54,7 @@ def guess_speaker(key, text):
 with open(input_path, "r") as f:
     js = f.read()
 
-# Remove the window.missionDialogues = and trailing semicolon
+
 js_obj = re.sub(r"^window\.missionDialogues\s*=\s*", "", js, flags=re.MULTILINE).strip()
 if js_obj.endswith(";"):
     js_obj = js_obj[:-1]
@@ -78,7 +78,6 @@ def add_speaker(obj):
     if isinstance(obj, dict):
         for k, v in obj.items():
             if isinstance(v, dict):
-                # Only add speaker if it's a dialogue node (has 'text')
                 if "text" in v and "speaker" not in v:
                     v["speaker"] = guess_speaker(k, v["text"])
                 add_speaker(v)

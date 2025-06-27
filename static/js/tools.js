@@ -93,7 +93,7 @@ function startNetworkScan() {
             status.textContent = 'Scan complete';
             // Auto-complete network scanning objective
             if (window.markObjectiveComplete) {
-                window.markObjectiveComplete(0); // First objective
+                window.markObjectiveComplete(0); 
             }
         }
     }, 500);
@@ -161,7 +161,7 @@ function crackPassword() {
             
             // Auto-complete password cracking objective
             if (window.markObjectiveComplete) {
-                window.markObjectiveComplete(2); // Third objective
+                window.markObjectiveComplete(2); 
             }
         }
     }, 100);
@@ -195,7 +195,7 @@ function recoverFile() {
             
             // Auto-complete file recovery objective
             if (window.markObjectiveComplete) {
-                window.markObjectiveComplete(3); // Fourth objective
+                window.markObjectiveComplete(3); 
             }
         }
     }, 100);
